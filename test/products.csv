@@ -1,0 +1,7 @@
+﻿IDSP	loaiSanPham	tenSanPham	giaGoc	giaBan	ngayNhap	hanSuDung	soLuong
+1	thucPham	Tao tau	100	125	2025-12-30	2026-12-30	20
+2	thucPham	Tao dai	1836	3636	2000-01-01	1970-01-01	36
+3	thucPham	Tao vang	600	1000	2026-05-05	2028-01-01	1
+4	thucPham	Tao do	50	100	2026-09-25	2026-10-30	100
+5	doGiaDung	Bep ga	400	600	2026-07-14		5
+6	doTieuDung	Bot giat	50	75	2024-02-28		10
