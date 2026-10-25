@@ -29,6 +29,34 @@ SieuThiMini_Project/
 └── .gitignore           # Bỏ qua các file rác của Java (.class, bin/...)
 ```
 
+## Module Tiện Ích Dùng Chung (Utils)
+
+Thư mục `src/utils/` chứa các class hỗ trợ (Helper Class) được sử dụng chung cho toàn bộ dự án, giúp giảm thiểu việc lặp lại code (DRY) và tăng tính ổn định cho chương trình.
+
+### 1. Class `Validation`
+Class này được tạo ra để giải quyết 2 vấn đề nhức nhối khi làm việc với Console (theo yêu cầu bẫy lỗi của môn học):
+- **Chống sập chương trình (Try-Catch):** Khi người dùng nhập chữ cái vào chỗ yêu cầu nhập số, chương trình sẽ không bị văng lỗi `InputMismatchException` mà sẽ báo lỗi và yêu cầu nhập lại.
+- **Kiểm tra định dạng (Regex):** Đảm bảo người dùng nhập đúng chuẩn dữ liệu (VD: Mã hóa đơn phải bắt đầu bằng HD, Mã sản phẩm bắt đầu bằng SP...).
+
+**Danh sách các hàm hỗ trợ:**
+- `inputInt(Scanner sc, String message)`: Nhập số nguyên an toàn. Tự động bắt lỗi và yêu cầu nhập lại nếu nhập sai.
+- `inputDouble(Scanner sc, String message)`: Nhập số thực (double) an toàn. Tự động bắt lỗi và yêu cầu nhập lại nếu nhập sai.
+- `inputStringRegex(Scanner sc, String message, String regex, String errorMessage)`: Nhập chuỗi và kiểm tra bằng biểu thức chính quy (Regex). Nếu sai định dạng, in ra `errorMessage` và yêu cầu nhập lại.
+
+**Ví dụ cách sử dụng trong code:**
+Thay vì dùng `sc.nextInt()` dễ gây sập chương trình, hãy dùng:
+```java
+import utils.Validation;
+
+// Nhập số lượng (tự động bắt lỗi nếu nhập chữ)
+int soLuong = Validation.inputInt(sc, "Nhập số lượng: ");
+
+// Nhập mã hóa đơn (Bắt buộc bắt đầu bằng HD + số)
+String maHD = Validation.inputStringRegex(sc, 
+    "Nhập mã HĐ: ", 
+    "^HD\\d+$", 
+    "Lỗi: Mã HĐ phải bắt đầu bằng HD và theo sau là số!");
+```
 ## 📌 Quy tắc Code & Push Git (Bắt buộc đọc)
 
 Để dự án chạy mượt mà, tránh xung đột code (conflict) và dễ dàng kiểm soát lỗi, tất cả thành viên cần tuân thủ nghiêm ngặt quy trình sau:
@@ -42,7 +70,6 @@ SieuThiMini_Project/
 ## Quy trình làm việc với Git (Git Workflow)
 
 **TUYỆT ĐỐI KHÔNG** code và push trực tiếp lên nhánh `main`. Hãy làm theo quy trình sau:
-
 ### Bước 1: Cập nhật code mới nhất từ nhánh main
 ```bash
 git checkout main
