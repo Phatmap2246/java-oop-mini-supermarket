@@ -1,0 +1,16 @@
+# Bỏ qua các file biên dịch của Java
+*.class
+bin/
+out/
+
+# Bỏ qua file cấu hình của IDE
+.vscode/
+.idea/
+*.iml
+
+# Bỏ qua file hệ thống của Mac
+.DS_Store
+
+# Bỏ qua file Gradle (nếu không dùng)
+.gradle/
+build/
