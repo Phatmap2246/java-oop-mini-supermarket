@@ -13,7 +13,7 @@
 Toàn bộ mã nguồn nằm trong thư mục `src/`. Mỗi thành viên chỉ làm việc trong thư mục được phân công của mình để tránh xung đột code (conflict).
 
 ```text
-SieuThiMini_Project/
+java-oop-mini-supermarket/
 │
 ├── src/
 │   ├── person/          # Quản lý con người (Person, KhachHang, NhanVien...)
@@ -21,13 +21,15 @@ SieuThiMini_Project/
 │   ├── thanhtoan/       # Phương thức thanh toán (TienMat, ChuyenKhoan...)
 │   ├── dichvu/          # Dịch vụ tiện ích (KhuyenMai, KhachHangThanThiet...)
 │   ├── luutru/          # Quản lý danh sách (DSNhanVien, DSSanPham, DSHoaDon...)
-│   ├── hoadon/          # Quản lý hóa đơn (HoaDon, CTHoaDon...)
-│   ├── interfaces/      # Chứa các Interface (QuyenHan...)
+│   ├── hoadon/          # Quản lý hóa đơn (HoaDon, CTHoaDon, IThanhToan...)
+│   ├── interfaces/      # Chứa các Interface dùng chung (QuyenHan...)
+│   ├── utils/           # Chứa các class tiện ích dùng chung (Validation.java...)
 │   └── Main.java        # Chương trình chính (Chứa menu tổng)
 │
-├── doc/                 # Chứa file README.md, tài liệu thiết kế, báo cáo
-└── .gitignore           # Bỏ qua các file rác của Java (.class, bin/...)
-```
+├── lib/                 # Chứa các thư viện ngoài (.jar) như ZXing (nếu dùng QR Code)
+├── doc/                 # Chứa tài liệu thiết kế, báo cáo, file hướng dẫn (huongdan.md...)
+├── .gitignore           # Bỏ qua các file rác của Java (.class, bin/...) và IDE
+└── README.md            # File hiển thị trang chủ GitHub (giới thiệu và hướng dẫn nhóm)
 
 ## Module Tiện Ích Dùng Chung (Utils)
 
