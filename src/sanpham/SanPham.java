@@ -2,11 +2,11 @@ package sanpham;
 
 import java.time.LocalDate;
 
-public abstract class sanPham {
-    private int IDSP;
+public abstract class SanPham {
+    private int maSanPham;
     private String tenSanPham;
-    private int giaGoc;
-    private int giaBan;
+    private double giaGoc;
+    private double giaBan;
     private LocalDate ngayNhap;
     private int soLuong;
     private String loaiSanPham;
@@ -22,19 +22,19 @@ public abstract class sanPham {
         this.tenSanPham = tenSanPham;
     }
 
-    public int getGiaGoc() {
+    public double getGiaGoc() {
         return giaGoc;
     }
 
-    public void setGiaGoc(int giaGoc) {
+    public void setGiaGoc(double giaGoc) {
         this.giaGoc = giaGoc;
     }
 
-    public int getGiaBan() {
+    public double getGiaBan() {
         return giaBan;
     }
 
-    public void setGiaBan(int giaBan) {
+    public void setGiaBan(double giaBan) {
         this.giaBan = giaBan;
     }
 
@@ -54,24 +54,24 @@ public abstract class sanPham {
         this.soLuong = soLuong;
     }
 
-    public int getIDSP() {
-        return IDSP;
+    public int getMaSanPham() {
+        return maSanPham;
     }
 
-    public void setIDSP(int IDSP) {
-        this.IDSP = IDSP;
+    public void setMaSanPham(int maSanPham) {
+        this.maSanPham = maSanPham;
     }
 
-    public sanPham(int soLuong, LocalDate ngayNhap, int giaBan, String tenSanPham, int IDSP, int giaGoc, String loaiSanPham) {
+    public SanPham(int soLuong, LocalDate ngayNhap, double giaBan, String tenSanPham, int maSanPham, double giaGoc, String loaiSanPham) {
         this.soLuong = soLuong;
         this.ngayNhap = ngayNhap;
         this.giaBan = giaBan;
         this.tenSanPham = tenSanPham;
-        this.IDSP = IDSP;
+        this.maSanPham = maSanPham;
         this.giaGoc = giaGoc;
         this.loaiSanPham = loaiSanPham;
     }
-    public sanPham(){
+    public SanPham(){
 
     }
 

@@ -1,11 +1,11 @@
 import org.junit.jupiter.api.Test;
-import sanpham.sanPham;
+import sanpham.SanPham;
 import utils.*;
 import java.util.ArrayList;
 import java.sql.*;
 
 public class tests {
-    ArrayList<sanPham> listSanPham = new ArrayList<sanPham>();
+    ArrayList<SanPham> listSanPham = new ArrayList<SanPham>();
 
     @Test
     void loadcsv() throws Exception {
@@ -23,7 +23,7 @@ public class tests {
         while (res.next()) {
             listSanPham.add(database.napSanPham(res));
         }
-        for (sanPham sp : listSanPham) {
+        for (SanPham sp : listSanPham) {
             System.out.println(sp.getClass());
         }
     }
@@ -35,7 +35,7 @@ public class tests {
         while (res.next()) {
             listSanPham.add(database.napSanPham(res));
         }
-        for (sanPham sp : listSanPham) {
+        for (SanPham sp : listSanPham) {
             String jso = json.mapper.writeValueAsString(sp);
             jsol.add(jso);
         }
@@ -44,14 +44,14 @@ public class tests {
     @Test
     void doctufilevaobang()throws Exception{
         database.schemas();
-        database.execute("insert into products select * from 'test/products.csv'");
-        database.execute("insert into products by name select * from read_json('src/utils/temp.json',ignore_errors = true)");
-        ResultSet res = database.query("select * from products");
+        database.execute("insert into sanpham select * from 'test/products.csv'");
+        database.execute("insert into sanpham by name select * from read_json('src/utils/temp.json',ignore_errors = true)");
+        ResultSet res = database.query("select * from sanpham");
        while (res.next()){
        listSanPham.add(database.napSanPham(res));
        }
-       for (sanPham sp : listSanPham){
-           System.out.println(sp.getIDSP());
+       for (SanPham sp : listSanPham){
+           System.out.println(sp.getMaSanPham());
        }
     }
 }
