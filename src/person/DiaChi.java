@@ -11,7 +11,7 @@ public class DiaChi {
     private String quanHuyen;
     private String tinhThanhPho;
 
-    // 1. Constructor mặc định (khởi tạo chuỗi rỗng để tránh lỗi null)
+    /** Khởi tạo địa chỉ với các thành phần là chuỗi rỗng. */
     public DiaChi() {
         this.soNha = "";
         this.duong = "";
@@ -20,7 +20,7 @@ public class DiaChi {
         this.tinhThanhPho = "";
     }
 
-    // 2. Constructor đầy đủ tham số
+    /** Khởi tạo địa chỉ với năm thành phần được truyền vào. */
     public DiaChi(String soNha, String duong, String phuongXa, String quanHuyen, String tinhThanhPho) {
         this.soNha = soNha;
         this.duong = duong;
@@ -29,7 +29,7 @@ public class DiaChi {
         this.tinhThanhPho = tinhThanhPho;
     }
 
-    // 3. Copy Constructor
+    /** Sao chép các thành phần từ địa chỉ nguồn nếu nguồn khác null. */
     public DiaChi(DiaChi dc) {
         if (dc != null) {
             this.soNha = dc.soNha;
@@ -40,48 +40,57 @@ public class DiaChi {
         }
     }
 
-    // Getter & Setter
+    /** Trả về số nhà. */
     public String getSoNha() {
         return soNha;
     }
 
+    /** Cập nhật số nhà. */
     public void setSoNha(String soNha) {
         this.soNha = soNha;
     }
 
+    /** Trả về tên đường. */
     public String getDuong() {
         return duong;
     }
 
+    /** Cập nhật tên đường. */
     public void setDuong(String duong) {
         this.duong = duong;
     }
 
+    /** Trả về phường hoặc xã. */
     public String getPhuongXa() {
         return phuongXa;
     }
 
+    /** Cập nhật phường hoặc xã. */
     public void setPhuongXa(String phuongXa) {
         this.phuongXa = phuongXa;
     }
 
+    /** Trả về quận hoặc huyện. */
     public String getQuanHuyen() {
         return quanHuyen;
     }
 
+    /** Cập nhật quận hoặc huyện. */
     public void setQuanHuyen(String quanHuyen) {
         this.quanHuyen = quanHuyen;
     }
 
+    /** Trả về tỉnh hoặc thành phố. */
     public String getTinhThanhPho() {
         return tinhThanhPho;
     }
 
+    /** Cập nhật tỉnh hoặc thành phố. */
     public void setTinhThanhPho(String tinhThanhPho) {
         this.tinhThanhPho = tinhThanhPho;
     }
 
-    // Nhập dữ liệu từ bàn phím
+    /** Nhập năm thành phần địa chỉ từ Scanner. */
     public void nhapDiaChi(Scanner sc) {
         System.out.println("--- Nhập thông tin địa chỉ ---");
         System.out.print("Số nhà: ");
@@ -96,12 +105,13 @@ public class DiaChi {
         this.tinhThanhPho = sc.nextLine().trim();
     }
 
-    // Ghi đè toString giúp in trực tiếp đối tượng: System.out.println(dc);
+    /** Ghép các thành phần địa chỉ thành chuỗi phân cách bằng dấu phẩy. */
     @Override
     public String toString() {
         return String.format("%s, %s, %s, %s, %s", soNha, duong, phuongXa, quanHuyen, tinhThanhPho);
     }
 
+    /** In địa chỉ ra console. */
     public void xuatDiaChi() {
         System.out.println(this.toString());
     }
