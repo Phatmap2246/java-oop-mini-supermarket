@@ -43,8 +43,14 @@ public class QuanLyHoaDon {
                 ((HoaDonNhapHang) hd).nhapHoaDon(sc);
             }
             
-            this.danhSachHoaDon.add(hd);
-            System.out.println("Đã thêm hóa đơn thành công!");
+            // Kiểm tra trùng Mã hóa đơn
+            if (timKiemTheoMa(hd.getMaHoaDon())!=null) {
+                System.out.println("[!] LỖI: Mã hóa đơn '" + hd.getMaHoaDon() + "' đã tồn tại! Hóa đơn này sẽ không được thêm vào.");
+            }
+            else{
+                this.danhSachHoaDon.add(hd);
+                System.out.println("[+] Đã thêm hóa đơn thành công!");
+            }
         }
     }
 
@@ -108,8 +114,16 @@ public class QuanLyHoaDon {
                         "Nhập mã HĐ mới: ", 
                         (hd instanceof HoaDonBanHang) ? HoaDonBanHang.MA_HD_BAN_REGEX : HoaDonNhapHang.MA_HD_NHAP_REGEX, 
                         "Lỗi: Mã HĐ không đúng định dạng!");
-                    hd.setMaHoaDon(maMoi);
-                    System.out.println("Đã cập nhật Mã HĐ!");
+
+                    // Kiểm tra trùng Mã hóa đơn
+                    HoaDon checkTrung = timKiemTheoMa(maMoi);
+                    if (checkTrung!=null && checkTrung != hd) {
+                      System.out.println("[!] LỖI: Mã HĐ '" + maMoi + "' đã được dùng cho hóa đơn khác!");
+                    }
+                    else{
+                        hd.setMaHoaDon(maMoi);
+                        System.out.println("Đã cập nhật Mã HĐ!");
+                    }
                     break;
 
                 case 2:
@@ -227,4 +241,94 @@ public class QuanLyHoaDon {
         System.out.println("===================================");
     }
 
+    // Ghi - đọc file
+    public void ghiFileText(String tenFile){
+        try (java.io.BufferedWriter bw = new java.io.BufferedWriter(new java.io.OutputStreamWriter(new java.io.FileOutputStream(tenFile),java.nio.charset.StandardCharsets.UTF_8)))
+        {
+            // Ghi thông tin chung
+            for(HoaDon hd : this.danhSachHoaDon){
+                if (hd instanceof HoaDonBanHang) {
+                    HoaDonBanHang hdBan = (HoaDonBanHang) hd;
+                    bw.write("BAN|"+hdBan.getMaHoaDon() +"|"+hdBan.getTenDoiTac()+"|"+hdBan.getTienKhuyenMai());
+                    bw.newLine();
+                }
+                else if (hd instanceof HoaDonNhapHang){
+                    HoaDonNhapHang hdNhap = (HoaDonNhapHang) hd;
+                    bw.write("NHAP|"+hdNhap.getMaHoaDon()+"|"+hdNhap.getTenDoiTac()+"|"+hdNhap.getMaNhaCungCap()+"|"+hdNhap.getThueVAT()+"|"+hdNhap.getChiPhiVanChuyen());
+                    bw.newLine();
+                }
+
+                // ghi chi tiết
+                for (CTHoaDon ct : hd.getDanhSachChiTiet()) {
+                    bw.write("CT|" + ct.getMaSanPham() + "|" + ct.getTenSanPham() + "|" + 
+                             ct.getSoLuong() + "|" + ct.getDonGia() + "|" + ct.getChietKhau());
+                    bw.newLine();
+                }
+            }
+                System.out.println("[+] Đã ghi dữ liệu thành công vào file: " + tenFile);
+            }
+            
+        catch (java.io.IOException e){
+            System.out.println("[!] Lỗi khi ghi file: " + e.getMessage());
+        }
+    }
+    public void docFileText(String tenFile){
+        this.danhSachHoaDon.clear(); // Xóa ds cũ
+        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(tenFile ,java.nio.charset.StandardCharsets.UTF_8))){
+            String line;
+            HoaDon hdHienTai = null;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split("\\|",-1) ; // cắt dựa vào dấu | và thêm -1 để không bị mất ô trống
+                if (parts.length >0){
+                    String loai = parts[0]; // lấy ra loại hóa đơn
+                    if (loai.equals("BAN") && parts.length ==4){
+                        // parts: BAN | MaHD | TenKH | TienKhuyenMai
+
+                        // Kiểm tra Mã hóa đơn trùng
+                        if (timKiemTheoMa(parts[1]) == null) {
+                            hdHienTai = new HoaDonBanHang(parts[1],parts[2]);
+                            ((HoaDonBanHang) hdHienTai).setTienKhuyenMai(Double.parseDouble(parts[3]));
+                            this.danhSachHoaDon.add(hdHienTai);
+                        }
+                        else{
+                            System.out.println("[!] Cảnh báo: Bỏ qua hóa đơn trùng mã " + parts[1] + " trong file!");
+                            hdHienTai = null; // Bỏ qua !
+                        }
+                        
+                    }
+
+                    else if (loai.equals("NHAP") && parts.length == 6) {
+                        // parts: NHAP | MaHD | TenNCC | MaNCC | ThueVAT | PhiVanChuyen
+
+                        // Kiểm tra trùng Mã hóa đơn
+                        if (timKiemTheoMa(parts[1]) == null) {
+                            hdHienTai = new HoaDonNhapHang(parts[1],parts[2],parts[3],Double.parseDouble(parts[5]),Double.parseDouble(parts[4]));
+                            this.danhSachHoaDon.add(hdHienTai);
+                        }
+                        else{
+                            System.out.println("[!] Cảnh báo: Bỏ qua hóa đơn trùng mã " + parts[1] + " trong file!");
+                            hdHienTai = null; // Bỏ qua !
+                        }
+                        
+                    }
+
+                    else if (loai.equals("CT") && hdHienTai != null && parts.length ==6){
+                        // parts: CT | MaSP | TenSP | SoLuong | DonGia | ChietKhau (thêm chi tiết cho hóa đơn)
+                        CTHoaDon ct = new CTHoaDon(parts[1],parts[2], Integer.parseInt(parts[3]),Double.parseDouble(parts[4]),Double.parseDouble(parts[5]));
+                        hdHienTai.themChiTiet(ct);
+                    }
+                }
+            }
+            System.out.println("[+] Đã đọc dữ liệu thành công từ file: " + tenFile);
+        }
+        // Catch 1 Bắt lỗi I/O (lỗi không tìm thấy file, lỗi đóng file)
+        catch (java.io.IOException e) { 
+            System.out.println("[!] Lỗi khi đọc file (Có thể file chưa tồn tại): " + e.getMessage());
+        } 
+        // Catch 2 Bắt lỗi ép kiểu số (nếu file bị sửa tay sai định dạng)
+        catch(NumberFormatException e){
+            System.out.println("[!] Lỗi định dạng số: File dữ liệu bị hỏng hoặc bị sửa tay sai!");
+        }
+    }
 }
+
