@@ -7,8 +7,8 @@ public abstract class HoaDon {
     protected String maHoaDon;
     protected LocalDate ngayLap;
     protected String tenDoiTac;
-    static int demHoaDon;
-    ArrayList<CTHoaDon> danhSachChiTiet;
+    private static int demHoaDon;
+    protected ArrayList<CTHoaDon> danhSachChiTiet;
     
     // Constructors
     public HoaDon() {
@@ -47,8 +47,8 @@ public abstract class HoaDon {
         return demHoaDon;
     }
     // Phương thức trừu tượng
-    abstract double tinhTongTien();
-    abstract void hienThiHoaDon();
+    public abstract double tinhTongTien();
+    public abstract void hienThiHoaDon();
 
     //getter - setter
     public String getMaHoaDon() {

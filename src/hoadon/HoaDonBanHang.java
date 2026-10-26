@@ -6,31 +6,40 @@ import utils.Validation;
 public class HoaDonBanHang extends HoaDon implements IThanhToan {
     private double tienKhachDua;
     private double tienThua;
+    private double tienKhuyenMai; // Tiền giảm giá cho toàn hóa đơn
+
+    // Mã hóa đơn bán: Bắt đầu bằng chữ "HD" (in hoa) và theo sau là các chữ số. VD: HD001
+    public static final String MA_HD_BAN_REGEX = "^HD\\d+$";
 
     // constructor
     public HoaDonBanHang(String maHoaDon, String tenDoiTac) {
         super(maHoaDon, tenDoiTac);
+        this.tienKhachDua = 0.0;
+        this.tienThua = 0.0;
+        this.tienKhuyenMai = 0.0;
     }
 
     public HoaDonBanHang() {
         super();
         this.tienKhachDua = 0.0;
         this.tienThua = 0.0;
+        this.tienKhuyenMai = 0.0;
     }
 
     // Ghi đè (HoaDon)
     @Override 
     public double tinhTongTien(){
-        double tong = 0;
+        double tongHang = 0;
         for(CTHoaDon ct : danhSachChiTiet){
-            tong += ct.tinhThanhTien();
+            tongHang += ct.tinhThanhTien();
         }
-        return tong;
+        // SỬA: Trừ đi tiền khuyến mãi. Không để tổng tiền bị âm.
+        double thanhToan = tongHang - this.tienKhuyenMai;
+        return (thanhToan > 0) ? thanhToan : 0; 
     }
    
     @Override 
     public void hienThiHoaDon(){
-         // 1. IN PHẦN HEADER (Đầu hóa đơn)
         System.out.println("==========================================================");
         System.out.println("                    SIÊU THỊ MINI OOP                     ");
         System.out.println("             Đ/c: 123 Đường Số 1, Q.1, TP.HCM             ");
@@ -41,44 +50,37 @@ public class HoaDonBanHang extends HoaDon implements IThanhToan {
         System.out.println("KH:   " + tenDoiTac);
         System.out.println("----------------------------------------------------------");
         
-        // 2. IN TIÊU ĐỀ BẢNG
-        // %-5s: căn trái, rộng 5 ký tự
-        // %25s: căn phải, rộng 25 ký tự
         System.out.printf("%-5s | %-20s | %-5s | %-10s | %-10s\n", 
                 "STT", "Tên Sản Phẩm", "SL", "Đơn Giá", "T.Tiền");
         System.out.println("----------------------------------------------------------");
 
-        // 3. IN CHI TIẾT TỪNG MÓN HÀNG (Dùng vòng lặp)
         int stt = 1;
+        double tongHang = 0;
         for (CTHoaDon ct : danhSachChiTiet) {
             System.out.printf("%-5d | %-20s | %-5d | %-10.2f | %-10.2f\n",
-                    stt, 
-                    ct.getTenSanPham(), 
-                    ct.getSoLuong(), 
-                    ct.getDonGia(), 
-                    ct.tinhThanhTien());
+                    stt, ct.getTenSanPham(), ct.getSoLuong(), ct.getDonGia(), ct.tinhThanhTien());
+            tongHang += ct.tinhThanhTien();
             stt++;
         }
 
         System.out.println("----------------------------------------------------------");
-
-        // 4. IN TỔNG TIỀN VÀ THANH TOÁN
-        // %43s: Đẩy chữ sang lề phải cho đẹp
-        System.out.printf("%43s %12.2f\n", "Tổng số tiền thanh toán:", tinhTongTien());
+        System.out.printf("%43s %12.2f\n", "Tổng tiền hàng:", tongHang);
+        
+        // SỬA: In khuyến mãi nếu có
+        if (this.tienKhuyenMai > 0) {
+            System.out.printf("%43s -%11.2f\n", "Khuyến mãi:", this.tienKhuyenMai);
+        }
+        
+        System.out.printf("%43s %12.2f\n", "TỔNG THANH TOÁN:", tinhTongTien());
         
         if (tienKhachDua > 0) {
             System.out.printf("%43s %12.2f\n", "Tiền khách đưa:", tienKhachDua);
             System.out.printf("%43s %12.2f\n", "Tiền thừa trả khách:", tienThua);
         }
 
-        // 5. IN FOOTER (Cuối hóa đơn)
         System.out.println("==========================================================");
         System.out.println("                 HÂN HẠNH ĐƯỢC PHỤC VỤ QUÝ KHÁCH          ");
         System.out.println("==========================================================");
-        
-        // 6. TÍNH NĂNG SÁNG TẠO: IN MÃ QR THANH TOÁN
-        // (Gọi hàm tạo QR mà chúng ta sẽ viết ở bước sau)
-        // this.xuatMaQRThanhToan(); 
         System.out.println("[Hệ thống: Đang tạo mã QR thanh toán...]");
     }
     
@@ -113,14 +115,54 @@ public class HoaDonBanHang extends HoaDon implements IThanhToan {
     }
 
     // Hàm nhập dùng Validation
-    public void nhapHoaDon(Scanner sc){
-        this.maHoaDon = Validation.inputStringRegex(sc,  "Nhap ma hoa don (VD: HD001): ", "^HD\\d+$", "Loi: Ma HD phai bat dau bang HD va theo sau la so!");
-        System.out.print("Nhap ten khach hang: ");
-        this.tenDoiTac = sc.nextLine();
+    public void nhapHoaDon(Scanner sc) {
+        this.maHoaDon = Validation.inputStringRegex(sc,  
+            "Nhap ma hoa don (VD: HD001): ", 
+            MA_HD_BAN_REGEX, 
+            "Loi: Ma HD phai bat dau bang HD va theo sau la so!");
+            
+        this.tenDoiTac = Validation.inputStringRegex(sc, 
+            "Nhap ten khach hang: ", 
+            Validation.HOTEN_REGEX, 
+            "Loi: Ten khach hang khong hop le!");
+
+        // SỬA: Hỏi nhập khuyến mãi hóa đơn
+        this.tienKhuyenMai = Validation.inputDouble(sc, "Nhap tien khuyen mai cho hoa don (Nhap 0 neu khong co): ");
+        if (this.tienKhuyenMai < 0) {
+            this.tienKhuyenMai = 0;
+        }
+
+        System.out.println("--- Nhap danh sach san pham ---");
+        while (true) {
+            CTHoaDon ct = new CTHoaDon();
+            ct.nhapThongTin(sc, true); // true: Hỏi chiết khấu từng sản phẩm
+            this.themChiTiet(ct);
+            
+            int tiepTuc = Validation.inputInt(sc, "Nhap tiep san pham? (1: Co / 0: Khong): ");
+            if (tiepTuc == 0) {
+                break;
+            }
+        }
+
         double tienDua = Validation.inputDouble(sc, "Nhap so tien khach dua: ");
+        
         if (!kiemTraThanhToan(tienDua)) {
             System.out.println("[!] Canh bao: Khach dua khong du tien!");
+        } else {
+            System.out.println("[+] Khach da thanh toan du tien.");
         }
     }
-    
+
+    // getter - setter
+    public double getTienKhachDua() { return tienKhachDua; }
+    public void setTienKhachDua(double tienKhachDua) { this.tienKhachDua = tienKhachDua; }
+
+    public double getTienThua() { return tienThua; }
+    public void setTienThua(double tienThua) { this.tienThua = tienThua; }
+
+    // SỬA: Thêm Getter/Setter cho Khuyến mãi
+    public double getTienKhuyenMai() { return tienKhuyenMai; }
+    public void setTienKhuyenMai(double tienKhuyenMai) { this.tienKhuyenMai = tienKhuyenMai; }
+
+    public static String getMaHdBanRegex() { return MA_HD_BAN_REGEX; }
 }

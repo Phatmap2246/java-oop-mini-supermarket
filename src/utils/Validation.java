@@ -12,6 +12,7 @@ public class Validation {
 
     // Email: Định dạng chuẩn abc@domain.com
     public static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+    
 
     // 1. Hàm nhập số nguyên (chống sập bằng try-catch)
     public static int inputInt(Scanner sc, String message) {
