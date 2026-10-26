@@ -2,15 +2,15 @@ package sanpham;
 
 import java.time.LocalDate;
 
-public class thucPham extends sanPham {
+public class ThucPham extends SanPham {
     private LocalDate hanSudung;
 
-    public thucPham(int soLuong, LocalDate ngayNhap, int giaBan, String tenSanPham, int IDSP, int giaGoc, LocalDate hsd, String loaisp) {
+    public ThucPham(int soLuong, LocalDate ngayNhap, double giaBan, String tenSanPham, int IDSP, double giaGoc, LocalDate hsd, String loaisp) {
         super(soLuong, ngayNhap, giaBan, tenSanPham, IDSP, giaGoc, loaisp);
         this.hanSudung = hsd;
     }
 
-    public thucPham() {
+    public ThucPham() {
 
     }
 

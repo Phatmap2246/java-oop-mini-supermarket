@@ -2,9 +2,9 @@ package sanpham;
 
 import java.time.LocalDate;
 
-public class doGiaDung extends sanPham{
-    public doGiaDung(int soLuong, LocalDate ngayNhap, int giaBan, String tenSanPham, int IDSP, int giaGoc,String loaisp) {
+public class DoGiaDung extends SanPham {
+    public DoGiaDung(int soLuong, LocalDate ngayNhap, double giaBan, String tenSanPham, int IDSP, double giaGoc, String loaisp) {
         super(soLuong, ngayNhap, giaBan, tenSanPham, IDSP, giaGoc,loaisp);
     }
-    public doGiaDung(){}
+    public DoGiaDung(){}
 }

@@ -14,3 +14,4 @@ out/
 # Bỏ qua file Gradle (nếu không dùng)
 .gradle/
 build/
+/src/utils/temp.json
