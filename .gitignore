@@ -1,16 +1,46 @@
-# Bỏ qua các file biên dịch của Java
+# ==================================================
+# CẤU HÌNH GITIGNORE CHO DỰ ÁN JAVA OOP - SIÊU THỊ MINI
+# ==================================================
+
+# 1. Các file biên dịch của Java (Bytecode)
+# Không bao giờ đẩy file .class lên GitHub
 *.class
+
+# 2. Thư mục chứa file build / output
 bin/
 out/
+build/
+target/
 
-# Bỏ qua file cấu hình của IDE
+# 3. File cấu hình của các IDE/Editor phổ biến
+# VS Code
 .vscode/
+# IntelliJ IDEA
 .idea/
 *.iml
+*.iws
+# Eclipse
+.project
+.classpath
+.settings/
 
-# Bỏ qua file hệ thống của Mac
-.DS_Store
-
-# Bỏ qua file Gradle (nếu không dùng)
+# 4. File của các công cụ Build (Gradle, Maven)
+# Dù nhóm không dùng nhưng để đây phòng trường hợp ai đó lỡ dùng
 .gradle/
-build/
+gradlew
+gradlew.bat
+
+# 5. File hệ điều hành (OS) - Cực kỳ quan trọng khi làm việc nhóm
+# macOS (Dành cho máy của bạn)
+.DS_Store
+# Windows (Dành cho máy của bạn cùng nhóm)
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# 6. Dữ liệu sinh ra khi chạy chương trình (Runtime data)
+# File text lưu trữ hóa đơn
+hoadon.txt
+# File chứa mã QR xuất ra
+QR_*.png
+*.log
