@@ -3,7 +3,7 @@ package sanpham;
 import java.time.LocalDate;
 
 public abstract class SanPham {
-    private int maSanPham;
+    private String maSanPham;
     private String tenSanPham;
     private double giaGoc;
     private double giaBan;
@@ -54,15 +54,15 @@ public abstract class SanPham {
         this.soLuong = soLuong;
     }
 
-    public int getMaSanPham() {
+    public String getMaSanPham() {
         return maSanPham;
     }
 
-    public void setMaSanPham(int maSanPham) {
+    public void setMaSanPham(String maSanPham) {
         this.maSanPham = maSanPham;
     }
 
-    public SanPham(int soLuong, LocalDate ngayNhap, double giaBan, String tenSanPham, int maSanPham, double giaGoc, String loaiSanPham) {
+    public SanPham(int soLuong, LocalDate ngayNhap, double giaBan, String tenSanPham, String maSanPham, double giaGoc, String loaiSanPham) {
         this.soLuong = soLuong;
         this.ngayNhap = ngayNhap;
         this.giaBan = giaBan;

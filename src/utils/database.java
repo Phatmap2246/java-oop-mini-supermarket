@@ -25,7 +25,7 @@ public class database{
         //Bang sanpham
         database.execute("""
                CREATE TABLE sanpham (
-               maSanPham INTEGER PRIMARY KEY,
+               maSanPham VARCHAR PRIMARY KEY,
                loaiSanPham VARCHAR,
                tenSanPham VARCHAR,
                giaGoc DOUBLE,
@@ -35,24 +35,31 @@ public class database{
                soLuong INTEGER 
                );""");
         //Bang hoadon
+        //constraint:
+        // ma hoa don ban hang "^HD\\d+$"
+        // ma hoa don nhap hang "^HDN\\d+$"
+        // nha san xuat "^NCC\\d+$"
         database.execute("""
                 CREATE TABLE hoadon(
-                maHoaDon INTEGER PRIMARY KEY,
+                maHoaDon VARCHAR PRIMARY KEY,
                 ngayLap DATE,
                 tenDoiTac VARCHAR,
                 tienKhachDua DOUBLE,
                 tienThua DOUBLE,
+                tienKhuyenMai DOUBLE,
                 maNhaCungCap VARCHAR,
+                chiPhiVanChuyen DOUBLE,
                 thueVAT DOUBLE
                 );
                 """);
         database.execute("""
                 CREATE TABLE cthoadon(
-                maHoaDon INTEGER REFERENCES hoadon(maHoaDon),
-                maSanPham INTEGER REFERENCES sanpham(maSanPham),
+                maHoaDon VARCHAR REFERENCES hoadon(maHoaDon),
+                maSanPham VARCHAR REFERENCES sanpham(maSanPham),
                 tenSanPham VARCHAR,
                 soLuong INTEGER,
-                donGia DOUBLE
+                donGia DOUBLE,
+                chietKhau DOUBLE
                 )
                 """);
     }
@@ -60,7 +67,7 @@ public class database{
     public static SanPham napSanPham(ResultSet res) throws Exception {
         if (res.getString("loaiSanPham").equals("ThucPham")) {
             ThucPham sp = new ThucPham();
-            sp.setMaSanPham(res.getInt("maSanPham"));
+            sp.setMaSanPham(res.getString("maSanPham"));
             sp.setTenSanPham(res.getString("tenSanPham"));
             sp.setGiaGoc(res.getDouble("giaGoc"));
             sp.setGiaBan(res.getDouble("giaBan"));
@@ -72,7 +79,7 @@ public class database{
 
         } else if (res.getString("loaiSanPham").equals("DoGiaDung")) {
             DoGiaDung sp = new DoGiaDung();
-            sp.setMaSanPham(res.getInt("maSanPham"));
+            sp.setMaSanPham(res.getString("maSanPham"));
             sp.setTenSanPham(res.getString("tenSanPham"));
             sp.setGiaGoc(res.getDouble("giaGoc"));
             sp.setGiaBan(res.getDouble("giaBan"));
@@ -83,7 +90,7 @@ public class database{
 
         } else if (res.getString("loaiSanPham").equals("DoTieuDung")) {
             DoTieuDung sp = new DoTieuDung();
-            sp.setMaSanPham(res.getInt("maSanPham"));
+            sp.setMaSanPham(res.getString("maSanPham"));
             sp.setTenSanPham(res.getString("tenSanPham"));
             sp.setGiaGoc(res.getDouble("giaGoc"));
             sp.setGiaBan(res.getDouble("giaBan"));
@@ -95,5 +102,5 @@ public class database{
         System.out.println(res.getString("loaiSanPham"));
         return null;
     }
-
+ //TODO nạp bảng vào list class, sử dụng array list?
 }

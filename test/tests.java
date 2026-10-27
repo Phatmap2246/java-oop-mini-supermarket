@@ -28,7 +28,7 @@ public class tests {
         }
     }
 
-    //@Test
+    @Test
     void ghivaojson() throws Exception {
         ArrayList<String> jsol = new ArrayList<String>();
         ResultSet res = database.query("select * from 'test/products.csv'");
