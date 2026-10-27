@@ -3,115 +3,87 @@ package hoadon;
 import java.util.Scanner;
 import utils.Validation;
 
-public class HoaDonBanHang extends HoaDon implements IThanhToan {
-    private double tienKhachDua;
-    private double tienThua;
-    private double tienKhuyenMai; // Tiền giảm giá cho toàn hóa đơn
+public class HoaDonBanHang extends HoaDon {
+    private double tienKhuyenMai;
+    
+    // SỬA: Chứa đối tượng thanh toán (Đa hình), KHÔNG implements IThanhToan nữa
+    private IThanhToan phuongThucThanhToan; 
+    private boolean daThanhToan;
 
-    // Mã hóa đơn bán: Bắt đầu bằng chữ "HD" (in hoa) và theo sau là các chữ số. VD: HD001
     public static final String MA_HD_BAN_REGEX = "^HD\\d+$";
 
-    // constructor
     public HoaDonBanHang(String maHoaDon, String tenDoiTac) {
         super(maHoaDon, tenDoiTac);
-        this.tienKhachDua = 0.0;
-        this.tienThua = 0.0;
         this.tienKhuyenMai = 0.0;
+        this.phuongThucThanhToan = null;
+        this.daThanhToan = false;
     }
 
     public HoaDonBanHang() {
         super();
-        this.tienKhachDua = 0.0;
-        this.tienThua = 0.0;
         this.tienKhuyenMai = 0.0;
+        this.phuongThucThanhToan = null;
+        this.daThanhToan = false;
     }
 
-    // Ghi đè (HoaDon)
     @Override 
     public double tinhTongTien(){
         double tongHang = 0;
         for(CTHoaDon ct : danhSachChiTiet){
             tongHang += ct.tinhThanhTien();
         }
-        // SỬA: Trừ đi tiền khuyến mãi. Không để tổng tiền bị âm.
         double thanhToan = tongHang - this.tienKhuyenMai;
         return (thanhToan > 0) ? thanhToan : 0; 
     }
    
     @Override 
     public void hienThiHoaDon(){
-        System.out.println("==========================================================");
-        System.out.println("                    SIÊU THỊ MINI OOP                     ");
-        System.out.println("             Đ/c: 123 Đường Số 1, Q.1, TP.HCM             ");
-        System.out.println("                     ĐT: 0123.456.789                     ");
-        System.out.println("==========================================================");
-        System.out.println("                     HÓA ĐƠN BÁN LẺ                        ");
-        System.out.println("Ngày: " + ngayLap + " \t\t\t Số: " + maHoaDon);
+        System.out.println("\n\n==========================================================================================");
+        System.out.println("                                    SIÊU THỊ MINI OOP                                     ");
+        System.out.println("             Đ/c: 123 Đường Số 1, Q.1, TP.HCM                   ĐT: 0123.456.789          ");
+        System.out.println("==========================================================================================");
+        System.out.println("                                     HÓA ĐƠN BÁN LẺ                                       ");
+        System.out.println("Ngày: " + ngayLap + " \t\t\t\t\t Số: " + maHoaDon);
         System.out.println("KH:   " + tenDoiTac);
-        System.out.println("----------------------------------------------------------");
+        System.out.println("------------------------------------------------------------------------------------------");
         
-        System.out.printf("%-5s | %-20s | %-5s | %-10s | %-10s\n", 
+        // SỬA: Tăng độ rộng cột
+        System.out.printf("%-5s | %-25s | %-5s | %15s | %15s\n", 
                 "STT", "Tên Sản Phẩm", "SL", "Đơn Giá", "T.Tiền");
-        System.out.println("----------------------------------------------------------");
+        System.out.println("------------------------------------------------------------------------------------------");
 
         int stt = 1;
         double tongHang = 0;
         for (CTHoaDon ct : danhSachChiTiet) {
-            System.out.printf("%-5d | %-20s | %-5d | %-10.2f | %-10.2f\n",
+            System.out.printf("%-5d | %-25s | %-5d | %15.2f | %15.2f\n",
                     stt, ct.getTenSanPham(), ct.getSoLuong(), ct.getDonGia(), ct.tinhThanhTien());
             tongHang += ct.tinhThanhTien();
             stt++;
         }
 
-        System.out.println("----------------------------------------------------------");
-        System.out.printf("%43s %12.2f\n", "Tổng tiền hàng:", tongHang);
+        System.out.println("------------------------------------------------------------------------------------------");
         
-        // SỬA: In khuyến mãi nếu có
+        System.out.printf("%70s %15.2f\n", "Tổng tiền hàng:", tongHang);
+        
         if (this.tienKhuyenMai > 0) {
-            System.out.printf("%43s -%11.2f\n", "Khuyến mãi:", this.tienKhuyenMai);
+            System.out.printf("%70s -%14.2f\n", "Khuyến mãi:", this.tienKhuyenMai);
         }
         
-        System.out.printf("%43s %12.2f\n", "TỔNG THANH TOÁN:", tinhTongTien());
+        System.out.printf("%70s %15.2f\n", "TỔNG THANH TOÁN:", tinhTongTien());
         
-        if (tienKhachDua > 0) {
-            System.out.printf("%43s %12.2f\n", "Tiền khách đưa:", tienKhachDua);
-            System.out.printf("%43s %12.2f\n", "Tiền thừa trả khách:", tienThua);
+        System.out.println("==========================================================================================");
+        
+        if (daThanhToan && phuongThucThanhToan != null) {
+            System.out.println(" TRẠNG THÁI: [X] ĐÃ THANH TOÁN");
+            phuongThucThanhToan.inBienLai(); 
+        } else {
+            System.out.println(" TRẠNG THÁI: [ ] CHƯA THANH TOÁN");
         }
-
-        System.out.println("==========================================================");
-        System.out.println("                 HÂN HẠNH ĐƯỢC PHỤC VỤ QUÝ KHÁCH          ");
-        System.out.println("==========================================================");
-        System.out.println("[Hệ thống: Đang tạo mã QR thanh toán...]");
-    }
-    
-    // Ghi đè (Interface)
-    @Override 
-    public boolean kiemTraThanhToan(double soTienKhachDua){
-        this.tienKhachDua = soTienKhachDua;
-        double tongTien = tinhTongTien();
-        if (this.tienKhachDua >= tongTien) {
-            this.tienThua = this.tienKhachDua - tongTien;
-            return true;
-        }
-        return false;
-    }
-
-    @Override 
-    public void inBienLai(){
-        System.out.println("\n**************************************************");
-        System.out.println("*               BIÊN LAI THANH TOÁN              *");
-        System.out.println("**************************************************");
-        System.out.println(" Mã giao dịch: " + maHoaDon);
-        System.out.println(" Khách hàng:   " + tenDoiTac);
-        System.out.println(" Thời gian:    " + java.time.LocalDateTime.now());
-        System.out.println("--------------------------------------------------");
-        System.out.printf(" Tổng tiền:    %15.2f VND\n", tinhTongTien());
-        System.out.printf(" Khách đưa:    %15.2f VND\n", tienKhachDua);
-        System.out.printf(" Tiền thừa:    %15.2f VND\n", tienThua);
-        System.out.println("--------------------------------------------------");
-        System.out.println(" Trạng thái:   [X] ĐÃ THANH TOÁN THÀNH CÔNG");
-        System.out.println("**************************************************");
-        System.out.println("        Cảm ơn quý khách và hẹn gặp lại!          ");
+        
+        System.out.println("==========================================================================================");
+        System.out.println("                          HÂN HẠNH ĐƯỢC PHỤC VỤ QUÝ KHÁCH                                ");
+        System.out.println("==========================================================================================");
+        System.out.println(); // Thêm dòng trống để phân biệt hóa đơn
     }
 
     // Hàm nhập dùng Validation
@@ -126,7 +98,6 @@ public class HoaDonBanHang extends HoaDon implements IThanhToan {
             Validation.HOTEN_REGEX, 
             "Loi: Ten khach hang khong hop le!");
 
-        // SỬA: Hỏi nhập khuyến mãi hóa đơn
         this.tienKhuyenMai = Validation.inputDouble(sc, "Nhap tien khuyen mai cho hoa don (Nhap 0 neu khong co): ");
         if (this.tienKhuyenMai < 0) {
             this.tienKhuyenMai = 0;
@@ -135,7 +106,7 @@ public class HoaDonBanHang extends HoaDon implements IThanhToan {
         System.out.println("--- Nhap danh sach san pham ---");
         while (true) {
             CTHoaDon ct = new CTHoaDon();
-            ct.nhapThongTin(sc, true); // true: Hỏi chiết khấu từng sản phẩm
+            ct.nhapThongTin(sc, true); 
             this.themChiTiet(ct);
             
             int tiepTuc = Validation.inputInt(sc, "Nhap tiep san pham? (1: Co / 0: Khong): ");
@@ -144,25 +115,47 @@ public class HoaDonBanHang extends HoaDon implements IThanhToan {
             }
         }
 
-        double tienDua = Validation.inputDouble(sc, "Nhap so tien khach dua: ");
-        
-        if (!kiemTraThanhToan(tienDua)) {
-            System.out.println("[!] Canh bao: Khach dua khong du tien!");
+        // SỬA: MENU CHỌN PHƯƠNG THỨC THANH TOÁN
+                // SỬA: MENU CHỌN PHƯƠNG THỨC THANH TOÁN
+        System.out.println("\n--- CHỌN PHƯƠNG THỨC THANH TOÁN ---");
+        System.out.println("1. Tiền mặt");
+        System.out.println("2. Chuyển khoản ngân hàng");
+        int chon = Validation.inputInt(sc, "Lựa chọn của bạn: ");
+
+        if (chon == 1) {
+            this.phuongThucThanhToan = new ThanhToanTienMat();
         } else {
-            System.out.println("[+] Khach da thanh toan du tien.");
+            System.out.print("Nhập tên ngân hàng: ");
+            String bank = sc.nextLine();
+            System.out.print("Nhập số tài khoản: ");
+            String stk = sc.nextLine();
+            
+            ThanhToanChuyenKhoan ck = new ThanhToanChuyenKhoan(bank, stk);
+            // SỬA: TẠO MÃ QR TRƯỚC KHI THANH TOÁN
+            ck.taoMaQR(tinhTongTien());
+            this.phuongThucThanhToan = ck;
+        }
+
+        // Gọi hàm thanh toán (Đa hình)
+         this.daThanhToan = this.phuongThucThanhToan.thucHienThanhToan(sc, tinhTongTien());
+        
+        if (this.daThanhToan) {
+            System.out.println("\n[+] Thanh toán thành công!");
+            System.out.println("=================================================");
+            System.out.println("         IN HÓA ĐƠN (ĐÃ THANH TOÁN)              ");
+            System.out.println("=================================================");
+            this.hienThiHoaDon(); // TỰ ĐỘNG IN HÓA ĐƠN LUÔN Ở ĐÂY
+        } else {
+            System.out.println("[!] Thanh toán thất bại (Khách đưa thiếu tiền)!");
         }
     }
-
-    // getter - setter
-    public double getTienKhachDua() { return tienKhachDua; }
-    public void setTienKhachDua(double tienKhachDua) { this.tienKhachDua = tienKhachDua; }
-
-    public double getTienThua() { return tienThua; }
-    public void setTienThua(double tienThua) { this.tienThua = tienThua; }
-
-    // SỬA: Thêm Getter/Setter cho Khuyến mãi
+    // getters - setters
     public double getTienKhuyenMai() { return tienKhuyenMai; }
     public void setTienKhuyenMai(double tienKhuyenMai) { this.tienKhuyenMai = tienKhuyenMai; }
 
-    public static String getMaHdBanRegex() { return MA_HD_BAN_REGEX; }
+    public IThanhToan getPhuongThucThanhToan() { return phuongThucThanhToan; }
+    public void setPhuongThucThanhToan(IThanhToan phuongThucThanhToan) { this.phuongThucThanhToan = phuongThucThanhToan; }
+
+    public boolean isDaThanhToan() { return daThanhToan; }
+    public void setDaThanhToan(boolean daThanhToan) { this.daThanhToan = daThanhToan; }
 }
