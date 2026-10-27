@@ -1,6 +1,10 @@
+import hoadon.*;
 import org.junit.jupiter.api.Test;
 import sanpham.SanPham;
+import sanpham.ThucPham;
 import utils.*;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.sql.*;
 
@@ -15,7 +19,30 @@ public class tests {
             System.out.println(res.getString("hanSuDung"));
         }
     }
-
+    @Test
+    void loadInvoicesDetails() throws Exception{
+       System.out.println("load invoices and details");
+       ResultSet res = database.query("select * from 'test/details.csv'");
+       ResultSet res2 = database.query("select * from 'test/invoices.csv'");
+       while(res.next()){
+           System.out.println(res.getString("maHoaDon"));
+       }
+       while(res2.next()){
+           System.out.println(res2.getString("maHoaDon"));
+       }
+    }
+    @Test
+    void napvaoinvoice() throws Exception{
+        ArrayList<HoaDon> invoices = new ArrayList<HoaDon>();
+        System.out.println("load from table into hoadon class");
+        ResultSet res = database.query("select * from 'test/invoices.csv'");
+        while(res.next()){
+            invoices.add(database.napHoaDon(res));
+        }
+        for( HoaDon in: invoices){
+            System.out.println(in.getClass());
+        }
+    }
     @Test
     void napvaoclass() throws Exception {
         System.out.println("turning into objects tests");
@@ -28,30 +55,16 @@ public class tests {
         }
     }
 
+
     @Test
-    void ghivaojson() throws Exception {
-        ArrayList<String> jsol = new ArrayList<String>();
-        ResultSet res = database.query("select * from 'test/products.csv'");
-        while (res.next()) {
-            listSanPham.add(database.napSanPham(res));
-        }
-        for (SanPham sp : listSanPham) {
-            String jso = json.mapper.writeValueAsString(sp);
-            jsol.add(jso);
-        }
-        json.themVaoTemp(jsol);
-    }
-    @Test
-    void doctufilevaobang()throws Exception{
+    void tuobjectvaobang() throws Exception{
         database.schemas();
-        database.execute("insert into sanpham select * from 'test/products.csv'");
-        database.execute("insert into sanpham by name select * from read_json('src/utils/temp.json',ignore_errors = true)");
+        database.execute("insert into sanpham select * from 'test/products.csv';");
+        ThucPham tp = new ThucPham(12, LocalDate.now(),1212,"helochaocacban","SP1037",199,LocalDate.now(), "ThucPham");
+        database.napVaoBangSanPham(tp);
         ResultSet res = database.query("select * from sanpham");
-       while (res.next()){
-       listSanPham.add(database.napSanPham(res));
-       }
-       for (SanPham sp : listSanPham){
-           System.out.println(sp.getMaSanPham());
-       }
+        while(res.next()){
+            System.out.println(res.getString("maSanPham"));
+        }
     }
 }

@@ -7,7 +7,7 @@ Sử dụng LocalDate thay vì Date vì nó hiện đại hơn Date
 
 Quy trình nạp query vào class: match đúng trường hợp -> tạo class rỗng -> nạp variable -> return class
 
-Quy trình từ class vào database/table: sử dụng objectmapper trong thư viện jackson để chuyển class thành json ->
-duckdb đọc file json, lý do: tránh nạp object trực tiếp vào database vì phức tạp
+Quy trình đọc từ class vào bảng, sử dụng appender của duckdb, appender đê điền vào mỗi cột trên một dòng các giá trị mà
+nó được truyền vào.
 
-Cách tạo class, class cơ sở nên có enum phân biệt các class kế thừa
+

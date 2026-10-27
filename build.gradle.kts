@@ -22,8 +22,7 @@ dependencies{
     testImplementation(platform("org.junit:junit-bom:6.0.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    implementation("org.duckdb:duckdb_jdbc:1.5.6.0")
-    implementation("tools.jackson.core:jackson-databind:3.2.4")
+    implementation("org.duckdb:duckdb_jdbc:2.0.0.0")
 }
 tasks.test {
     useJUnitPlatform()
