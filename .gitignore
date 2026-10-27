@@ -33,11 +33,12 @@ gradlew.bat
 
 # 5. File hệ điều hành (OS)
 .DS_Store
+._*             <-- Thêm dòng này để chặn file rác của Mac
 Thumbs.db
 ehthumbs.db
 Desktop.ini
 
 # 6. Dữ liệu sinh ra khi chạy chương trình (Runtime data)
 hoadon.txt
-QR_*.png
+QR/            
 *.log
