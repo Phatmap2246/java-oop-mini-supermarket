@@ -35,6 +35,23 @@ java-oop-mini-supermarket/
 
 Thư mục `src/utils/` chứa các class hỗ trợ (Helper Class) được sử dụng chung cho toàn bộ dự án, giúp giảm thiểu việc lặp lại code (DRY) và tăng tính ổn định cho chương trình.
 
+### Class `FileUtil`
+`FileUtil` đọc và ghi danh sách bản ghi dạng các trường phân cách bằng dấu phẩy, sử dụng UTF-8. Mỗi dòng là một bản ghi; các trường có dấu phẩy hoặc dấu ngoặc kép sẽ được đặt trong ngoặc kép và dấu ngoặc kép bên trong được nhân đôi. Trường không được chứa ký tự xuống dòng.
+
+```java
+import java.io.IOException;
+import java.util.ArrayList;
+import utils.FileUtil;
+
+ArrayList<String[]> records = new ArrayList<>();
+records.add(new String[] {"NV001", "Nguyễn Văn An", "12, Lê Lợi"});
+FileUtil.writeFile("data/nhanvien.txt", records);
+
+ArrayList<String[]> loadedRecords = FileUtil.readFile("data/nhanvien.txt");
+```
+
+Hai phương thức `readFile` và `writeFile` ném `IOException`; nơi gọi cần xử lý hoặc khai báo ngoại lệ để lỗi đọc/ghi không bị bỏ qua.
+
 ### 1. Class `Validation`
 Class này được tạo ra để giải quyết 2 vấn đề nhức nhối khi làm việc với Console (theo yêu cầu bẫy lỗi của môn học):
 - **Chống sập chương trình (Try-Catch):** Khi người dùng nhập chữ cái vào chỗ yêu cầu nhập số, chương trình sẽ không bị văng lỗi `InputMismatchException` mà sẽ báo lỗi và yêu cầu nhập lại.
@@ -112,4 +129,3 @@ git branch -d feature/ten-phan-viec
 ```
 
 ---
-
