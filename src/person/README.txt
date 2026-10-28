@@ -102,3 +102,13 @@ Chương trình kiểm thử in kết quả từng ca `PASS`/`FAIL` và trả m�
 - `NhanVien.getLuong()` trả về lương cơ bản cộng phụ cấp; `NhanVien.tinhLuong()` cũng tính tổng này. `toString()` hiện hiển thị riêng lương cơ bản và phụ cấp.
 - Các thao tác nhập liệu phụ thuộc vào `Scanner` được truyền vào và các hàm kiểm tra trong `Validation`.
 - `QuanLy.quanLyNhanSu()` đang điều khiển menu thêm, xóa, sửa danh sách nội bộ của đối tượng quản lý; danh sách này không được chia sẻ tự động với các đối tượng `DSNhanVien` khác.
+
+## Cập nhật ngày 28/10/2026
+
+- `QuanLy` tiếp tục kế thừa `NhanVien`, trả về vai trò `QuanLy` và có thêm đối tượng `QuanLyHoaDon` để sử dụng các chức năng quản lý hóa đơn.
+- `QuanLy.quanLyNhanSu(Scanner)` cung cấp menu thêm, xóa và sửa nhân viên thông qua danh sách nội bộ `ds`.
+- `QuanLy.phanCaLamViec(DSNhanVien, Scanner)` cho phép chọn ca 1 (6h-14h), ca 2 (14h-22h) hoặc hoàn tất. Với mỗi ca, người dùng nhập số lượng nhân viên, chọn vai trò `KeToan`, `ThuNgan` hoặc `QuanKho`, rồi chọn nhân viên bằng `MaNV`. Chương trình kiểm tra số lượng hợp lệ, vai trò khớp với mã nhân viên và không phân trùng một nhân viên trong cùng ca.
+- Danh sách phân công hiện chỉ dùng trong lúc xử lý một ca và được in ra màn hình; chương trình chưa lưu lịch phân công vào tệp hoặc thuộc tính để sử dụng lại.
+- `QuanLy.getDSNhanVien()`, `QuanLy.quanLySanPham()`, `QuanLy.duyetYeuCau()` và `QuanLy.themSuKien()` hiện chưa được triển khai đầy đủ; nội dung các phương thức này vẫn là phần ghi chú/khung chức năng.
+- `KeToan` và `QuanKho` hiện là các lớp kế thừa `NhanVien`, chưa bổ sung thuộc tính hoặc phương thức riêng.
+- `ThuNgan` kế thừa `NhanVien`, lưu tổng tiền đầu ca và danh sách hóa đơn bán hàng. `taoHoaDon(Scanner)` nhập hóa đơn rồi thêm vào danh sách; `tinhTienCuoiCa()` cộng tiền đầu ca với tổng tiền các hóa đơn bán hàng.
