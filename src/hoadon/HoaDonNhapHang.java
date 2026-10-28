@@ -43,43 +43,40 @@ public class HoaDonNhapHang extends HoaDon {
 
     @Override
     public void hienThiHoaDon() {
-        System.out.println("\n==========================================================");
-        System.out.println("                   HÓA ĐƠN NHẬP HÀNG                      ");
-        System.out.println("==========================================================");
+        System.out.println("\n\n==========================================================================================");
+        System.out.println("                                    HÓA ĐƠN NHẬP HÀNG                                      ");
+        System.out.println("==========================================================================================");
         System.out.println("Mã HĐ: " + maHoaDon + " | Ngày nhập: " + ngayLap);
         System.out.println("Nhà cung cấp: " + tenDoiTac + " (Mã: " + maNhaCungCap + ")");
         System.out.println("Thuế VAT áp dụng: " + thueVAT + "%");
-        System.out.println("----------------------------------------------------------");
+        System.out.println("------------------------------------------------------------------------------------------");
         
-        // In tiêu đề bảng
-        System.out.printf("%-5s | %-20s | %-5s | %-10s | %-10s\n", 
+        // SỬA: Tăng độ rộng cột lên 15 cho số tiền, và 25 cho tên
+        System.out.printf("%-5s | %-25s | %-5s | %15s | %15s\n", 
                 "STT", "Tên Hàng Hóa", "SL", "Giá Nhập", "T.Tiền");
-        System.out.println("----------------------------------------------------------");
+        System.out.println("------------------------------------------------------------------------------------------");
 
-        // In chi tiết
         int stt = 1;
         for (CTHoaDon ct : danhSachChiTiet) {
-            System.out.printf("%-5d | %-20s | %-5d | %-10.2f | %-10.2f\n",
+            System.out.printf("%-5d | %-25s | %-5d | %15.2f | %15.2f\n",
                     stt, ct.getTenSanPham(), ct.getSoLuong(), ct.getDonGia(), ct.tinhThanhTien());
             stt++;
         }
 
-        System.out.println("----------------------------------------------------------");
+        System.out.println("------------------------------------------------------------------------------------------");
         
-        // Tính toán để in ra cho đẹp
         double tienHang = 0;
-        for (CTHoaDon ct : danhSachChiTiet) {
-            tienHang += ct.tinhThanhTien();
-        }
+        for (CTHoaDon ct : danhSachChiTiet) tienHang += ct.tinhThanhTien();
         double tienThue = tienHang * thueVAT / 100.0;
 
-        System.out.printf("%43s %12.2f\n", "Tiền hàng:", tienHang);
-        System.out.printf("%43s %12.2f\n", "Tiền thuế VAT:", tienThue);
-        // ĐÃ THÊM: In chi phí vận chuyển
-        System.out.printf("%43s %12.2f\n", "Phí vận chuyển:", chiPhiVanChuyen); 
-        System.out.printf("%43s %12.2f\n", "TỔNG CỘNG PHẢI TRẢ:", tinhTongTien());
+        // SỬA: Căn lề phải (bỏ dấu trừ) và đẩy lề sang phải cho đẹp
+        System.out.printf("%70s %15.2f\n", "Tiền hàng:", tienHang);
+        System.out.printf("%70s %15.2f\n", "Tiền thuế VAT:", tienThue);
+        System.out.printf("%70s %15.2f\n", "Phí vận chuyển:", chiPhiVanChuyen); 
+        System.out.printf("%70s %15.2f\n", "TỔNG CỘNG PHẢI TRẢ:", tinhTongTien());
         
-        System.out.println("==========================================================");
+        System.out.println("==========================================================================================");
+        System.out.println(); // Thêm dòng trống để phân biệt hóa đơn
     }
 
     // Nhập hóa đơn nhập hàng

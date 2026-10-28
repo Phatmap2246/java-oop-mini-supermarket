@@ -7,7 +7,9 @@ public class MainTest_HoaDon {
         Scanner sc = new Scanner(System.in);
         QuanLyHoaDon ql = new QuanLyHoaDon();
         int choice = -1;
-        String filePath = "/Users/phatpeso/Desktop/Phat/OOP - 2026/Đồ án/hoadon.txt";
+        
+        // SỬA: Dùng đường dẫn tương đối để ai cũng chạy được
+        String filePath = "hoadon.txt"; 
 
         while (choice != 0) {
             System.out.println("\n================ MENU QUẢN LÝ HÓA ĐƠN ================");
