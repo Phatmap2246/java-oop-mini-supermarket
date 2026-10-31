@@ -38,6 +38,7 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 
+src/utils/temp.json
 # 6. Dữ liệu sinh ra khi chạy chương trình (Runtime data)
 hoadon.txt
 QR/            
