@@ -2,7 +2,6 @@ package dichvu;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-import utils.Nhapdulieu;
 import utils.Validation;
 
 public class Danhsachdoitac {
@@ -53,7 +52,7 @@ public class Danhsachdoitac {
         System.out.println("Tạo danh sách đối tác!");
         do {
             themDoiTac(sc);
-        } while (Nhapdulieu.luaChon(sc, "Bạn có muốn tiếp tục thêm đối tác(1/0): ", 0, 1) == 1);
+        } while (Validation.luaChon(sc, "Bạn có muốn tiếp tục thêm đối tác(1/0): ", 0, 1) == 1);
         System.out.println("Tạo dữ liệu đối tác thành công!");
     }
     public int traCuuThongTinDoiTac(String maDoiTac)
