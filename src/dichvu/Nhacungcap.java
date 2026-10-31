@@ -1,27 +1,42 @@
 package dichvu;
+import Hoadon.CTHoaDon ;
+import Hoadon.HoaDonNhapHang;
 import Sanpham.Sanpham;
-import utils.Nhapdulieu;
+import Sanpham.Quanlysanpham ;
+import utils.Validation;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 public class Nhacungcap extends Doitac{
-    private String nganhHangCungCap  ;
+    private String nganhHangCungCap  , maDonViVanChuyen;
     private long hanMucNoCong ;
-    private ArrayList<Sanpham> sanPhamCungCap ;
+    private Quanlysanpham sanPhamCungCap ;
+    private ArrayList<HoaDonNhapHang> hoaDonNhapHangs ;
     public Nhacungcap()
     {
-        nganhHangCungCap = "" ;
+        nganhHangCungCap = maDonViVanChuyen = "" ;
         hanMucNoCong = 0 ;
         super.setLoaiDoiTac("Nhà cung cấp");
-        sanPhamCungCap = new ArrayList<>() ;
+        sanPhamCungCap = new Quanlysanpham() ;
+        hoaDonNhapHangs = new ArrayList<>() ;
+        super.setMaDoiTac(Validation.taoMa("NCC%03d" , Doitac.getSoThuTuNCC()));
+        Doitac.setSoThuTuNCC(Doitac.getSoThuTuNCC()+1);
     }
-    public Nhacungcap ( String maDoiTac , String tenDoiTac , String soDienThoai , String diaChi , String maSoThue , String email , String loaiDoiTac , String nganhHangCungCap , long hanMucNoCong )
+    public Nhacungcap ( String maDoiTac , String tenDoiTac , String soDienThoai , String diaChi , String maSoThue , String email , String loaiDoiTac , String nganhHangCungCap , String maDonViVanChuyen , long hanMucNoCong  )
     {
         super(maDoiTac, tenDoiTac, soDienThoai, diaChi, maSoThue, email , loaiDoiTac);
         this.nganhHangCungCap = nganhHangCungCap;
         this.hanMucNoCong = hanMucNoCong;
-        sanPhamCungCap = new ArrayList<>() ;
+        this.maDonViVanChuyen = maDonViVanChuyen ;
+        sanPhamCungCap = new Quanlysanpham() ;
+    }
+
+    public String getMaDonViVanChuyen() {
+        return maDonViVanChuyen;
+    }
+
+    public void setMaDonViVanChuyen(String maDonViVanChuyen) {
+        this.maDonViVanChuyen = maDonViVanChuyen;
     }
 
     public String getNganhHangCungCap() {
@@ -40,49 +55,48 @@ public class Nhacungcap extends Doitac{
         return hanMucNoCong;
     }
 
-    public ArrayList<Sanpham> getSanPhamCungCap() {
+    public Quanlysanpham getSanPhamCungCap() {
         return sanPhamCungCap;
     }
 
-    public void setSanPhamCungCap(ArrayList<Sanpham> sanPhamCungCap) {
+    public void setSanPhamCungCap(Quanlysanpham sanPhamCungCap) {
         this.sanPhamCungCap = sanPhamCungCap;
     }
 
-    public void setDoiTac( Scanner sc)
+    public void setHoaDonNhapHangs(ArrayList<HoaDonNhapHang> hoaDonNhapHangs) {
+        this.hoaDonNhapHangs = hoaDonNhapHangs;
+    }
+
+    public ArrayList<HoaDonNhapHang> getHoaDonNhapHangs() {
+        return hoaDonNhapHangs;
+    }
+
+    public void setDoiTac(Scanner sc)
     {
         super.setDoiTac( sc );
         System.out.println("Nhập ngành hàng cung cấp: ");
         nganhHangCungCap = sc.nextLine() ;
-        hanMucNoCong = Nhapdulieu.nhapSoNguyen(sc , "Nhập hạn mức nợ công!") ;
+        hanMucNoCong = Validation.inputInt(sc , "Nhập hạn mức nợ công!") ;
     }
-    public void nhanDon (Sanpham sp , int soLuong , LocalDate ngayDatHang )
+    public void nhanDon ( ArrayList<CTHoaDon> ctHoaDonNhaps )
     {
-
-    }
-    public int timKiemSanPham ( String maSanPham )
-    {
-        for (int i = 0 ; i < sanPhamCungCap.size() ; i++ )
+        HoaDonNhapHang hoaDonNhapHang = new HoaDonNhapHang() ;
+        for ( CTHoaDon cthd: ctHoaDonNhaps )
         {
-            if ( sanPhamCungCap.get(i).getMaSanPham().equalsIgnoreCase(maSanPham)) return i ;
+
         }
-        return -1;
+    }
+    public void KhoiTaoDanhSachSPCungCap ( Quanlysanpham qlsp )
+    {
+        for ( Sanpham sp: qlsp.getDanhSachSanPham() )
+            if ( sp.getMaNhaCungCap().equalsIgnoreCase(super.getMaDoiTac()) )
+                sanPhamCungCap.getDanhSachSanPham().add(sp) ;
+        System.out.println("Khởi tao danh sách sản phẩm thành công!");
     }
     public void inDanhSachSanPham ()
     {
         System.out.println("Danh sách sản phẩm do nhà cung cấp " + super.getTenDoiTac() + " cung cấp!");
-        for( Sanpham sp:sanPhamCungCap )
-            System.out.println(sp);
-    }
-    public void hienThiSanPhamTraCuu ( String maSanPham )
-    {
-        int index = timKiemSanPham(maSanPham) ;
-        if ( index == -1 )
-        {
-            System.out.println("Mã sản phẩm không tồn tại!");
-            return;
-        }
-        System.out.println("Sản phẩm cần tra cứu là: ");
-        System.out.println(sanPhamCungCap.get(index));
+        sanPhamCungCap.inDanhSachSanPham();
     }
     public boolean kiemTraHanMucNoCong ()
     {

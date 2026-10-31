@@ -7,19 +7,37 @@ import java.util.Scanner;
 
 public abstract class Doitac {
     private String maDoiTac , tenDoiTac , soDienThoai , diaChi , email , maSoThue , loaiDoiTac;
+    private static int SoThuTuNCC = 1 ;
+    private static int SoThuTuDVVC = 1 ;
     public Doitac()
     {
         maDoiTac = tenDoiTac = soDienThoai = diaChi = maSoThue = email = loaiDoiTac = " " ;
     }
-    public Doitac ( String maDoiTac , String tenDoiTac , String soDienThoai , String diaChi , String maSoThue , String email , String loaiDoiTac)
+    public Doitac (  String maDoiTac , String tenDoiTac , String soDienThoai , String diaChi , String maSoThue , String email , String loaiDoiTac)
     {
-        this.maDoiTac = maDoiTac;
+        this.maDoiTac = maDoiTac ;
         this.tenDoiTac = tenDoiTac;
         this.soDienThoai = soDienThoai;
         this.diaChi = diaChi;
         this.maSoThue = maSoThue;
         this.email = email;
         this.loaiDoiTac = loaiDoiTac;
+    }
+
+    public static int getSoThuTuDVVC() {
+        return SoThuTuDVVC;
+    }
+
+    public static int getSoThuTuNCC() {
+        return SoThuTuNCC;
+    }
+
+    public static void setSoThuTuDVVC(int soThuTuDVVC) {
+        SoThuTuDVVC = soThuTuDVVC;
+    }
+
+    public static void setSoThuTuNCC(int soThuTuNCC) {
+        SoThuTuNCC = soThuTuNCC;
     }
 
     public String getLoaiDoiTac() {
@@ -79,7 +97,6 @@ public abstract class Doitac {
     }
     public void setDoiTac ( Scanner sc)
     {
-        maDoiTac = Validation.inputStringRegex(sc , "Nhập mã đối tác: " , "DT\\d{3}" , "Mã đối tác nhập sai định dạng vui lòng nhập lại(VD:DT00X)!") ;
         System.out.println("Nhập tên công ty đối tác: ");
         tenDoiTac = sc.nextLine() ;
         soDienThoai = Validation.inputStringRegex(sc , "Nhập số điện thoại: " , Validation.phoneRegex , "Nhập sai định dạng số điện thoại vui lòng nhập lại(VD:0123456789)!") ;

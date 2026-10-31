@@ -1,5 +1,7 @@
 package dichvu;
 import utils.Nhapdulieu;
+import utils.Validation;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -9,6 +11,8 @@ public class Donvivanchuyen extends Doitac {
     {
         danhSachXe = new ArrayList<>() ;
         super.setLoaiDoiTac("Đơn vị vận chuyển");
+        super.setMaDoiTac(Validation.taoMa("DVVC%03d" , Doitac.getSoThuTuDVVC()));
+        Doitac.setSoThuTuDVVC(Doitac.getSoThuTuDVVC()+1);
     }
     public Donvivanchuyen( String maDoiTac , String tenDoiTac , String soDienThoai , String diaChi , String maSoThue , String email , String loaiDoiTac , ArrayList<Xe> danhSachXe  )
     {
