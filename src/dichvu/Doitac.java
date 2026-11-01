@@ -97,11 +97,11 @@ public abstract class Doitac {
     {
         System.out.println("Nhập tên công ty đối tác: ");
         tenDoiTac = sc.nextLine() ;
-        soDienThoai = Validation.inputStringRegex(sc , "Nhập số điện thoại: " , Validation.phoneRegex , "Nhập sai định dạng số điện thoại vui lòng nhập lại(VD:0123456789)!") ;
+        soDienThoai = Validation.inputStringRegex(sc , "Nhập số điện thoại: " , Validation.PHONE_REGEX , "Nhập sai định dạng số điện thoại vui lòng nhập lại(VD:0123456789)!") ;
         System.out.println("Nhập địa chỉ: ");
         diaChi = sc.nextLine() ;
         System.out.println("Nhập Email: ");
-        email = Validation.inputStringRegex(sc , "Nhập Email: " , Validation.emailRegex , "Nhập sai định dạng email vui lòng nhập lại!");
+        email = Validation.inputStringRegex(sc , "Nhập Email: " , Validation.EMAIL_REGEX, "Nhập sai định dạng email vui lòng nhập lại!");
         System.out.println("Nhập mã số thuế: ");
         maSoThue = sc.nextLine() ;
     }

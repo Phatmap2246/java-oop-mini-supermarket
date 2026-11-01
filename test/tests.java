@@ -55,7 +55,21 @@ public class tests {
         }
     }
 
+    @Test
+    void chinhfile() throws Exception{
+        database.schemas();
+        ResultSet res = database.docFilecsvVaoBang("sanpham","test/products1.csv");
+        database.execute("""
+                update sanpham
+                set soLuong = soLuong + 1 
+                """);
+        res = database.query("select * from sanpham");
+        while(res.next()){
+            System.out.println(res.getInt("soLuong"));
+        }
+        database.ghiVaoFilecsv("sanpham","test/products1.csv");
 
+    }
     @Test
     void tuobjectvaobang() throws Exception{
         database.schemas();

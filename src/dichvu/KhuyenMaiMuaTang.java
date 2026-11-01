@@ -1,5 +1,5 @@
 package dichvu;
-import Sanpham.Sanpham;
+import sanpham.*;
 import utils.Validation;
 
 import java.time.LocalDate;
@@ -14,7 +14,7 @@ public class KhuyenMaiMuaTang extends Khuyenmai{
         soLuongMuaToiThieu = soLuongTang = 0;
         super.setLoaiKhuyenMai("Khuyến mãi mua tặng");
     }
-    public KhuyenMaiMuaTang(String maKhuyenMai , String loaiKhuyenMai , LocalDate ngayBatDau , LocalDate ngayKetThuc , long mucChiToiThieu , ArrayList<Sanpham> danhSachKhuyenMai , int soLuongMuaToiThieu , int soLuongTang)
+    public KhuyenMaiMuaTang(String maKhuyenMai , String loaiKhuyenMai , LocalDate ngayBatDau , LocalDate ngayKetThuc , long mucChiToiThieu , ArrayList<SanPham> danhSachKhuyenMai , int soLuongMuaToiThieu , int soLuongTang)
     {
         super(maKhuyenMai, loaiKhuyenMai, ngayBatDau, ngayKetThuc, mucChiToiThieu, danhSachKhuyenMai);
         this.soLuongMuaToiThieu = soLuongMuaToiThieu ;

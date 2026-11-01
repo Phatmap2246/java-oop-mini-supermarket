@@ -48,8 +48,8 @@ public class database{
                 CREATE TABLE thongtinchuyenkhoan(
                 tenNganHang VARCHAR,
                 soTaiKhoang VARCHAR,
-                maGiaoDich VARCHAR,
-                noiDungQR VARCHAR
+                maGiaoDich VARCHAR PRIMARY KEY,
+                noiDungQR VARCHAR,
                 );""");
         //Bang hoadon
         //constraint:
@@ -89,7 +89,7 @@ public class database{
                 email VARCHAR,
                 hoten VARCHAR,
                 sdt VARCHAR,
-                diachi STRUCT(soNha VARCHAR, duong VARCHAR, phuongXa VARCHAR,)
+                diachi STRUCT(soNha VARCHAR, duong VARCHAR, phuongXa VARCHAR),
                 ngsinh DATE,
                 maNV VARCHAR,
                 vaitro VARCHAR,
@@ -212,6 +212,29 @@ public class database{
         }
         catch(SQLException e) {
            System.err.println(e.getErrorCode());
+        }
+    }
+    public static ResultSet docFilecsvVaoBang(String tenBang, String pathFile){
+       try {
+         database.execute("COPY " + tenBang + " FROM " + "'" + pathFile + "'");
+         return database.query("SELECT * FROM" + tenBang);
+       }
+       catch (SQLException e){
+           System.err.println(e.getMessage());
+       } catch (Exception e) {
+           throw new RuntimeException(e);
+       }
+        System.out.println("loi doc file csv");
+       return null;
+    }
+    public static void ghiVaoFilecsv(String tenBang, String pathFile){
+        try {
+            database.query("COPY "+ tenBang + " TO "+ "'" + pathFile + "'" + "(HEADER, DELIMITER ',');");
+        }
+        catch (SQLException e){
+            System.err.println(e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
     //TODO tim cach nap cthoadon vao bang ma khong anh huong toi class

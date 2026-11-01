@@ -82,4 +82,8 @@ public abstract class SanPham {
     public void setLoaiSanPham(String loaiSanPham) {
         this.loaiSanPham = loaiSanPham;
     }
+    //TODO qua kho de lam, can tim giai phap
+    public String getMaNhaCungCap() {
+        return "";
+    }
 }
