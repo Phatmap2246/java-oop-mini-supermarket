@@ -42,25 +42,7 @@ public class KeToan extends NhanVien {
         return (long)(tinhLoiNhuan()*VAT*TNDN);
     }
 
-    public void thanhToanCongNo(Scanner sc, QuanLyHoaDon quanLyHoaDon) {
 
-        while (true) {
-            System.out.println("\n========== QUẢN LÝ CÔNG NỢ NHÀ CUNG CẤP ==========");
-            System.out.println("1. Đối chiếu phiếu nhập kho với hóa đơn");
-            System.out.println("2. Theo dõi và thanh toán công nợ đến hạn");
-            System.out.println("0. Thoát");
-            int luaChon = Validation.luaChon(sc, "Chọn chức năng: ", 0, 2);
-
-            if (luaChon == 0) {
-                return;
-            }
-            if (luaChon == 1) {
-                doiChieuVaGhiNhanCongNo(sc, quanLyHoaDon);
-            } else {
-                hienThiVaThanhToanCongNo(sc);
-            }
-        }
-    }
 
     private void doiChieuVaGhiNhanCongNo(Scanner sc, QuanLyHoaDon quanLyHoaDon) {
         String maHoaDon = Validation.inputStringRegex(sc, "Nhập mã hóa đơn nhà cung cấp: ",
@@ -87,32 +69,18 @@ public class KeToan extends NhanVien {
         System.out.println("Nhà cung cấp: " + hoaDonNhap.getTenDoiTac()
                 + " (" + hoaDonNhap.getMaNhaCungCap() + ")");
         System.out.println("Nhập các mặt hàng thực nhận trên phiếu nhập kho.");
-
-        int soMatHang;
-        do {
-            soMatHang = Validation.inputInt(sc, "Nhập số dòng mặt hàng thực nhận: ");
-            if (soMatHang <= 0) {
-                System.out.println("Số dòng mặt hàng phải lớn hơn 0.");
-            }
-        } while (soMatHang <= 0);
-
+           int soMatHang = Validation.inputInt(sc, "Nhập số dòng mặt hàng thực nhận: ");
         ArrayList<String> maSanPhamThucNhan = new ArrayList<>();
         ArrayList<Integer> soLuongThucNhan = new ArrayList<>();
-        ArrayList<Double> donGiaThucNhan = new ArrayList<>();
+        ArrayList<Long> donGiaThucNhan = new ArrayList<>();
         for (int i = 0; i < soMatHang; i++) {
             System.out.println("--- Mặt hàng thực nhận thứ " + (i + 1) + " ---");
             String maSanPham = Validation.inputStringRegex(sc, "Nhập mã sản phẩm: ",
                     CTHoaDon.MA_SP_REGEX, "Mã sản phẩm không hợp lệ!").toUpperCase();
-            int soLuong;
-            do {
-                soLuong = Validation.inputInt(sc, "Nhập số lượng thực nhận: ");
-                if (soLuong <= 0) {
-                    System.out.println("Số lượng thực nhận phải lớn hơn 0.");
-                }
-            } while (soLuong <= 0);
+                int soLuong = Validation.inputInt(sc, "Nhập số lượng thực nhận: ");
 
-            double donGia = Validation.inputDouble(sc, "Nhập đơn giá theo hóa đơn/hợp đồng: ");
-            if (!Double.isFinite(donGia) || donGia < 0) {
+            long donGia = Validation.inputLong(sc, "Nhập đơn giá theo hóa đơn/hợp đồng: ");
+            if ( donGia < 0) {
                 System.out.println("Đơn giá không hợp lệ; hủy đối chiếu.");
                 return;
             }
@@ -124,8 +92,7 @@ public class KeToan extends NhanVien {
         ArrayList<CTHoaDon> chiTietHoaDon = hoaDonNhap.getDanhSachChiTiet();
         for (int i = 0; i < chiTietHoaDon.size(); i++) {
             CTHoaDon chiTiet = chiTietHoaDon.get(i);
-            if (chiTiet.getSoLuong() <= 0 || !Double.isFinite(chiTiet.getDonGia())
-                    || chiTiet.getDonGia() < 0) {
+            if (chiTiet.getSoLuong() <= 0 ||chiTiet.getDonGia() < 0) {
                 System.out.println("Chi tiết hóa đơn có số lượng hoặc đơn giá không hợp lệ.");
                 return;
             }
@@ -188,8 +155,8 @@ public class KeToan extends NhanVien {
             }
         }
 
-        double tongTien = hoaDonNhap.tinhTongTien();
-        if (!Double.isFinite(tongTien) || tongTien < 0) {
+        Long tongTien = hoaDonNhap.tinhTongTien();
+        if ( tongTien < 0) {
             System.out.println("Tổng tiền hóa đơn không hợp lệ; không ghi nhận công nợ.");
             return;
         }
@@ -287,6 +254,26 @@ public class KeToan extends NhanVien {
                 return ngayNhan;
             }
             System.out.println("Ngày không hợp lệ. Vui lòng nhập đúng định dạng dd/MM/yyyy.");
+        }
+    }
+
+        public void thanhToanCongNo(Scanner sc, QuanLyHoaDon quanLyHoaDon) {
+
+        while (true) {
+            System.out.println("\n========== QUẢN LÝ CÔNG NỢ NHÀ CUNG CẤP ==========");
+            System.out.println("1. Đối chiếu phiếu nhập kho với hóa đơn");
+            System.out.println("2. Theo dõi và thanh toán công nợ đến hạn");
+            System.out.println("0. Thoát");
+            int luaChon = Validation.luaChon(sc, "Chọn chức năng: ", 0, 2);
+
+            if (luaChon == 0) {
+                return;
+            }
+            if (luaChon == 1) {
+                doiChieuVaGhiNhanCongNo(sc, quanLyHoaDon);
+            } else {
+                hienThiVaThanhToanCongNo(sc);
+            }
         }
     }
 
