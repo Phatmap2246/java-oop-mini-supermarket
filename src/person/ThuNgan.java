@@ -3,7 +3,6 @@ package person;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
-import hoadon.HoaDon;
 import hoadon.HoaDonBanHang;
 
 public class ThuNgan extends NhanVien {
@@ -34,6 +33,10 @@ public class ThuNgan extends NhanVien {
         HoaDonBanHang hdbh = new HoaDonBanHang();
         hdbh.nhapHoaDon(sc);
         dsHoaDonBanHang.add(hdbh);
+    }
+    public void thayCa(ThuNgan tn){
+        // ghi list hoa don vao file 
+        tn.tongTienDauCa = tinhTienCuoiCa();
     }
 
 }
