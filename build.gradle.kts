@@ -23,6 +23,8 @@ dependencies{
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("org.duckdb:duckdb_jdbc:2.0.0.0")
+    //implementation("com.google.zxing:core:3.5.4")
+    implementation("com.google.zxing:javase:3.5.4")
 }
 tasks.test {
     useJUnitPlatform()
