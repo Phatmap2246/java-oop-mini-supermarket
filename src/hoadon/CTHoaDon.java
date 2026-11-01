@@ -93,4 +93,17 @@ public class CTHoaDon {
     public void setDonGia(double donGia) {
         this.donGia = donGia;
     }
+
+    public double getChietKhau() {
+        return chietKhau;
+    }
+
+    public void setChietKhau(double chietKhau) {
+        this.chietKhau = chietKhau;
+    }
+
+    public static String getMaSpRegex() {
+        return MA_SP_REGEX;
+    }
+    
 }
