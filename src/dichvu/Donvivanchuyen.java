@@ -1,4 +1,6 @@
 package dichvu;
+import utils.Nhapdulieu;
+
 import utils.Validation;
 
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ public class Donvivanchuyen extends Doitac {
         this.danhSachXe = danhSachXe;
     }
     public void taoDanhSachXe( Scanner sc) {
+        long soLuongXe = Nhapdulieu.nhapSoNguyen(sc , "Nhập số lượng xe: ") ;
         long soLuongXe = Validation.inputLong(sc , "Nhập số lượng xe: ") ;
         for (int i = 0; i < soLuongXe; i++) {
             System.out.println("Nhập thông tin cho xe " + (i + 1) + " ! ");
@@ -75,7 +78,11 @@ public class Donvivanchuyen extends Doitac {
             System.out.println("4.Giá trên 1 km!");
             System.out.println("5.Sức chứa tối đa!");
             System.out.println("6.Giá vận chuyển cơ bản!");
+<<<<<<< HEAD
+            int luaChon = Nhapdulieu.luaChon(sc , "Nhập lựa chọn: " , 1 , 6) ;
+=======
             int luaChon = Validation.luaChon(sc , "Nhập lựa chọn: " , 1 , 6) ;
+>>>>>>> 04acdace8314b8399912a4ca5fab6b80da3a3418
             switch ( luaChon )
             {
                 case 1:

@@ -4,9 +4,9 @@ import utils.Validation;
 public class CTHoaDon {
     private String maSanPham;
     private String tenSanPham;
-    private int soLuong;
-    private Long donGia;
-    private Long chietKhau;
+    private  int soLuong;
+    private  long donGia;
+    private double chietKhau;
 
     // TODO: Tạm thời khai báo ở đây, sau này class SanPham có thể chuyển sang đó
     public static final String MA_SP_REGEX = "^SP\\d+$";
@@ -17,11 +17,12 @@ public class CTHoaDon {
         this.maSanPham = "";
         this.tenSanPham = "";
         this.soLuong = 0;
-        this.donGia = 0L;
-        this.chietKhau =0L;
+        this.donGia = 0;
+        this.chietKhau =0.0;
     }
 
-    public CTHoaDon(String maSanPham, String tenSanPham, int soLuong, Long donGia, Long chietKhau) {
+
+    public CTHoaDon(String maSanPham, String tenSanPham, int soLuong, long donGia, double chietKhau) {
         this.maSanPham = maSanPham;
         this.tenSanPham = tenSanPham;
         this.soLuong = soLuong;
@@ -48,16 +49,16 @@ public class CTHoaDon {
             this.chietKhau = 0L; // Nhập hàng mặc định không chiết khấu lẻ
         }
     }
-
-    public Long tinhThanhTien(){
-        Long tienGoc = this.soLuong * this.donGia;
-        Long tienGiam = tienGoc * (this.chietKhau / 100);
+    //TODO: Nên xem lại là CTHD nên có khuyến mãi liên kết với HD bán hàng
+    public long tinhThanhTien(){
+        long tienGoc = this.soLuong * this.donGia;
+        long tienGiam = (long) (tienGoc * (this.chietKhau / 100.0));
         return tienGoc - tienGiam;
     }
 
     public void hienThiChiTiet(){
         String ck = (chietKhau > 0) ? String.format(" (CK: %.0f%%)", chietKhau) : "";
-        System.out.printf("  - Mã SP: %-10s | Tên: %-20s | SL: %-5d | Đơn giá: %-10.2f | Thành tiền: %.2f%s\n", 
+        System.out.printf("  - Mã SP: %-10s | Tên: %-20s | SL: %-5d | Đơn giá: %-10d | Thành tiền: %d%s\n", 
                 maSanPham, tenSanPham, soLuong, donGia, tinhThanhTien(), ck);
     }
 
@@ -86,11 +87,11 @@ public class CTHoaDon {
         this.soLuong = soLuong;
     }
 
-    public Long getDonGia() {
+    public long getDonGia() {
         return donGia;
     }
 
-    public void setDonGia(Long donGia) {
+    public void setDonGia(long donGia) {
         this.donGia = donGia;
     }
 

@@ -4,7 +4,7 @@ import java.util.Scanner;
 import utils.Validation;
 
 public class HoaDonBanHang extends HoaDon {
-    private Long tienKhuyenMai;
+    private long tienKhuyenMai;
     
     // SỬA: Chứa đối tượng thanh toán (Đa hình), KHÔNG implements IThanhToan nữa
     private IThanhToan phuongThucThanhToan; 
@@ -14,26 +14,26 @@ public class HoaDonBanHang extends HoaDon {
 
     public HoaDonBanHang(String maHoaDon, String tenDoiTac) {
         super(maHoaDon, tenDoiTac);
-        this.tienKhuyenMai = 0L;
+        this.tienKhuyenMai = 0;
         this.phuongThucThanhToan = null;
         this.daThanhToan = false;
     }
 
     public HoaDonBanHang() {
         super();
-        this.tienKhuyenMai = 0L;
+        this.tienKhuyenMai = 0;
         this.phuongThucThanhToan = null;
         this.daThanhToan = false;
     }
 
     @Override 
-    public Long tinhTongTien(){
-        Long tongHang = 0L;
+    public long tinhTongTien(){
+        long tongHang = 0;
         for(CTHoaDon ct : danhSachChiTiet){
             tongHang += ct.tinhThanhTien();
         }
-        Long thanhToan = tongHang - this.tienKhuyenMai;
-        return (thanhToan > 0) ? thanhToan : 0;
+        long thanhToan = tongHang - this.tienKhuyenMai;
+        return (thanhToan > 0) ? thanhToan : 0; 
     }
    
     @Override 
@@ -47,7 +47,7 @@ public class HoaDonBanHang extends HoaDon {
         System.out.println("KH:   " + tenDoiTac);
         System.out.println("------------------------------------------------------------------------------------------");
         
-        // SỬA: Tăng độ rộng cột
+        
         System.out.printf("%-5s | %-25s | %-5s | %15s | %15s\n", 
                 "STT", "Tên Sản Phẩm", "SL", "Đơn Giá", "T.Tiền");
         System.out.println("------------------------------------------------------------------------------------------");
@@ -55,7 +55,7 @@ public class HoaDonBanHang extends HoaDon {
         int stt = 1;
         Long tongHang = 0L;
         for (CTHoaDon ct : danhSachChiTiet) {
-            System.out.printf("%-5d | %-25s | %-5d | %15.2f | %15.2f\n",
+            System.out.printf("%-5d | %-25s | %-5d | %15d | %15d\n",
                     stt, ct.getTenSanPham(), ct.getSoLuong(), ct.getDonGia(), ct.tinhThanhTien());
             tongHang += ct.tinhThanhTien();
             stt++;
@@ -66,10 +66,9 @@ public class HoaDonBanHang extends HoaDon {
         System.out.printf("%70s %15.2f\n", "Tổng tiền hàng:", tongHang);
         
         if (this.tienKhuyenMai > 0) {
-            System.out.printf("%70s -%14.2f\n", "Khuyến mãi:", this.tienKhuyenMai);
+            System.out.printf("%70s -%14d\n", "Khuyến mãi:", this.tienKhuyenMai);
         }
-        
-        System.out.printf("%70s %15.2f\n", "TỔNG THANH TOÁN:", tinhTongTien());
+        System.out.printf("%70s %15d\n", "TỔNG THANH TOÁN:", tinhTongTien());
         
         System.out.println("==========================================================================================");
         
@@ -150,8 +149,8 @@ public class HoaDonBanHang extends HoaDon {
         }
     }
     // getters - setters
-    public Long getTienKhuyenMai() { return tienKhuyenMai; }
-    public void setTienKhuyenMai(Long tienKhuyenMai) { this.tienKhuyenMai = tienKhuyenMai; }
+    public long getTienKhuyenMai() { return tienKhuyenMai; }
+    public void setTienKhuyenMai(long tienKhuyenMai) { this.tienKhuyenMai = tienKhuyenMai; }
 
     public IThanhToan getPhuongThucThanhToan() { return phuongThucThanhToan; }
     public void setPhuongThucThanhToan(IThanhToan phuongThucThanhToan) { this.phuongThucThanhToan = phuongThucThanhToan; }

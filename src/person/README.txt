@@ -102,3 +102,26 @@ Chương trình kiểm thử in kết quả từng ca `PASS`/`FAIL` và trả m�
 - `NhanVien.getLuong()` trả về lương cơ bản cộng phụ cấp; `NhanVien.tinhLuong()` cũng tính tổng này. `toString()` hiện hiển thị riêng lương cơ bản và phụ cấp.
 - Các thao tác nhập liệu phụ thuộc vào `Scanner` được truyền vào và các hàm kiểm tra trong `Validation`.
 - `QuanLy.quanLyNhanSu()` đang điều khiển menu thêm, xóa, sửa danh sách nội bộ của đối tượng quản lý; danh sách này không được chia sẻ tự động với các đối tượng `DSNhanVien` khác.
+
+## Cập nhật ngày 1/11/2026
+
+### `NhanVien.java`
+
+- Thêm `yeuCau(String maHD, Scanner sc)` làm khung nhập yêu cầu liên quan đến hóa đơn: nhận mã hóa đơn và đọc nội dung, hình thức yêu cầu từ bàn phím.
+- Việc tra cứu hóa đơn và ghi yêu cầu ra tệp hiện mới là ghi chú, chưa được triển khai.
+
+### `KeToan.java`
+
+- Thêm các danh sách doanh thu và chi phí; `tinhTongDoanhThu()` và `tinhTongChiPhi()` cộng các khoản tương ứng.
+- `tinhLoiNhuan()` lấy doanh thu trừ chi phí; `tinhLoiNhuanRong()` tính kết quả theo các tỷ lệ VAT và thuế TNDN đang khai báo trong lớp.
+- Thêm `thanhToanCongNo(Scanner, QuanLyHoaDon)` với menu đối chiếu hóa đơn nhập, theo dõi công nợ và thanh toán khoản đến hạn.
+- Khi đối chiếu, kế toán nhập mã phiếu nhập cùng mã sản phẩm, số lượng, đơn giá thực nhận; chương trình so sánh với hóa đơn trước khi ghi công nợ.
+- Công nợ ghi nhận nhà cung cấp, số tiền, ngày nhận hàng, kỳ hạn 7/15/30 ngày và trạng thái thanh toán. Dữ liệu hiện được giữ trong các danh sách của đối tượng `KeToan`, chưa lưu ra tệp.
+- Thanh toán hiện được mô phỏng bằng cách nhập ngân hàng, số tài khoản và nhấn Enter để xác nhận đã chuyển khoản; sau đó trạng thái công nợ được cập nhật.
+
+### `ThuNgan.java`
+
+- Thêm danh sách hóa đơn bán hàng của thu ngân. `taoHoaDon(Scanner)` nhập hóa đơn mới và thêm vào danh sách.
+- `tinhTienCuoiCa()` cộng tiền đầu ca với tổng tiền các hóa đơn trong danh sách.
+- `thayCa(ThuNgan)` cập nhật tiền đầu ca của thu ngân nhận ca bằng tổng tiền cuối ca của thu ngân hiện tại.
+- Việc ghi danh sách hóa đơn ra tệp khi thay ca hiện mới là ghi chú, chưa được triển khai.

@@ -49,7 +49,7 @@ public abstract class HoaDon {
 
     public static int getDemHoaDon(){ return demHoaDon; }
     
-    public abstract Long tinhTongTien();
+    public abstract long tinhTongTien();
     public abstract void hienThiHoaDon();
 
     public String getMaHoaDon() { return maHoaDon; }

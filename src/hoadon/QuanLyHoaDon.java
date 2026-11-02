@@ -33,8 +33,6 @@ public class QuanLyHoaDon {
 
             if (hd instanceof HoaDonBanHang) {
                 ((HoaDonBanHang) hd).nhapHoaDon(sc);
-            } else if (hd instanceof HoaDonNhapHang) {
-                ((HoaDonNhapHang) hd).nhapHoaDon(sc);
             }
             
             if (timKiemTheoMa(hd.getMaHoaDon()) != null) {
@@ -71,6 +69,7 @@ public class QuanLyHoaDon {
         if (hd == null) return false;
 
         int choice = -1;
+        // TODO: sửa lại bỏ sửa mã HD
         while (choice != 0) {
             System.out.println("\n--- SỬA HÓA ĐƠN: " + hd.getMaHoaDon() + " ---");
             System.out.println("1. Sửa Mã Hóa Đơn");
@@ -112,7 +111,6 @@ public class QuanLyHoaDon {
                     if (hd instanceof HoaDonBanHang) {
                         HoaDonBanHang hdBan = (HoaDonBanHang) hd;
                         if (hdBan.getPhuongThucThanhToan() != null) {
-                            // SỬA: Gọi thanh toán qua đối tượng IThanhToan
                             boolean ketQua = hdBan.getPhuongThucThanhToan().thucHienThanhToan(sc, hdBan.tinhTongTien());
                             hdBan.setDaThanhToan(ketQua);
                             System.out.println("Đã cập nhật lại thông tin thanh toán!");
@@ -130,12 +128,13 @@ public class QuanLyHoaDon {
                 case 4:
                     if (hd instanceof HoaDonBanHang) {
                         HoaDonBanHang hdBan = (HoaDonBanHang) hd;
-                        Long kmMoi = Validation.inputLong(sc, "Nhập tiền khuyến mãi mới: ");
+                        long kmMoi = Validation.inputLong(sc, "Nhập tiền khuyến mãi mới: ");
                         hdBan.setTienKhuyenMai(kmMoi);
                         System.out.println("Đã cập nhật Khuyến mãi!");
                     } else if (hd instanceof HoaDonNhapHang) {
                         HoaDonNhapHang hdNhap = (HoaDonNhapHang) hd;
-                        Long vatMoi = Validation.inputLong(sc, "Nhập thuế VAT mới (%): ");
+                        // SỬA: Thuế VAT giữ nguyên double thay vì long
+                        double vatMoi = Validation.inputDouble(sc, "Nhập thuế VAT mới (%): ");
                         hdNhap.setThueVAT(vatMoi);
                         System.out.println("Đã cập nhật Thuế VAT!");
                     }
@@ -144,7 +143,7 @@ public class QuanLyHoaDon {
                 case 5:
                     if (hd instanceof HoaDonNhapHang) {
                         HoaDonNhapHang hdNhap = (HoaDonNhapHang) hd;
-                        Long phiMoi = Validation.inputLong(sc, "Nhập phí vận chuyển mới: ");
+                        long phiMoi = Validation.inputLong(sc, "Nhập phí vận chuyển mới: ");
                         hdNhap.setChiPhiVanChuyen(phiMoi);
                         System.out.println("Đã cập nhật Phí vận chuyển!");
                     }
@@ -188,7 +187,7 @@ public class QuanLyHoaDon {
             return;
         }
         int soLuongBan = 0, soLuongNhap = 0;
-        Long tongDoanhThuBan = 0L, tongChiPhiNhap = 0L;
+        long tongDoanhThuBan = 0, tongChiPhiNhap = 0;
         
         for (HoaDon hd : this.danhSachHoaDon) {
             if (hd instanceof HoaDonBanHang) {
@@ -212,7 +211,6 @@ public class QuanLyHoaDon {
             for (HoaDon hd : this.danhSachHoaDon) {
                 if (hd instanceof HoaDonBanHang) {
                     HoaDonBanHang hdBan = (HoaDonBanHang) hd;
-                    // SỬA: Thêm trạng thái thanh toán (true/false) vào cuối
                     bw.write("BAN|" + hdBan.getMaHoaDon() + "|" + hdBan.getTenDoiTac() + "|" + hdBan.getTienKhuyenMai() + "|" + hdBan.isDaThanhToan());
                     bw.newLine();
                 } else if (hd instanceof HoaDonNhapHang) {
@@ -240,11 +238,11 @@ public class QuanLyHoaDon {
                 String[] parts = line.split("\\|", -1);
                 if (parts.length > 0) {
                     String loai = parts[0];
-                    if (loai.equals("BAN") && parts.length == 5) { // SỬA: Tăng lên 5 phần tử
+                    if (loai.equals("BAN") && parts.length == 5) { 
                         if (timKiemTheoMa(parts[1]) == null) {
                             hdHienTai = new HoaDonBanHang(parts[1], parts[2]);
+                            // SỬA: Long.parseLong (viết hoa chữ L)
                             ((HoaDonBanHang) hdHienTai).setTienKhuyenMai(Long.parseLong(parts[3]));
-                            // SỬA: Đọc trạng thái thanh toán
                             ((HoaDonBanHang) hdHienTai).setDaThanhToan(Boolean.parseBoolean(parts[4]));
                             this.danhSachHoaDon.add(hdHienTai);
                         } else {
@@ -253,14 +251,18 @@ public class QuanLyHoaDon {
                         }
                     } else if (loai.equals("NHAP") && parts.length == 6) {
                         if (timKiemTheoMa(parts[1]) == null) {
-                            hdHienTai = new HoaDonNhapHang(parts[1], parts[2], parts[3], Long.parseLong(parts[5]), Long.parseLong(parts[4]));
+                            // SỬA: Long.parseLong cho chi phí vận chuyển, Double.parseDouble cho VAT
+                            hdHienTai = new HoaDonNhapHang(parts[1], parts[2], parts[3], 
+                                        Long.parseLong(parts[5]), Double.parseDouble(parts[4]));
                             this.danhSachHoaDon.add(hdHienTai);
                         } else {
                             System.out.println("[!] Cảnh báo: Bỏ qua hóa đơn trùng mã " + parts[1] + " trong file!");
                             hdHienTai = null;
                         }
                     } else if (loai.equals("CT") && hdHienTai != null && parts.length == 6) {
-                        CTHoaDon ct = new CTHoaDon(parts[1], parts[2], Integer.parseInt(parts[3]), Long.parseLong(parts[4]), Long.parseLong(parts[5]));
+                        // SỬA: Long.parseLong cho Đơn giá, Double.parseDouble cho Chiết khấu
+                        CTHoaDon ct = new CTHoaDon(parts[1], parts[2], Integer.parseInt(parts[3]), 
+                                     Long.parseLong(parts[4]), Double.parseDouble(parts[5]));
                         hdHienTai.themChiTiet(ct);
                     }
                 }
