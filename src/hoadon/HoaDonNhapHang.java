@@ -5,7 +5,7 @@ import utils.Validation;
 
 public class HoaDonNhapHang extends HoaDon {
     private String maNhaCungCap;
-    private double chiPhiVanChuyen;
+    private long chiPhiVanChuyen;
     private double thueVAT; // Lưu ý VAT lưu dạng 10 (10%)
 
     // Mã hóa đơn nhập: Bắt đầu bằng chữ "HDN" (in hoa) và theo sau là các chữ số. VD: HDN001
@@ -18,11 +18,11 @@ public class HoaDonNhapHang extends HoaDon {
     public HoaDonNhapHang() {
         super();
         this.maNhaCungCap = "";
-        this.thueVAT = 0.0;
-        this.chiPhiVanChuyen = 0.0;
+        this.thueVAT = 0;
+        this.chiPhiVanChuyen = 0;
     }
 
-    public HoaDonNhapHang(String maHoaDon, String tenNhaCungCap, String maNhaCungCap, double chiPhiVanChuyen, double thueVAT) {
+    public HoaDonNhapHang(String maHoaDon, String tenNhaCungCap, String maNhaCungCap, long chiPhiVanChuyen, double thueVAT) {
         super(maHoaDon, tenNhaCungCap);
         this.maNhaCungCap = maNhaCungCap; // ĐÃ THÊM DÒNG NÀY
         this.chiPhiVanChuyen = chiPhiVanChuyen;
@@ -31,12 +31,12 @@ public class HoaDonNhapHang extends HoaDon {
 
     // Override
     @Override 
-    public double tinhTongTien(){
-        double tongTienHang = 0;
+    public long tinhTongTien(){
+        long tongTienHang = 0;
         for(CTHoaDon ct : danhSachChiTiet){
             tongTienHang += ct.tinhThanhTien();
         }
-        double tienThue = (tongTienHang * thueVAT) / 100; 
+        long tienThue = (long)((tongTienHang * thueVAT) / 100); 
         // ĐÃ SỬA: Cộng thêm chi phí vận chuyển
         return tongTienHang + tienThue + chiPhiVanChuyen; 
     }
@@ -51,7 +51,7 @@ public class HoaDonNhapHang extends HoaDon {
         System.out.println("Thuế VAT áp dụng: " + thueVAT + "%");
         System.out.println("------------------------------------------------------------------------------------------");
         
-        // SỬA: Tăng độ rộng cột lên 15 cho số tiền, và 25 cho tên
+        
         System.out.printf("%-5s | %-25s | %-5s | %15s | %15s\n", 
                 "STT", "Tên Hàng Hóa", "SL", "Giá Nhập", "T.Tiền");
         System.out.println("------------------------------------------------------------------------------------------");
@@ -65,15 +65,15 @@ public class HoaDonNhapHang extends HoaDon {
 
         System.out.println("------------------------------------------------------------------------------------------");
         
-        double tienHang = 0;
+        long tienHang = 0;
         for (CTHoaDon ct : danhSachChiTiet) tienHang += ct.tinhThanhTien();
-        double tienThue = tienHang * thueVAT / 100.0;
+        long tienThue = (long)(tienHang * thueVAT / 100.0);
 
         // SỬA: Căn lề phải (bỏ dấu trừ) và đẩy lề sang phải cho đẹp
-        System.out.printf("%70s %15.2f\n", "Tiền hàng:", tienHang);
-        System.out.printf("%70s %15.2f\n", "Tiền thuế VAT:", tienThue);
-        System.out.printf("%70s %15.2f\n", "Phí vận chuyển:", chiPhiVanChuyen); 
-        System.out.printf("%70s %15.2f\n", "TỔNG CỘNG PHẢI TRẢ:", tinhTongTien());
+        System.out.printf("%70s %15d\n", "Tiền hàng:", tienHang);
+        System.out.printf("%70s %15d\n", "Tiền thuế VAT:", tienThue);
+        System.out.printf("%70s %15d\n", "Phí vận chuyển:", chiPhiVanChuyen); 
+        System.out.printf("%70s %15d\n", "TỔNG CỘNG PHẢI TRẢ:", tinhTongTien());
         
         System.out.println("==========================================================================================");
         System.out.println(); // Thêm dòng trống để phân biệt hóa đơn
@@ -97,7 +97,7 @@ public class HoaDonNhapHang extends HoaDon {
             "Lỗi: Mã NCC phải bắt đầu bằng NCC và theo sau là số!");
             
         this.thueVAT = Validation.inputDouble(sc, "Nhập thuế VAT (%): ");
-        this.chiPhiVanChuyen = Validation.inputDouble(sc, "Nhập chi phí vận chuyển (VND): ");
+        this.chiPhiVanChuyen = Validation.inputLong(sc, "Nhập chi phí vận chuyển (VND): ");
 
         System.out.println("--- Nhập danh sách sản phẩm nhập ---");
         while (true) {
@@ -131,11 +131,11 @@ public class HoaDonNhapHang extends HoaDon {
     }
 
 // Getter/Setter cho chi phí vận chuyển
-    public double getChiPhiVanChuyen() {
+    public long getChiPhiVanChuyen() {
         return chiPhiVanChuyen;
     }
 
-    public void setChiPhiVanChuyen(double chiPhiVanChuyen) {
+    public void setChiPhiVanChuyen(long chiPhiVanChuyen) {
         this.chiPhiVanChuyen = chiPhiVanChuyen;
     }
 }
