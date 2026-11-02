@@ -19,7 +19,7 @@ public class ThanhToanChuyenKhoan implements IThanhToan {
         this.noiDungQR = "";
     }
 
-    public String taoMaQR(double tongTien) {
+    public String taoMaQR(Long tongTien) {
         this.maGiaoDich = "FT" + (100000 + new Random().nextInt(900000));
         
         this.noiDungQR = "Chuyen tien den: " + tenNganHang + 
@@ -47,7 +47,7 @@ public class ThanhToanChuyenKhoan implements IThanhToan {
     }
 
     @Override 
-    public boolean thucHienThanhToan(Scanner sc, double tongTien) {
+    public boolean thucHienThanhToan(Scanner sc, Long tongTien) {
         System.out.println("\n[Hệ thống] Đang chờ thanh toán từ ngân hàng " + tenNganHang + "...");
         System.out.println("[Hệ thống] Mã giao dịch: " + this.maGiaoDich);
         

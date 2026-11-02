@@ -4,9 +4,9 @@ import utils.Validation;
 public class CTHoaDon {
     private String maSanPham;
     private String tenSanPham;
-    private  int soLuong;
-    private  double donGia;
-    private double chietKhau;
+    private int soLuong;
+    private Long donGia;
+    private Long chietKhau;
 
     // TODO: Tạm thời khai báo ở đây, sau này class SanPham có thể chuyển sang đó
     public static final String MA_SP_REGEX = "^SP\\d+$";
@@ -17,11 +17,11 @@ public class CTHoaDon {
         this.maSanPham = "";
         this.tenSanPham = "";
         this.soLuong = 0;
-        this.donGia = 0.0;
-        this.chietKhau =0.0;
+        this.donGia = 0L;
+        this.chietKhau =0L;
     }
 
-    public CTHoaDon(String maSanPham, String tenSanPham, int soLuong, double donGia, double chietKhau) {
+    public CTHoaDon(String maSanPham, String tenSanPham, int soLuong, Long donGia, Long chietKhau) {
         this.maSanPham = maSanPham;
         this.tenSanPham = tenSanPham;
         this.soLuong = soLuong;
@@ -35,23 +35,23 @@ public class CTHoaDon {
         System.out.print("Nhập tên sản phẩm: ");
         this.tenSanPham = sc.nextLine();
         this.soLuong = Validation.inputInt(sc, "Nhập số lượng: ");
-        this.donGia = Validation.inputDouble(sc, "Nhập đơn giá: ");
+        this.donGia = Validation.inputLong(sc, "Nhập đơn giá: ");
         
         // Hỏi xem có phải đang nhập hóa đơn bán hàng không
         if (isBanHang) {
-            this.chietKhau = Validation.inputDouble(sc, "Nhập % chiết khấu sản phẩm (Nhập 0 nếu không có): ");
+            this.chietKhau = Validation.inputLong(sc, "Nhập % chiết khấu sản phẩm (Nhập 0 nếu không có): ");
             if (this.chietKhau < 0 || this.chietKhau > 100) {
                 System.out.println("[!] Chiết khấu không hợp lệ, đặt về 0%.");
-                this.chietKhau = 0;
+                this.chietKhau = 0L;
             }
         } else {
-            this.chietKhau = 0; // Nhập hàng mặc định không chiết khấu lẻ
+            this.chietKhau = 0L; // Nhập hàng mặc định không chiết khấu lẻ
         }
     }
 
-    public double tinhThanhTien(){
-        double tienGoc = this.soLuong * this.donGia;
-        double tienGiam = tienGoc * (this.chietKhau / 100.0);
+    public Long tinhThanhTien(){
+        Long tienGoc = this.soLuong * this.donGia;
+        Long tienGiam = tienGoc * (this.chietKhau / 100);
         return tienGoc - tienGiam;
     }
 
@@ -86,19 +86,19 @@ public class CTHoaDon {
         this.soLuong = soLuong;
     }
 
-    public double getDonGia() {
+    public Long getDonGia() {
         return donGia;
     }
 
-    public void setDonGia(double donGia) {
+    public void setDonGia(Long donGia) {
         this.donGia = donGia;
     }
 
-    public double getChietKhau() {
+    public Long getChietKhau() {
         return chietKhau;
     }
 
-    public void setChietKhau(double chietKhau) {
+    public void setChietKhau(Long chietKhau) {
         this.chietKhau = chietKhau;
     }
 

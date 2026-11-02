@@ -5,8 +5,8 @@ import java.time.LocalDate;
 public abstract class SanPham {
     private String maSanPham;
     private String tenSanPham;
-    private double giaGoc;
-    private double giaBan;
+    private Long giaGoc;
+    private Long giaBan;
     private LocalDate ngayNhap;
     private int soLuong;
     private String loaiSanPham;
@@ -22,19 +22,19 @@ public abstract class SanPham {
         this.tenSanPham = tenSanPham;
     }
 
-    public double getGiaGoc() {
+    public Long getGiaGoc() {
         return giaGoc;
     }
 
-    public void setGiaGoc(double giaGoc) {
+    public void setGiaGoc(Long giaGoc) {
         this.giaGoc = giaGoc;
     }
 
-    public double getGiaBan() {
+    public Long getGiaBan() {
         return giaBan;
     }
 
-    public void setGiaBan(double giaBan) {
+    public void setGiaBan(Long giaBan) {
         this.giaBan = giaBan;
     }
 
@@ -62,7 +62,7 @@ public abstract class SanPham {
         this.maSanPham = maSanPham;
     }
 
-    public SanPham(int soLuong, LocalDate ngayNhap, double giaBan, String tenSanPham, String maSanPham, double giaGoc, String loaiSanPham) {
+    public SanPham(int soLuong, LocalDate ngayNhap, Long giaBan, String tenSanPham, String maSanPham, Long giaGoc, String loaiSanPham) {
         this.soLuong = soLuong;
         this.ngayNhap = ngayNhap;
         this.giaBan = giaBan;

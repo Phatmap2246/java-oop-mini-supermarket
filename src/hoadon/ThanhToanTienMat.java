@@ -4,20 +4,20 @@ import java.util.Scanner;
 import utils.Validation;
 
 public class ThanhToanTienMat implements IThanhToan {
-    private double tienKhachDua;
-    private double tienThua;
+    private Long tienKhachDua;
+    private Long tienThua;
 
     public ThanhToanTienMat() {}
 
-    public ThanhToanTienMat(double tienKhachDua, double tienThua){
+    public ThanhToanTienMat(Long tienKhachDua, Long tienThua){
         this.tienKhachDua = tienKhachDua;
         this.tienThua = tienThua;
     }
 
     // Ghi đè Interface
     @Override 
-    public boolean thucHienThanhToan(Scanner sc, double tongTien){
-        this.tienKhachDua = Validation.inputDouble(sc, "Nhap so tien khach dua: ");
+    public boolean thucHienThanhToan(Scanner sc, Long tongTien){
+        this.tienKhachDua = Validation.inputLong(sc, "Nhap so tien khach dua: ");
         if (this.tienKhachDua >= tongTien) {
             this.tienThua = this.tienKhachDua - tongTien;
             return true;
@@ -37,6 +37,6 @@ public class ThanhToanTienMat implements IThanhToan {
         System.out.println(" - Ghi chu: Da kiem tra du tien va da thoi lai cho khach.");
     }
 
-    public double getTienKhachDua() { return tienKhachDua; }
-    public double getTienThua() { return tienThua; }
+    public Long getTienKhachDua() { return tienKhachDua; }
+    public Long getTienThua() { return tienThua; }
 }

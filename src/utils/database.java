@@ -38,8 +38,8 @@ public class database{
                maSanPham VARCHAR PRIMARY KEY,
                loaiSanPham VARCHAR,
                tenSanPham VARCHAR,
-               giaGoc DOUBLE,
-               giaBan DOUBLE,
+               giaGoc LONG,
+               giaBan LONG,
                ngayNhap DATE,
                hanSuDung DATE DEFAULT NULL,
                soLuong INTEGER
@@ -63,15 +63,15 @@ public class database{
                 maHoaDon VARCHAR PRIMARY KEY,
                 ngayLap DATE,
                 tenDoiTac VARCHAR,
-                tienKhuyenMai DOUBLE,
+                tienKhuyenMai LONG,
                 phuongThucThanhToan VARCHAR,
                 maGiaoDich VARCHAR REFERENCES thongtinchuyenkhoan(maGiaoDich),
-                tienKhachDua DOUBLE,
-                tienThua DOUBLE,
+                tienKhachDua LONG,
+                tienThua LONG,
                 daThanhToan BOOL,
                 maNhaCungCap VARCHAR,
-                chiPhiVanChuyen DOUBLE,
-                thueVAT DOUBLE
+                chiPhiVanChuyen LONG,
+                thueVAT LONG
                 );
                 """);
         database.execute("""
@@ -80,8 +80,8 @@ public class database{
                 maSanPham VARCHAR REFERENCES sanpham(maSanPham),
                 tenSanPham VARCHAR,
                 soLuong INTEGER,
-                donGia DOUBLE,
-                chietKhau DOUBLE
+                donGia LONG,
+                chietKhau LONG
                 );
                 """);
         database.execute("""
@@ -104,8 +104,8 @@ public class database{
             ThucPham sp = new ThucPham();
             sp.setMaSanPham(res.getString("maSanPham"));
             sp.setTenSanPham(res.getString("tenSanPham"));
-            sp.setGiaGoc(res.getDouble("giaGoc"));
-            sp.setGiaBan(res.getDouble("giaBan"));
+            sp.setGiaGoc(res.getLong("giaGoc"));
+            sp.setGiaBan(res.getLong("giaBan"));
             sp.setNgayNhap(res.getDate("ngayNhap").toLocalDate());
             sp.setHanSudung(res.getDate("hanSuDung").toLocalDate());
             sp.setSoLuong(res.getInt("soLuong"));
@@ -116,8 +116,8 @@ public class database{
             DoGiaDung sp = new DoGiaDung();
             sp.setMaSanPham(res.getString("maSanPham"));
             sp.setTenSanPham(res.getString("tenSanPham"));
-            sp.setGiaGoc(res.getDouble("giaGoc"));
-            sp.setGiaBan(res.getDouble("giaBan"));
+            sp.setGiaGoc(res.getLong("giaGoc"));
+            sp.setGiaBan(res.getLong("giaBan"));
             sp.setNgayNhap(res.getDate("ngayNhap").toLocalDate());
             sp.setSoLuong(res.getInt("soLuong"));
             sp.setLoaiSanPham(res.getString("loaiSanPham"));
@@ -127,8 +127,8 @@ public class database{
             DoTieuDung sp = new DoTieuDung();
             sp.setMaSanPham(res.getString("maSanPham"));
             sp.setTenSanPham(res.getString("tenSanPham"));
-            sp.setGiaGoc(res.getDouble("giaGoc"));
-            sp.setGiaBan(res.getDouble("giaBan"));
+            sp.setGiaGoc(res.getLong("giaGoc"));
+            sp.setGiaBan(res.getLong("giaBan"));
             sp.setNgayNhap(res.getDate("ngayNhap").toLocalDate());
             sp.setSoLuong(res.getInt("soLuong"));
             sp.setLoaiSanPham(res.getString("loaiSanPham"));
@@ -144,8 +144,8 @@ public class database{
            hd.setNgayLap(res.getDate("ngayLap").toLocalDate());
            hd.setTenDoiTac(res.getString("tenDoiTac"));
            hd.setMaNhaCungCap(res.getString("maNhaCungCap"));
-           hd.setChiPhiVanChuyen(res.getDouble("chiPhiVanChuyen"));
-           hd.setThueVAT(res.getDouble("thueVAT"));
+           hd.setChiPhiVanChuyen(res.getLong("chiPhiVanChuyen"));
+           hd.setThueVAT(res.getLong("thueVAT"));
            return hd;
        }
        else if(res.getString("maHoaDon").matches(HoaDonBanHang.MA_HD_BAN_REGEX)){
@@ -153,7 +153,7 @@ public class database{
             hd.setMaHoaDon(res.getString("maHoaDon"));
             hd.setNgayLap(res.getDate("ngayLap").toLocalDate());
             hd.setTenDoiTac(res.getString("tenDoiTac"));
-            hd.setTienKhuyenMai(res.getDouble("tienKhuyenMai"));
+            hd.setTienKhuyenMai(res.getLong("tienKhuyenMai"));
             //TODO tìm giải pháp cho chuyển phương thức chuyển khoảng vào sql, sài struct hoặc chứa foreign key vào bảng thông tin chuyển khoảng?
             if(Objects.equals(res.getString("phuongThucThanhToan"), "Chuyen Khoan")){
                 PreparedStatement preped = conn.prepareStatement("select * from thongtinchuyenkhoan where maGiaoDich = (?)");
@@ -163,7 +163,7 @@ public class database{
                 hd.setPhuongThucThanhToan(new ThanhToanChuyenKhoan(res2.getString("tenNganHang"),res2.getString("soTaiKhoan")));
             }
             else{
-                hd.setPhuongThucThanhToan(new ThanhToanTienMat(res.getDouble("tienKhachDua"),res.getDouble("tienThua")));
+                hd.setPhuongThucThanhToan(new ThanhToanTienMat(res.getLong("tienKhachDua"),res.getLong("tienThua")));
             }
                 hd.setDaThanhToan(res.getBoolean("daThanhToan"));
             return hd;

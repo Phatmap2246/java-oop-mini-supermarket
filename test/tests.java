@@ -58,7 +58,7 @@ public class tests {
     @Test
     void chinhfile() throws Exception{
         database.schemas();
-        ResultSet res = database.docFilecsvVaoBang("sanpham","test/products1.csv");
+        ResultSet res = database.docFilecsvVaoBang("sanpham","test/products.csv");
         database.execute("""
                 update sanpham
                 set soLuong = soLuong + 1 
@@ -74,7 +74,7 @@ public class tests {
     void tuobjectvaobang() throws Exception{
         database.schemas();
         database.execute("insert into sanpham select * from 'test/products.csv';");
-        ThucPham tp = new ThucPham(12, LocalDate.now(),1212,"helochaocacban","SP1037",199,LocalDate.now(), "ThucPham");
+        ThucPham tp = new ThucPham(12, LocalDate.now(),1212L,"helochaocacban","SP1037",199L,LocalDate.now(), "ThucPham");
         database.napVaoBangSanPham(tp);
         ResultSet res = database.query("select * from sanpham");
         while(res.next()){

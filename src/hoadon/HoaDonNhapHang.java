@@ -5,8 +5,8 @@ import utils.Validation;
 
 public class HoaDonNhapHang extends HoaDon {
     private String maNhaCungCap;
-    private double chiPhiVanChuyen;
-    private double thueVAT; // Lưu ý VAT lưu dạng 10 (10%)
+    private Long chiPhiVanChuyen;
+    private Long thueVAT; // Lưu ý VAT lưu dạng 10 (10%)
 
     // Mã hóa đơn nhập: Bắt đầu bằng chữ "HDN" (in hoa) và theo sau là các chữ số. VD: HDN001
     public static final String MA_HD_NHAP_REGEX = "^HDN\\d+$";
@@ -18,11 +18,11 @@ public class HoaDonNhapHang extends HoaDon {
     public HoaDonNhapHang() {
         super();
         this.maNhaCungCap = "";
-        this.thueVAT = 0.0;
-        this.chiPhiVanChuyen = 0.0;
+        this.thueVAT = 0L;
+        this.chiPhiVanChuyen = 0L;
     }
 
-    public HoaDonNhapHang(String maHoaDon, String tenNhaCungCap, String maNhaCungCap, double chiPhiVanChuyen, double thueVAT) {
+    public HoaDonNhapHang(String maHoaDon, String tenNhaCungCap, String maNhaCungCap, Long chiPhiVanChuyen, Long thueVAT) {
         super(maHoaDon, tenNhaCungCap);
         this.maNhaCungCap = maNhaCungCap; // ĐÃ THÊM DÒNG NÀY
         this.chiPhiVanChuyen = chiPhiVanChuyen;
@@ -31,12 +31,12 @@ public class HoaDonNhapHang extends HoaDon {
 
     // Override
     @Override 
-    public double tinhTongTien(){
-        double tongTienHang = 0;
+    public Long tinhTongTien(){
+        Long tongTienHang = 0L;
         for(CTHoaDon ct : danhSachChiTiet){
             tongTienHang += ct.tinhThanhTien();
         }
-        double tienThue = (tongTienHang * thueVAT) / 100; 
+        Long tienThue = (tongTienHang * thueVAT) / 100;
         // ĐÃ SỬA: Cộng thêm chi phí vận chuyển
         return tongTienHang + tienThue + chiPhiVanChuyen; 
     }
@@ -65,9 +65,9 @@ public class HoaDonNhapHang extends HoaDon {
 
         System.out.println("------------------------------------------------------------------------------------------");
         
-        double tienHang = 0;
+        Long tienHang = 0L;
         for (CTHoaDon ct : danhSachChiTiet) tienHang += ct.tinhThanhTien();
-        double tienThue = tienHang * thueVAT / 100.0;
+        Long tienThue = tienHang * thueVAT / 100;
 
         // SỬA: Căn lề phải (bỏ dấu trừ) và đẩy lề sang phải cho đẹp
         System.out.printf("%70s %15.2f\n", "Tiền hàng:", tienHang);
@@ -96,8 +96,8 @@ public class HoaDonNhapHang extends HoaDon {
             MA_NCC_REGEX, 
             "Lỗi: Mã NCC phải bắt đầu bằng NCC và theo sau là số!");
             
-        this.thueVAT = Validation.inputDouble(sc, "Nhập thuế VAT (%): ");
-        this.chiPhiVanChuyen = Validation.inputDouble(sc, "Nhập chi phí vận chuyển (VND): ");
+        this.thueVAT = Validation.inputLong(sc, "Nhập thuế VAT (%): ");
+        this.chiPhiVanChuyen = Validation.inputLong(sc, "Nhập chi phí vận chuyển (VND): ");
 
         System.out.println("--- Nhập danh sách sản phẩm nhập ---");
         while (true) {
@@ -122,20 +122,20 @@ public class HoaDonNhapHang extends HoaDon {
         this.maNhaCungCap = maNhaCungCap;
     }
 
-    public double getThueVAT() {
+    public Long getThueVAT() {
         return thueVAT;
     }
 
-    public void setThueVAT(double thueVAT) {
+    public void setThueVAT(Long thueVAT) {
         this.thueVAT = thueVAT;
     }
 
 // Getter/Setter cho chi phí vận chuyển
-    public double getChiPhiVanChuyen() {
+    public Long getChiPhiVanChuyen() {
         return chiPhiVanChuyen;
     }
 
-    public void setChiPhiVanChuyen(double chiPhiVanChuyen) {
+    public void setChiPhiVanChuyen(Long chiPhiVanChuyen) {
         this.chiPhiVanChuyen = chiPhiVanChuyen;
     }
 }

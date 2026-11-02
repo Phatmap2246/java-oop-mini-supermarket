@@ -130,12 +130,12 @@ public class QuanLyHoaDon {
                 case 4:
                     if (hd instanceof HoaDonBanHang) {
                         HoaDonBanHang hdBan = (HoaDonBanHang) hd;
-                        double kmMoi = Validation.inputDouble(sc, "Nhập tiền khuyến mãi mới: ");
+                        Long kmMoi = Validation.inputLong(sc, "Nhập tiền khuyến mãi mới: ");
                         hdBan.setTienKhuyenMai(kmMoi);
                         System.out.println("Đã cập nhật Khuyến mãi!");
                     } else if (hd instanceof HoaDonNhapHang) {
                         HoaDonNhapHang hdNhap = (HoaDonNhapHang) hd;
-                        double vatMoi = Validation.inputDouble(sc, "Nhập thuế VAT mới (%): ");
+                        Long vatMoi = Validation.inputLong(sc, "Nhập thuế VAT mới (%): ");
                         hdNhap.setThueVAT(vatMoi);
                         System.out.println("Đã cập nhật Thuế VAT!");
                     }
@@ -144,7 +144,7 @@ public class QuanLyHoaDon {
                 case 5:
                     if (hd instanceof HoaDonNhapHang) {
                         HoaDonNhapHang hdNhap = (HoaDonNhapHang) hd;
-                        double phiMoi = Validation.inputDouble(sc, "Nhập phí vận chuyển mới: ");
+                        Long phiMoi = Validation.inputLong(sc, "Nhập phí vận chuyển mới: ");
                         hdNhap.setChiPhiVanChuyen(phiMoi);
                         System.out.println("Đã cập nhật Phí vận chuyển!");
                     }
@@ -188,7 +188,7 @@ public class QuanLyHoaDon {
             return;
         }
         int soLuongBan = 0, soLuongNhap = 0;
-        double tongDoanhThuBan = 0, tongChiPhiNhap = 0;
+        Long tongDoanhThuBan = 0L, tongChiPhiNhap = 0L;
         
         for (HoaDon hd : this.danhSachHoaDon) {
             if (hd instanceof HoaDonBanHang) {
@@ -243,7 +243,7 @@ public class QuanLyHoaDon {
                     if (loai.equals("BAN") && parts.length == 5) { // SỬA: Tăng lên 5 phần tử
                         if (timKiemTheoMa(parts[1]) == null) {
                             hdHienTai = new HoaDonBanHang(parts[1], parts[2]);
-                            ((HoaDonBanHang) hdHienTai).setTienKhuyenMai(Double.parseDouble(parts[3]));
+                            ((HoaDonBanHang) hdHienTai).setTienKhuyenMai(Long.parseLong(parts[3]));
                             // SỬA: Đọc trạng thái thanh toán
                             ((HoaDonBanHang) hdHienTai).setDaThanhToan(Boolean.parseBoolean(parts[4]));
                             this.danhSachHoaDon.add(hdHienTai);
@@ -253,14 +253,14 @@ public class QuanLyHoaDon {
                         }
                     } else if (loai.equals("NHAP") && parts.length == 6) {
                         if (timKiemTheoMa(parts[1]) == null) {
-                            hdHienTai = new HoaDonNhapHang(parts[1], parts[2], parts[3], Double.parseDouble(parts[5]), Double.parseDouble(parts[4]));
+                            hdHienTai = new HoaDonNhapHang(parts[1], parts[2], parts[3], Long.parseLong(parts[5]), Long.parseLong(parts[4]));
                             this.danhSachHoaDon.add(hdHienTai);
                         } else {
                             System.out.println("[!] Cảnh báo: Bỏ qua hóa đơn trùng mã " + parts[1] + " trong file!");
                             hdHienTai = null;
                         }
                     } else if (loai.equals("CT") && hdHienTai != null && parts.length == 6) {
-                        CTHoaDon ct = new CTHoaDon(parts[1], parts[2], Integer.parseInt(parts[3]), Double.parseDouble(parts[4]), Double.parseDouble(parts[5]));
+                        CTHoaDon ct = new CTHoaDon(parts[1], parts[2], Integer.parseInt(parts[3]), Long.parseLong(parts[4]), Long.parseLong(parts[5]));
                         hdHienTai.themChiTiet(ct);
                     }
                 }
