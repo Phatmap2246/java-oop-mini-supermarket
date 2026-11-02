@@ -21,6 +21,7 @@ public class CTHoaDon {
         this.chietKhau =0.0;
     }
 
+
     public CTHoaDon(String maSanPham, String tenSanPham, int soLuong, long donGia, double chietKhau) {
         this.maSanPham = maSanPham;
         this.tenSanPham = tenSanPham;
@@ -48,7 +49,7 @@ public class CTHoaDon {
             this.chietKhau = 0; // Nhập hàng mặc định không chiết khấu lẻ
         }
     }
-
+    //TODO: Nên xem lại là CTHD nên có khuyến mãi liên kết với HD bán hàng
     public long tinhThanhTien(){
         long tienGoc = this.soLuong * this.donGia;
         long tienGiam = (long) (tienGoc * (this.chietKhau / 100.0));

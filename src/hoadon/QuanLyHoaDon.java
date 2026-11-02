@@ -33,8 +33,6 @@ public class QuanLyHoaDon {
 
             if (hd instanceof HoaDonBanHang) {
                 ((HoaDonBanHang) hd).nhapHoaDon(sc);
-            } else if (hd instanceof HoaDonNhapHang) {
-                ((HoaDonNhapHang) hd).nhapHoaDon(sc);
             }
             
             if (timKiemTheoMa(hd.getMaHoaDon()) != null) {
@@ -71,6 +69,7 @@ public class QuanLyHoaDon {
         if (hd == null) return false;
 
         int choice = -1;
+        // TODO: sửa lại bỏ sửa mã HD
         while (choice != 0) {
             System.out.println("\n--- SỬA HÓA ĐƠN: " + hd.getMaHoaDon() + " ---");
             System.out.println("1. Sửa Mã Hóa Đơn");

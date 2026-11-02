@@ -1,6 +1,6 @@
 package dichvu;
-import Hoadon.CTHoaDon ;
-import Hoadon.HoaDonNhapHang;
+import hoadon.CTHoaDon ;
+import hoadon.HoaDonNhapHang;
 import Sanpham.Sanpham;
 import Sanpham.Quanlysanpham ;
 import utils.Validation;
