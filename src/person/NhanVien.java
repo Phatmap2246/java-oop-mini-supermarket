@@ -107,4 +107,10 @@ public  class NhanVien extends Person {
         " | Vai tro: " + vaitro +
         " | Luong: " + luong + " | Phu cap trach nhiem: " + phuCapTrachNhiem ;
     }
+        public void yeuCau(String maHD, Scanner sc){
+        //tìm mã hóa đơn
+        String nd = sc.nextLine();
+        String ht = sc.nextLine();
+        //ghi yeu cau vao file: maHD, hinh thuc ,ND yeu cau
+    }
 }
