@@ -184,7 +184,8 @@ public class KeToan extends NhanVien {
         maPhieuNhapCongNo.add(maPhieuNhap);
         maNhaCungCapCongNo.add(hoaDonNhap.getMaNhaCungCap());
         tenNhaCungCapCongNo.add(hoaDonNhap.getTenDoiTac());
-        soTienCongNo.add(tongTien);
+        // TODO: Kiểm tra lại soTienNoCong có cần cần double ko !
+        soTienCongNo.add((double)(tongTien));
         ngayDenHanCongNo.add(ngayDenHan);
         daThanhToanCongNo.add(false);
         System.out.println("Đã ghi nhận công nợ " + tongTien + " VND cho nhà cung cấp "
