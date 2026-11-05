@@ -10,8 +10,6 @@ public class HoaDonBanHang extends HoaDon {
     private IThanhToan phuongThucThanhToan; 
     private boolean daThanhToan;
 
-    public static final String MA_HD_BAN_REGEX = "^HD\\d+$";
-
     public HoaDonBanHang(String maHoaDon, String tenDoiTac) {
         super(maHoaDon, tenDoiTac);
         this.tienKhuyenMai = 0;
@@ -89,7 +87,7 @@ public class HoaDonBanHang extends HoaDon {
     public void nhapHoaDon(Scanner sc) {
         this.maHoaDon = Validation.inputStringRegex(sc,  
             "Nhap ma hoa don (VD: HD001): ", 
-            MA_HD_BAN_REGEX, 
+            Validation.MA_HD_BAN_REGEX,
             "Loi: Ma HD phai bat dau bang HD va theo sau la so!");
             
         this.tenDoiTac = Validation.inputStringRegex(sc, 

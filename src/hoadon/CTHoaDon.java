@@ -9,7 +9,6 @@ public class CTHoaDon {
     private double chietKhau;
 
     // TODO: Tạm thời khai báo ở đây, sau này class SanPham có thể chuyển sang đó
-    public static final String MA_SP_REGEX = "^SP\\d+$";
     //
 
     // constructor
@@ -32,7 +31,7 @@ public class CTHoaDon {
 
     // methods
     public void nhapThongTin(Scanner sc, boolean isBanHang){
-        this.maSanPham = Validation.inputStringRegex(sc, "Nhập mã sản phẩm (VD: SP01): ", MA_SP_REGEX, "Lỗi: Mã SP phải bắt đầu bằng SP in hoa và theo sau là số!");
+        this.maSanPham = Validation.inputStringRegex(sc, "Nhập mã sản phẩm (VD: SP01): ", Validation.MA_SP_REGEX, "Lỗi: Mã SP phải bắt đầu bằng SP in hoa và theo sau là số!");
         System.out.print("Nhập tên sản phẩm: ");
         this.tenSanPham = sc.nextLine();
         this.soLuong = Validation.inputInt(sc, "Nhập số lượng: ");
@@ -103,8 +102,4 @@ public class CTHoaDon {
         this.chietKhau = chietKhau;
     }
 
-    public static String getMaSpRegex() {
-        return MA_SP_REGEX;
-    }
-    
 }

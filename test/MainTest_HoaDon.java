@@ -37,7 +37,7 @@ public class MainTest_HoaDon {
                 case 3:
                     String maTim = Validation.inputStringRegex(sc, 
                         "Nhập mã HĐ cần tìm: ", 
-                        "^[A-Z0-9]+$", 
+                        Validation.MA_HOA_DON_REGEX,
                         "Mã không hợp lệ (chỉ gồm chữ in hoa và số)!");
                     HoaDon hdTim = ql.timKiemTheoMa(maTim);
                     if (hdTim != null) {
@@ -55,7 +55,7 @@ public class MainTest_HoaDon {
                 case 5:
                     String maSua = Validation.inputStringRegex(sc, 
                         "Nhập mã HĐ cần sửa: ", 
-                        "^[A-Z0-9]+$", 
+                        Validation.MA_HOA_DON_REGEX,
                         "Mã không hợp lệ!");
                     if (ql.suaHoaDon(maSua, sc)) {
                         System.out.println("=> Đã hoàn tất quá trình sửa!");
@@ -66,7 +66,7 @@ public class MainTest_HoaDon {
                 case 6:
                     String maXoa = Validation.inputStringRegex(sc, 
                         "Nhập mã HĐ cần xóa: ", 
-                        "^[A-Z0-9]+$", 
+                        Validation.MA_HOA_DON_REGEX,
                         "Mã không hợp lệ!");
                     if (ql.xoaHoaDon(maXoa)) {
                         System.out.println("=> Đã xóa hóa đơn thành công!");

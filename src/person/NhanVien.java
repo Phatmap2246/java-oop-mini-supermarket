@@ -43,7 +43,7 @@ public  class NhanVien extends Person {
     public void setManv(Scanner sc){
         maNV = Validation.inputStringRegex
         (sc, "Nhap ma nhan vien: ",
-        Validation.MaNV_REGEX,
+        Validation.MA_NV_REGEX,
          "Ma nhan vien chua dung dinh dang (NVxxx)!" );
 
     }
@@ -57,7 +57,7 @@ public  class NhanVien extends Person {
     }
     /** Nhập và kiểm tra vai trò từ Scanner. */
     public void setVaiTro(Scanner sc){
-        vaitro = Validation.inputStringRegex(sc, "Nhap vai tro cho nhan vien:  ", "^QuanLy|KeToan|QuanKho|ThuNgan$", "Nhap sai dinh dang , hay nhap lai ( dinh dang: Carmels)");
+        vaitro = Validation.inputStringRegex(sc, "Nhap vai tro cho nhan vien:  ", Validation.VAI_TRO_NHAN_VIEN_REGEX, "Nhap sai dinh dang , hay nhap lai ( dinh dang: Carmels)");
     }
 
     /** Trả về lương cơ bản cộng phụ cấp trách nhiệm. */

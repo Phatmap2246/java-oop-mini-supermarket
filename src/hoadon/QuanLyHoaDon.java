@@ -90,7 +90,7 @@ public class QuanLyHoaDon {
             switch (choice) {
                 case 1:
                     String maMoi = Validation.inputStringRegex(sc, "Nhập mã HĐ mới: ", 
-                        (hd instanceof HoaDonBanHang) ? HoaDonBanHang.MA_HD_BAN_REGEX : HoaDonNhapHang.MA_HD_NHAP_REGEX, 
+                        (hd instanceof HoaDonBanHang) ? Validation.MA_HD_BAN_REGEX : Validation.MA_HD_NHAP_REGEX,
                         "Lỗi: Mã HĐ không đúng định dạng!");
                     HoaDon checkTrung = timKiemTheoMa(maMoi);
                     if (checkTrung != null && checkTrung != hd) {
@@ -119,7 +119,7 @@ public class QuanLyHoaDon {
                         }
                     } else if (hd instanceof HoaDonNhapHang) {
                         HoaDonNhapHang hdNhap = (HoaDonNhapHang) hd;
-                        String maNCCMoi = Validation.inputStringRegex(sc, "Nhập mã NCC mới: ", HoaDonNhapHang.MA_NCC_REGEX, "Lỗi: Mã NCC không đúng!");
+                        String maNCCMoi = Validation.inputStringRegex(sc, "Nhập mã NCC mới: ", Validation.MA_NCC_REGEX, "Lỗi: Mã NCC không đúng!");
                         hdNhap.setMaNhaCungCap(maNCCMoi);
                         System.out.println("Đã cập nhật Mã NCC!");
                     }

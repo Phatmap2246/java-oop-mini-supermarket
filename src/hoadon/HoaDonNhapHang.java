@@ -8,12 +8,6 @@ public class HoaDonNhapHang extends HoaDon {
     private long chiPhiVanChuyen;
     private double thueVAT; // Lưu ý VAT lưu dạng 10 (10%)
 
-    // Mã hóa đơn nhập: Bắt đầu bằng chữ "HDN" (in hoa) và theo sau là các chữ số. VD: HDN001
-    public static final String MA_HD_NHAP_REGEX = "^HDN\\d+$";
-    
-    // Mã nhà cung cấp: Bắt đầu bằng chữ "NCC" (in hoa) và theo sau là các chữ số. VD: NCC01
-    public static final String MA_NCC_REGEX = "^NCC\\d+$";    
-
     // Constructors
     public HoaDonNhapHang() {
         super();
@@ -83,7 +77,7 @@ public class HoaDonNhapHang extends HoaDon {
     public void nhapHoaDon(Scanner sc){
         this.maHoaDon = Validation.inputStringRegex(sc, 
             "Nhập mã hóa đơn nhập (VD: HDN001): ", 
-            MA_HD_NHAP_REGEX, 
+            Validation.MA_HD_NHAP_REGEX,
             "Lỗi: Mã HĐ nhập phải bắt đầu bằng HDN và theo sau là số!");
             
         this.tenDoiTac = Validation.inputStringRegex(sc, 
@@ -93,7 +87,7 @@ public class HoaDonNhapHang extends HoaDon {
 
         this.maNhaCungCap = Validation.inputStringRegex(sc, 
             "Nhập mã nhà cung cấp (VD: NCC01): ", 
-            MA_NCC_REGEX, 
+            Validation.MA_NCC_REGEX,
             "Lỗi: Mã NCC phải bắt đầu bằng NCC và theo sau là số!");
             
         this.thueVAT = Validation.inputDouble(sc, "Nhập thuế VAT (%): ");

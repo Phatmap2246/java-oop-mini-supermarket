@@ -208,7 +208,7 @@ public class Danhsachkhuyenmai {
                     while (true)
                     {
 
-                        String maKhuyenMai = Validation.inputStringRegex( sc , "Nhập mã khuyến mãi bạn muốn xoá: ", "KM\\d{3}" , "Mã khuyến mãi không đúng định dạng vui lòng nhập lại(ví dụ hợp lệ: KM001): ");
+                        String maKhuyenMai = Validation.inputStringRegex( sc , "Nhập mã khuyến mãi bạn muốn xoá: ", Validation.MA_KHUYEN_MAI_REGEX , "Mã khuyến mãi không đúng định dạng vui lòng nhập lại(ví dụ hợp lệ: KM001): ");
                         int index = traCuuThongTinKhuyenMai(maKhuyenMai) ;
                         if ( index == -1 )
                         {

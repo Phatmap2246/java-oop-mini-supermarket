@@ -85,7 +85,7 @@ public class DSNhanVien {
             switch(choice){
                 case 1:
                     String maMoi = Validation.inputStringRegex(
-                            sc, "Nhap ma nhan vien moi: ", Validation.MaNV_REGEX,
+                            sc, "Nhap ma nhan vien moi: ", Validation.MA_NV_REGEX,
                             "Ma nhan vien chua dung dinh dang (NVxxx)!");
                     boolean biTrung;
                     do{
@@ -96,7 +96,7 @@ public class DSNhanVien {
                                 biTrung = true;
                                 maMoi = Validation.inputStringRegex(
                                         sc, "Ma da ton tai, nhap ma nhan vien khac: ",
-                                        Validation.MaNV_REGEX,
+                                        Validation.MA_NV_REGEX,
                                         "Ma nhan vien chua dung dinh dang (NVxxx)!");
                                 break;
                             }
@@ -122,7 +122,7 @@ public class DSNhanVien {
                 case 7:
                     String vaiTro = Validation.inputStringRegex(
                             sc, "Nhap vai tro (QuanLy/KeToan/QuanKho/ThuNgan): ",
-                            "^(QuanLy|KeToan|QuanKho|ThuNgan)$",
+                            Validation.VAI_TRO_NHAN_VIEN_REGEX,
                             "Vai tro khong hop le, vui long nhap lai!");
                     nv.setVaiTro(vaiTro);
                     break;

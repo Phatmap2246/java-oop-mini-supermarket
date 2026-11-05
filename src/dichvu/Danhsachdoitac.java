@@ -69,7 +69,7 @@ public class Danhsachdoitac {
         {
             System.out.println("Mã đối tác đã tồn tại vui lòng nhập mã mới!");
             doiTac.setMaDoiTac(Validation.inputStringRegex(sc, "Nhập mã đối tác: ",
-                    "DT\\d{3}", "Mã đối tác không đúng định dạng (VD: DT001)!"));
+                    Validation.MA_DOI_TAC_REGEX, "Mã đối tác không đúng định dạng (VD: DT001)!"));
         }
     }
     public void timKiemDoiTac(String maDoiTac)
@@ -153,7 +153,7 @@ public class Danhsachdoitac {
                 break;
             case 8:
                 String maVanChuyen = Validation.inputStringRegex(sc, "Nhập mã đơn vị vận chuyển: ",
-                        "DT\\d{3}", "Mã đối tác không đúng định dạng (VD: DT001)!");
+                        Validation.MA_DOI_TAC_REGEX, "Mã đối tác không đúng định dạng (VD: DT001)!");
                 int viTri = traCuuThongTinDoiTac(maVanChuyen);
                 if (viTri == -1 || !(danhSachDoiTac.get(viTri) instanceof Donvivanchuyen))
                 {
