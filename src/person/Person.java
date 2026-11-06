@@ -35,9 +35,9 @@ public abstract class Person {
     public String getEmail(){
         return email; 
     }
-    /** Cập nhật email nếu email hiện tại khớp định dạng quy định. */
+    /** Cập nhật email nếu địa chỉ mới khớp định dạng quy định. */
     public void setEmail(String newEmail){
-        if(email != null && email.matches(Validation.EMAIL_REGEX))
+        if(newEmail != null && newEmail.matches(Validation.EMAIL_REGEX))
         email = newEmail; 
     }
     /** Nhập và kiểm tra email từ Scanner. */
@@ -53,9 +53,9 @@ public abstract class Person {
     public String getHoten(){
         return hoten; 
     }
-    /** Cập nhật họ tên nếu họ tên hiện tại khớp định dạng quy định. */
+    /** Cập nhật họ tên nếu tên mới khớp định dạng quy định. */
     public void setHoten(String newhoten){
-        if(hoten != null && hoten.matches(Validation.HOTEN_REGEX))
+        if(newhoten != null && newhoten.matches(Validation.HOTEN_REGEX))
         hoten = newhoten; 
     }
     /** Nhập và kiểm tra họ tên từ Scanner. */
@@ -71,9 +71,9 @@ public abstract class Person {
     public String getSdt(){
         return sdt; 
     }
-    /** Cập nhật số điện thoại nếu giá trị hiện tại khớp định dạng quy định. */
+    /** Cập nhật số điện thoại nếu số mới khớp định dạng quy định. */
     public void setSdt(String newSdt){
-        if(sdt != null && sdt.matches(Validation.PHONE_REGEX))
+        if(newSdt != null && newSdt.matches(Validation.PHONE_REGEX))
         sdt = newSdt; 
     }
     /** Nhập và kiểm tra số điện thoại từ Scanner. */
@@ -88,6 +88,10 @@ public abstract class Person {
     /** Trả về địa chỉ dưới dạng chuỗi. */
     public String getDiachi(){
         return diachi.toString();
+    }
+    /** Trả về đối tượng địa chỉ để lưu hoặc xử lý từng thành phần. */
+    public DiaChi getDiaChi(){
+        return diachi;
     }
     /** Nhập các thành phần địa chỉ từ Scanner. */
     public void setDiachi(Scanner sc){

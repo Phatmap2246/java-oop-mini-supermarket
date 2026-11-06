@@ -107,21 +107,59 @@ Chương trình kiểm thử in kết quả từng ca `PASS`/`FAIL` và trả m�
 
 ### `NhanVien.java`
 
-- Thêm `yeuCau(String maHD, Scanner sc)` làm khung nhập yêu cầu liên quan đến hóa đơn: nhận mã hóa đơn và đọc nội dung, hình thức yêu cầu từ bàn phím.
-- Việc tra cứu hóa đơn và ghi yêu cầu ra tệp hiện mới là ghi chú, chưa được triển khai.
+- `taoYeuCau(Scanner)` nhập nội dung yêu cầu, không chấp nhận nội dung rỗng hoặc chứa ký tự `|`, rồi ghi thêm yêu cầu vào `YeuCau.txt`.
+- Mỗi dòng có định dạng `maNV|vaiTro|noiDung|ChoDuyet`; yêu cầu được ghi bằng UTF-8 và bổ sung vào cuối tệp.
 
 ### `KeToan.java`
 
-- Thêm các danh sách doanh thu và chi phí; `tinhTongDoanhThu()` và `tinhTongChiPhi()` cộng các khoản tương ứng.
-- `tinhLoiNhuan()` lấy doanh thu trừ chi phí; `tinhLoiNhuanRong()` tính kết quả theo các tỷ lệ VAT và thuế TNDN đang khai báo trong lớp.
-- Thêm `thanhToanCongNo(Scanner, QuanLyHoaDon)` với menu đối chiếu hóa đơn nhập, theo dõi công nợ và thanh toán khoản đến hạn.
-- Khi đối chiếu, kế toán nhập mã phiếu nhập cùng mã sản phẩm, số lượng, đơn giá thực nhận; chương trình so sánh với hóa đơn trước khi ghi công nợ.
-- Công nợ ghi nhận nhà cung cấp, số tiền, ngày nhận hàng, kỳ hạn 7/15/30 ngày và trạng thái thanh toán. Dữ liệu hiện được giữ trong các danh sách của đối tượng `KeToan`, chưa lưu ra tệp.
-- Thanh toán hiện được mô phỏng bằng cách nhập ngân hàng, số tài khoản và nhấn Enter để xác nhận đã chuyển khoản; sau đó trạng thái công nợ được cập nhật.
+- Các danh sách doanh thu và chi phí được dùng để tính tổng doanh thu, tổng chi phí và lợi nhuận. `tinhLoiNhuanRong()` hiện tính lợi nhuận nhân với tỷ lệ VAT 8% và thuế TNDN 20% được khai báo trong lớp.
+- `thanhToanCongNo(Scanner, QuanLyHoaDon)` cung cấp menu đối chiếu hóa đơn nhập, xem công nợ nhà cung cấp và thanh toán khoản đến hạn.
+- Khi đối chiếu, kế toán nhập phiếu nhập cùng các mặt hàng thực nhận; số lượng và đơn giá được so sánh với hóa đơn trước khi ghi nhận công nợ.
+- Công nợ lưu thông tin hóa đơn, phiếu nhập, nhà cung cấp, số tiền, ngày nhận hàng, kỳ hạn 7/15/30 ngày và trạng thái thanh toán trong bộ nhớ của đối tượng `KeToan`.
+- Thanh toán hiện được mô phỏng bằng cách nhập ngân hàng, số tài khoản và xác nhận đã chuyển khoản; trạng thái công nợ sau đó được cập nhật trong bộ nhớ.
 
 ### `ThuNgan.java`
 
-- Thêm danh sách hóa đơn bán hàng của thu ngân. `taoHoaDon(Scanner)` nhập hóa đơn mới và thêm vào danh sách.
+- `taoHoaDonThanhToan(Scanner)` nhập hóa đơn bán hàng và thêm vào danh sách hóa đơn của thu ngân.
 - `tinhTienCuoiCa()` cộng tiền đầu ca với tổng tiền các hóa đơn trong danh sách.
-- `thayCa(ThuNgan)` cập nhật tiền đầu ca của thu ngân nhận ca bằng tổng tiền cuối ca của thu ngân hiện tại.
-- Việc ghi danh sách hóa đơn ra tệp khi thay ca hiện mới là ghi chú, chưa được triển khai.
+- `thayCa(ThuNgan)` ghi các hóa đơn trong ca ra `hoadon.LichSuHoaDon` theo định dạng các trường phân cách bằng dấu chấm phẩy nếu tệp đã tồn tại, sau đó cập nhật tiền đầu ca cho thu ngân nhận ca.
+- Thu ngân kế thừa `taoYeuCau(Scanner)` từ `NhanVien` để gửi yêu cầu vào `YeuCau.txt`; không cần định nghĩa lại hàm này trong `ThuNgan`.
+
+## Cập nhật ngày 6/11/2026
+
+### `QuanLy.java`
+
+- `duyetYeuCau(Scanner)` đọc các dòng UTF-8 từ `YeuCau.txt`, dùng cùng định dạng bốn trường phân cách bằng `|` như `NhanVien.taoYeuCau(Scanner)`.
+- Chỉ yêu cầu có trạng thái `ChoDuyet` được đưa ra duyệt. Quản lý nhập `1` để đặt trạng thái `DaDuyet` hoặc `0` để đặt `KhongDuyet`.
+- Các dòng sai định dạng được báo lỗi và giữ nguyên; yêu cầu đã xử lý cũng được giữ nguyên. Tệp chỉ được ghi lại khi có yêu cầu được duyệt.
+- Nếu chưa có `YeuCau.txt`, hàm thông báo và kết thúc; lỗi I/O được khai báo để nơi gọi xử lý.
+
+### `NhanVien.java`, `ThuNgan.java` và `KeToan.java`
+
+- Hàm tạo yêu cầu được đặt ở lớp cơ sở `NhanVien`, vì vậy các vai trò kế thừa như thu ngân và kế toán dùng chung luồng nhập, định dạng và tệp yêu cầu.
+- Mã nhân viên và vai trò được lấy từ đối tượng nhân viên; người dùng chỉ nhập nội dung yêu cầu. Trạng thái ban đầu là `ChoDuyet`.
+- Kế toán có thể gửi yêu cầu qua hàm kế thừa, ví dụ đề nghị duyệt thanh toán công nợ hoặc xin hướng xử lý chênh lệch khi đối chiếu hàng nhận. Nghiệp vụ kế toán hiện chưa tự động tạo yêu cầu khi phát sinh các trường hợp này.
+
+## Kiểm thử và đánh giá trước commit
+
+- `test/person/PersonPackageTest.java` là bộ kiểm thử Java độc lập, không cần JUnit. Bộ test bao phủ các luồng chính của 10 lớp Java trong thư mục `person`: địa chỉ, thông tin người/nhân viên, danh sách nhân viên và khách hàng, hạng thành viên/giỏ hàng, tính toán kế toán, tra cứu kho, tạo/duyệt yêu cầu và bàn giao ca thu ngân.
+- Chạy từ thư mục gốc dự án bằng PowerShell. Test được chạy trong thư mục tạm riêng để không tạo hoặc ghi đè các tệp dữ liệu của dự án:
+
+```powershell
+$repoRoot = (Get-Location).Path
+$outDir = Join-Path $env:TEMP "person-package-test-classes"
+$runDir = Join-Path $env:TEMP "person-package-test-run"
+New-Item -ItemType Directory -Force $outDir, $runDir | Out-Null
+javac -encoding UTF-8 -sourcepath src -cp "lib/*" -d $outDir test\person\PersonPackageTest.java
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+Push-Location $runDir
+java -cp "$outDir;$repoRoot\lib\*" person.PersonPackageTest
+$testResult = $LASTEXITCODE
+Pop-Location
+if ($testResult -ne 0) { exit $testResult }
+```
+
+- Kết quả gần nhất: **60 assertions đạt**. Các test đã phát hiện và sửa lỗi ở `Person.setEmail(String)`, `setHoten(String)` và `setSdt(String)`: trước đây các hàm kiểm tra giá trị cũ, khiến không thể gán giá trị mới khi đối tượng chưa có thông tin.
+- Bộ test bao phủ các luồng trọng yếu, không thay thế kiểm thử mọi nhánh nhập liệu tương tác hoặc toàn bộ nghiệp vụ cập nhật kho, hóa đơn và công nợ.
+- Biên dịch toàn bộ `src` hiện vẫn thất bại do dấu xung đột Git chưa xử lý trong `src/dichvu/Danhsachdoitac.java` (khoảng dòng 55–62). Đây là vấn đề ngoài phạm vi bộ test `person`; cần giải quyết trước khi xác nhận toàn dự án sẵn sàng build/commit.
+- `git diff --check` cũng đang báo khoảng trắng thừa trên một số dòng trong phần thay đổi hiện có của `ThuNgan.java`; cần dọn trước khi commit nếu muốn diff sạch.

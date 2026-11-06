@@ -2,7 +2,7 @@ package sanpham;
 
 import java.time.LocalDate;
 
-public abstract class ThucPham extends SanPham {
+public  class ThucPham extends SanPham {
 
     public LocalDate hanSuDung;
 

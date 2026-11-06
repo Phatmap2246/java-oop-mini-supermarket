@@ -17,7 +17,7 @@ public class KeToan extends NhanVien {
     private final ArrayList<String> maPhieuNhapCongNo = new ArrayList<>();
     private final ArrayList<String> maNhaCungCapCongNo = new ArrayList<>();
     private final ArrayList<String> tenNhaCungCapCongNo = new ArrayList<>();
-    private final ArrayList<Double> soTienCongNo = new ArrayList<>();
+    private final ArrayList<Long> soTienCongNo = new ArrayList<>();
     private final ArrayList<LocalDate> ngayDenHanCongNo = new ArrayList<>();
     private final ArrayList<Boolean> daThanhToanCongNo = new ArrayList<>();
 
@@ -185,7 +185,7 @@ public class KeToan extends NhanVien {
         maNhaCungCapCongNo.add(hoaDonNhap.getMaNhaCungCap());
         tenNhaCungCapCongNo.add(hoaDonNhap.getTenDoiTac());
         // TODO: Kiểm tra lại soTienNoCong có cần cần double ko !
-        soTienCongNo.add((double)(tongTien));
+        soTienCongNo.add((tongTien));
         ngayDenHanCongNo.add(ngayDenHan);
         daThanhToanCongNo.add(false);
         System.out.println("Đã ghi nhận công nợ " + tongTien + " VND cho nhà cung cấp "

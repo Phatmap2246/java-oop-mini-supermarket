@@ -92,12 +92,11 @@ public class DSNhanVien {
                         biTrung = false;
                         for(int i = 0; i < list.size(); i++){
                             String maTrongDanhSach = list.get(i).getMaNV();
-                            if(i != idx && maTrongDanhSach != null){
+                            if (i != idx && maTrongDanhSach != null && maTrongDanhSach.equalsIgnoreCase(maMoi)) {
                                 biTrung = true;
-                                maMoi = Validation.inputStringRegex(
-                                        sc, "Ma da ton tai, nhap ma nhan vien khac: ",
-                                        Validation.MaNV_REGEX,
-                                        "Ma nhan vien chua dung dinh dang (NVxxx)!");
+                                maMoi = Validation.inputStringRegex(sc, "Ma da ton tai, nhap ma nhan vien khac: ",
+                                    Validation.MaNV_REGEX,
+                                    "Ma nhan vien chua dung dinh dang (NVxxx)!");
                                 break;
                             }
                         }
