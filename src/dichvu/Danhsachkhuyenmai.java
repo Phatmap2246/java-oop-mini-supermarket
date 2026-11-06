@@ -84,12 +84,12 @@ public class Danhsachkhuyenmai {
     public void suaThongTinKhuyenMai( String maKhuyenMai , Scanner sc )
     {
         int index = traCuuThongTinKhuyenMai(maKhuyenMai) ;
-        Khuyenmai km = khuyenmais.get(index) ;
         if ( index == -1 )
         {
             System.out.println("Mã khuyến mãi không tồn tại!");
             return;
         }
+        Khuyenmai km = khuyenmais.get(index);
         int luaChon ;
         System.out.println("Chọn các giá trị cần sửa thông tin!");
         System.out.println("1. Ngày bắt đầu!");
@@ -112,7 +112,14 @@ public class Danhsachkhuyenmai {
                     km.setMucChiToiThieu(Validation.inputLong(sc , "Nhập mức chi tiêu tối thiểu mới: "));
                     break;
                 case 4:
-                    ((KhuyenMaiPhanTram) km).setPhanTramGiamGia(Validation.inputDouble(sc , "Nhập phần traăm khuyến mãi mới: "));
+                    double phanTramMoi = Validation.inputDouble(sc,
+                            "Nhập phần trăm khuyến mãi mới: ");
+                    while (phanTramMoi > 100) {
+                        System.out.println("[!] Phần trăm giảm giá không được vượt quá 100%.");
+                        phanTramMoi = Validation.inputDouble(sc,
+                                "Nhập phần trăm khuyến mãi mới: ");
+                    }
+                    ((KhuyenMaiPhanTram) km).setPhanTramGiamGia(phanTramMoi / 100.0);
                     break;
                 case 5:
                     ((KhuyenMaiPhanTram) km).setMucGiamToiDa(Validation.inputLong(sc , "Nhập mức giảm tối đa mới: "));
@@ -208,7 +215,7 @@ public class Danhsachkhuyenmai {
                     while (true)
                     {
 
-                        String maKhuyenMai = Validation.inputStringRegex( sc , "Nhập mã khuyến mãi bạn muốn xoá: ", Validation.MA_KHUYEN_MAI_REGEX , "Mã khuyến mãi không đúng định dạng vui lòng nhập lại(ví dụ hợp lệ: KM001): ");
+                        String maKhuyenMai = Validation.inputStringRegex( sc , "Nhập mã khuyến mãi bạn muốn xoá: ", "KM\\d{3}" , "Mã khuyến mãi không đúng định dạng vui lòng nhập lại(ví dụ hợp lệ: KM001): ");
                         int index = traCuuThongTinKhuyenMai(maKhuyenMai) ;
                         if ( index == -1 )
                         {

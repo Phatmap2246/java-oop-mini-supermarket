@@ -48,6 +48,34 @@ public class Danhsachdoitac {
         danhSachDoiTac.add(donViVanChuyen);
         System.out.println("Thêm đơn vị vận chuyển thành công!");
     }
+
+    public void taoDanhSachXeChoDonViVanChuyen(Scanner sc)
+    {
+        ArrayList<Donvivanchuyen> donViVanChuyens = new ArrayList<>();
+        for (Doitac doiTac : danhSachDoiTac)
+        {
+            if (doiTac instanceof Donvivanchuyen)
+            {
+                donViVanChuyens.add((Donvivanchuyen) doiTac);
+            }
+        }
+        if (donViVanChuyens.isEmpty())
+        {
+            System.out.println("Chưa có đơn vị vận chuyển trong danh sách đối tác.");
+            return;
+        }
+
+        System.out.println("Chọn đơn vị vận chuyển cần đăng ký xe:");
+        for (int i = 0; i < donViVanChuyens.size(); i++)
+        {
+            Doitac donVi = donViVanChuyens.get(i);
+            System.out.println((i + 1) + ". " + donVi.getTenDoiTac()
+                    + " (" + donVi.getMaDoiTac() + ")");
+        }
+        int luaChon = Validation.luaChon(sc, "Chọn đơn vị: ", 1, donViVanChuyens.size());
+        donViVanChuyens.get(luaChon - 1).taoDanhSachXe(sc);
+    }
+
     public void taoDuLieuDoiTac(Scanner sc)
     {
         System.out.println("Tạo danh sách đối tác!");
@@ -69,7 +97,7 @@ public class Danhsachdoitac {
         {
             System.out.println("Mã đối tác đã tồn tại vui lòng nhập mã mới!");
             doiTac.setMaDoiTac(Validation.inputStringRegex(sc, "Nhập mã đối tác: ",
-                    Validation.MA_DOI_TAC_REGEX, "Mã đối tác không đúng định dạng (VD: DT001)!"));
+                    "DT\\d{3}", "Mã đối tác không đúng định dạng (VD: DT001)!"));
         }
     }
     public void timKiemDoiTac(String maDoiTac)
@@ -153,7 +181,7 @@ public class Danhsachdoitac {
                 break;
             case 8:
                 String maVanChuyen = Validation.inputStringRegex(sc, "Nhập mã đơn vị vận chuyển: ",
-                        Validation.MA_DOI_TAC_REGEX, "Mã đối tác không đúng định dạng (VD: DT001)!");
+                        "DT\\d{3}", "Mã đối tác không đúng định dạng (VD: DT001)!");
                 int viTri = traCuuThongTinDoiTac(maVanChuyen);
                 if (viTri == -1 || !(danhSachDoiTac.get(viTri) instanceof Donvivanchuyen))
                 {

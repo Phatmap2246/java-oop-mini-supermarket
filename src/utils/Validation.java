@@ -17,21 +17,8 @@ public class Validation {
     // Email: Định dạng chuẩn abc@domain.com
     public static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 
-    public static final String MA_NV_REGEX = "(?i)^NV\\d{3}$";
-    public static final String MA_KH_REGEX = "(?i)^KH\\d{3,5}$";
-    public static final String MA_HD_BAN_REGEX = "(?i)^HD\\d+$";
-    public static final String MA_HD_NHAP_REGEX = "(?i)^HDN\\d+$";
-    public static final String MA_NCC_REGEX = "(?i)^NCC\\d+$";
-    public static final String MA_SP_REGEX = "(?i)^SP\\d+$";
-    public static final String MA_SP_KHUYEN_MAI_REGEX = "(?i)^SP\\d{3}$";
-    public static final String MA_KHUYEN_MAI_REGEX = "(?i)^KM\\d{3}$";
-    public static final String MA_XE_REGEX = "(?i)^XE\\d{3}$";
-    public static final String MA_DOI_TAC_REGEX = "(?i)^DT\\d{3}$";
-    public static final String MA_PHIEU_NHAP_REGEX = "(?i)^PNK\\d+$";
-    public static final String MA_HOA_DON_REGEX = "^[A-Z0-9]+$";
-    public static final String VAI_TRO_NHAN_VIEN_REGEX = "^(QuanLy|KeToan|QuanKho|ThuNgan)$";
-    public static final String TEN_NGAN_HANG_REGEX = ".+";
-    public static final String SO_TAI_KHOAN_REGEX = "\\S+";
+    public static final String MaNV_REGEX = "(?i)^NV\\d{3}$";
+    public static final String MaKH_REGEX = "(?i)^KH\\d{3,5}$";
     private static final String DATE_REGEX =
             "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/[0-9]{4}$";
 

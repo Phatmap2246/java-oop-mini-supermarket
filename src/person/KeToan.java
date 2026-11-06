@@ -46,7 +46,7 @@ public class KeToan extends NhanVien {
 
     private void doiChieuVaGhiNhanCongNo(Scanner sc, QuanLyHoaDon quanLyHoaDon) {
         String maHoaDon = Validation.inputStringRegex(sc, "Nhập mã hóa đơn nhà cung cấp: ",
-                Validation.MA_HD_NHAP_REGEX, "Mã hóa đơn nhập không hợp lệ!");
+                HoaDonNhapHang.MA_HD_NHAP_REGEX, "Mã hóa đơn nhập không hợp lệ!");
         HoaDon hoaDon = quanLyHoaDon.timKiemTheoMa(maHoaDon);
         if (!(hoaDon instanceof HoaDonNhapHang)) {
             System.out.println("Không tìm thấy hóa đơn nhập hàng có mã " + maHoaDon + ".");
@@ -76,7 +76,7 @@ public class KeToan extends NhanVien {
         for (int i = 0; i < soMatHang; i++) {
             System.out.println("--- Mặt hàng thực nhận thứ " + (i + 1) + " ---");
             String maSanPham = Validation.inputStringRegex(sc, "Nhập mã sản phẩm: ",
-                    Validation.MA_SP_REGEX, "Mã sản phẩm không hợp lệ!").toUpperCase();
+                    CTHoaDon.MA_SP_REGEX, "Mã sản phẩm không hợp lệ!").toUpperCase();
                 int soLuong = Validation.inputInt(sc, "Nhập số lượng thực nhận: ");
 
             long donGia = Validation.inputLong(sc, "Nhập đơn giá theo hóa đơn/hợp đồng: ");
@@ -162,7 +162,7 @@ public class KeToan extends NhanVien {
         }
 
         String maPhieuNhap = Validation.inputStringRegex(sc, "Nhập mã phiếu nhập kho: ",
-                Validation.MA_PHIEU_NHAP_REGEX, "Mã phiếu nhập kho phải có dạng PNK theo sau là chữ số!");
+                "^PNK\\d+$", "Mã phiếu nhập kho phải có dạng PNK theo sau là chữ số!");
         for (String maPhieuNhapDaGhi : maPhieuNhapCongNo) {
             if (maPhieuNhapDaGhi.equalsIgnoreCase(maPhieuNhap)) {
                 System.out.println("Mã phiếu nhập kho này đã được sử dụng.");
@@ -235,9 +235,9 @@ public class KeToan extends NhanVien {
         int viTriCongNo = congNoDenHan.get(luaChon - 1);
 
         String tenNganHang = Validation.inputStringRegex(sc, "Nhập tên ngân hàng nhà cung cấp: ",
-                Validation.TEN_NGAN_HANG_REGEX, "Tên ngân hàng không được để trống!");
+                ".+", "Tên ngân hàng không được để trống!");
         String soTaiKhoan = Validation.inputStringRegex(sc, "Nhập số tài khoản nhà cung cấp: ",
-                Validation.SO_TAI_KHOAN_REGEX, "Số tài khoản không được để trống!");
+                "\\S+", "Số tài khoản không được để trống!");
         System.out.printf("Lệnh chuyển khoản %.2f VND đến %s, tài khoản %s.%n",
                 soTienCongNo.get(viTriCongNo), tenNganHang, soTaiKhoan);
         System.out.print("Nhấn Enter để xác nhận chuyển khoản đã hoàn tất: ");

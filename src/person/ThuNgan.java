@@ -3,7 +3,11 @@ package person;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
+import dichvu.DanhSachSPKM;
+import dichvu.Danhsachkhuyenmai;
 import hoadon.HoaDonBanHang;
+import sanpham.QuanLySanPham;
+import sanpham.QuanLyTonKho;
 
 public class ThuNgan extends NhanVien {
     private long tongTienDauCa; 
@@ -25,13 +29,34 @@ public class ThuNgan extends NhanVien {
     }
     public long tinhTienCuoiCa(){
         long tongTienCuoiCa = 0; 
-        for(HoaDonBanHang i: dsHoaDonBanHang)
-            tongTienCuoiCa += i.tinhTongTien();
+        for(HoaDonBanHang i: dsHoaDonBanHang) {
+            if (i.isDaThanhToan()) {
+                tongTienCuoiCa += i.tinhTongTien();
+            }
+        }
         return tongTienDauCa +  tongTienCuoiCa;
     }
     public void taoHoaDon(Scanner sc){
+        taoHoaDon(sc, new DanhSachSPKM(), new Danhsachkhuyenmai());
+    }
+    public void taoHoaDon(Scanner sc, DanhSachSPKM danhSachSPKM,
+            Danhsachkhuyenmai danhSachKhuyenMai){
+        taoHoaDon(sc, danhSachSPKM, danhSachKhuyenMai, new QuanLySanPham());
+    }
+    public void taoHoaDon(Scanner sc, DanhSachSPKM danhSachSPKM,
+            Danhsachkhuyenmai danhSachKhuyenMai, QuanLySanPham quanLySanPham){
         HoaDonBanHang hdbh = new HoaDonBanHang();
-        hdbh.nhapHoaDon(sc);
+        boolean daLap = hdbh.nhapHoaDon(sc, danhSachSPKM, danhSachKhuyenMai,
+                maHoaDon -> dsHoaDonBanHang.stream()
+                        .anyMatch(hoaDon -> hoaDon.getMaHoaDon().equalsIgnoreCase(maHoaDon)),
+                quanLySanPham.getDanhSachSanPham());
+        if (!daLap) {
+            return;
+        }
+        if (hdbh.isDaThanhToan()) {
+            QuanLyTonKho.truTonKho(
+                    quanLySanPham.getDanhSachSanPham(), hdbh.getDanhSachChiTiet());
+        }
         dsHoaDonBanHang.add(hdbh);
     }
     public void thayCa(ThuNgan tn){

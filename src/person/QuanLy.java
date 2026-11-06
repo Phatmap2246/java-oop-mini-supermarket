@@ -37,12 +37,12 @@ public class QuanLy extends NhanVien {
                     ds.themNV(sc);
                     break;
                 case 2:
-                    String MaNV = Validation.inputStringRegex(sc, "Nhap ma nhan vien muon xoa", Validation.MA_NV_REGEX,
+                    String MaNV = Validation.inputStringRegex(sc, "Nhap ma nhan vien muon xoa", Validation.MaNV_REGEX,
                      "Ma nhan vien chua dung dinh dang (NVxxx)!,hay nhap lai");
                     ds.xoaNV(MaNV);
                     break;
                 case 3:
-                    String MaNV_sua = Validation.inputStringRegex(sc, "Nhap ma nhan vien muon sua", Validation.MA_NV_REGEX,
+                    String MaNV_sua = Validation.inputStringRegex(sc, "Nhap ma nhan vien muon sua", Validation.MaNV_REGEX,
                      "Ma nhan vien chua dung dinh dang (NVxxx)!,hay nhap lai");
                     ds.suaNV(MaNV_sua, sc);
                     break;
@@ -140,7 +140,7 @@ public class QuanLy extends NhanVien {
                 }
 
                 String maNV = Validation.inputStringRegex(
-                        sc, "Nhap MaNV muon phan vao ca: ", Validation.MA_NV_REGEX,
+                        sc, "Nhap MaNV muon phan vao ca: ", Validation.MaNV_REGEX,
                         "Ma nhan vien chua dung dinh dang (NVxxx)!");
                 for(NhanVien nv : ds.list){
                     if(maNV.equals(nv.getMaNV())

@@ -80,11 +80,11 @@ public class Donvivanchuyen extends Doitac {
             switch ( luaChon )
             {
                 case 1:
-                    String maXeMoi = Validation.inputStringRegex(sc , "Nhập mã số xe: " , Validation.MA_XE_REGEX , "Mã xe không đúng định dạng vui lòng nhập lại(VD: XE001)!") ;
+                    String maXeMoi = utils.Validation.inputStringRegex(sc , "Nhập mã số xe: " , "XE\\d{3}" , "Mã xe không đúng định dạng vui lòng nhập lại(VD: XE001)!") ;
                     while ( traCuuXe(maXeMoi) != -1 )
                     {
                         System.out.println("Mã xe đã tồn tại vui lòng nhập lại!");
-                        maXeMoi = Validation.inputStringRegex(sc , "Nhập mã số xe: " , Validation.MA_XE_REGEX , "Mã xe không đúng định dạng vui lòng nhập lại(VD: XE001)!") ;
+                        maXeMoi = utils.Validation.inputStringRegex(sc , "Nhập mã số xe: " , "XE\\d{3}" , "Mã xe không đúng định dạng vui lòng nhập lại(VD: XE001)!") ;
                     }
                     danhSachXe.get(index).setMaXe(maXeMoi);
                     break;
@@ -148,7 +148,7 @@ public class Donvivanchuyen extends Doitac {
         while( traCuuXe(xe.getMaXe()) != -1 )
         {
             System.out.println("Mã xe đã tồn tại vui lòng nhập mã mới!");
-            xe.setMaXe(Validation.inputStringRegex(sc , "Nhập mã xe: " , Validation.MA_XE_REGEX , "Mã xe không đúng định dạng vui lòng nhập lại!(VD hợp lệ: XE001"));
+            xe.setMaXe(utils.Validation.inputStringRegex(sc , "Nhập mã xe: " , "XE\\d{3}" , "Mã xe không đúng định dạng vui lòng nhập lại!(VD hợp lệ: XE001"));
         }
     }
 }

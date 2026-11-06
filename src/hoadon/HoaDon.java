@@ -29,7 +29,11 @@ public abstract class HoaDon {
     // SỬA: Tự động gộp số lượng nếu thêm trùng mã sản phẩm
     public void themChiTiet(CTHoaDon ct){
         for (CTHoaDon existing : this.danhSachChiTiet) {
-            if (existing.getMaSanPham().equalsIgnoreCase(ct.getMaSanPham())) {
+            if (existing.getMaSanPham().equalsIgnoreCase(ct.getMaSanPham())
+                    && existing.getTenSanPham().equalsIgnoreCase(ct.getTenSanPham())
+                    && existing.getDonGia() == ct.getDonGia()
+                    && existing.getChietKhau() == ct.getChietKhau()
+                    && existing.isHangKhuyenMai() == ct.isHangKhuyenMai()) {
                 existing.setSoLuong(existing.getSoLuong() + ct.getSoLuong());
                 return;
             }

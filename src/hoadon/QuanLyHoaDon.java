@@ -2,6 +2,13 @@ package hoadon;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import dichvu.Danhsachdoitac;
+import dichvu.Doitac;
+import dichvu.Nhacungcap;
+import dichvu.DanhSachSPKM;
+import dichvu.Danhsachkhuyenmai;
+import sanpham.QuanLySanPham;
+import sanpham.QuanLyTonKho;
 import utils.Validation;
 
 public class QuanLyHoaDon {
@@ -14,6 +21,22 @@ public class QuanLyHoaDon {
     public ArrayList<HoaDon> getDanhSachHoaDon() { return danhSachHoaDon; }
 
     public void nhapDanhSachHoaDon(Scanner sc) {
+        nhapDanhSachHoaDon(sc, null);
+    }
+
+    public void nhapDanhSachHoaDon(Scanner sc, Danhsachdoitac danhSachDoiTac) {
+        nhapDanhSachHoaDon(sc, danhSachDoiTac, new DanhSachSPKM(), new Danhsachkhuyenmai());
+    }
+
+    public void nhapDanhSachHoaDon(Scanner sc, Danhsachdoitac danhSachDoiTac,
+            DanhSachSPKM danhSachSPKM, Danhsachkhuyenmai danhSachKhuyenMai) {
+        nhapDanhSachHoaDon(sc, danhSachDoiTac, danhSachSPKM,
+                danhSachKhuyenMai, new QuanLySanPham());
+    }
+
+    public void nhapDanhSachHoaDon(Scanner sc, Danhsachdoitac danhSachDoiTac,
+            DanhSachSPKM danhSachSPKM, Danhsachkhuyenmai danhSachKhuyenMai,
+            QuanLySanPham quanLySanPham) {
         int n = Validation.inputInt(sc, "Nhập số lượng hóa đơn muốn tạo: ");
         for (int i = 0; i < n; i++) {
             System.out.println("\n--- Nhập hóa đơn thứ " + (i + 1) + " ---");
@@ -21,27 +44,113 @@ public class QuanLyHoaDon {
             System.out.println("2. Hóa đơn nhập hàng");
             int chon = Validation.inputInt(sc, "Chọn loại hóa đơn (1/2): ");
             
-            HoaDon hd = null;
             if (chon == 1) {
-                hd = new HoaDonBanHang();
+                HoaDonBanHang hoaDonBan = new HoaDonBanHang();
+                boolean daLap = hoaDonBan.nhapHoaDon(sc, danhSachSPKM, danhSachKhuyenMai,
+                        maHoaDon -> timKiemTheoMa(maHoaDon) != null,
+                        quanLySanPham.getDanhSachSanPham());
+                if (!daLap) {
+                    continue;
+                }
+                if (hoaDonBan.isDaThanhToan()
+                        && !QuanLyTonKho.truTonKho(
+                                quanLySanPham.getDanhSachSanPham(),
+                                hoaDonBan.getDanhSachChiTiet())) {
+                    System.out.println("[!] Thanh toán đã thành công nhưng không thể cập nhật kho; cần đối soát hóa đơn "
+                            + hoaDonBan.getMaHoaDon() + ".");
+                }
+                danhSachHoaDon.add(hoaDonBan);
+                System.out.println("[+] Đã thêm hóa đơn thành công!");
+                continue;
             } else if (chon == 2) {
-                hd = new HoaDonNhapHang();
+                if (danhSachDoiTac == null) {
+                    System.out.println("[!] Cần danh sách đối tác để tạo hóa đơn nhập qua quy trình quản kho.");
+                    continue;
+                }
+                taoHoaDonNhapHang(sc, danhSachDoiTac);
+                continue;
             } else {
                 System.out.println("Lựa chọn không hợp lệ, bỏ qua!");
                 continue;
             }
 
-            if (hd instanceof HoaDonBanHang) {
-                ((HoaDonBanHang) hd).nhapHoaDon(sc);
-            }
-            
-            if (timKiemTheoMa(hd.getMaHoaDon()) != null) {
-                System.out.println("[!] LỖI: Mã hóa đơn đã tồn tại! Hóa đơn này không được thêm vào.");
-            } else {
-                this.danhSachHoaDon.add(hd);
-                System.out.println("[+] Đã thêm hóa đơn thành công!");
+        }
+    }
+
+    public boolean taoHoaDonNhapHang(Scanner sc, Danhsachdoitac danhSachDoiTac) {
+        ArrayList<Nhacungcap> nhaCungCaps = new ArrayList<>();
+        for (Doitac doiTac : danhSachDoiTac.getDanhSachDoiTac()) {
+            if (doiTac instanceof Nhacungcap) {
+                nhaCungCaps.add((Nhacungcap) doiTac);
             }
         }
+
+        if (nhaCungCaps.isEmpty()) {
+            System.out.println("[!] Chưa có nhà cung cấp trong danh sách đối tác.");
+            return false;
+        }
+
+        System.out.println("--- Chọn nhà cung cấp ---");
+        for (int i = 0; i < nhaCungCaps.size(); i++) {
+            Nhacungcap nhaCungCap = nhaCungCaps.get(i);
+            System.out.println((i + 1) + ". " + nhaCungCap.getTenDoiTac()
+                    + " (" + nhaCungCap.getMaDoiTac() + ")");
+        }
+        int luaChon = Validation.luaChon(sc, "Chọn nhà cung cấp: ", 1, nhaCungCaps.size());
+
+        HoaDonNhapHang hoaDonNhap = new HoaDonNhapHang();
+        hoaDonNhap.khoiTaoThongTinChung(sc, nhaCungCaps.get(luaChon - 1));
+        if (timKiemTheoMa(hoaDonNhap.getMaHoaDon()) != null) {
+            System.out.println("[!] Mã hóa đơn đã tồn tại; phiếu nhập chưa được tạo.");
+            return false;
+        }
+
+        hoaDonNhap.quanKhoNhapChiTiet(sc);
+        danhSachHoaDon.add(hoaDonNhap);
+        System.out.println("[+] Đã tạo phiếu nhập " + hoaDonNhap.getMaHoaDon()
+                + ". Phiếu đang chờ nhà cung cấp báo phí vận chuyển.");
+        return true;
+    }
+
+    public boolean nhaCungCapBaoPhiVanChuyen(Scanner sc, String maHoaDon,
+            Danhsachdoitac danhSachDoiTac) {
+        HoaDon hoaDon = timKiemTheoMa(maHoaDon);
+        if (!(hoaDon instanceof HoaDonNhapHang)) {
+            System.out.println("[!] Không tìm thấy hóa đơn nhập có mã " + maHoaDon + ".");
+            return false;
+        }
+
+        HoaDonNhapHang hoaDonNhap = (HoaDonNhapHang) hoaDon;
+        for (Doitac doiTac : danhSachDoiTac.getDanhSachDoiTac()) {
+            if (doiTac instanceof Nhacungcap
+                    && doiTac.getMaDoiTac().equalsIgnoreCase(hoaDonNhap.getMaNhaCungCap())) {
+                return ((Nhacungcap) doiTac).baoPhiVanChuyen(sc, hoaDonNhap, danhSachDoiTac);
+            }
+        }
+
+        System.out.println("[!] Không tìm thấy nhà cung cấp của hóa đơn trong danh sách đối tác.");
+        return false;
+    }
+
+    public boolean duyetHoaDonNhapHang(String maHoaDon, QuanLySanPham quanLySanPham) {
+        HoaDon hoaDon = timKiemTheoMa(maHoaDon);
+        if (!(hoaDon instanceof HoaDonNhapHang)) {
+            System.out.println("[!] Không tìm thấy hóa đơn nhập có mã " + maHoaDon + ".");
+            return false;
+        }
+
+        HoaDonNhapHang hoaDonNhap = (HoaDonNhapHang) hoaDon;
+        if (!HoaDonNhapHang.TRANG_THAI_CHO_QUAN_LY_DUYET.equals(
+                hoaDonNhap.getTrangThai())) {
+            System.out.println("[!] Hóa đơn chưa sẵn sàng để duyệt nhập kho.");
+            return false;
+        }
+        if (!QuanLyTonKho.congTonKho(
+                quanLySanPham.getDanhSachSanPham(),
+                hoaDonNhap.getDanhSachChiTiet())) {
+            return false;
+        }
+        return hoaDonNhap.xacNhanDuyetNhapKho();
     }
 
     public void hienThiDanhSach() {
@@ -76,8 +185,7 @@ public class QuanLyHoaDon {
             System.out.println("2. Sửa Tên Đối Tác");
             
             if (hd instanceof HoaDonBanHang) {
-                System.out.println("3. Sửa Tiền Khách Đưa");
-                System.out.println("4. Sửa Tiền Khuyến Mãi");
+                System.out.println("3. Thực hiện lại thanh toán");
             } else if (hd instanceof HoaDonNhapHang) {
                 System.out.println("3. Sửa Mã Nhà Cung Cấp");
                 System.out.println("4. Sửa Thuế VAT");
@@ -90,7 +198,7 @@ public class QuanLyHoaDon {
             switch (choice) {
                 case 1:
                     String maMoi = Validation.inputStringRegex(sc, "Nhập mã HĐ mới: ", 
-                        (hd instanceof HoaDonBanHang) ? Validation.MA_HD_BAN_REGEX : Validation.MA_HD_NHAP_REGEX,
+                        (hd instanceof HoaDonBanHang) ? HoaDonBanHang.MA_HD_BAN_REGEX : HoaDonNhapHang.MA_HD_NHAP_REGEX,
                         "Lỗi: Mã HĐ không đúng định dạng!");
                     HoaDon checkTrung = timKiemTheoMa(maMoi);
                     if (checkTrung != null && checkTrung != hd) {
@@ -110,33 +218,43 @@ public class QuanLyHoaDon {
                 case 3:
                     if (hd instanceof HoaDonBanHang) {
                         HoaDonBanHang hdBan = (HoaDonBanHang) hd;
-                        if (hdBan.getPhuongThucThanhToan() != null) {
+                        if (hdBan.isDaThanhToan()) {
+                            System.out.println("[!] Hóa đơn này đã thanh toán, không thể thu tiền lần nữa.");
+                        } else if (!QuanLyTonKho.kiemTraDuTonKho(
+                                new QuanLySanPham().getDanhSachSanPham(),
+                                hdBan.getDanhSachChiTiet())) {
+                            System.out.println("[!] Chưa thể thu tiền do tồn kho không đủ.");
+                        } else if (hdBan.getPhuongThucThanhToan() != null) {
                             boolean ketQua = hdBan.getPhuongThucThanhToan().thucHienThanhToan(sc, hdBan.tinhTongTien());
                             hdBan.setDaThanhToan(ketQua);
-                            System.out.println("Đã cập nhật lại thông tin thanh toán!");
+                            if (ketQua) {
+                                QuanLyTonKho.truTonKho(
+                                        new QuanLySanPham().getDanhSachSanPham(),
+                                        hdBan.getDanhSachChiTiet());
+                                System.out.println("Thanh toán thành công; tồn kho đã cập nhật.");
+                            } else {
+                                System.out.println("Thanh toán chưa thành công; tồn kho không thay đổi.");
+                            }
                         } else {
                             System.out.println("[!] Lỗi: Hóa đơn này chưa có phương thức thanh toán!");
                         }
                     } else if (hd instanceof HoaDonNhapHang) {
                         HoaDonNhapHang hdNhap = (HoaDonNhapHang) hd;
-                        String maNCCMoi = Validation.inputStringRegex(sc, "Nhập mã NCC mới: ", Validation.MA_NCC_REGEX, "Lỗi: Mã NCC không đúng!");
+                        String maNCCMoi = Validation.inputStringRegex(sc, "Nhập mã NCC mới: ", HoaDonNhapHang.MA_NCC_REGEX, "Lỗi: Mã NCC không đúng!");
                         hdNhap.setMaNhaCungCap(maNCCMoi);
                         System.out.println("Đã cập nhật Mã NCC!");
                     }
                     break;
 
                 case 4:
-                    if (hd instanceof HoaDonBanHang) {
-                        HoaDonBanHang hdBan = (HoaDonBanHang) hd;
-                        long kmMoi = Validation.inputLong(sc, "Nhập tiền khuyến mãi mới: ");
-                        hdBan.setTienKhuyenMai(kmMoi);
-                        System.out.println("Đã cập nhật Khuyến mãi!");
-                    } else if (hd instanceof HoaDonNhapHang) {
+                    if (hd instanceof HoaDonNhapHang) {
                         HoaDonNhapHang hdNhap = (HoaDonNhapHang) hd;
                         // SỬA: Thuế VAT giữ nguyên double thay vì long
                         double vatMoi = Validation.inputDouble(sc, "Nhập thuế VAT mới (%): ");
                         hdNhap.setThueVAT(vatMoi);
                         System.out.println("Đã cập nhật Thuế VAT!");
+                    } else {
+                        System.out.println("[!] Tiền khuyến mãi được tính từ chương trình, không sửa trực tiếp.");
                     }
                     break;
 
@@ -215,11 +333,17 @@ public class QuanLyHoaDon {
                     bw.newLine();
                 } else if (hd instanceof HoaDonNhapHang) {
                     HoaDonNhapHang hdNhap = (HoaDonNhapHang) hd;
-                    bw.write("NHAP|" + hdNhap.getMaHoaDon() + "|" + hdNhap.getTenDoiTac() + "|" + hdNhap.getMaNhaCungCap() + "|" + hdNhap.getThueVAT() + "|" + hdNhap.getChiPhiVanChuyen());
+                    bw.write("NHAP|" + hdNhap.getMaHoaDon() + "|" + hdNhap.getTenDoiTac()
+                            + "|" + hdNhap.getMaNhaCungCap() + "|" + hdNhap.getThueVAT()
+                            + "|" + hdNhap.getChiPhiVanChuyen() + "|" + hdNhap.getTrangThai()
+                            + "|" + hdNhap.getMaDonViVanChuyen() + "|" + hdNhap.getMaXeVanChuyen()
+                            + "|" + hdNhap.getLoaiXeVanChuyen());
                     bw.newLine();
                 }
                 for (CTHoaDon ct : hd.getDanhSachChiTiet()) {
-                    bw.write("CT|" + ct.getMaSanPham() + "|" + ct.getTenSanPham() + "|" + ct.getSoLuong() + "|" + ct.getDonGia() + "|" + ct.getChietKhau());
+                    bw.write("CT|" + ct.getMaSanPham() + "|" + ct.getTenSanPham() + "|"
+                            + ct.getSoLuong() + "|" + ct.getDonGia() + "|"
+                            + ct.getChietKhau() + "|" + ct.isHangKhuyenMai());
                     bw.newLine();
                 }
             }
@@ -249,20 +373,26 @@ public class QuanLyHoaDon {
                             System.out.println("[!] Cảnh báo: Bỏ qua hóa đơn trùng mã " + parts[1] + " trong file!");
                             hdHienTai = null;
                         }
-                    } else if (loai.equals("NHAP") && parts.length == 6) {
+                    } else if (loai.equals("NHAP") && (parts.length == 6 || parts.length == 10)) {
                         if (timKiemTheoMa(parts[1]) == null) {
                             // SỬA: Long.parseLong cho chi phí vận chuyển, Double.parseDouble cho VAT
                             hdHienTai = new HoaDonNhapHang(parts[1], parts[2], parts[3], 
                                         Long.parseLong(parts[5]), Double.parseDouble(parts[4]));
+                            if (parts.length == 10) {
+                                ((HoaDonNhapHang) hdHienTai).setThongTinVanChuyen(
+                                        parts[7], parts[8], parts[9], parts[6]);
+                            }
                             this.danhSachHoaDon.add(hdHienTai);
                         } else {
                             System.out.println("[!] Cảnh báo: Bỏ qua hóa đơn trùng mã " + parts[1] + " trong file!");
                             hdHienTai = null;
                         }
-                    } else if (loai.equals("CT") && hdHienTai != null && parts.length == 6) {
+                    } else if (loai.equals("CT") && hdHienTai != null
+                            && (parts.length == 6 || parts.length == 7)) {
                         // SỬA: Long.parseLong cho Đơn giá, Double.parseDouble cho Chiết khấu
-                        CTHoaDon ct = new CTHoaDon(parts[1], parts[2], Integer.parseInt(parts[3]), 
-                                     Long.parseLong(parts[4]), Double.parseDouble(parts[5]));
+                        CTHoaDon ct = new CTHoaDon(parts[1], parts[2], Integer.parseInt(parts[3]),
+                                Long.parseLong(parts[4]), Double.parseDouble(parts[5]),
+                                parts.length == 7 && Boolean.parseBoolean(parts[6]));
                         hdHienTai.themChiTiet(ct);
                     }
                 }

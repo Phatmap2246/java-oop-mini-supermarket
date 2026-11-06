@@ -70,7 +70,7 @@ public class Xe {
 
     public void setXe ( Scanner sc)
     {
-        maXe = utils.Validation.inputStringRegex(sc , "Nhập mã số xe: " , utils.Validation.MA_XE_REGEX , "Mã xe không đúng định dạng vui lòng nhập lại(VD: XE001)!");
+        maXe = utils.Validation.inputStringRegex(sc , "Nhập mã số xe: " , "XE\\d{3}" , "Mã xe không đúng định dạng vui lòng nhập lại(VD: XE001)!");
         System.out.println("Nhập tên xe: ");
         tenXe = sc.nextLine() ;
         System.out.println("Nhập loại xe: ");

@@ -1,6 +1,14 @@
 package hoadon;
 
 import java.util.Scanner;
+import java.util.List;
+import java.util.function.Predicate;
+import dichvu.DanhSachSPKM;
+import dichvu.Danhsachkhuyenmai;
+import dichvu.KhuyenMaiService;
+import sanpham.QuanLySanPham;
+import sanpham.QuanLyTonKho;
+import sanpham.SanPham;
 import utils.Validation;
 
 public class HoaDonBanHang extends HoaDon {
@@ -9,6 +17,8 @@ public class HoaDonBanHang extends HoaDon {
     // SỬA: Chứa đối tượng thanh toán (Đa hình), KHÔNG implements IThanhToan nữa
     private IThanhToan phuongThucThanhToan; 
     private boolean daThanhToan;
+
+    public static final String MA_HD_BAN_REGEX = "^HD\\d+$";
 
     public HoaDonBanHang(String maHoaDon, String tenDoiTac) {
         super(maHoaDon, tenDoiTac);
@@ -30,7 +40,7 @@ public class HoaDonBanHang extends HoaDon {
         for(CTHoaDon ct : danhSachChiTiet){
             tongHang += ct.tinhThanhTien();
         }
-        long thanhToan = tongHang - this.tienKhuyenMai;
+        long thanhToan = tongHang - Math.min(tongHang, this.tienKhuyenMai);
         return (thanhToan > 0) ? thanhToan : 0; 
     }
    
@@ -51,28 +61,32 @@ public class HoaDonBanHang extends HoaDon {
         System.out.println("------------------------------------------------------------------------------------------");
 
         int stt = 1;
-        double tongHang = 0;
+        long tongHang = 0;
         for (CTHoaDon ct : danhSachChiTiet) {
+            String tenHienThi = ct.isHangKhuyenMai()
+                    ? ct.getTenSanPham() + " (TẶNG)" : ct.getTenSanPham();
             System.out.printf("%-5d | %-25s | %-5d | %15d | %15d\n",
-                    stt, ct.getTenSanPham(), ct.getSoLuong(), ct.getDonGia(), ct.tinhThanhTien());
+                    stt, tenHienThi, ct.getSoLuong(), ct.getDonGia(), ct.tinhThanhTien());
             tongHang += ct.tinhThanhTien();
             stt++;
         }
 
         System.out.println("------------------------------------------------------------------------------------------");
         
-        System.out.printf("%70s %15.2f\n", "Tổng tiền hàng:", tongHang);
+        System.out.printf("%70s %15d\n", "Tổng tiền hàng:", tongHang);
         
-        if (this.tienKhuyenMai > 0) {
-            System.out.printf("%70s -%14d\n", "Khuyến mãi:", this.tienKhuyenMai);
+        if (getTienKhuyenMai() > 0) {
+            System.out.printf("%70s -%14d\n", "Khuyến mãi:", getTienKhuyenMai());
         }
         System.out.printf("%70s %15d\n", "TỔNG THANH TOÁN:", tinhTongTien());
         
         System.out.println("==========================================================================================");
         
-        if (daThanhToan && phuongThucThanhToan != null) {
+        if (daThanhToan) {
             System.out.println(" TRẠNG THÁI: [X] ĐÃ THANH TOÁN");
-            phuongThucThanhToan.inBienLai(); 
+            if (phuongThucThanhToan != null) {
+                phuongThucThanhToan.inBienLai();
+            }
         } else {
             System.out.println(" TRẠNG THÁI: [ ] CHƯA THANH TOÁN");
         }
@@ -84,26 +98,44 @@ public class HoaDonBanHang extends HoaDon {
     }
 
     // Hàm nhập dùng Validation
-    public void nhapHoaDon(Scanner sc) {
-        this.maHoaDon = Validation.inputStringRegex(sc,  
+    public boolean nhapHoaDon(Scanner sc) {
+        return nhapHoaDon(sc, new DanhSachSPKM(), new Danhsachkhuyenmai(),
+                ma -> false, new QuanLySanPham().getDanhSachSanPham());
+    }
+
+    public boolean nhapHoaDon(Scanner sc, DanhSachSPKM danhSachSPKM,
+            Danhsachkhuyenmai danhSachKhuyenMai, Predicate<String> maHoaDonDaTonTai) {
+        return nhapHoaDon(sc, danhSachSPKM, danhSachKhuyenMai,
+                maHoaDonDaTonTai, new QuanLySanPham().getDanhSachSanPham());
+    }
+
+    public boolean nhapHoaDon(Scanner sc, DanhSachSPKM danhSachSPKM,
+            Danhsachkhuyenmai danhSachKhuyenMai, Predicate<String> maHoaDonDaTonTai,
+            List<SanPham> danhSachSanPham) {
+        if (danhSachSanPham == null || danhSachSanPham.isEmpty()) {
+            System.out.println("[!] Chưa có sản phẩm trong danh mục/tồn kho để lập hóa đơn bán.");
+            return false;
+        }
+        this.maHoaDon = Validation.inputStringRegex(sc,
             "Nhap ma hoa don (VD: HD001): ", 
-            Validation.MA_HD_BAN_REGEX,
+            MA_HD_BAN_REGEX,
             "Loi: Ma HD phai bat dau bang HD va theo sau la so!");
+        while (maHoaDonDaTonTai.test(this.maHoaDon)) {
+            System.out.println("[!] Mã hóa đơn đã tồn tại.");
+            this.maHoaDon = Validation.inputStringRegex(sc,
+                    "Nhập mã hóa đơn khác: ", MA_HD_BAN_REGEX,
+                    "Lỗi: Mã HD phải bắt đầu bằng HD và theo sau là số!");
+        }
             
         this.tenDoiTac = Validation.inputStringRegex(sc, 
             "Nhap ten khach hang: ", 
             Validation.HOTEN_REGEX, 
             "Loi: Ten khach hang khong hop le!");
 
-        this.tienKhuyenMai = Validation.inputLong(sc, "Nhap tien khuyen mai cho hoa don (Nhap 0 neu khong co): ");
-        if (this.tienKhuyenMai < 0) {
-            this.tienKhuyenMai = 0;
-        }
-
         System.out.println("--- Nhap danh sach san pham ---");
         while (true) {
             CTHoaDon ct = new CTHoaDon();
-            ct.nhapThongTin(sc, true); 
+            ct.nhapThongTinBan(sc, danhSachSanPham, danhSachChiTiet);
             this.themChiTiet(ct);
             
             int tiepTuc = Validation.inputInt(sc, "Nhap tiep san pham? (1: Co / 0: Khong): ");
@@ -112,12 +144,20 @@ public class HoaDonBanHang extends HoaDon {
             }
         }
 
-        // SỬA: MENU CHỌN PHƯƠNG THỨC THANH TOÁN
-                // SỬA: MENU CHỌN PHƯƠNG THỨC THANH TOÁN
+        this.tienKhuyenMai = KhuyenMaiService.apDungKhuyenMai(
+                this, danhSachSPKM, danhSachKhuyenMai, danhSachSanPham);
+        if (!QuanLyTonKho.kiemTraDuTonKho(danhSachSanPham, danhSachChiTiet)) {
+            return false;
+        }
+        if (this.tienKhuyenMai > 0) {
+            System.out.println("[+] Đã áp dụng khuyến mãi: giảm "
+                    + this.tienKhuyenMai + " VND.");
+        }
+
         System.out.println("\n--- CHỌN PHƯƠNG THỨC THANH TOÁN ---");
         System.out.println("1. Tiền mặt");
         System.out.println("2. Chuyển khoản ngân hàng");
-        int chon = Validation.inputInt(sc, "Lựa chọn của bạn: ");
+        int chon = Validation.luaChon(sc, "Lựa chọn của bạn: ", 1, 2);
 
         if (chon == 1) {
             this.phuongThucThanhToan = new ThanhToanTienMat();
@@ -145,10 +185,19 @@ public class HoaDonBanHang extends HoaDon {
         } else {
             System.out.println("[!] Thanh toán thất bại (Khách đưa thiếu tiền)!");
         }
+        return true;
     }
     // getters - setters
-    public long getTienKhuyenMai() { return tienKhuyenMai; }
-    public void setTienKhuyenMai(long tienKhuyenMai) { this.tienKhuyenMai = tienKhuyenMai; }
+    public long getTienKhuyenMai() {
+        long tongHang = 0;
+        for (CTHoaDon ct : danhSachChiTiet) {
+            tongHang += ct.tinhThanhTien();
+        }
+        return Math.min(tongHang, tienKhuyenMai);
+    }
+    public void setTienKhuyenMai(long tienKhuyenMai) {
+        this.tienKhuyenMai = Math.max(0, tienKhuyenMai);
+    }
 
     public IThanhToan getPhuongThucThanhToan() { return phuongThucThanhToan; }
     public void setPhuongThucThanhToan(IThanhToan phuongThucThanhToan) { this.phuongThucThanhToan = phuongThucThanhToan; }
