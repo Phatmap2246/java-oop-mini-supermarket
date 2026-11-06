@@ -33,9 +33,4 @@ public class QuanLySanPham {
            System.err.println(e.getStackTrace());
        }
    }
-
-   // (ĐỨC PHÁT) Thêm getDanhSach 
-   public ArrayList<SanPham> getDanhSachSanPham(){
-      return danhSachSanPham;
-   }
 }

@@ -71,11 +71,11 @@ public class DataBase {
         System.err.println("co loi");
         return null;
     }
+    //Class của object cần constuctor rỗng VD public SanPham(){};
     public static <T> T taoObject (Class<T> clazz,String CSVHeader, String CSVLine){
        String[] headers = CSVHeader.split(",", -1);
        String[] values = CSVLine.split("," ,-1);
        try{
-           //clazz can constructor rong
            T inst = clazz.getDeclaredConstructor().newInstance();
            ArrayList<Field> fields = getALlField(clazz);
            for(int i = 0; i < headers.length; i++){
