@@ -1,13 +1,12 @@
 package person;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Scanner;
 import hoadon.HoaDonBanHang;
 
 public class ThuNgan extends NhanVien {
     private long tongTienDauCa; 
-    private ArrayList<HoaDonBanHang> dsHoaDonBanHang = new ArrayList<>();
+    private HoaDonBanHang[] dsHoaDonBanHang = new HoaDonBanHang[0];
     public ThuNgan(){
         super();
         tongTienDauCa = 0;
@@ -29,11 +28,17 @@ public class ThuNgan extends NhanVien {
             tongTienCuoiCa += i.tinhTongTien();
         return tongTienDauCa +  tongTienCuoiCa;
     }
-    public void taoHoaDon(Scanner sc){
+    public void taoHoaDonThanhToan(Scanner sc){
         HoaDonBanHang hdbh = new HoaDonBanHang();
         hdbh.nhapHoaDon(sc);
-        dsHoaDonBanHang.add(hdbh);
+        HoaDonBanHang[] dsMoi = new HoaDonBanHang[dsHoaDonBanHang.length + 1];
+        for (int i = 0; i < dsHoaDonBanHang.length; i++) {
+            dsMoi[i] = dsHoaDonBanHang[i];
+        }
+        dsHoaDonBanHang = dsMoi;
+        dsHoaDonBanHang[dsHoaDonBanHang.length - 1] = hdbh;
     }
+    
     public void thayCa(ThuNgan tn){
         // ghi list hoa don vao file 
         tn.tongTienDauCa = tinhTienCuoiCa();

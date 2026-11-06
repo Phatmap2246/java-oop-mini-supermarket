@@ -2,10 +2,16 @@ package person;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import dichvu.Danhsachkhuyenmai;
+import dichvu.Khuyenmai;
+import hoadon.HoaDonNhapHang;
+import sanpham.SanPham;
 import utils.Validation; 
 
 public class QuanLy extends NhanVien {
     DSNhanVien ds = new DSNhanVien(); 
+    private final Danhsachkhuyenmai dsKhuyenMai = new Danhsachkhuyenmai();
     /** Khởi tạo quản lý với thông tin mặc định. */
     public QuanLy(){
         super();
@@ -21,6 +27,9 @@ public class QuanLy extends NhanVien {
     /** Trả về vai trò cố định của lớp là Quản lý. */
     public String getVaiTro(){
         return "QuanLy";
+    }
+    public Danhsachkhuyenmai getDanhSachKhuyenMai(){
+        return dsKhuyenMai;
     }
 // Quyền quản lý nhân sự (thêm / xóa / sửa)
     /** Hiển thị menu để thêm, xóa hoặc sửa nhân viên trong danh sách quản lý. */
@@ -169,8 +178,45 @@ public class QuanLy extends NhanVien {
         //Khi quản kho, thu ngân , ke toán gửi yêu cầu liên file text, quản lý lấy dữ liệu từ file đó và ra
         //quyết định có/không
     }
-    public void themSuKien(){
-        //Tao cac chiec dich khuyen mai, giam gia
+    // public boolean kiemTraCanDate(Scanner sc){
+    //     String maHD = Validation.inputStringRegex(sc, "Nhap ma hoa don can kiem tra",
+    //      "^HD\\d+$", "Nhap sai dinh dang ma hoa dom, hay nhap lai");
+
+        // truy xuat hd nhap bang ma hoa don--> truy xuat danh sach san pham nhap
+        //--> lay ngay sx - hsd = ngay con lai --> kiem tra can date theo hsd
+    // }
+    public ArrayList<SanPham> spCanDate(){
+        //kiểm tra các sản phẩm cận date
+        //trả về danh sách các sản phẩm cận date
+    }
+    public void themKhuyenMai(Scanner sc){
+        while(true)
+        {
+            System.out.println("Tạo khuyến mãi cho nhóm sản phẩm:");
+            System.out.println("1. Thực phẩm");
+            System.out.println("2. Gia dụng");
+            System.out.println("3. Điện tử");
+            System.out.println("4. Thoát");
+            int luaChon = Validation.luaChon(sc, "Hãy chọn (1-4): ", 1, 4);
+            switch (luaChon) {
+                case 1:
+                    System.out.println("Đã chọn nhóm Thực phẩm.");
+                    dsKhuyenMai.themKhuyenMai(sc);
+                    break;
+                case 2:
+                    System.out.println("Đã chọn nhóm Gia dụng.");
+                    dsKhuyenMai.themKhuyenMai(sc);
+                    break;
+                case 3:
+                    System.out.println("Đã chọn nhóm Điện tử.");
+                    dsKhuyenMai.themKhuyenMai(sc);
+                    break;
+                case 4:
+                    return;
+                default:
+                    throw new IllegalStateException("Lựa chọn nhóm sản phẩm không hợp lệ.");
+            }
+        }
     }
 
 }

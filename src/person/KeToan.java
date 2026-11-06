@@ -17,7 +17,7 @@ public class KeToan extends NhanVien {
     private final ArrayList<String> maPhieuNhapCongNo = new ArrayList<>();
     private final ArrayList<String> maNhaCungCapCongNo = new ArrayList<>();
     private final ArrayList<String> tenNhaCungCapCongNo = new ArrayList<>();
-    private final ArrayList<Double> soTienCongNo = new ArrayList<>();
+    private final ArrayList<Long> soTienCongNo = new ArrayList<>();
     private final ArrayList<LocalDate> ngayDenHanCongNo = new ArrayList<>();
     private final ArrayList<Boolean> daThanhToanCongNo = new ArrayList<>();
 
