@@ -4,7 +4,7 @@ public abstract class SanPham {
     private String maSanPham, loaiSanPham, tenSanPham, maNhaCungCap;
     private long giaNhap, giaBan;
     private int soLuong;
-
+    public SanPham(){};
     public SanPham(String maSanPham, String loaiSanPham, String tenSanPham, String maNhaCungCap, long giaNhap, long giaBan, int soLuong) {
         this.maSanPham = maSanPham;
         this.loaiSanPham = loaiSanPham;

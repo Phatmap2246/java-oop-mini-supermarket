@@ -13,7 +13,8 @@ public class QuanLySanPham {
          System.out.println(msg);
       }
    }
-   public static void suaThongTinSanPham(int id){
+   public ArrayList<SanPham> getDanhSachSanPham(){return danhSachSanPham;}
+   public void suaThongTinSanPham(int id){
       SanPham sp = danhSachSanPham.get(id);
       ArrayList<Field> fields = DataBase.getALlField(sp.getClass());
       System.out.println("Cac gia tri co the sua");
@@ -31,10 +32,5 @@ public class QuanLySanPham {
        } catch (IllegalAccessException e) {
            System.err.println(e.getStackTrace());
        }
-   }
-
-   // (ĐỨC PHÁT) Thêm getDanhSach 
-   public ArrayList<SanPham> getDanhSachSanPham(){
-      return danhSachSanPham;
    }
 }
