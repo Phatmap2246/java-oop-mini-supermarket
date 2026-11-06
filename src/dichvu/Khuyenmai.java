@@ -1,6 +1,6 @@
 package dichvu ;
 // TODO: Hiện tại chưa có class Sản Phẩm nên chấp nhận lỗi !
-import Sanpham.Sanpham;
+import sanpham.SanPham;
 import utils.Validation;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public abstract class Khuyenmai {
         maKhuyenMai = (Validation.taoMa("KM%03d" , Khuyenmai.getSoThuTu())) ;
         soThuTu++ ;
     }
-    public Khuyenmai ( String maKhuyenMai , String loaiKhuyenMai , LocalDate ngayBatDau , LocalDate ngayKetThuc , long mucChiToiThieu , ArrayList<Sanpham> danhSachKhuyenMai)
+    public Khuyenmai ( String maKhuyenMai , String loaiKhuyenMai , LocalDate ngayBatDau , LocalDate ngayKetThuc , long mucChiToiThieu , ArrayList<SanPham> danhSachKhuyenMai)
     {
         this.maKhuyenMai = maKhuyenMai ;
         this.loaiKhuyenMai = loaiKhuyenMai ;

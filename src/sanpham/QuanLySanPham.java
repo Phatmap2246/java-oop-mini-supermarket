@@ -13,7 +13,8 @@ public class QuanLySanPham {
          System.out.println(msg);
       }
    }
-   public static void suaThongTinSanPham(int id){
+   public ArrayList<SanPham> getDanhSachSanPham(){return danhSachSanPham;}
+   public void suaThongTinSanPham(int id){
       SanPham sp = danhSachSanPham.get(id);
       ArrayList<Field> fields = DataBase.getALlField(sp.getClass());
       System.out.println("Cac gia tri co the sua");
