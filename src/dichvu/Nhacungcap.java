@@ -2,7 +2,7 @@ package dichvu;
 import hoadon.CTHoaDon ;
 import hoadon.HoaDonNhapHang;
 import sanpham.SanPham;
-import sanpham.QuanLySanPham ;
+import sanpham.QuanLySanPham;
 import utils.Validation;
 
 import java.util.ArrayList;
