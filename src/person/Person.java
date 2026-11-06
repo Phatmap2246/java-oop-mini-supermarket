@@ -89,6 +89,10 @@ public abstract class Person {
     public String getDiachi(){
         return diachi.toString();
     }
+    /** Trả về đối tượng địa chỉ để lưu hoặc xử lý từng thành phần. */
+    public DiaChi getDiaChi(){
+        return diachi;
+    }
     /** Nhập các thành phần địa chỉ từ Scanner. */
     public void setDiachi(Scanner sc){
         diachi.nhapDiaChi(sc);

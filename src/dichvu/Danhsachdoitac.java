@@ -22,6 +22,7 @@ public class Danhsachdoitac {
     public void setDanhSachDoiTac(ArrayList<Doitac> danhSachDoiTac) {
         this.danhSachDoiTac = danhSachDoiTac;
     }
+    
     public void themDoiTac(Scanner sc)
     {
         System.out.println("Chọn loại đối tác cần thêm:");
@@ -51,8 +52,14 @@ public class Danhsachdoitac {
     {
         System.out.println("Tạo danh sách đối tác!");
         do {
+<<<<<<< HEAD
             themDoiTac(sc);}
         while (Validation.luaChon(sc, "Bạn có muốn tiếp tục thêm đối tác(1/0): ", 0, 1) == 1);
+=======
+            themDoiTac(sc);
+        } while (Validation.luaChon(sc, "Bạn có muốn tiếp tục thêm đối tác(1/0): ", 0, 1) == 1);
+
+>>>>>>> ac2418857258485bf57e3ffe71b873ef6488c2f4
         System.out.println("Tạo dữ liệu đối tác thành công!");
     }
     public int traCuuThongTinDoiTac(String maDoiTac)
@@ -122,7 +129,7 @@ public class Danhsachdoitac {
                 break;
             case 2:
                 doiTac.setSoDienThoai(Validation.inputStringRegex(sc, "Nhập số điện thoại mới: ",
-                        Validation.phoneRegex, "Số điện thoại không đúng định dạng!"));
+                        Validation.PHONE_REGEX, "Số điện thoại không đúng định dạng!"));
                 break;
             case 3:
                 System.out.println("Nhập địa chỉ mới: ");
@@ -130,7 +137,7 @@ public class Danhsachdoitac {
                 break;
             case 4:
                 doiTac.setEmail(Validation.inputStringRegex(sc, "Nhập email mới: ",
-                        Validation.emailRegex, "Email không đúng định dạng!"));
+                        Validation.EMAIL_REGEX, "Email không đúng định dạng!"));
                 break;
             case 5:
                 System.out.println("Nhập mã số thuế mới: ");

@@ -1,8 +1,8 @@
 package dichvu;
-import Hoadon.CTHoaDon ;
-import Hoadon.HoaDonNhapHang;
-import Sanpham.Sanpham;
-import Sanpham.Quanlysanpham ;
+import hoadon.CTHoaDon ;
+import hoadon.HoaDonNhapHang;
+import sanpham.SanPham;
+import sanpham.QuanLySanPham;
 import utils.Validation;
 
 import java.util.ArrayList;
@@ -10,14 +10,14 @@ import java.util.Scanner;
 public class Nhacungcap extends Doitac{
     private String nganhHangCungCap  , maDonViVanChuyen;
     private long hanMucNoCong ;
-    private Quanlysanpham sanPhamCungCap ;
+    private QuanLySanPham sanPhamCungCap ;
     private ArrayList<HoaDonNhapHang> hoaDonNhapHangs ;
     public Nhacungcap()
     {
         nganhHangCungCap = maDonViVanChuyen = "" ;
         hanMucNoCong = 0 ;
         super.setLoaiDoiTac("Nhà cung cấp");
-        sanPhamCungCap = new Quanlysanpham() ;
+        sanPhamCungCap = new QuanLySanPham() ;
         hoaDonNhapHangs = new ArrayList<>() ;
         super.setMaDoiTac(Validation.taoMa("NCC%03d" , Doitac.getSoThuTuNCC()));
         Doitac.setSoThuTuNCC(Doitac.getSoThuTuNCC()+1);
@@ -28,7 +28,7 @@ public class Nhacungcap extends Doitac{
         this.nganhHangCungCap = nganhHangCungCap;
         this.hanMucNoCong = hanMucNoCong;
         this.maDonViVanChuyen = maDonViVanChuyen ;
-        sanPhamCungCap = new Quanlysanpham() ;
+        sanPhamCungCap = new QuanLySanPham() ;
     }
 
     public String getMaDonViVanChuyen() {
@@ -55,11 +55,11 @@ public class Nhacungcap extends Doitac{
         return hanMucNoCong;
     }
 
-    public Quanlysanpham getSanPhamCungCap() {
+    public QuanLySanPham getSanPhamCungCap() {
         return sanPhamCungCap;
     }
 
-    public void setSanPhamCungCap(Quanlysanpham sanPhamCungCap) {
+    public void setSanPhamCungCap(QuanLySanPham sanPhamCungCap) {
         this.sanPhamCungCap = sanPhamCungCap;
     }
 
@@ -86,9 +86,9 @@ public class Nhacungcap extends Doitac{
 
         }
     }
-    public void KhoiTaoDanhSachSPCungCap ( Quanlysanpham qlsp )
+    public void KhoiTaoDanhSachSPCungCap ( QuanLySanPham qlsp )
     {
-        for ( Sanpham sp: qlsp.getDanhSachSanPham() )
+        for ( SanPham sp: qlsp.getDanhSachSanPham() )
             if ( sp.getMaNhaCungCap().equalsIgnoreCase(super.getMaDoiTac()) )
                 sanPhamCungCap.getDanhSachSanPham().add(sp) ;
         System.out.println("Khởi tao danh sách sản phẩm thành công!");

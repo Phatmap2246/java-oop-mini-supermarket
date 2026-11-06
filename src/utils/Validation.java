@@ -29,6 +29,10 @@ public class Validation {
                 System.out.print(message);
                 int value = sc.nextInt();
                 sc.nextLine(); // Xóa bộ đệm sau khi nhập số
+                if (value <0) {
+                    System.out.println("[!] Lỗi: Bạn phải nhập số nguyên lớn hoặc bằng 0. Vui lòng thử lại");
+                    continue;
+                }
                 return value;
             } catch (Exception e) {
                 System.out.println("[!] Lỗi: Bạn phải nhập số nguyên. Vui lòng thử lại!");
@@ -43,6 +47,10 @@ public class Validation {
                 System.out.print(message);
                 long value = sc.nextLong();
                 sc.nextLine();
+                if (value <0) {
+                    System.out.println("[!] Lỗi: Bạn phải nhập số nguyên lớn hoặc bằng 0. Vui lòng thử lại");
+                    continue;
+                }
                 return value;
             } catch (Exception e) {
                 System.out.println("[!] Lỗi: Bạn phải nhập số nguyên. Vui lòng thử lại!");
@@ -58,6 +66,10 @@ public class Validation {
                 System.out.print(message);
                 double value = sc.nextDouble();
                 sc.nextLine();
+                if (value <0) {
+                    System.out.println("[!] Lỗi: Bạn phải nhập số thực lớn hoặc bằng 0. Vui lòng thử lại");
+                    continue;
+                }
                 return value;
             } catch (Exception e) {
                 System.out.println("[!] Lỗi: Bạn phải nhập số thực (VD: 10.5). Vui lòng thử lại!");
