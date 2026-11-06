@@ -295,20 +295,20 @@ public class QuanKho extends NhanVien {
     /**
      * Nhận maHD được truyền vào, nhập hình thức và nội dung yêu cầu của Quản kho, sau đó ghi vào file YeuCauDuyet.text để Quản lý duyệt.
      */
-    @Override
-    public void yeuCau(String maHD, Scanner sc) {
-        System.out.println("\n--- TẠO YÊU CẦU DUYỆT (QUẢN KHO) ---");
-        System.out.println("Mã nhân viên tạo: " + ((getMaNV() != null) ? getMaNV() : "N/A"));
-        System.out.println("Mã hóa đơn: " + ((maHD != null && !maHD.isEmpty()) ? maHD : "KHONG_CO"));
+    // @Override
+    // public void taoYeuCau(String maHD, Scanner sc) {
+    //     System.out.println("\n--- TẠO YÊU CẦU DUYỆT (QUẢN KHO) ---");
+    //     System.out.println("Mã nhân viên tạo: " + ((getMaNV() != null) ? getMaNV() : "N/A"));
+    //     System.out.println("Mã hóa đơn: " + ((maHD != null && !maHD.isEmpty()) ? maHD : "KHONG_CO"));
 
-        System.out.print("Nhập hình thức yêu cầu (VD: Nhập thêm hàng, Xuất hủy hàng hết date, Kiểm kê kho): ");
-        String ht = sc.nextLine().trim();
+    //     System.out.print("Nhập hình thức yêu cầu (VD: Nhập thêm hàng, Xuất hủy hàng hết date, Kiểm kê kho): ");
+    //     String ht = sc.nextLine().trim();
 
-        System.out.print("Nhập nội dung chi tiết yêu cầu: ");
-        String nd = sc.nextLine().trim();
+    //     System.out.print("Nhập nội dung chi tiết yêu cầu: ");
+    //     String nd = sc.nextLine().trim();
 
-        ghiYeuCauVaoFile(maHD, ht, nd);
-    }
+    //     ghiYeuCauVaoFile(maHD, ht, nd);
+    // }
 
     // ========================= Các hàm bổ trợ cho các hàm phương thức ở trên =========================
 

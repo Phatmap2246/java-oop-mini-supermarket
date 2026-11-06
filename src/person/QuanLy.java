@@ -1,8 +1,14 @@
 package person;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
-
 import dichvu.Danhsachkhuyenmai;
 import dichvu.KhuyenMaiPhanTram;
 import dichvu.KhuyenMaiTrucTiep;
@@ -348,17 +354,48 @@ public class QuanLy extends NhanVien {
         }while(soLuong < 0);
         return soLuong;
     }
-    public void duyetYeuCau(){
-        //Khi quản kho, thu ngân , ke toán gửi yêu cầu liên file text, quản lý lấy dữ liệu từ file đó và ra
-        //quyết định có/không
-    }
-    // public boolean kiemTraCanDate(Scanner sc){
-    //     String maHD = Validation.inputStringRegex(sc, "Nhap ma hoa don can kiem tra",
-    //      "^HD\\d+$", "Nhap sai dinh dang ma hoa dom, hay nhap lai");
+    public void duyetYeuCau(Scanner sc) throws IOException{
+        Path filePath = Paths.get("YeuCau.txt");
+        if (!Files.exists(filePath)) {
+            System.out.println("Chưa có file YeuCau.txt.");
+            return;
+        }
 
-        // truy xuat hd nhap bang ma hoa don--> truy xuat danh sach san pham nhap
-        //--> lay ngay sx - hsd = ngay con lai --> kiem tra can date theo hsd
-    // }
+        ArrayList<String> dsYeuCau = new ArrayList<>(
+                Files.readAllLines(filePath, StandardCharsets.UTF_8));
+        boolean coThayDoi = false;
+        for (int index = 0; index < dsYeuCau.size(); index++) {
+            String[] data = dsYeuCau.get(index).split("\\|", -1);
+            if (data.length != 4) {
+                System.err.println("[!] Dòng yêu cầu sai định dạng, giữ nguyên: " + dsYeuCau.get(index));
+                continue;
+            }
+            if (!data[3].equals("ChoDuyet")) {
+                continue;
+            }
+
+            System.out.println("Yêu cầu: " + dsYeuCau.get(index));
+            String quyetDinh = Validation.inputStringRegex(
+                    sc, "Duyệt: 1 / Không duyệt: 0: ", "^[01]$",
+                    "Chỉ được nhập 0 hoặc 1.");
+            data[3] = quyetDinh.equals("1") ? "DaDuyet" : "KhongDuyet";
+            dsYeuCau.set(index, String.join("|", data));
+            coThayDoi = true;
+        }
+
+        if (coThayDoi) {
+            try (BufferedWriter writer = Files.newBufferedWriter(
+                    filePath,
+                    StandardCharsets.UTF_8,
+                    StandardOpenOption.TRUNCATE_EXISTING,
+                    StandardOpenOption.WRITE)) {
+                for (String yeuCau : dsYeuCau) {
+                    writer.write(yeuCau);
+                    writer.newLine();
+                }
+            }
+        }
+    }
     public void giamGiaCanHSD(Scanner sc){
         QuanKho qk = new QuanKho(); 
         ArrayList<ThucPham> dscanDate = qk.danhSachSapHetHan(7);  

@@ -3,6 +3,15 @@ package person;
 import java.time.LocalDate;
 import java.util.Scanner;
 import hoadon.HoaDonBanHang;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import utils.YeuCau;
 
 public class ThuNgan extends NhanVien {
     private long tongTienDauCa; 
@@ -38,10 +47,27 @@ public class ThuNgan extends NhanVien {
         dsHoaDonBanHang = dsMoi;
         dsHoaDonBanHang[dsHoaDonBanHang.length - 1] = hdbh;
     }
-    
-    public void thayCa(ThuNgan tn){
-        // ghi list hoa don vao file 
+
+
+
+    public void thayCa(ThuNgan tn) throws IOException {
+        File f = new File("hoadon.LichSuHoaDon");
+        if(!f.exists()) {
+            System.out.println("File khong ton tai");
+            return;
+        }
+        BufferedWriter bw = new BufferedWriter( new FileWriter(f)) ;
+        for(int i = 0; i<dsHoaDonBanHang.length; i++)
+        {
+            String[] data = new String[4];
+            data[0] = maNV; data[1] = dsHoaDonBanHang[i].getMaHoaDon();
+            data[2] = dsHoaDonBanHang[i].getTenDoiTac(); data[3] = dsHoaDonBanHang[i].getNgayLap().toString();
+            String line = String.join(";", data);
+            bw.newLine();
+            bw.write(line);
+        }
         tn.tongTienDauCa = tinhTienCuoiCa();
+        bw.close();
     }
 
 }

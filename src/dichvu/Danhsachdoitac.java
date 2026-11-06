@@ -52,14 +52,9 @@ public class Danhsachdoitac {
     {
         System.out.println("Tạo danh sách đối tác!");
         do {
-<<<<<<< HEAD
             themDoiTac(sc);}
         while (Validation.luaChon(sc, "Bạn có muốn tiếp tục thêm đối tác(1/0): ", 0, 1) == 1);
-=======
             themDoiTac(sc);
-        } while (Validation.luaChon(sc, "Bạn có muốn tiếp tục thêm đối tác(1/0): ", 0, 1) == 1);
-
->>>>>>> ac2418857258485bf57e3ffe71b873ef6488c2f4
         System.out.println("Tạo dữ liệu đối tác thành công!");
     }
     public int traCuuThongTinDoiTac(String maDoiTac)
