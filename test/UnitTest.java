@@ -7,9 +7,12 @@ import utils.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 
 public class UnitTest {
+    static String userinput;
+    static Scanner sc = new Scanner(System.in);
     void assertAllEqual(Object expected, Object actual) throws Exception {
         Class <?> clazz = expected.getClass();
         ArrayList<Field> fields = DataBase.getALlField(clazz);
@@ -54,5 +57,12 @@ public class UnitTest {
         while(itr1.hasNext() || itr2.hasNext()){
             assertAllEqual(itr1.next(),itr2.next());
         }
+    }
+    @Test
+    void TESTUSERINPUT() throws Exception {
+        sc = new Scanner("12\n12\nDienTu\n12\n12\n12\n12\n12\n12\n12\n12\n");
+        DienTu sp1 = DienTu.taoDienTu(sc);
+        DienTu sp2 = new DienTu("12","12","12",12,12,12,12);
+        assertAllEqual(sp1,sp2);
     }
 }
