@@ -1,6 +1,16 @@
 package hoadon;
 
 import java.util.ArrayList;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
+import java.time.LocalDate;
+import java.util.Base64;
 import java.util.Scanner;
 import dichvu.Danhsachdoitac;
 import dichvu.Doitac;
@@ -322,6 +332,279 @@ public class QuanLyHoaDon {
         System.out.println("Số hóa đơn NHẬP: " + soLuongNhap + " | Tổng chi phí: " + tongChiPhiNhap + " VND");
         System.out.println("Lợi nhuận tạm tính: " + (tongDoanhThuBan - tongChiPhiNhap) + " VND");
         System.out.println("===================================");
+    }
+
+    public void ghiHoaDonBanText(String tenFile) throws IOException {
+        ArrayList<String> dongDuLieu = new ArrayList<>();
+        for (HoaDon hoaDon : danhSachHoaDon) {
+            if (!(hoaDon instanceof HoaDonBanHang)) {
+                continue;
+            }
+            HoaDonBanHang hoaDonBan = (HoaDonBanHang) hoaDon;
+            dongDuLieu.add(String.join("|", "BAN4",
+                    maHoa(hoaDonBan.getMaHoaDon()),
+                    maHoa(hoaDonBan.getTenDoiTac()),
+                    hoaDonBan.getNgayLap().toString(),
+                    Long.toString(hoaDonBan.getTienKhuyenMai()),
+                    Boolean.toString(hoaDonBan.isDaThanhToan()),
+                    Boolean.toString(hoaDonBan.isKhuyenMaiPhanBoTheoChiTiet()),
+                    hoaDonBan.getKieuChietKhauHoaDon(),
+                    hoaDonBan.getGiaTriChietKhauHoaDon()));
+            for (CTHoaDon chiTiet : hoaDonBan.getDanhSachChiTiet()) {
+                dongDuLieu.add(ghiChiTietMoi(chiTiet));
+            }
+        }
+        ghiFileThayThe(Paths.get(tenFile), dongDuLieu);
+    }
+
+    public void docHoaDonBanText(String tenFile) throws IOException {
+        ArrayList<HoaDon> hoaDonDocDuoc = docHoaDon(Paths.get(tenFile), true);
+        thayTheLoaiHoaDon(hoaDonDocDuoc, true);
+    }
+
+    public void ghiHoaDonNhapText(String tenFile) throws IOException {
+        ArrayList<String> dongDuLieu = new ArrayList<>();
+        for (HoaDon hoaDon : danhSachHoaDon) {
+            if (!(hoaDon instanceof HoaDonNhapHang)) {
+                continue;
+            }
+            HoaDonNhapHang hoaDonNhap = (HoaDonNhapHang) hoaDon;
+            dongDuLieu.add(String.join("|", "NHAP2",
+                    maHoa(hoaDonNhap.getMaHoaDon()),
+                    maHoa(hoaDonNhap.getTenDoiTac()),
+                    maHoa(hoaDonNhap.getMaNhaCungCap()),
+                    hoaDonNhap.getNgayLap().toString(),
+                    Double.toString(hoaDonNhap.getThueVAT()),
+                    Long.toString(hoaDonNhap.getChiPhiVanChuyen()),
+                    maHoa(hoaDonNhap.getTrangThai()),
+                    maHoa(hoaDonNhap.getMaDonViVanChuyen()),
+                    maHoa(hoaDonNhap.getMaXeVanChuyen()),
+                    maHoa(hoaDonNhap.getLoaiXeVanChuyen())));
+            for (CTHoaDon chiTiet : hoaDonNhap.getDanhSachChiTiet()) {
+                dongDuLieu.add(ghiChiTietMoi(chiTiet));
+            }
+        }
+        ghiFileThayThe(Paths.get(tenFile), dongDuLieu);
+    }
+
+    public void docHoaDonNhapText(String tenFile) throws IOException {
+        ArrayList<HoaDon> hoaDonDocDuoc = docHoaDon(Paths.get(tenFile), false);
+        thayTheLoaiHoaDon(hoaDonDocDuoc, false);
+    }
+
+    private ArrayList<HoaDon> docHoaDon(Path duongDan, boolean docHoaDonBan)
+            throws IOException {
+        ArrayList<HoaDon> ketQua = new ArrayList<>();
+        HoaDon hoaDonHienTai = null;
+        ArrayList<String> dongDuLieu = new ArrayList<>(
+                Files.readAllLines(duongDan, StandardCharsets.UTF_8));
+        for (int i = 0; i < dongDuLieu.size(); i++) {
+            String dong = dongDuLieu.get(i);
+            if (dong.trim().isEmpty()) {
+                continue;
+            }
+            String[] truong = dong.split("\\|", -1);
+            try {
+                if (laDongDauHoaDonBan(truong)) {
+                    if (!docHoaDonBan) {
+                        throw new IllegalArgumentException("File hóa đơn nhập chứa hóa đơn bán.");
+                    }
+                    hoaDonHienTai = docHoaDonBan(truong);
+                    ketQua.add(hoaDonHienTai);
+                } else if (laDongDauHoaDonNhap(truong)) {
+                    if (docHoaDonBan) {
+                        throw new IllegalArgumentException("File hóa đơn bán chứa hóa đơn nhập.");
+                    }
+                    hoaDonHienTai = docHoaDonNhap(truong);
+                    ketQua.add(hoaDonHienTai);
+                } else if (laDongChiTiet(truong)) {
+                    if (hoaDonHienTai == null) {
+                        throw new IllegalArgumentException("Chi tiết không thuộc hóa đơn nào.");
+                    }
+                    hoaDonHienTai.getDanhSachChiTiet().add(docChiTiet(truong));
+                } else {
+                    throw new IllegalArgumentException("Loại dòng không được hỗ trợ.");
+                }
+            } catch (IllegalArgumentException ex) {
+                throw new IOException("Lỗi dữ liệu tại " + duongDan + ", dòng "
+                        + (i + 1) + ": " + ex.getMessage(), ex);
+            }
+        }
+
+        kiemTraMaHoaDonDocDuoc(ketQua, docHoaDonBan);
+        return ketQua;
+    }
+
+    private HoaDonBanHang docHoaDonBan(String[] truong) {
+        HoaDonBanHang hoaDon;
+        if ("BAN4".equals(truong[0])) {
+            if (truong.length != 9) {
+                throw new IllegalArgumentException("Dòng BAN4 cần có 9 trường.");
+            }
+            hoaDon = new HoaDonBanHang(giaiMa(truong[1]), giaiMa(truong[2]));
+            hoaDon.setNgayLap(LocalDate.parse(truong[3]));
+            hoaDon.setTienKhuyenMai(Long.parseLong(truong[4]));
+            hoaDon.setDaThanhToan(docBoolean(truong[5]));
+            hoaDon.setKhuyenMaiPhanBoTheoChiTiet(docBoolean(truong[6]));
+            hoaDon.setChietKhauHoaDon(truong[7], truong[8]);
+            return hoaDon;
+        }
+
+        boolean coChietKhau = "BAN3".equals(truong[0]);
+        if ((!coChietKhau && truong.length != 5)
+                || (coChietKhau && truong.length != 7)) {
+            throw new IllegalArgumentException("Dòng hóa đơn bán cũ sai định dạng.");
+        }
+        hoaDon = new HoaDonBanHang(truong[1], truong[2]);
+        hoaDon.setTienKhuyenMai(Long.parseLong(truong[3]));
+        hoaDon.setDaThanhToan(docBoolean(truong[4]));
+        hoaDon.setKhuyenMaiPhanBoTheoChiTiet(!"BAN".equals(truong[0]));
+        if (coChietKhau) {
+            hoaDon.setChietKhauHoaDon(truong[5], truong[6]);
+        }
+        return hoaDon;
+    }
+
+    private HoaDonNhapHang docHoaDonNhap(String[] truong) {
+        HoaDonNhapHang hoaDon;
+        if ("NHAP2".equals(truong[0])) {
+            if (truong.length != 11) {
+                throw new IllegalArgumentException("Dòng NHAP2 cần có 11 trường.");
+            }
+            hoaDon = new HoaDonNhapHang(giaiMa(truong[1]), giaiMa(truong[2]),
+                    giaiMa(truong[3]), Long.parseLong(truong[6]),
+                    Double.parseDouble(truong[5]));
+            hoaDon.setNgayLap(LocalDate.parse(truong[4]));
+            hoaDon.setThongTinVanChuyen(giaiMa(truong[8]), giaiMa(truong[9]),
+                    giaiMa(truong[10]), giaiMa(truong[7]));
+            return hoaDon;
+        }
+
+        if (truong.length != 6 && truong.length != 10) {
+            throw new IllegalArgumentException("Dòng hóa đơn nhập cũ sai định dạng.");
+        }
+        hoaDon = new HoaDonNhapHang(truong[1], truong[2], truong[3],
+                Long.parseLong(truong[5]), Double.parseDouble(truong[4]));
+        if (truong.length == 10) {
+            hoaDon.setThongTinVanChuyen(truong[7], truong[8], truong[9], truong[6]);
+        }
+        return hoaDon;
+    }
+
+    private CTHoaDon docChiTiet(String[] truong) {
+        if ("CT4".equals(truong[0])) {
+            if (truong.length != 8) {
+                throw new IllegalArgumentException("Dòng CT4 cần có 8 trường.");
+            }
+            return new CTHoaDon(giaiMa(truong[1]), giaiMa(truong[2]),
+                    Integer.parseInt(truong[3]), Long.parseLong(truong[4]),
+                    Double.parseDouble(truong[5]), docBoolean(truong[6]),
+                    Long.parseLong(truong[7]));
+        }
+        if (!"CT".equals(truong[0])
+                || (truong.length != 6 && truong.length != 7 && truong.length != 8)) {
+            throw new IllegalArgumentException("Dòng chi tiết hóa đơn cũ sai định dạng.");
+        }
+        CTHoaDon chiTiet = new CTHoaDon(truong[1], truong[2],
+                Integer.parseInt(truong[3]), Long.parseLong(truong[4]),
+                Double.parseDouble(truong[5]),
+                truong.length >= 7 && docBoolean(truong[6]));
+        if (truong.length == 8) {
+            chiTiet.setThanhTienSauKhuyenMai(Long.parseLong(truong[7]));
+        }
+        return chiTiet;
+    }
+
+    private boolean laDongDauHoaDonBan(String[] truong) {
+        return truong.length > 0 && ("BAN4".equals(truong[0])
+                || "BAN".equals(truong[0]) || "BAN2".equals(truong[0])
+                || "BAN3".equals(truong[0]));
+    }
+
+    private boolean laDongDauHoaDonNhap(String[] truong) {
+        return truong.length > 0 && ("NHAP2".equals(truong[0])
+                || "NHAP".equals(truong[0]));
+    }
+
+    private boolean laDongChiTiet(String[] truong) {
+        return truong.length > 0 && ("CT4".equals(truong[0]) || "CT".equals(truong[0]));
+    }
+
+    private String ghiChiTietMoi(CTHoaDon chiTiet) {
+        return String.join("|", "CT4",
+                maHoa(chiTiet.getMaSanPham()),
+                maHoa(chiTiet.getTenSanPham()),
+                Integer.toString(chiTiet.getSoLuong()),
+                Long.toString(chiTiet.getDonGia()),
+                Double.toString(chiTiet.getChietKhau()),
+                Boolean.toString(chiTiet.isHangKhuyenMai()),
+                Long.toString(chiTiet.getThanhTienSauKhuyenMai()));
+    }
+
+    private void kiemTraMaHoaDonDocDuoc(ArrayList<HoaDon> hoaDonDocDuoc,
+            boolean laHoaDonBan) throws IOException {
+        ArrayList<String> maDaDoc = new ArrayList<>();
+        for (HoaDon hoaDon : hoaDonDocDuoc) {
+            for (String ma : maDaDoc) {
+                if (ma.equalsIgnoreCase(hoaDon.getMaHoaDon())) {
+                    throw new IOException("Mã hóa đơn bị lặp trong file: "
+                            + hoaDon.getMaHoaDon());
+                }
+            }
+            maDaDoc.add(hoaDon.getMaHoaDon());
+            HoaDon hoaDonKhacLoai = timKiemTheoMa(hoaDon.getMaHoaDon());
+            if (hoaDonKhacLoai != null
+                    && (laHoaDonBan != (hoaDonKhacLoai instanceof HoaDonBanHang))) {
+                throw new IOException("Mã hóa đơn đã được dùng cho loại hóa đơn khác: "
+                        + hoaDon.getMaHoaDon());
+            }
+        }
+    }
+
+    private void thayTheLoaiHoaDon(ArrayList<HoaDon> hoaDonMoi, boolean laHoaDonBan) {
+        danhSachHoaDon.removeIf(hoaDon -> laHoaDonBan
+                ? hoaDon instanceof HoaDonBanHang
+                : hoaDon instanceof HoaDonNhapHang);
+        danhSachHoaDon.addAll(hoaDonMoi);
+    }
+
+    private void ghiFileThayThe(Path duongDan, ArrayList<String> dongDuLieu)
+            throws IOException {
+        Path duongDanTuyetDoi = duongDan.toAbsolutePath();
+        Path thuMuc = duongDanTuyetDoi.getParent();
+        Files.createDirectories(thuMuc);
+        Path tepTam = Files.createTempFile(thuMuc, duongDan.getFileName().toString(), ".tmp");
+        try {
+            Files.write(tepTam, dongDuLieu, StandardCharsets.UTF_8,
+                    StandardOpenOption.TRUNCATE_EXISTING);
+            try {
+                Files.move(tepTam, duongDanTuyetDoi, StandardCopyOption.REPLACE_EXISTING,
+                        StandardCopyOption.ATOMIC_MOVE);
+            } catch (AtomicMoveNotSupportedException ex) {
+                Files.move(tepTam, duongDanTuyetDoi, StandardCopyOption.REPLACE_EXISTING);
+            }
+        } finally {
+            Files.deleteIfExists(tepTam);
+        }
+    }
+
+    private String maHoa(String giaTri) {
+        return Base64.getUrlEncoder().withoutPadding()
+                .encodeToString(giaTri.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private String giaiMa(String giaTri) {
+        return new String(Base64.getUrlDecoder().decode(giaTri), StandardCharsets.UTF_8);
+    }
+
+    private boolean docBoolean(String giaTri) {
+        if ("true".equalsIgnoreCase(giaTri)) {
+            return true;
+        }
+        if ("false".equalsIgnoreCase(giaTri)) {
+            return false;
+        }
+        throw new IllegalArgumentException("Giá trị boolean không hợp lệ.");
     }
 
     public void ghiFileText(String tenFile) {

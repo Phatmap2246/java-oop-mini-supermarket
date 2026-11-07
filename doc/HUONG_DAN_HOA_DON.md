@@ -6,14 +6,14 @@ Tài liệu giới thiệu cấu trúc hóa đơn trong project Mini Supermarket
 
 | Lớp | Vai trò |
 |---|---|
-| [`HoaDon`](./src/hoadon/HoaDon.java) | Lớp cơ sở trừu tượng, lưu mã, ngày lập, tên đối tác và các dòng chi tiết. |
-| [`CTHoaDon`](./src/hoadon/CTHoaDon.java) | Một dòng hàng trên hóa đơn: mã/tên sản phẩm, số lượng, đơn giá gốc, thành tiền sau khuyến mãi, chiết khấu cũ và cờ nhận diện hàng tặng. |
-| [`HoaDonBanHang`](./src/hoadon/HoaDonBanHang.java) | Hóa đơn bán lẻ; tính tiền, áp dụng khuyến mãi và thực hiện thanh toán. |
-| [`HoaDonNhapHang`](./src/hoadon/HoaDonNhapHang.java) | Phiếu nhập; lưu nhà cung cấp, VAT, vận chuyển và trạng thái duyệt nhập kho. |
-| [`QuanLyHoaDon`](./src/hoadon/QuanLyHoaDon.java) | Tạo, tìm, sửa, xóa, thống kê, lưu/đọc hóa đơn và điều phối các bước nghiệp vụ. |
-| [`QuanLyTonKho`](./src/sanpham/QuanLyTonKho.java) | Tìm sản phẩm, kiểm tra tồn, trừ tồn khi bán và cộng tồn khi duyệt phiếu nhập. |
-| [`KhuyenMaiService`](./src/dichvu/KhuyenMaiService.java) | Tính giảm giá và hàng tặng từ danh sách chương trình khuyến mãi và liên kết sản phẩm. |
-| [`ThuNgan`](./src/person/ThuNgan.java) / [`QuanKho`](./src/person/QuanKho.java) | Điểm gọi nghiệp vụ hóa đơn tương ứng với vai trò thu ngân và quản kho. |
+| [`HoaDon`](../src/hoadon/HoaDon.java) | Lớp cơ sở trừu tượng, lưu mã, ngày lập, tên đối tác và các dòng chi tiết. |
+| [`CTHoaDon`](../src/hoadon/CTHoaDon.java) | Một dòng hàng trên hóa đơn: mã/tên sản phẩm, số lượng, đơn giá gốc, thành tiền sau khuyến mãi, chiết khấu cũ và cờ nhận diện hàng tặng. |
+| [`HoaDonBanHang`](../src/hoadon/HoaDonBanHang.java) | Hóa đơn bán lẻ; tính tiền, áp dụng khuyến mãi và thực hiện thanh toán. |
+| [`HoaDonNhapHang`](../src/hoadon/HoaDonNhapHang.java) | Phiếu nhập; lưu nhà cung cấp, VAT, vận chuyển và trạng thái duyệt nhập kho. |
+| [`QuanLyHoaDon`](../src/hoadon/QuanLyHoaDon.java) | Tạo, tìm, sửa, xóa, thống kê, lưu/đọc hóa đơn và điều phối các bước nghiệp vụ. |
+| [`QuanLyTonKho`](../src/sanpham/QuanLyTonKho.java) | Tìm sản phẩm, kiểm tra tồn, trừ tồn khi bán và cộng tồn khi duyệt phiếu nhập. |
+| [`KhuyenMaiService`](../src/dichvu/KhuyenMaiService.java) | Tính giảm giá và hàng tặng từ danh sách chương trình khuyến mãi và liên kết sản phẩm. |
+| [`ThuNgan`](../src/person/ThuNgan.java) / [`QuanKho`](../src/person/QuanKho.java) | Điểm gọi nghiệp vụ hóa đơn tương ứng với vai trò thu ngân và quản kho. |
 
 `HoaDon` chứa danh sách `CTHoaDon`. `HoaDonBanHang` và `HoaDonNhapHang` kế thừa hóa đơn cơ sở nhưng có cách tính tiền và trạng thái riêng.
 
@@ -90,28 +90,33 @@ javac -cp "lib/*" -d out $(find src test -name '*.java' -print)
 java -cp "out:lib/*" MainTest_HoaDon
 ```
 
-Các lựa chọn nghiệp vụ trên menu trong [`MainTest_HoaDon`](./test/MainTest_HoaDon.java):
+Các lựa chọn nghiệp vụ trên menu trong [`MainTest_HoaDon`](../test/MainTest_HoaDon.java):
 
 | Lựa chọn | Chức năng |
 |---:|---|
-| 1 | Tạo hóa đơn bán hoặc nhập |
+| 1 | Tạo hóa đơn bán hoặc nhập qua menu nhập hóa đơn |
 | 2 | Hiển thị hóa đơn |
 | 3–6 | Tìm, sửa hoặc xóa hóa đơn |
 | 7 | Thống kê doanh thu/chi phí |
-| 8–9 | Lưu hóa đơn ra `hoadon.txt` / đọc hóa đơn từ file |
-| 10–11 | Tạo nhà cung cấp/đơn vị vận chuyển và đăng ký xe |
-| 12–13 | Quản kho lập phiếu / nhà cung cấp báo xe và phí |
-| 14–16 | Tạo khuyến mãi, gắn khuyến mãi với sản phẩm, xem danh sách |
-| 17 | Quản lý duyệt phiếu nhập và cộng tồn |
+| 8–9 | Ghi/đọc hóa đơn bán qua `hoadon_ban.txt` |
+| 10–11 | Ghi/đọc hóa đơn nhập qua `hoadon_nhap.txt` |
+| 12–13 | Tạo dữ liệu nhà cung cấp/đơn vị vận chuyển và đăng ký xe |
+| 14–15 | Quản kho lập phiếu nhập / nhà cung cấp báo xe và phí |
+| 16–18 | Tạo khuyến mãi, gắn khuyến mãi với sản phẩm, xem danh sách |
+| 19 | Quản lý duyệt phiếu nhập và cộng tồn |
+| 20 | Đọc dữ liệu từ file gộp cũ `hoadon.txt` |
 | 0 | Thoát |
 
-Để thử bán, cần chuẩn bị danh mục sản phẩm có tồn kho trước rồi chọn **1 → Hóa đơn bán hàng**. Để thử nhập, cần tạo nhà cung cấp, đơn vị vận chuyển và xe trước; sau đó thực hiện **12 → 13 → 17**.
+Để thử bán, cần chuẩn bị danh mục sản phẩm có tồn kho trước rồi chọn **1 → Hóa đơn bán hàng**. Để thử nhập, cần tạo nhà cung cấp, đơn vị vận chuyển và xe trước; sau đó thực hiện **14 → 15 → 19**.
 
 ## 6. Lưu trữ và lưu ý khi tích hợp
 
-- Hóa đơn được ghi bằng file text UTF-8 tại `hoadon.txt` trong thư mục chạy chương trình. Định dạng mới lưu thành tiền sau khuyến mãi của từng dòng; hóa đơn bán có chiết khấu bill dùng header `BAN3`, header `BAN2` biểu thị hóa đơn theo dòng nhưng không có chiết khấu bill. Bộ đọc vẫn hỗ trợ định dạng cũ (`BAN`, các dòng chi tiết 6/7 trường); khi ghi lại hóa đơn cũ, chương trình giữ kiểu `BAN` để không đổi cách tính tổng tiền lịch sử.
+- Hóa đơn bán và nhập được ghi tách biệt bằng UTF-8 vào `hoadon_ban.txt` và `hoadon_nhap.txt` trong thư mục làm việc. Ghi file sẽ thay toàn bộ nội dung file bằng danh sách tương ứng trong bộ nhớ; không nối thêm từng bản ghi.
+- Định dạng mới của hóa đơn bán dùng header `BAN4`, hóa đơn nhập dùng `NHAP2`, dòng chi tiết dùng `CT4`. Các trường văn bản được mã hóa để dấu `|` trong tên không làm sai cột. Dữ liệu giữ ngày lập, chi tiết, số tiền khuyến mãi, loại/giá trị chiết khấu, trạng thái thanh toán và trạng thái/vận chuyển của hóa đơn nhập.
+- Trình đọc file riêng vẫn hỗ trợ dữ liệu cũ (`BAN`, `BAN2`, `BAN3`, `NHAP`, `CT`). Mục **20** đọc file gộp cũ `hoadon.txt`; sau đó dùng mục **8** và **10** để chuyển dữ liệu thành hai file riêng.
+- Đọc một file chỉ thay các hóa đơn cùng loại trong bộ nhớ, giữ nguyên hóa đơn loại còn lại. Nếu file lỗi định dạng hoặc có mã trùng, thao tác báo lỗi và không thay danh sách hiện tại.
 - Danh sách sản phẩm/tồn kho, danh sách đối tác/xe và danh sách chương trình khuyến mãi không được lưu bởi file hóa đơn này. Khởi động lại ứng dụng cần nạp lại các dữ liệu đó từ module lưu trữ tương ứng.
-- Đọc hóa đơn từ file không tự cập nhật tồn kho. Tránh duyệt lại hóa đơn nhập đã lưu ở trạng thái đã duyệt nếu ứng dụng chưa khôi phục trạng thái/tồn kho nhất quán.
+- Đọc hóa đơn từ file không tự cập nhật tồn kho. Đặc biệt, nạp lại hóa đơn nhập đã duyệt chỉ khôi phục trạng thái phiếu, không cộng tồn lần nữa.
 - Hủy hoặc xóa hóa đơn bán đã thanh toán hiện chưa tự hoàn lại tồn kho. Các thao tác điều chỉnh sau thanh toán cần có quy trình hoàn/hủy riêng.
 - Menu thử nghiệm mô phỏng vai trò; chưa có đăng nhập và phân quyền người dùng thật.
 - Các overload `nhapHoaDon`/`nhapDanhSachHoaDon` cũ được giữ để tương thích. Khi tích hợp vào ứng dụng chính, truyền cùng một `QuanLySanPham`, `DanhSachSPKM` và `Danhsachkhuyenmai` dùng chung cho các vai trò; tránh tạo danh sách mới cho từng hóa đơn vì như vậy không thấy dữ liệu đã cấu hình.

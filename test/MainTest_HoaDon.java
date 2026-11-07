@@ -4,7 +4,6 @@ import java.util.Scanner;
 import dichvu.Danhsachdoitac;
 import dichvu.Danhsachkhuyenmai;
 import dichvu.DanhSachSPKM;
-import person.QuanKho;
 import sanpham.QuanLySanPham;
 
 public class MainTest_HoaDon {
@@ -15,11 +14,10 @@ public class MainTest_HoaDon {
         Danhsachkhuyenmai danhSachKhuyenMai = new Danhsachkhuyenmai();
         DanhSachSPKM danhSachSPKM = new DanhSachSPKM();
         QuanLySanPham quanLySanPham = new QuanLySanPham();
-        QuanKho quanKho = new QuanKho();
         int choice = -1;
         
-        // SỬA: Dùng đường dẫn tương đối để ai cũng chạy được
-        String filePath = "hoadon.txt"; 
+        String fileHoaDonBan = "hoadon_ban.txt";
+        String fileHoaDonNhap = "hoadon_nhap.txt";
 
         while (choice != 0) {
             System.out.println("\n================ MENU QUẢN LÝ HÓA ĐƠN ================");
@@ -30,16 +28,19 @@ public class MainTest_HoaDon {
             System.out.println("5. Sửa thông tin hóa đơn");
             System.out.println("6. Xóa hóa đơn theo Mã");
             System.out.println("7. Thống kê doanh thu / chi phí");
-            System.out.println("8. Ghi danh sách ra file Text");
-            System.out.println("9. Đọc danh sách từ file Text");
-            System.out.println("10. Tạo dữ liệu nhà cung cấp/đơn vị vận chuyển");
-            System.out.println("11. Đăng ký xe cho đơn vị vận chuyển");
-            System.out.println("12. Quản kho lập phiếu nhập");
-            System.out.println("13. Nhà cung cấp báo xe và phí vận chuyển");
-            System.out.println("14. Tạo khuyến mãi");
-            System.out.println("15. Gắn khuyến mãi cho sản phẩm");
-            System.out.println("16. Xem khuyến mãi và sản phẩm áp dụng");
-            System.out.println("17. Quản lý duyệt hóa đơn nhập và cập nhật tồn kho");
+            System.out.println("8. Ghi hóa đơn bán ra file");
+            System.out.println("9. Đọc hóa đơn bán từ file");
+            System.out.println("10. Ghi hóa đơn nhập ra file");
+            System.out.println("11. Đọc hóa đơn nhập từ file");
+            System.out.println("12. Tạo dữ liệu nhà cung cấp/đơn vị vận chuyển");
+            System.out.println("13. Đăng ký xe cho đơn vị vận chuyển");
+            System.out.println("14. Quản kho lập phiếu nhập");
+            System.out.println("15. Nhà cung cấp báo xe và phí vận chuyển");
+            System.out.println("16. Tạo khuyến mãi");
+            System.out.println("17. Gắn khuyến mãi cho sản phẩm");
+            System.out.println("18. Xem khuyến mãi và sản phẩm áp dụng");
+            System.out.println("19. Quản lý duyệt hóa đơn nhập và cập nhật tồn kho");
+            System.out.println("20. Đọc dữ liệu từ file gộp cũ hoadon.txt");
             System.out.println("0. Thoát chương trình");
             System.out.println("========================================================");
 
@@ -97,45 +98,74 @@ public class MainTest_HoaDon {
                     ql.thongKe();
                     break;
                 case 8:
-                    ql.ghiFileText(filePath);
+                    try {
+                        ql.ghiHoaDonBanText(fileHoaDonBan);
+                        System.out.println("[+] Đã ghi hóa đơn bán vào " + fileHoaDonBan);
+                    } catch (java.io.IOException e) {
+                        System.err.println("[!] Không thể ghi hóa đơn bán: " + e.getMessage());
+                    }
                     break;
                 case 9:
-                    ql.docFileText(filePath);
-                    System.out.println("=> Đã nạp dữ liệu từ file. Hãy chọn chức năng 2 để xem danh sách!");
+                    try {
+                        ql.docHoaDonBanText(fileHoaDonBan);
+                        System.out.println("[+] Đã đọc hóa đơn bán từ " + fileHoaDonBan);
+                    } catch (java.io.IOException e) {
+                        System.err.println("[!] Không thể đọc hóa đơn bán: " + e.getMessage());
+                    }
                     break;
                 case 10:
-                    danhSachDoiTac.taoDuLieuDoiTac(sc);
+                    try {
+                        ql.ghiHoaDonNhapText(fileHoaDonNhap);
+                        System.out.println("[+] Đã ghi hóa đơn nhập vào " + fileHoaDonNhap);
+                    } catch (java.io.IOException e) {
+                        System.err.println("[!] Không thể ghi hóa đơn nhập: " + e.getMessage());
+                    }
                     break;
                 case 11:
-                    danhSachDoiTac.taoDanhSachXeChoDonViVanChuyen(sc);
+                    try {
+                        ql.docHoaDonNhapText(fileHoaDonNhap);
+                        System.out.println("[+] Đã đọc hóa đơn nhập từ " + fileHoaDonNhap);
+                    } catch (java.io.IOException e) {
+                        System.err.println("[!] Không thể đọc hóa đơn nhập: " + e.getMessage());
+                    }
                     break;
                 case 12:
-                    quanKho.lapHoaDonNhapHang(sc, ql, danhSachDoiTac);
+                    danhSachDoiTac.taoDuLieuDoiTac(sc);
                     break;
                 case 13:
+                    danhSachDoiTac.taoDanhSachXeChoDonViVanChuyen(sc);
+                    break;
+                case 14:
+                    ql.taoHoaDonNhapHang(sc, danhSachDoiTac);
+                    break;
+                case 15:
                     String maHoaDonNhap = Validation.inputStringRegex(sc,
                             "Nhập mã hóa đơn nhập cần báo phí: ",
                             HoaDonNhapHang.MA_HD_NHAP_REGEX,
                             "Mã hóa đơn nhập không đúng định dạng!");
                     ql.nhaCungCapBaoPhiVanChuyen(sc, maHoaDonNhap, danhSachDoiTac);
                     break;
-                case 14:
+                case 16:
                     danhSachKhuyenMai.themKhuyenMai(sc);
                     danhSachKhuyenMai.inDanhSachKhuyenMai();
                     break;
-                case 15:
+                case 17:
                     danhSachSPKM.themSanPhamKhuyenMai(sc);
                     break;
-                case 16:
+                case 18:
                     danhSachKhuyenMai.inDanhSachKhuyenMai();
                     danhSachSPKM.inDanhSachSanPhamKM();
                     break;
-                case 17:
+                case 19:
                     String maDuyet = Validation.inputStringRegex(sc,
                             "Nhập mã hóa đơn nhập cần duyệt: ",
                             HoaDonNhapHang.MA_HD_NHAP_REGEX,
                             "Mã hóa đơn nhập không đúng định dạng!");
                     ql.duyetHoaDonNhapHang(maDuyet, quanLySanPham);
+                    break;
+                case 20:
+                    ql.docFileText("hoadon.txt");
+                    System.out.println("Đã nạp dữ liệu file cũ. Hãy lưu từng loại bằng các mục 8-11.");
                     break;
                 case 0:
                     System.out.println("Tạm biệt và hẹn gặp lại!");
