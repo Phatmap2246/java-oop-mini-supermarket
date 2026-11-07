@@ -112,7 +112,7 @@ public class Validation {
     public static String taoMa(String regex, int soTiepTheo) {
         return String.format(regex, soTiepTheo);
     }
-
+    
     // 5. Hàm nhập ngày tháng (dd/MM/yyyy)
     public static LocalDate inputLocalDateRegex(Scanner sc, String message) {
         DateTimeFormatter khuon = DateTimeFormatter.ofPattern("dd/MM/yyyy").withResolverStyle(ResolverStyle.STRICT);

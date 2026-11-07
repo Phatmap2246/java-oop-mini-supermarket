@@ -1,17 +1,23 @@
 package person;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Scanner;
 import dichvu.DanhSachSPKM;
 import dichvu.Danhsachkhuyenmai;
 import hoadon.HoaDonBanHang;
-import sanpham.QuanLySanPham;
-import sanpham.QuanLyTonKho;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import utils.YeuCau;
 
 public class ThuNgan extends NhanVien {
     private long tongTienDauCa; 
-    private ArrayList<HoaDonBanHang> dsHoaDonBanHang = new ArrayList<>();
+    private HoaDonBanHang[] dsHoaDonBanHang = new HoaDonBanHang[0];
     public ThuNgan(){
         super();
         tongTienDauCa = 0;
@@ -36,32 +42,37 @@ public class ThuNgan extends NhanVien {
         }
         return tongTienDauCa +  tongTienCuoiCa;
     }
-    public void taoHoaDon(Scanner sc){
-        taoHoaDon(sc, new DanhSachSPKM(), new Danhsachkhuyenmai());
-    }
-    public void taoHoaDon(Scanner sc, DanhSachSPKM danhSachSPKM,
-            Danhsachkhuyenmai danhSachKhuyenMai){
-        taoHoaDon(sc, danhSachSPKM, danhSachKhuyenMai, new QuanLySanPham());
-    }
-    public void taoHoaDon(Scanner sc, DanhSachSPKM danhSachSPKM,
-            Danhsachkhuyenmai danhSachKhuyenMai, QuanLySanPham quanLySanPham){
+    public void taoHoaDonThanhToan(Scanner sc){
         HoaDonBanHang hdbh = new HoaDonBanHang();
-        boolean daLap = hdbh.nhapHoaDon(sc, danhSachSPKM, danhSachKhuyenMai,
-                maHoaDon -> dsHoaDonBanHang.stream()
-                        .anyMatch(hoaDon -> hoaDon.getMaHoaDon().equalsIgnoreCase(maHoaDon)),
-                quanLySanPham.getDanhSachSanPham());
-        if (!daLap) {
+        hdbh.nhapHoaDon(sc);
+        HoaDonBanHang[] dsMoi = new HoaDonBanHang[dsHoaDonBanHang.length + 1];
+        for (int i = 0; i < dsHoaDonBanHang.length; i++) {
+            dsMoi[i] = dsHoaDonBanHang[i];
+        }
+        dsHoaDonBanHang = dsMoi;
+        dsHoaDonBanHang[dsHoaDonBanHang.length - 1] = hdbh;
+    }
+
+
+
+    public void thayCa(ThuNgan tn) throws IOException {
+        File f = new File("hoadon.LichSuHoaDon");
+        if(!f.exists()) {
+            System.out.println("File khong ton tai");
             return;
         }
-        if (hdbh.isDaThanhToan()) {
-            QuanLyTonKho.truTonKho(
-                    quanLySanPham.getDanhSachSanPham(), hdbh.getDanhSachChiTiet());
+        BufferedWriter bw = new BufferedWriter( new FileWriter(f)) ;
+        for(int i = 0; i<dsHoaDonBanHang.length; i++)
+        {
+            String[] data = new String[4];
+            data[0] = maNV; data[1] = dsHoaDonBanHang[i].getMaHoaDon();
+            data[2] = dsHoaDonBanHang[i].getTenDoiTac(); data[3] = dsHoaDonBanHang[i].getNgayLap().toString();
+            String line = String.join(";", data);
+            bw.newLine();
+            bw.write(line);
         }
-        dsHoaDonBanHang.add(hdbh);
-    }
-    public void thayCa(ThuNgan tn){
-        // ghi list hoa don vao file 
         tn.tongTienDauCa = tinhTienCuoiCa();
+        bw.close();
     }
 
 }
