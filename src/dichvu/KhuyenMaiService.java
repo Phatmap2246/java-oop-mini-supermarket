@@ -2,6 +2,8 @@ package dichvu;
 
 import hoadon.CTHoaDon;
 import hoadon.HoaDonBanHang;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -27,6 +29,9 @@ public final class KhuyenMaiService {
             List<SanPham> danhSachSanPham) {
         ArrayList<CTHoaDon> chiTietHoaDon = hoaDon.getDanhSachChiTiet();
         chiTietHoaDon.removeIf(CTHoaDon::isHangKhuyenMai);
+        for (CTHoaDon chiTiet : chiTietHoaDon) {
+            chiTiet.setThanhTienSauKhuyenMai((long) chiTiet.getSoLuong() * chiTiet.getDonGia());
+        }
 
         if (danhSachSanPhamKhuyenMai == null || danhSachKhuyenMai == null) {
             hoaDon.setTienKhuyenMai(0);
@@ -35,11 +40,11 @@ public final class KhuyenMaiService {
 
         long tongTienHang = 0;
         for (CTHoaDon chiTiet : chiTietHoaDon) {
-            tongTienHang += chiTiet.tinhThanhTien();
+            tongTienHang += (long) chiTiet.getSoLuong() * chiTiet.getDonGia();
         }
 
-        Map<String, Long> tienHangTheoKhuyenMai = new LinkedHashMap<>();
         Map<String, Khuyenmai> khuyenMaiApDung = new LinkedHashMap<>();
+        Map<String, ArrayList<CTHoaDon>> dongHangTheoKhuyenMai = new LinkedHashMap<>();
         Map<String, ArrayList<CTHoaDon>> dongHangTangTheoKhuyenMai = new LinkedHashMap<>();
         Map<String, Long> soLuongMuaTheoKhuyenMaiVaSanPham = new LinkedHashMap<>();
         Map<String, CTHoaDon> sanPhamTheoKhuyenMaiVaSanPham = new LinkedHashMap<>();
@@ -61,7 +66,9 @@ public final class KhuyenMaiService {
 
             String maKhuyenMai = khuyenMai.getMaKhuyenMai().toUpperCase();
             khuyenMaiApDung.putIfAbsent(maKhuyenMai, khuyenMai);
-            tienHangTheoKhuyenMai.merge(maKhuyenMai, chiTiet.tinhThanhTien(), Long::sum);
+            dongHangTheoKhuyenMai
+                    .computeIfAbsent(maKhuyenMai, key -> new ArrayList<>())
+                    .add(chiTiet);
 
             if (khuyenMai instanceof KhuyenMaiMuaTang) {
                 String khoaSanPham = maKhuyenMai + "|" + chiTiet.getMaSanPham().toUpperCase();
@@ -103,7 +110,7 @@ public final class KhuyenMaiService {
                 }
                 CTHoaDon hangTang = new CTHoaDon(
                         sanPham.getMaSanPham(), sanPham.getTenSanPham(),
-                        (int) soLuongTang, 0, 0, true);
+                        (int) soLuongTang, 0, 0,0, true);
                 soLuongTangDuKienTheoMaSanPham.merge(
                         sanPham.getMaSanPham().toUpperCase(), soLuongTang, Long::sum);
                 dongHangTangTheoKhuyenMai
@@ -115,7 +122,7 @@ public final class KhuyenMaiService {
         long tienGiam = 0;
         for (Map.Entry<String, Khuyenmai> entry : khuyenMaiApDung.entrySet()) {
             Khuyenmai khuyenMai = entry.getValue();
-            long tienHangDuocApDung = tienHangTheoKhuyenMai.get(entry.getKey());
+            ArrayList<CTHoaDon> dongDuocApDung = dongHangTheoKhuyenMai.get(entry.getKey());
             long tienGiamChoKhuyenMai = 0;
 
             if (khuyenMai instanceof KhuyenMaiPhanTram) {
@@ -125,15 +132,26 @@ public final class KhuyenMaiService {
                     phanTram /= 100.0;
                 }
                 phanTram = Math.max(0, Math.min(1, phanTram));
-                tienGiamChoKhuyenMai = (long) (tienHangDuocApDung * phanTram);
-                tienGiamChoKhuyenMai = Math.min(
-                        tienGiamChoKhuyenMai, giamTheoPhanTram.getMucGiamToiDa());
+                long mucGiamConLai = Math.max(0, giamTheoPhanTram.getMucGiamToiDa());
+                for (CTHoaDon chiTiet : dongDuocApDung) {
+                    long tienGiamTrenDong = BigDecimal.valueOf(chiTiet.tinhThanhTien())
+                            .multiply(BigDecimal.valueOf(phanTram))
+                            .setScale(0, RoundingMode.DOWN).longValueExact();
+                    tienGiamTrenDong = Math.min(tienGiamTrenDong, mucGiamConLai);
+                    tienGiamTrenDong = apDungGiamTrenDong(chiTiet, tienGiamTrenDong);
+                    tienGiamChoKhuyenMai += tienGiamTrenDong;
+                    mucGiamConLai -= tienGiamTrenDong;
+                }
             } else if (khuyenMai instanceof KhuyenMaiTrucTiep) {
-                tienGiamChoKhuyenMai = ((KhuyenMaiTrucTiep) khuyenMai).getSoTienGiam();
+                long mucGiamMoiDong = Math.max(
+                        0, ((KhuyenMaiTrucTiep) khuyenMai).getSoTienGiam());
+                for (CTHoaDon chiTiet : dongDuocApDung) {
+                    tienGiamChoKhuyenMai += apDungGiamTrenDong(
+                            chiTiet, mucGiamMoiDong);
+                }
             }
 
-            long tienConLai = tongTienHang - tienGiam;
-            tienGiam += Math.min(Math.max(0, tienGiamChoKhuyenMai), tienConLai);
+            tienGiam += tienGiamChoKhuyenMai;
 
             ArrayList<CTHoaDon> hangTang = dongHangTangTheoKhuyenMai.get(entry.getKey());
             if (hangTang != null) {
@@ -144,6 +162,15 @@ public final class KhuyenMaiService {
         }
 
         hoaDon.setTienKhuyenMai(tienGiam);
+        return tienGiam;
+    }
+
+    private static long apDungGiamTrenDong(CTHoaDon chiTiet, long tienGiamYeuCau) {
+        long tienGiam = Math.min(Math.max(0, tienGiamYeuCau), chiTiet.tinhThanhTien());
+        if (tienGiam == 0) {
+            return 0;
+        }
+        chiTiet.setThanhTienSauKhuyenMai(chiTiet.tinhThanhTien() - tienGiam);
         return tienGiam;
     }
 

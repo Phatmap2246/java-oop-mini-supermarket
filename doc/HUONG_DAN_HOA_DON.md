@@ -7,7 +7,7 @@ Tài liệu giới thiệu cấu trúc hóa đơn trong project Mini Supermarket
 | Lớp | Vai trò |
 |---|---|
 | [`HoaDon`](./src/hoadon/HoaDon.java) | Lớp cơ sở trừu tượng, lưu mã, ngày lập, tên đối tác và các dòng chi tiết. |
-| [`CTHoaDon`](./src/hoadon/CTHoaDon.java) | Một dòng hàng trên hóa đơn: mã/tên sản phẩm, số lượng, đơn giá, chiết khấu cũ và cờ nhận diện hàng tặng. |
+| [`CTHoaDon`](./src/hoadon/CTHoaDon.java) | Một dòng hàng trên hóa đơn: mã/tên sản phẩm, số lượng, đơn giá gốc, thành tiền sau khuyến mãi, chiết khấu cũ và cờ nhận diện hàng tặng. |
 | [`HoaDonBanHang`](./src/hoadon/HoaDonBanHang.java) | Hóa đơn bán lẻ; tính tiền, áp dụng khuyến mãi và thực hiện thanh toán. |
 | [`HoaDonNhapHang`](./src/hoadon/HoaDonNhapHang.java) | Phiếu nhập; lưu nhà cung cấp, VAT, vận chuyển và trạng thái duyệt nhập kho. |
 | [`QuanLyHoaDon`](./src/hoadon/QuanLyHoaDon.java) | Tạo, tìm, sửa, xóa, thống kê, lưu/đọc hóa đơn và điều phối các bước nghiệp vụ. |
@@ -25,26 +25,29 @@ Khi lập hóa đơn bán, chương trình:
 2. Nhận mã sản phẩm. Mã phải có trong danh mục sản phẩm; tên và giá bán lấy từ sản phẩm trong kho, không nhập lại thủ công.
 3. Giới hạn số lượng theo tồn kho còn lại. Nếu thêm cùng sản phẩm ở nhiều dòng, số lượng đã nhập ở các dòng trước được tính vào giới hạn.
 4. Áp dụng khuyến mãi phù hợp.
-5. Thực hiện thanh toán. Chỉ khi thanh toán thành công mới trừ tồn kho. Nếu thanh toán thất bại, tồn kho không đổi và có thể thử thanh toán lại qua chức năng sửa hóa đơn.
+5. Thu ngân chọn chiết khấu cuối bill: không giảm, giảm số tiền cố định hoặc giảm phần trăm trên tạm tính sau khuyến mãi sản phẩm. Chiết khấu không thể làm tổng thanh toán âm.
+6. Thực hiện thanh toán. Chỉ khi thanh toán thành công mới trừ tồn kho. Nếu thanh toán thất bại, tồn kho không đổi và có thể thử thanh toán lại qua chức năng sửa hóa đơn.
 
-Tổng tiền bán được tính như sau:
+Mỗi dòng giữ đơn giá gốc và thành tiền sau khuyến mãi. Tổng thanh toán cộng các thành tiền cuối của dòng hàng; không trừ lại tiền khuyến mãi ở cấp hóa đơn:
 
 ```text
-Tổng tiền hàng = tổng thành tiền các dòng
-Tổng thanh toán = tối đa 0, (tổng tiền hàng - tiền giảm khuyến mãi)
+Tổng tiền gốc = tổng (số lượng × đơn giá gốc)
+Tạm tính = tổng thành tiền sau khuyến mãi sản phẩm của các dòng
+Chiết khấu bill = số tiền cố định hoặc phần trăm của tạm tính
+Tổng thanh toán = tạm tính - chiết khấu bill
 ```
 
 ### Các loại khuyến mãi
 
 Chương trình kết nối [`Danhsachkhuyenmai`](./src/dichvu/Danhsachkhuyenmai.java) với [`DanhSachSPKM`](./src/dichvu/DanhSachSPKM.java), nơi gắn mã sản phẩm với mã khuyến mãi.
 
-- **Giảm phần trăm:** áp dụng lên tiền hàng của sản phẩm được gắn khuyến mãi; không vượt quá mức giảm tối đa.
-- **Giảm trực tiếp:** trừ số tiền cấu hình một lần cho chương trình khuyến mãi áp dụng trên hóa đơn.
+- **Giảm phần trăm:** tính trên thành tiền hiện tại của các dòng sản phẩm được gắn khuyến mãi; không vượt quá mức giảm tối đa.
+- **Giảm trực tiếp:** áp dụng số tiền cấu hình một lần cho mỗi dòng `CTHoaDon` đủ điều kiện, không nhân theo số lượng trong dòng; mức giảm của dòng không vượt quá thành tiền còn lại của dòng đó.
 - **Mua tặng:** khi đủ số lượng mua tối thiểu, thêm dòng quà cùng mã sản phẩm với đơn giá 0. Hàng tặng cũng cần có tồn kho.
 - Chương trình phải đang trong thời hạn và tổng tiền hàng hóa đơn phải đạt mức chi tiêu tối thiểu.
 - Nhiều chương trình giảm giá có thể cộng dồn nhưng tổng mức giảm không vượt quá tiền hàng.
 
-Chiết khấu theo từng dòng (`CTHoaDon.chietKhau`) còn để tương thích dữ liệu cũ; luồng bán mới không hỏi người dùng nhập chiết khấu thủ công. Hàng tặng được thể hiện riêng để không bị hiểu nhầm là giảm tiền.
+Khuyến mãi sản phẩm được ghi vào thành tiền sau khuyến mãi của từng dòng. Cuối bill, **Khuyến mãi sản phẩm** là tổng các khoản giảm dòng hàng; **Chiết khấu hóa đơn** là khoản thu ngân nhập riêng và áp dụng sau khuyến mãi sản phẩm. Hai khoản được tính riêng, không trừ lặp. Chiết khấu phần trăm cũ trên `CTHoaDon` còn để đọc dữ liệu cũ. Hàng tặng được thể hiện riêng và có thành tiền bằng 0.
 
 ## 3. Hóa đơn nhập hàng
 
@@ -106,7 +109,7 @@ Các lựa chọn nghiệp vụ trên menu trong [`MainTest_HoaDon`](./test/Main
 
 ## 6. Lưu trữ và lưu ý khi tích hợp
 
-- Hóa đơn được ghi bằng file text UTF-8 tại `hoadon.txt` trong thư mục chạy chương trình. Bộ đọc hỗ trợ một số định dạng hóa đơn cũ; file hiện lưu chi tiết hàng, khuyến mãi và thông tin vận chuyển.
+- Hóa đơn được ghi bằng file text UTF-8 tại `hoadon.txt` trong thư mục chạy chương trình. Định dạng mới lưu thành tiền sau khuyến mãi của từng dòng; hóa đơn bán có chiết khấu bill dùng header `BAN3`, header `BAN2` biểu thị hóa đơn theo dòng nhưng không có chiết khấu bill. Bộ đọc vẫn hỗ trợ định dạng cũ (`BAN`, các dòng chi tiết 6/7 trường); khi ghi lại hóa đơn cũ, chương trình giữ kiểu `BAN` để không đổi cách tính tổng tiền lịch sử.
 - Danh sách sản phẩm/tồn kho, danh sách đối tác/xe và danh sách chương trình khuyến mãi không được lưu bởi file hóa đơn này. Khởi động lại ứng dụng cần nạp lại các dữ liệu đó từ module lưu trữ tương ứng.
 - Đọc hóa đơn từ file không tự cập nhật tồn kho. Tránh duyệt lại hóa đơn nhập đã lưu ở trạng thái đã duyệt nếu ứng dụng chưa khôi phục trạng thái/tồn kho nhất quán.
 - Hủy hoặc xóa hóa đơn bán đã thanh toán hiện chưa tự hoàn lại tồn kho. Các thao tác điều chỉnh sau thanh toán cần có quy trình hoàn/hủy riêng.

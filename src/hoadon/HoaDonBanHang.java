@@ -1,5 +1,7 @@
 package hoadon;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Scanner;
 import java.util.List;
 import java.util.function.Predicate;
@@ -13,6 +15,10 @@ import utils.Validation;
 
 public class HoaDonBanHang extends HoaDon {
     private long tienKhuyenMai;
+    private boolean khuyenMaiPhanBoTheoChiTiet;
+    private long chietKhauHoaDon;
+    private double phanTramChietKhauHoaDon;
+    private boolean chietKhauHoaDonTheoPhanTram;
     
     // SỬA: Chứa đối tượng thanh toán (Đa hình), KHÔNG implements IThanhToan nữa
     private IThanhToan phuongThucThanhToan; 
@@ -23,6 +29,10 @@ public class HoaDonBanHang extends HoaDon {
     public HoaDonBanHang(String maHoaDon, String tenDoiTac) {
         super(maHoaDon, tenDoiTac);
         this.tienKhuyenMai = 0;
+        this.khuyenMaiPhanBoTheoChiTiet = true;
+        this.chietKhauHoaDon = 0;
+        this.phanTramChietKhauHoaDon = 0;
+        this.chietKhauHoaDonTheoPhanTram = false;
         this.phuongThucThanhToan = null;
         this.daThanhToan = false;
     }
@@ -30,6 +40,10 @@ public class HoaDonBanHang extends HoaDon {
     public HoaDonBanHang() {
         super();
         this.tienKhuyenMai = 0;
+        this.khuyenMaiPhanBoTheoChiTiet = true;
+        this.chietKhauHoaDon = 0;
+        this.phanTramChietKhauHoaDon = 0;
+        this.chietKhauHoaDonTheoPhanTram = false;
         this.phuongThucThanhToan = null;
         this.daThanhToan = false;
     }
@@ -40,7 +54,10 @@ public class HoaDonBanHang extends HoaDon {
         for(CTHoaDon ct : danhSachChiTiet){
             tongHang += ct.tinhThanhTien();
         }
-        long thanhToan = tongHang - Math.min(tongHang, this.tienKhuyenMai);
+        long tienGiam = khuyenMaiPhanBoTheoChiTiet
+                ? tinhTienChietKhauHoaDon(tongHang)
+                : Math.min(tongHang, this.tienKhuyenMai);
+        long thanhToan = tongHang - tienGiam;
         return (thanhToan > 0) ? thanhToan : 0; 
     }
    
@@ -61,22 +78,34 @@ public class HoaDonBanHang extends HoaDon {
         System.out.println("------------------------------------------------------------------------------------------");
 
         int stt = 1;
-        long tongHang = 0;
+        long tongHangGoc = 0;
+        long tongSauKhuyenMaiSanPham = 0;
         for (CTHoaDon ct : danhSachChiTiet) {
             String tenHienThi = ct.isHangKhuyenMai()
                     ? ct.getTenSanPham() + " (TẶNG)" : ct.getTenSanPham();
             System.out.printf("%-5d | %-25s | %-5d | %15d | %15d\n",
                     stt, tenHienThi, ct.getSoLuong(), ct.getDonGia(), ct.tinhThanhTien());
-            tongHang += ct.tinhThanhTien();
+            tongHangGoc += (long) ct.getSoLuong() * ct.getDonGia();
+            tongSauKhuyenMaiSanPham += ct.tinhThanhTien();
             stt++;
         }
 
         System.out.println("------------------------------------------------------------------------------------------");
-        
-        System.out.printf("%70s %15d\n", "Tổng tiền hàng:", tongHang);
-        
-        if (getTienKhuyenMai() > 0) {
-            System.out.printf("%70s -%14d\n", "Khuyến mãi:", getTienKhuyenMai());
+
+        System.out.printf("%70s %15d\n", "Tổng tiền hàng (giá gốc):", tongHangGoc);
+        if (khuyenMaiPhanBoTheoChiTiet) {
+            if (getTienKhuyenMai() > 0) {
+                System.out.printf("%70s -%14d\n",
+                        "Khuyến mãi sản phẩm:", getTienKhuyenMai());
+            }
+            System.out.printf("%70s %15d\n",
+                    "Tạm tính sau khuyến mãi:", tongSauKhuyenMaiSanPham);
+            long tienChietKhau = tinhTienChietKhauHoaDon(tongSauKhuyenMaiSanPham);
+            if (tienChietKhau > 0) {
+                System.out.printf("%70s -%14d\n", "Chiết khấu hóa đơn:", tienChietKhau);
+            }
+        } else if (getTienKhuyenMai() > 0) {
+            System.out.printf("%70s -%14d\n", "Chiết khấu (dữ liệu cũ):", getTienKhuyenMai());
         }
         System.out.printf("%70s %15d\n", "TỔNG THANH TOÁN:", tinhTongTien());
         
@@ -153,6 +182,7 @@ public class HoaDonBanHang extends HoaDon {
             System.out.println("[+] Đã áp dụng khuyến mãi: giảm "
                     + this.tienKhuyenMai + " VND.");
         }
+        nhapChietKhauHoaDon(sc);
 
         System.out.println("\n--- CHỌN PHƯƠNG THỨC THANH TOÁN ---");
         System.out.println("1. Tiền mặt");
@@ -189,6 +219,9 @@ public class HoaDonBanHang extends HoaDon {
     }
     // getters - setters
     public long getTienKhuyenMai() {
+        if (khuyenMaiPhanBoTheoChiTiet) {
+            return tienKhuyenMai;
+        }
         long tongHang = 0;
         for (CTHoaDon ct : danhSachChiTiet) {
             tongHang += ct.tinhThanhTien();
@@ -197,6 +230,119 @@ public class HoaDonBanHang extends HoaDon {
     }
     public void setTienKhuyenMai(long tienKhuyenMai) {
         this.tienKhuyenMai = Math.max(0, tienKhuyenMai);
+    }
+
+    private void nhapChietKhauHoaDon(Scanner sc) {
+        System.out.println("\n--- CHIẾT KHẤU HÓA ĐƠN ---");
+        System.out.println("0. Không chiết khấu");
+        System.out.println("1. Giảm số tiền cố định");
+        System.out.println("2. Giảm theo phần trăm");
+        int luaChon = Validation.luaChon(sc, "Chọn loại chiết khấu: ", 0, 2);
+
+        if (luaChon == 1) {
+            long tamTinh = tinhTongSauKhuyenMaiSanPham();
+            long soTien;
+            do {
+                soTien = Validation.inputLong(sc, "Nhập số tiền chiết khấu (VND): ");
+                if (soTien > tamTinh) {
+                    System.out.println("[!] Chiết khấu không được lớn hơn tạm tính.");
+                }
+            } while (soTien > tamTinh);
+            setChietKhauHoaDonSoTien(soTien);
+        } else if (luaChon == 2) {
+            double phanTram;
+            do {
+                phanTram = Validation.inputDouble(sc, "Nhập phần trăm chiết khấu (0-100): ");
+                if (!Double.isFinite(phanTram) || phanTram > 100) {
+                    System.out.println("[!] Phần trăm chiết khấu phải từ 0 đến 100.");
+                }
+            } while (!Double.isFinite(phanTram) || phanTram > 100);
+            setChietKhauHoaDonPhanTram(phanTram);
+        } else {
+            setChietKhauHoaDonSoTien(0);
+        }
+
+        long tienChietKhau = tinhTienChietKhauHoaDon(tinhTongSauKhuyenMaiSanPham());
+        if (tienChietKhau > 0) {
+            System.out.println("[+] Chiết khấu hóa đơn: " + tienChietKhau + " VND.");
+        }
+    }
+
+    private long tinhTongSauKhuyenMaiSanPham() {
+        long tongTien = 0;
+        for (CTHoaDon chiTiet : danhSachChiTiet) {
+            tongTien += chiTiet.tinhThanhTien();
+        }
+        return tongTien;
+    }
+
+    private long tinhTienChietKhauHoaDon(long tamTinh) {
+        if (!khuyenMaiPhanBoTheoChiTiet || tamTinh <= 0) {
+            return 0;
+        }
+        if (!chietKhauHoaDonTheoPhanTram) {
+            return Math.min(tamTinh, chietKhauHoaDon);
+        }
+        long tienChietKhau = BigDecimal.valueOf(tamTinh)
+                .multiply(BigDecimal.valueOf(phanTramChietKhauHoaDon))
+                .divide(BigDecimal.valueOf(100), 0, RoundingMode.DOWN)
+                .longValueExact();
+        return Math.min(tamTinh, tienChietKhau);
+    }
+
+    public String getKieuChietKhauHoaDon() {
+        if (chietKhauHoaDonTheoPhanTram) {
+            return "PERCENT";
+        }
+        return chietKhauHoaDon > 0 ? "AMOUNT" : "NONE";
+    }
+
+    public String getGiaTriChietKhauHoaDon() {
+        return chietKhauHoaDonTheoPhanTram
+                ? Double.toString(phanTramChietKhauHoaDon)
+                : Long.toString(chietKhauHoaDon);
+    }
+
+    public void setChietKhauHoaDonSoTien(long soTien) {
+        if (soTien < 0) {
+            throw new IllegalArgumentException("Chiết khấu hóa đơn không được âm.");
+        }
+        this.chietKhauHoaDon = soTien;
+        this.phanTramChietKhauHoaDon = 0;
+        this.chietKhauHoaDonTheoPhanTram = false;
+    }
+
+    public void setChietKhauHoaDonPhanTram(double phanTram) {
+        if (!Double.isFinite(phanTram) || phanTram < 0 || phanTram > 100) {
+            throw new IllegalArgumentException("Phần trăm chiết khấu phải từ 0 đến 100.");
+        }
+        this.chietKhauHoaDon = 0;
+        this.phanTramChietKhauHoaDon = phanTram;
+        this.chietKhauHoaDonTheoPhanTram = true;
+    }
+
+    public long getSoTienChietKhauHoaDon() {
+        return tinhTienChietKhauHoaDon(tinhTongSauKhuyenMaiSanPham());
+    }
+
+    public void setChietKhauHoaDon(String kieu, String giaTri) {
+        if ("AMOUNT".equals(kieu)) {
+            setChietKhauHoaDonSoTien(Long.parseLong(giaTri));
+        } else if ("PERCENT".equals(kieu)) {
+            setChietKhauHoaDonPhanTram(Double.parseDouble(giaTri));
+        } else if ("NONE".equals(kieu)) {
+            setChietKhauHoaDonSoTien(0);
+        } else {
+            throw new IllegalArgumentException("Loại chiết khấu hóa đơn không hợp lệ.");
+        }
+    }
+
+    public boolean isKhuyenMaiPhanBoTheoChiTiet() {
+        return khuyenMaiPhanBoTheoChiTiet;
+    }
+
+    public void setKhuyenMaiPhanBoTheoChiTiet(boolean khuyenMaiPhanBoTheoChiTiet) {
+        this.khuyenMaiPhanBoTheoChiTiet = khuyenMaiPhanBoTheoChiTiet;
     }
 
     public IThanhToan getPhuongThucThanhToan() { return phuongThucThanhToan; }

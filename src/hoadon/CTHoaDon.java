@@ -9,6 +9,7 @@ public class CTHoaDon {
     private String tenSanPham;
     private  int soLuong;
     private  long donGia;
+    private long thanhTienSauKhuyenMai;
     private double chietKhau;
     private boolean hangKhuyenMai;
 
@@ -22,23 +23,48 @@ public class CTHoaDon {
         this.tenSanPham = "";
         this.soLuong = 0;
         this.donGia = 0;
+        this.thanhTienSauKhuyenMai = 0;
         this.chietKhau = 0.0;
         this.hangKhuyenMai = false;
     }
 
+    public CTHoaDon(String maSanPham, String tenSanPham, int soLuong,
+            long donGia, double chietKhau) {
+        this(maSanPham, tenSanPham, soLuong, donGia, chietKhau, false);
+    }
 
-    public CTHoaDon(String maSanPham, String tenSanPham, int soLuong, long donGia, double chietKhau) {
+    public CTHoaDon(String maSanPham, String tenSanPham, int soLuong,
+            long donGia, double chietKhau, boolean hangKhuyenMai) {
         this.maSanPham = maSanPham;
         this.tenSanPham = tenSanPham;
         this.soLuong = soLuong;
         this.donGia = donGia;
         this.chietKhau = chietKhau;
+        this.hangKhuyenMai = hangKhuyenMai;
+        this.thanhTienSauKhuyenMai = tinhThanhTienTheoChietKhauCu();
+    }
+
+    public CTHoaDon(String maSanPham, String tenSanPham, int soLuong,
+            long donGia, long donGiaSauKhuyenMai, double chietKhau) {
+        this.maSanPham = maSanPham;
+        this.tenSanPham = tenSanPham;
+        this.soLuong = soLuong;
+        this.donGia = donGia;
+        this.thanhTienSauKhuyenMai = (long) soLuong * donGiaSauKhuyenMai;
+        this.chietKhau = chietKhau;
         this.hangKhuyenMai = false;
     }
 
     public CTHoaDon(String maSanPham, String tenSanPham, int soLuong, long donGia,
+            double chietKhau, boolean hangKhuyenMai, long thanhTienSauKhuyenMai) {
+        this(maSanPham, tenSanPham, soLuong, donGia, chietKhau, hangKhuyenMai);
+        setThanhTienSauKhuyenMai(thanhTienSauKhuyenMai);
+    }
+
+    public CTHoaDon(String maSanPham, String tenSanPham, int soLuong,
+            long donGia, long donGiaSauKhuyenMai,
             double chietKhau, boolean hangKhuyenMai) {
-        this(maSanPham, tenSanPham, soLuong, donGia, chietKhau);
+        this(maSanPham, tenSanPham, soLuong, donGia, donGiaSauKhuyenMai, chietKhau);
         this.hangKhuyenMai = hangKhuyenMai;
     }
 
@@ -60,6 +86,7 @@ public class CTHoaDon {
             }
         } while (this.donGia == 0);
         this.chietKhau = 0;
+        this.thanhTienSauKhuyenMai = (long) this.soLuong * this.donGia;
         this.hangKhuyenMai = false;
     }
 
@@ -93,22 +120,26 @@ public class CTHoaDon {
             } while (this.soLuong == 0 || this.soLuong > conLai);
 
             this.chietKhau = 0;
+            this.thanhTienSauKhuyenMai = (long) this.soLuong * this.donGia;
             this.hangKhuyenMai = false;
             return;
         }
     }
-    //TODO: Nên xem lại là CTHD nên có khuyến mãi liên kết với HD bán hàng
-    public long tinhThanhTien(){
-        long tienGoc = this.soLuong * this.donGia;
-        long tienGiam = (long) (tienGoc * (this.chietKhau / 100.0));
+
+    private long tinhThanhTienTheoChietKhauCu() {
+        long tienGoc = (long) soLuong * donGia;
+        long tienGiam = (long) (tienGoc * (chietKhau / 100.0));
         return tienGoc - tienGiam;
+    }
+
+    public long tinhThanhTien() {
+        return thanhTienSauKhuyenMai;
     }
 
     public void hienThiChiTiet(){
         String tenHienThi = hangKhuyenMai ? tenSanPham + " (TẶNG)" : tenSanPham;
-        String ck = (chietKhau > 0) ? String.format(" (CK cũ: %.0f%%)", chietKhau) : "";
-        System.out.printf("  - Mã SP: %-10s | Tên: %-20s | SL: %-5d | Đơn giá: %-10d | Thành tiền: %d%s\n",
-                maSanPham, tenHienThi, soLuong, donGia, tinhThanhTien(), ck);
+        System.out.printf("  - Mã SP: %-10s | Tên: %-20s | SL: %-5d | Đơn giá gốc: %-10d | Thành tiền sau KM: %d\n",
+                maSanPham, tenHienThi, soLuong, donGia, tinhThanhTien());
     }
 
     // getters - setters
@@ -134,6 +165,7 @@ public class CTHoaDon {
 
     public void setSoLuong(int soLuong) {
         this.soLuong = soLuong;
+        this.thanhTienSauKhuyenMai = tinhThanhTienTheoChietKhauCu();
     }
 
     public long getDonGia() {
@@ -142,6 +174,7 @@ public class CTHoaDon {
 
     public void setDonGia(long donGia) {
         this.donGia = donGia;
+        this.thanhTienSauKhuyenMai = tinhThanhTienTheoChietKhauCu();
     }
 
     public double getChietKhau() {
@@ -150,6 +183,7 @@ public class CTHoaDon {
 
     public void setChietKhau(double chietKhau) {
         this.chietKhau = chietKhau;
+        this.thanhTienSauKhuyenMai = tinhThanhTienTheoChietKhauCu();
     }
 
     public boolean isHangKhuyenMai() {
@@ -162,6 +196,18 @@ public class CTHoaDon {
 
     public static String getMaSpRegex() {
         return MA_SP_REGEX;
+    }
+
+
+    public long getThanhTienSauKhuyenMai() {
+        return thanhTienSauKhuyenMai;
+    }
+
+    public void setThanhTienSauKhuyenMai(long thanhTienSauKhuyenMai) {
+        if (thanhTienSauKhuyenMai < 0) {
+            throw new IllegalArgumentException("Thành tiền sau khuyến mãi không được âm.");
+        }
+        this.thanhTienSauKhuyenMai = thanhTienSauKhuyenMai;
     }
 
 }

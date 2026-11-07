@@ -329,7 +329,22 @@ public class QuanLyHoaDon {
             for (HoaDon hd : this.danhSachHoaDon) {
                 if (hd instanceof HoaDonBanHang) {
                     HoaDonBanHang hdBan = (HoaDonBanHang) hd;
-                    bw.write("BAN|" + hdBan.getMaHoaDon() + "|" + hdBan.getTenDoiTac() + "|" + hdBan.getTienKhuyenMai() + "|" + hdBan.isDaThanhToan());
+                    String loaiHoaDonBan;
+                    if (!hdBan.isKhuyenMaiPhanBoTheoChiTiet()) {
+                        loaiHoaDonBan = "BAN";
+                    } else if (!"NONE".equals(hdBan.getKieuChietKhauHoaDon())) {
+                        loaiHoaDonBan = "BAN3";
+                    } else {
+                        loaiHoaDonBan = "BAN2";
+                    }
+                    bw.write(loaiHoaDonBan + "|" + hdBan.getMaHoaDon() + "|"
+                            + hdBan.getTenDoiTac() + "|" + hdBan.getTienKhuyenMai()
+                            + "|" + hdBan.isDaThanhToan());
+                    if (loaiHoaDonBan.equals("BAN3")) {
+                        bw.write("|" + hdBan.getKieuChietKhauHoaDon()
+                                + "|" + hdBan.getGiaTriChietKhauHoaDon());
+                    }
+                    bw.newLine();
                     bw.newLine();
                 } else if (hd instanceof HoaDonNhapHang) {
                     HoaDonNhapHang hdNhap = (HoaDonNhapHang) hd;
@@ -343,7 +358,8 @@ public class QuanLyHoaDon {
                 for (CTHoaDon ct : hd.getDanhSachChiTiet()) {
                     bw.write("CT|" + ct.getMaSanPham() + "|" + ct.getTenSanPham() + "|"
                             + ct.getSoLuong() + "|" + ct.getDonGia() + "|"
-                            + ct.getChietKhau() + "|" + ct.isHangKhuyenMai());
+                            + ct.getChietKhau() + "|" + ct.isHangKhuyenMai()
+                            + "|" + ct.getThanhTienSauKhuyenMai());
                     bw.newLine();
                 }
             }
@@ -362,12 +378,18 @@ public class QuanLyHoaDon {
                 String[] parts = line.split("\\|", -1);
                 if (parts.length > 0) {
                     String loai = parts[0];
-                    if (loai.equals("BAN") && parts.length == 5) { 
+                    if (((loai.equals("BAN") || loai.equals("BAN2")) && parts.length == 5)
+                            || (loai.equals("BAN3") && parts.length == 7)) {
                         if (timKiemTheoMa(parts[1]) == null) {
                             hdHienTai = new HoaDonBanHang(parts[1], parts[2]);
-                            // SỬA: Long.parseLong (viết hoa chữ L)
                             ((HoaDonBanHang) hdHienTai).setTienKhuyenMai(Long.parseLong(parts[3]));
                             ((HoaDonBanHang) hdHienTai).setDaThanhToan(Boolean.parseBoolean(parts[4]));
+                            ((HoaDonBanHang) hdHienTai)
+                                    .setKhuyenMaiPhanBoTheoChiTiet(!loai.equals("BAN"));
+                            if (loai.equals("BAN3")) {
+                                ((HoaDonBanHang) hdHienTai)
+                                        .setChietKhauHoaDon(parts[5], parts[6]);
+                            }
                             this.danhSachHoaDon.add(hdHienTai);
                         } else {
                             System.out.println("[!] Cảnh báo: Bỏ qua hóa đơn trùng mã " + parts[1] + " trong file!");
@@ -388,11 +410,15 @@ public class QuanLyHoaDon {
                             hdHienTai = null;
                         }
                     } else if (loai.equals("CT") && hdHienTai != null
-                            && (parts.length == 6 || parts.length == 7)) {
-                        // SỬA: Long.parseLong cho Đơn giá, Double.parseDouble cho Chiết khấu
-                        CTHoaDon ct = new CTHoaDon(parts[1], parts[2], Integer.parseInt(parts[3]),
-                                Long.parseLong(parts[4]), Double.parseDouble(parts[5]),
-                                parts.length == 7 && Boolean.parseBoolean(parts[6]));
+                            && (parts.length == 6 || parts.length == 7 || parts.length == 8)) {
+                        boolean hangKhuyenMai = parts.length >= 7
+                                && Boolean.parseBoolean(parts[6]);
+                        CTHoaDon ct = new CTHoaDon(parts[1], parts[2],
+                                Integer.parseInt(parts[3]), Long.parseLong(parts[4]),
+                                Double.parseDouble(parts[5]), hangKhuyenMai);
+                        if (parts.length == 8) {
+                            ct.setThanhTienSauKhuyenMai(Long.parseLong(parts[7]));
+                        }
                         hdHienTai.themChiTiet(ct);
                     }
                 }
