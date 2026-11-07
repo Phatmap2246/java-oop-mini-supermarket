@@ -64,7 +64,7 @@ public  class NhanVien extends Person {
     }
     /** Nhập và kiểm tra vai trò từ Scanner. */
     public void setVaiTro(Scanner sc){
-        vaitro = Validation.inputStringRegex(sc, "Nhap vai tro cho nhan vien:  ", "^QuanLy|KeToan|QuanKho|ThuNgan$", "Nhap sai dinh dang , hay nhap lai ( dinh dang: Carmels)");
+        vaitro = Validation.inputStringRegex(sc, "Nhap vai tro cho nhan vien:  ", "^(QuanLy|KeToan|QuanKho|ThuNgan)$", "Nhap sai dinh dang , hay nhap lai ( dinh dang: Carmels)");
     }
 
     /** Trả về lương cơ bản cộng phụ cấp trách nhiệm. */

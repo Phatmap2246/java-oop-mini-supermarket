@@ -16,9 +16,11 @@ public class Validation {
 
     // Email: Định dạng chuẩn abc@domain.com
     public static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
-    
-    public static final String MaNV_REGEX = "^NV\\d{3}$";
-    public static final String MaKH_REGEX = "^KH\\d{3,5}$";
+
+    public static final String MaNV_REGEX = "(?i)^NV\\d{3}$";
+    public static final String MaKH_REGEX = "(?i)^KH\\d{3,5}$";
+    private static final String DATE_REGEX =
+            "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/[0-9]{4}$";
 
     // ================= CÁC HÀM NHẬP SỐ =================
 
@@ -117,7 +119,7 @@ public class Validation {
         while(true) {
             System.out.print(message);
             String date = sc.nextLine();
-            if (!date.matches("^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/[0-9]{4}$")) {
+            if (!date.matches(DATE_REGEX)) {
                 System.out.println("[!] Bạn nhập sai định dạng (dd/MM/yyyy). Vui lòng nhập lại!");
                 continue;
             }

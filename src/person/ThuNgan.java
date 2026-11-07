@@ -2,6 +2,8 @@ package person;
 
 import java.time.LocalDate;
 import java.util.Scanner;
+import dichvu.DanhSachSPKM;
+import dichvu.Danhsachkhuyenmai;
 import hoadon.HoaDonBanHang;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -33,8 +35,11 @@ public class ThuNgan extends NhanVien {
     }
     public long tinhTienCuoiCa(){
         long tongTienCuoiCa = 0; 
-        for(HoaDonBanHang i: dsHoaDonBanHang)
-            tongTienCuoiCa += i.tinhTongTien();
+        for(HoaDonBanHang i: dsHoaDonBanHang) {
+            if (i.isDaThanhToan()) {
+                tongTienCuoiCa += i.tinhTongTien();
+            }
+        }
         return tongTienDauCa +  tongTienCuoiCa;
     }
     public void taoHoaDonThanhToan(Scanner sc){

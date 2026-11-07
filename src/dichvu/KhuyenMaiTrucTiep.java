@@ -30,12 +30,7 @@ public class KhuyenMaiTrucTiep extends Khuyenmai{
     public void setKM( Scanner sc )
     {
         super.setKM(sc);
-        soTienGiam = Validation.inputInt(sc , "Nhập số tiền giảm giá trực tiếp: ") ;
-        while ( soTienGiam > super.getMucChiToiThieu() )
-        {
-            System.out.println("Số tiền giảm giá không thể lớn hơn mức tiêu tối thiểu, vui lòng nhập lại: ");
-            soTienGiam = Validation.inputInt(sc , "Nhập số tiền giảm giá trực tiếp: " ) ;
-        }
+        soTienGiam = Validation.inputLong(sc, "Nhập số tiền giảm giá trực tiếp: ");
     }
     public String toString()
     {
