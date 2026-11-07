@@ -1,10 +1,8 @@
-package person; 
+package person;
+
 import java.util.Scanner;
 
 public class DiaChi {
-    // Nếu dự án đã có InputUtil hoặc Main.sc thì nên dùng chung, 
-    // còn nếu dùng độc lập thì giữ lại Scanner này:
-
     private String soNha;
     private String duong;
     private String phuongXa;
@@ -92,7 +90,7 @@ public class DiaChi {
 
     /** Nhập năm thành phần địa chỉ từ Scanner. */
     public void nhapDiaChi(Scanner sc) {
-        System.out.println("--- Nhập thông tin địa chỉ ---");
+        System.out.println("\n=== NHẬP ĐỊA CHỈ ===");
         System.out.print("Số nhà: ");
         this.soNha = sc.nextLine().trim();
         System.out.print("Đường: ");
@@ -108,11 +106,11 @@ public class DiaChi {
     /** Ghép các thành phần địa chỉ thành chuỗi phân cách bằng dấu phẩy. */
     @Override
     public String toString() {
-        return String.format("%s, %s, %s, %s, %s", soNha, duong, phuongXa, quanHuyen, tinhThanhPho);
+        return String.join(", ", soNha, duong, phuongXa, quanHuyen, tinhThanhPho);
     }
 
     /** In địa chỉ ra console. */
     public void xuatDiaChi() {
-        System.out.println(this.toString());
+        System.out.println("Địa chỉ: " + this);
     }
 }

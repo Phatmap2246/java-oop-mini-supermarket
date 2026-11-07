@@ -2,6 +2,7 @@ package person;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+
 import utils.Validation;
 
 public class DSKhachHang {
@@ -34,9 +35,9 @@ public class DSKhachHang {
 
     /** Nhập số lượng rồi nhập thông tin và thêm từng khách hàng vào danh sách. */
     public void taoDS(Scanner sc) {
-        int n = Validation.inputInt(sc, "Nhap so khach hang tao danh sach: ");
+        int n = Validation.inputInt(sc, "Nhập số khách hàng cần tạo: ");
         for (int i = 0; i < n; i++) {
-            System.out.println("\n--- Nhap khach hang thu " + (i + 1) + " ---");
+            System.out.printf("%n--- Nhập khách hàng %d/%d ---%n", i + 1, n);
             KhachHang kh = new KhachHang();
             kh.nhapThongTin(sc);
             list.add(kh);
@@ -46,13 +47,13 @@ public class DSKhachHang {
     /** In thông tin từng khách hàng; thông báo nếu danh sách rỗng. */
     public void xuatDSKH() {
         if (list == null || list.isEmpty()) {
-            System.out.println("Danh sach khach hang rong.");
+            System.out.println("[!] Danh sách khách hàng đang trống.");
             return;
         }
 
-        System.out.println("\n--- DANH SACH KHACH HANG ---");
+        System.out.println("\n=== DANH SÁCH KHÁCH HÀNG ===");
         for (KhachHang kh : list) {
-            System.out.println(kh.toString());
+            System.out.println(kh);
         }
     }
 
@@ -63,12 +64,12 @@ public class DSKhachHang {
 
         // Kiểm tra xem mã khách hàng đã tồn tại trong danh sách chưa
         if (timKH(kh.getMaKhachHang()) != -1) {
-            System.out.println("[!] Ma khach hang da ton tai trong danh sach. Khong the them!");
+            System.out.println("[!] Mã khách hàng đã tồn tại, không thể thêm.");
             return;
         }
 
         list.add(kh);
-        System.out.println("[+] Da them khach hang " + kh.getMaKhachHang() + " thanh cong!");
+        System.out.println("[+] Đã thêm khách hàng " + kh.getMaKhachHang() + ".");
     }
 
     /** Tìm vị trí khách hàng theo mã; trả về -1 nếu không tìm thấy. */
@@ -94,9 +95,12 @@ public class DSKhachHang {
     /** Tìm danh sách khách hàng theo họ tên (tìm kiếm gần đúng). */
     public ArrayList<KhachHang> timKiemTheoTen(String hoTen) {
         ArrayList<KhachHang> ketQua = new ArrayList<>();
-        if (hoTen == null || list == null) return ketQua;
+        if (hoTen == null || list == null) {
+            return ketQua;
+        }
         for (KhachHang kh : list) {
-            if (kh.getHoten() != null && kh.getHoten().toLowerCase().contains(hoTen.toLowerCase().trim())) {
+            if (kh.getHoten() != null
+                    && kh.getHoten().toLowerCase().contains(hoTen.toLowerCase().trim())) {
                 ketQua.add(kh);
             }
         }
@@ -108,9 +112,9 @@ public class DSKhachHang {
         int idx = timKH(maKH);
         if (idx != -1) {
             list.remove(idx);
-            System.out.println("[+] Da xoa khach hang co ma " + maKH);
+            System.out.println("[+] Đã xóa khách hàng có mã " + maKH + ".");
         } else {
-            System.out.println("Khong tim thay trong danh sach");
+            System.out.println("[!] Không tìm thấy khách hàng trong danh sách.");
         }
     }
 
@@ -118,31 +122,31 @@ public class DSKhachHang {
     public boolean suaKH(String maKH, Scanner sc) {
         int idx = timKH(maKH);
         if (idx == -1) {
-            System.out.println("Khong tim thay trong danh sach");
+            System.out.println("[!] Không tìm thấy khách hàng trong danh sách.");
             return false;
         }
 
         KhachHang kh = list.get(idx);
         int choice;
         do {
-            System.out.println("\n--- SUA THONG TIN KHACH HANG: " + kh.getMaKhachHang() + " ---");
-            System.out.println("1. Ma khach hang");
-            System.out.println("2. Ho ten");
+            System.out.println("\n=== CẬP NHẬT KHÁCH HÀNG: " + kh.getMaKhachHang() + " ===");
+            System.out.println("1. Mã khách hàng");
+            System.out.println("2. Họ tên");
             System.out.println("3. Email");
-            System.out.println("4. So dien thoai");
-            System.out.println("5. Ngay sinh");
-            System.out.println("6. Dia chi");
-            System.out.println("7. Ngay dang ky");
-            System.out.println("8. Tong chi tieu");
-            System.out.println("9. Diem tich luy");
-            System.out.println("0. Hoan tat");
-            choice = Validation.inputInt(sc, "Chon thong tin muon sua: ");
+            System.out.println("4. Số điện thoại");
+            System.out.println("5. Ngày sinh");
+            System.out.println("6. Địa chỉ");
+            System.out.println("7. Ngày đăng ký");
+            System.out.println("8. Tổng chi tiêu");
+            System.out.println("9. Điểm tích lũy");
+            System.out.println("0. Hoàn tất");
+            choice = Validation.luaChon(sc, "Chọn thông tin cần sửa (0-9): ", 0, 9);
 
             switch (choice) {
                 case 1:
                     String maMoi = Validation.inputStringRegex(
-                            sc, "Nhap ma khach hang moi: ", Validation.MaKH_REGEX,
-                            "Ma khach hang chua dung dinh dang (KHxxx)!");
+                            sc, "Nhập mã khách hàng mới: ", Validation.MaKH_REGEX,
+                            "Mã khách hàng không đúng định dạng (KHxxx).");
                     boolean biTrung;
                     do {
                         biTrung = false;
@@ -151,9 +155,9 @@ public class DSKhachHang {
                             if (i != idx && maTrongDanhSach != null && maTrongDanhSach.equalsIgnoreCase(maMoi)) {
                                 biTrung = true;
                                 maMoi = Validation.inputStringRegex(
-                                        sc, "Ma da ton tai, nhap ma khach hang khac: ",
+                                        sc, "Mã đã tồn tại, nhập mã khác: ",
                                         Validation.MaKH_REGEX,
-                                        "Ma khach hang chua dung dinh dang (KHxxx)!");
+                                        "Mã khách hàng không đúng định dạng (KHxxx).");
                                 break;
                             }
                         }
@@ -176,21 +180,22 @@ public class DSKhachHang {
                     kh.setDiachi(sc);
                     break;
                 case 7:
-                    kh.setNgayDangKy(Validation.inputLocalDateRegex(sc, "Nhap ngay dang ky moi (dd/MM/yyyy): "));
+                    kh.setNgayDangKy(Validation.inputLocalDateRegex(
+                            sc, "Nhập ngày đăng ký mới (dd/MM/yyyy): "));
                     break;
                 case 8:
-                    long tongChiTieuMoi = Validation.inputLong(sc, "Nhap tong chi tieu moi (VND): ");
+                    long tongChiTieuMoi = Validation.inputLong(sc, "Nhập tổng chi tiêu mới (VND): ");
                     kh.setTongChiTieu(tongChiTieuMoi);
                     kh.capNhatThuHang();
                     break;
                 case 9:
-                    int diemMoi = Validation.inputInt(sc, "Nhap diem tich luy moi: ");
+                    int diemMoi = Validation.inputInt(sc, "Nhập điểm tích lũy mới: ");
                     kh.setDiemTichLuy(diemMoi);
                     break;
                 case 0:
                     break;
                 default:
-                    System.out.println("Lua chon khong hop le, vui long chon lai.");
+                    System.out.println("[!] Lựa chọn không hợp lệ, vui lòng thử lại.");
             }
         } while (choice != 0);
 
@@ -200,7 +205,7 @@ public class DSKhachHang {
     /** Thống kê số lượng khách hàng theo từng hạng thành viên. */
     public void thongKeTheoHang() {
         if (list == null || list.isEmpty()) {
-            System.out.println("Danh sach khach hang rong.");
+            System.out.println("[!] Danh sách khách hàng đang trống.");
             return;
         }
 
@@ -213,12 +218,11 @@ public class DSKhachHang {
             else dong++;
         }
 
-        System.out.println("\n--- THONG KE HANG THANH VIEN ---");
-        System.out.println("Tong so khach hang: " + list.size());
-        System.out.println("- Hang Dong: " + dong);
-        System.out.println("- Hang Bac: " + bac);
-        System.out.println("- Hang Vang: " + vang);
-        System.out.println("- Hang Kim Cuong: " + kimCuong);
+        System.out.println("\n=== THỐNG KÊ HẠNG THÀNH VIÊN ===");
+        System.out.println("Tổng khách hàng: " + list.size());
+        System.out.println("Đồng       : " + dong);
+        System.out.println("Bạc        : " + bac);
+        System.out.println("Vàng       : " + vang);
+        System.out.println("Kim Cương  : " + kimCuong);
     }
 }
-

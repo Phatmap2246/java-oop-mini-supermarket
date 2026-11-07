@@ -161,5 +161,22 @@ if ($testResult -ne 0) { exit $testResult }
 
 - Kết quả gần nhất: **60 assertions đạt**. Các test đã phát hiện và sửa lỗi ở `Person.setEmail(String)`, `setHoten(String)` và `setSdt(String)`: trước đây các hàm kiểm tra giá trị cũ, khiến không thể gán giá trị mới khi đối tượng chưa có thông tin.
 - Bộ test bao phủ các luồng trọng yếu, không thay thế kiểm thử mọi nhánh nhập liệu tương tác hoặc toàn bộ nghiệp vụ cập nhật kho, hóa đơn và công nợ.
-- Biên dịch toàn bộ `src` hiện vẫn thất bại do dấu xung đột Git chưa xử lý trong `src/dichvu/Danhsachdoitac.java` (khoảng dòng 55–62). Đây là vấn đề ngoài phạm vi bộ test `person`; cần giải quyết trước khi xác nhận toàn dự án sẵn sàng build/commit.
-- `git diff --check` cũng đang báo khoảng trắng thừa trên một số dòng trong phần thay đổi hiện có của `ThuNgan.java`; cần dọn trước khi commit nếu muốn diff sạch.
+## Cập nhật ngày 7/11/2026
+
+### Chuẩn hóa bố cục và thông báo console
+
+- Chuẩn hóa cách xuống dòng, thụt lề, nhóm import và trình bày phương thức trong các lớp thuộc gói `person`; không thay đổi mục tiêu nghiệp vụ của các luồng hiện có.
+- Các lớp `Person`, `NhanVien`, `DSNhanVien`, `DSKhachHang` và `QuanLy` dùng tiêu đề, lời nhắc và thông báo tiếng Việt rõ ràng, nhất quán hơn.
+- `DSNhanVien.suaNV()` giới hạn lựa chọn menu trong khoảng `0–9`; mã nhân viên mới được kiểm tra để tránh trùng với nhân viên khác trong danh sách.
+- `DSKhachHang` dùng kiểm tra lựa chọn menu khi sửa thông tin. Các thông báo danh sách, thống kê và kết quả thao tác được trình bày gọn hơn.
+- `KhachHang` trình bày thao tác giỏ hàng và bảng sản phẩm rõ ràng hơn; lựa chọn thêm sản phẩm được giới hạn trong `0–1`.
+- `DiaChi.nhapDiaChi()` có tiêu đề nhập liệu; `toString()` ghép năm thành phần bằng dấu phẩy và `xuatDiaChi()` in kèm nhãn địa chỉ.
+- `ThuNgan.thayCa()` đóng luồng ghi file bằng try-with-resources; quy ước nội dung lịch sử hóa đơn hiện có được giữ lại.
+- Các menu quản lý nhân sự, phân ca và sản phẩm của `QuanLy` được trình bày thống nhất hơn.
+- `KeToan` được chuẩn hóa thụt lề và cách trình bày các luồng công nợ; chữ ký và nghiệp vụ kế toán được giữ nguyên.
+
+### Kiểm tra mã nguồn
+
+- Biên dịch toàn bộ mã nguồn chính thành công với các thư viện trong `lib` bằng `javac -encoding UTF-8 -cp "lib/*"`.
+- Chưa biên dịch được `test/person/PersonPackageTest.java`: bốn kiểm thử gọi các hàm `KeToan.tinhTongDoanhThu()`, `tinhTongChiPhi()`, `tinhLoiNhuan()` và `tinhLoiNhuanRong()` không có tham số, trong khi các hàm hiện tại yêu cầu `ArrayList<HoaDon>`.
+- `git diff --check` không phát hiện lỗi khoảng trắng trong các tệp thuộc gói `person` đã chỉnh sửa ở lần kiểm tra này.

@@ -3,6 +3,7 @@ package person;
 import hoadon.CTHoaDon;
 import hoadon.HoaDonBanHang;
 import sanpham.QuanLySanPham;
+import utils.YeuCau;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -146,10 +147,12 @@ public class PersonPackageTest {
         check(!Files.exists(requestFile), "Request test starts in isolated working directory");
 
         NhanVien employee = employee("NV003", "KeToan");
-        employee.taoYeuCau(new Scanner("Đề nghị duyệt thanh toán\n"));
-        equal("NV003|KeToan|Đề nghị duyệt thanh toán|ChoDuyet",
-                Files.readAllLines(requestFile, StandardCharsets.UTF_8).get(0),
-                "NhanVien writes request in expected format");
+        employee.taoYeuCau(new Scanner("Đề nghị duyệt thanh toán, nội dung | cần xét\n"));
+        ArrayList<YeuCau.BanGhiDataBase> requests = YeuCau.docDanhSach(requestFile);
+        equal(1, requests.size(), "NhanVien writes request in DataBase format");
+        equal("Đề nghị duyệt thanh toán, nội dung | cần xét",
+                requests.get(0).getNoiDung(), "Request content supports CSV separators");
+        equal("ChoDuyet", requests.get(0).getTrangThai(), "New request starts pending");
 
         ThuNgan cashier = new ThuNgan(
                 "cashier@example.com", "Tran Thi D", "0912345678", new DiaChi(),
@@ -163,21 +166,21 @@ public class PersonPackageTest {
         QuanLy manager = new QuanLy();
         equal("QuanLy", manager.getVaiTro(), "QuanLy role");
         manager.duyetYeuCau(new Scanner("1\n0\n1\n"));
-        ArrayList<String> requests = new ArrayList<>(
-                Files.readAllLines(requestFile, StandardCharsets.UTF_8));
-        equal("DaDuyet", requests.get(0).split("\\|", -1)[3], "QuanLy approves request");
-        equal("KhongDuyet", requests.get(1).split("\\|", -1)[3], "QuanLy rejects request");
-        equal("DaDuyet", requests.get(2).split("\\|", -1)[3], "QuanLy approves accountant request");
+        requests = YeuCau.docDanhSach(requestFile);
+        equal("DaDuyet", requests.get(0).getTrangThai(), "QuanLy approves request");
+        equal("KhongDuyet", requests.get(1).getTrangThai(), "QuanLy rejects request");
+        equal("DaDuyet", requests.get(2).getTrangThai(), "QuanLy approves accountant request");
 
         Files.write(requestFile, java.util.Arrays.asList(
                 "NV001|KeToan|bad|ChoDuyet|extra",
                 "NV002|KeToan|already done|DaDuyet",
                 "NV003|KeToan|pending|ChoDuyet"), StandardCharsets.UTF_8);
         manager.duyetYeuCau(new Scanner("1\n"));
-        requests = new ArrayList<>(Files.readAllLines(requestFile, StandardCharsets.UTF_8));
-        equal("NV001|KeToan|bad|ChoDuyet|extra", requests.get(0), "Manager preserves malformed request");
-        equal("NV002|KeToan|already done|DaDuyet", requests.get(1), "Manager preserves processed request");
-        equal("DaDuyet", requests.get(2).split("\\|", -1)[3], "Manager processes valid pending request");
+        requests = YeuCau.docDanhSach(requestFile);
+        equal("NV001|KeToan|bad|ChoDuyet|extra",
+                requests.get(0).getDongLoi(), "Manager preserves malformed request");
+        equal("DaDuyet", requests.get(2).getTrangThai(),
+                "Manager processes valid pending request");
     }
 
     private static void testThuNganShift() throws Exception {

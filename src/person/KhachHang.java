@@ -3,6 +3,7 @@ package person;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 import hoadon.CTHoaDon;
 import utils.DateUtil;
 import utils.Validation;
@@ -145,33 +146,36 @@ public class KhachHang extends Person {
      * dồn số lượng.
      */
     public void themVaoGioHang(CTHoaDon ct) {
-        if (ct == null)
+        if (ct == null) {
             return;
+        }
         for (CTHoaDon item : gioHang) {
             if (item.getMaSanPham().equalsIgnoreCase(ct.getMaSanPham())) {
                 item.setSoLuong(item.getSoLuong() + ct.getSoLuong());
-                System.out.println("[+] Đã tăng số lượng sản phẩm [" + ct.getTenSanPham() + "] trong giỏ hàng thành: "
-                        + item.getSoLuong());
+                System.out.printf("[+] Đã cập nhật %s: %d sản phẩm.%n",
+                        ct.getTenSanPham(), item.getSoLuong());
                 return;
             }
         }
         gioHang.add(ct);
-        System.out.println("[+] Đã thêm [" + ct.getTenSanPham() + "] vào giỏ hàng thành công!");
+        System.out.println("[+] Đã thêm " + ct.getTenSanPham() + " vào giỏ hàng.");
     }
 
     /**
      * Nhập thêm món hàng vào giỏ từ bàn phím qua Scanner.
      */
     public void themVaoGioHang(Scanner sc) {
-        if (sc == null)
+        if (sc == null) {
             sc = new Scanner(System.in);
-        System.out.println("\n--- THÊM SẢN PHẨM VÀO GIỎ HÀNG ---");
+        }
+        System.out.println("\n=== THÊM SẢN PHẨM VÀO GIỎ HÀNG ===");
         while (true) {
             CTHoaDon ct = new CTHoaDon();
             ct.nhapThongTin(sc, true);
             themVaoGioHang(ct);
 
-            int tiepTuc = Validation.inputInt(sc, "Bạn có muốn thêm tiếp sản phẩm khác vào giỏ? (1: Có / 0: Không): ");
+            int tiepTuc = Validation.luaChon(
+                    sc, "Thêm sản phẩm khác? (1: Có / 0: Không): ", 0, 1);
             if (tiepTuc == 0) {
                 break;
             }
@@ -182,16 +186,17 @@ public class KhachHang extends Person {
      * Xóa một sản phẩm khỏi giỏ hàng theo mã sản phẩm.
      */
     public boolean xoaKhoiGioHang(String maSP) {
-        if (maSP == null || gioHang.isEmpty())
+        if (maSP == null || gioHang.isEmpty()) {
             return false;
+        }
         for (int i = 0; i < gioHang.size(); i++) {
             if (gioHang.get(i).getMaSanPham().equalsIgnoreCase(maSP.trim())) {
                 CTHoaDon removed = gioHang.remove(i);
-                System.out.println("[+] Đã xóa [" + removed.getTenSanPham() + "] khỏi giỏ hàng!");
+                System.out.println("[+] Đã xóa " + removed.getTenSanPham() + " khỏi giỏ hàng.");
                 return true;
             }
         }
-        System.out.println("[!] Không tìm thấy sản phẩm có mã " + maSP + " trong giỏ hàng!");
+        System.out.println("[!] Không tìm thấy sản phẩm mã " + maSP + " trong giỏ hàng.");
         return false;
     }
 
@@ -200,24 +205,25 @@ public class KhachHang extends Person {
      * Nếu số lượng mới <= 0, món hàng sẽ tự động bị xóa khỏi giỏ.
      */
     public boolean suaSoLuongTrongGioHang(String maSP, int soLuongMoi) {
-        if (maSP == null || gioHang.isEmpty())
+        if (maSP == null || gioHang.isEmpty()) {
             return false;
+        }
         for (int i = 0; i < gioHang.size(); i++) {
             CTHoaDon item = gioHang.get(i);
             if (item.getMaSanPham().equalsIgnoreCase(maSP.trim())) {
                 if (soLuongMoi <= 0) {
                     gioHang.remove(i);
-                    System.out.println(
-                            "[+] Số lượng <= 0, đã xóa sản phẩm [" + item.getTenSanPham() + "] khỏi giỏ hàng!");
+                    System.out.println("[+] Đã xóa " + item.getTenSanPham()
+                            + " vì số lượng mới không lớn hơn 0.");
                 } else {
                     item.setSoLuong(soLuongMoi);
-                    System.out.println(
-                            "[+] Đã cập nhật số lượng cho [" + item.getTenSanPham() + "] thành: " + soLuongMoi);
+                    System.out.println("[+] Đã cập nhật số lượng " + item.getTenSanPham()
+                            + " thành " + soLuongMoi + ".");
                 }
                 return true;
             }
         }
-        System.out.println("[!] Không tìm thấy sản phẩm có mã " + maSP + " trong giỏ hàng!");
+        System.out.println("[!] Không tìm thấy sản phẩm mã " + maSP + " trong giỏ hàng.");
         return false;
     }
 
@@ -236,34 +242,24 @@ public class KhachHang extends Person {
      * Hiển thị danh sách các món hiện có trong giỏ hàng kèm tổng tiền tạm tính.
      */
     public void xemGioHang() {
-        System.out.println(
-                "\n==========================================================================================");
-        System.out.println("                           GIỎ HÀNG CỦA KHÁCH: "
-                + (getHoten() != null ? getHoten().toUpperCase() : ""));
-        System.out
-                .println("==========================================================================================");
+        System.out.println("\n=== GIỎ HÀNG: "
+                + (getHoten() != null ? getHoten().toUpperCase() : "KHÁCH HÀNG") + " ===");
         if (gioHang.isEmpty()) {
-            System.out.println("                      [ Giỏ hàng hiện đang trống ]");
-            System.out.println(
-                    "==========================================================================================");
+            System.out.println("Giỏ hàng đang trống.");
             return;
         }
 
-        System.out.printf("%-5s | %-10s | %-25s | %-5s | %15s | %15s\n",
-                "STT", "Mã SP", "Tên Sản Phẩm", "SL", "Đơn Giá", "T.Tiền (VND)");
-        System.out
-                .println("------------------------------------------------------------------------------------------");
+        System.out.printf("%-4s | %-10s | %-24s | %5s | %12s | %14s%n",
+                "STT", "Mã SP", "Tên sản phẩm", "SL", "Đơn giá", "Thành tiền");
+        System.out.println("--------------------------------------------------------------------------");
 
         int stt = 1;
         for (CTHoaDon ct : gioHang) {
-            System.out.printf("%-5d | %-10s | %-25s | %-5d | %15d | %15d\n",
+            System.out.printf("%-4d | %-10s | %-24s | %5d | %,12d | %,14d%n",
                     stt++, ct.getMaSanPham(), ct.getTenSanPham(), ct.getSoLuong(), ct.getDonGia(), ct.tinhThanhTien());
         }
-        System.out
-                .println("------------------------------------------------------------------------------------------");
-        System.out.printf("%65s %18d VND\n", "TỔNG TẠM TÍNH:", tinhTongTienGioHang());
-        System.out
-                .println("==========================================================================================");
+        System.out.println("--------------------------------------------------------------------------");
+        System.out.printf("Tổng tạm tính: %,d VND%n", tinhTongTienGioHang());
     }
 
     /**
