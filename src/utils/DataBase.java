@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class DataBase {
     public static ArrayList<Field> getALlField(Class<?> clazz){
@@ -96,7 +97,26 @@ public class DataBase {
            return null;
        }
     }
-
+    public static <T> T taoObjectTuTerminal(Class<T> clazz, Scanner sc){
+        System.out.println("nhap cac gia tri cho" + clazz);
+        ArrayList<Field> fields = DataBase.getALlField(clazz);
+        try{
+            T inst = clazz.getDeclaredConstructor().newInstance();
+            for(Field field : fields){
+                field.setAccessible(true);
+                System.out.println("nhap gia tri: " + field.getName());
+                String inputString = sc.nextLine().trim();
+                Object value = DataBase.getDataType(inputString,field.getType());
+                field.set(inst,value);
+            }
+            System.out.println("Tao "+ clazz + "thanh cong");
+            return inst;
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
     public static void ghiVaoFile(Object obj, String filePath,boolean ghiDe){
         String headers = DataBase.getCSVHeader(obj);
         String csvLine = DataBase.getCSVLine(obj);
