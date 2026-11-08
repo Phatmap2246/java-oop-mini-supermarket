@@ -19,12 +19,13 @@ public class KhuyenMaiPhanTram extends  Khuyenmai{
     public KhuyenMaiPhanTram(String maKhuyenMai , String loaiKhuyenMai , LocalDate ngayBatDau , LocalDate ngayKetThuc , long mucChiToiThieu , ArrayList<SanPham> danhSachKhuyenMai , double phanTramGiamGia , long mucGiamToiDa )
     {
         super(maKhuyenMai, loaiKhuyenMai, ngayBatDau, ngayKetThuc, mucChiToiThieu, danhSachKhuyenMai);
-        this.phanTramGiamGia = phanTramGiamGia ;
+        setPhanTramGiamGia(phanTramGiamGia > 1
+                ? phanTramGiamGia / 100.0 : phanTramGiamGia);
         this.mucGiamToiDa = mucGiamToiDa ;
     }
 
     public void setPhanTramGiamGia(double phanTramGiamGia) {
-        this.phanTramGiamGia = phanTramGiamGia;
+        this.phanTramGiamGia = Math.max(0, Math.min(1, phanTramGiamGia));
     }
 
     public double getPhanTramGiamGia() {
@@ -42,12 +43,23 @@ public class KhuyenMaiPhanTram extends  Khuyenmai{
     public void setKM(Scanner sc )
     {
         super.setKM(sc);
-        phanTramGiamGia = Validation.inputDouble(sc , "Nhập phần trăm giảm giá cho sản phẩm: ") ;
-        if ( phanTramGiamGia > 1 ) phanTramGiamGia *= 0.01 ;
-        mucGiamToiDa = Validation.inputLong(sc , "Nhập số tiền được giảm tối đa: ") ;
+        double phanTramNhap = Validation.inputDouble(sc, "Nhập phần trăm giảm giá cho sản phẩm: ");
+        while (phanTramNhap > 100) {
+            System.out.println("[!] Phần trăm giảm giá không được vượt quá 100%.");
+            phanTramNhap = Validation.inputDouble(sc, "Nhập phần trăm giảm giá cho sản phẩm: ");
+        }
+        setPhanTramGiamGia(phanTramNhap / 100.0);
+        do {
+            mucGiamToiDa = Validation.inputLong(sc, "Nhập số tiền được giảm tối đa: ");
+            if (mucGiamToiDa == 0) {
+                System.out.println("[!] Mức giảm tối đa phải lớn hơn 0.");
+            }
+        } while (mucGiamToiDa == 0);
     }
     public String toString()
     {
-        return super.toString()  + " | Phần trăm giảm giá: " + phanTramGiamGia + " | Mức giảm tối đa: " + mucGiamToiDa ;
+        return super.toString() + String.format(
+                " | Phần trăm giảm giá: %.2f%% | Mức giảm tối đa: %d",
+                phanTramGiamGia * 100, mucGiamToiDa);
     }
 }

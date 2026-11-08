@@ -48,13 +48,41 @@ public class Danhsachdoitac {
         danhSachDoiTac.add(donViVanChuyen);
         System.out.println("Thêm đơn vị vận chuyển thành công!");
     }
+
+    public void taoDanhSachXeChoDonViVanChuyen(Scanner sc)
+    {
+        ArrayList<Donvivanchuyen> donViVanChuyens = new ArrayList<>();
+        for (Doitac doiTac : danhSachDoiTac)
+        {
+            if (doiTac instanceof Donvivanchuyen)
+            {
+                donViVanChuyens.add((Donvivanchuyen) doiTac);
+            }
+        }
+        if (donViVanChuyens.isEmpty())
+        {
+            System.out.println("Chưa có đơn vị vận chuyển trong danh sách đối tác.");
+            return;
+        }
+
+        System.out.println("Chọn đơn vị vận chuyển cần đăng ký xe:");
+        for (int i = 0; i < donViVanChuyens.size(); i++)
+        {
+            Doitac donVi = donViVanChuyens.get(i);
+            System.out.println((i + 1) + ". " + donVi.getTenDoiTac()
+                    + " (" + donVi.getMaDoiTac() + ")");
+        }
+        int luaChon = Validation.luaChon(sc, "Chọn đơn vị: ", 1, donViVanChuyens.size());
+        donViVanChuyens.get(luaChon - 1).taoDanhSachXe(sc);
+    }
+
     public void taoDuLieuDoiTac(Scanner sc)
     {
         System.out.println("Tạo danh sách đối tác!");
         do {
+            themDoiTac(sc);}
+        while (Validation.luaChon(sc, "Bạn có muốn tiếp tục thêm đối tác(1/0): ", 0, 1) == 1);
             themDoiTac(sc);
-        } while (Validation.luaChon(sc, "Bạn có muốn tiếp tục thêm đối tác(1/0): ", 0, 1) == 1);
-
         System.out.println("Tạo dữ liệu đối tác thành công!");
     }
     public int traCuuThongTinDoiTac(String maDoiTac)

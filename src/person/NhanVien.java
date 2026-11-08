@@ -1,7 +1,14 @@
 package person; 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDate;
 import java.util.Scanner;
 import utils.Validation;
+import utils.YeuCau;
 public  class NhanVien extends Person {
     String maNV; 
     String vaitro; 
@@ -57,7 +64,7 @@ public  class NhanVien extends Person {
     }
     /** Nhập và kiểm tra vai trò từ Scanner. */
     public void setVaiTro(Scanner sc){
-        vaitro = Validation.inputStringRegex(sc, "Nhap vai tro cho nhan vien:  ", "^QuanLy|KeToan|QuanKho|ThuNgan$", "Nhap sai dinh dang , hay nhap lai ( dinh dang: Carmels)");
+        vaitro = Validation.inputStringRegex(sc, "Nhap vai tro cho nhan vien:  ", "^(QuanLy|KeToan|QuanKho|ThuNgan)$", "Nhap sai dinh dang , hay nhap lai ( dinh dang: Carmels)");
     }
 
     /** Trả về lương cơ bản cộng phụ cấp trách nhiệm. */
@@ -107,10 +114,25 @@ public  class NhanVien extends Person {
         " | Vai tro: " + vaitro +
         " | Luong: " + luong + " | Phu cap trach nhiem: " + phuCapTrachNhiem ;
     }
-        public void yeuCau(String maHD, Scanner sc){
-        //tìm mã hóa đơn
-        String nd = sc.nextLine();
-        String ht = sc.nextLine();
-        //ghi yeu cau vao file: maHD, hinh thuc ,ND yeu cau
+    public void taoYeuCau(Scanner sc) throws IOException {
+        String noiDung;
+        do {
+            System.out.print("Nhập nội dung yêu cầu (không dùng ký tự |): ");
+            noiDung = sc.nextLine().trim();
+            if (noiDung.isEmpty() || noiDung.contains("|")) {
+                System.out.println("Nội dung không được để trống hoặc chứa ký tự |.");
+            }
+        } while (noiDung.isEmpty() || noiDung.contains("|"));
+
+        YeuCau yeuCau = new YeuCau(getMaNV(), getVaiTro(), noiDung, "ChoDuyet");
+        try (BufferedWriter writer = Files.newBufferedWriter(
+                Paths.get("YeuCau.txt"),
+                StandardCharsets.UTF_8,
+                StandardOpenOption.CREATE,
+                StandardOpenOption.APPEND)) {
+            writer.write(yeuCau.toFileFormat());
+            writer.newLine();
+        }
+        System.out.println("Đã ghi yêu cầu vào YeuCau.txt.");
     }
 }
