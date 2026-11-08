@@ -7,6 +7,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import hoadon.CTHoaDon;
 import sanpham.DienTu;
 import sanpham.QuanLySanPham;
 import sanpham.SanPham;
@@ -257,9 +258,84 @@ public class QuanKho extends NhanVien {
     }
 
     /**
-     * Tìm sản phẩm theo mã trong kho(file này là kho đk :
-     * QuanLySanPham.danhSachSanPham).
+     * nhập hàng vào kho:
+     * Cho phép Quản kho nhập danh sách các mặt hàng (mã SP, tên, số lượng nhập, đơn
+     * giá nhập),
+     * cập nhật số lượng tồn trong kho và TRẢ VỀ danh sách các chi tiết nhập
+     * (ArrayList<CTHoaDon>)
+     * để chuyển giao cho bên Đối tác (Nhà cung cấp ).
      */
+    public ArrayList<CTHoaDon> nhapHangvaokho(Scanner sc) {
+        System.out.println("\n=======================================================");
+        System.out.println("                     NHẬP HÀNG VÀO KHO                  ");
+        System.out.println("=======================================================");
+
+        ArrayList<CTHoaDon> danhSachNhap = new ArrayList<>();
+
+        while (true) {
+            String maSP = Validation.inputStringRegex(sc,
+                    "Nhập mã sản phẩm cần nhập (VD: SP001): ",
+                    "^SP\\d+$",
+                    "Mã sản phẩm không đúng định dạng (VD: SP001)!");
+
+            SanPham sp = timSanPham(maSP);
+            String tenSP;
+            long donGiaNhap;
+
+            if (sp != null) {
+                tenSP = sp.getTenSanPham();
+                donGiaNhap = sp.getGiaNhap();
+                System.out.println("[+] Sản phẩm có sẵn: " + tenSP + " | Tồn kho hiện tại: " + sp.getSoLuong()
+                        + " | Giá nhập chuẩn: " + donGiaNhap + " VND");
+            } else {
+                System.out.println("[!] Sản phẩm chưa có trong kho, vui lòng nhập thông tin ban đầu:");
+                System.out.print("Nhập tên sản phẩm: ");
+                tenSP = sc.nextLine().trim();
+                donGiaNhap = Validation.inputLong(sc, "Nhập giá nhập (VND): ");
+            }
+
+            int soLuongNhap = Validation.inputInt(sc, "Nhập số lượng muốn nhập: ");
+
+            // Cập nhật tồn kho nếu sản phẩm đã có trong kho
+            if (sp != null) {
+                sp.setSoLuong(sp.getSoLuong() + soLuongNhap);
+            }
+
+            // Tạo chi tiết nhập (CTHoaDon: maSP, tenSP, soLuong, donGia, chietKhau = 0)
+            CTHoaDon cthd = new CTHoaDon(maSP, tenSP, soLuongNhap, donGiaNhap, 0.0);
+            danhSachNhap.add(cthd);
+
+            System.out.printf("[+] Đã thêm vào danh sách nhập: [%s - %s] x %d cái.\n", maSP, tenSP, soLuongNhap);
+
+            int tiepTuc = Validation.inputInt(sc, "Bạn có muốn nhập tiếp sản phẩm khác không? (1: Có / 0: Không): ");
+            if (tiepTuc == 0) {
+                break;
+            }
+        }
+
+        System.out.println("\n[+] ĐÃ HOÀN TẤT TÙY CHỌN NHẬP HÀNG! Tổng cộng: " + danhSachNhap.size() + " mặt hàng.");
+        return danhSachNhap;
+    }
+
+    /**
+     * Tùy chọn nhập hàng từ danh sách sản phẩm có rồi
+     */
+    public ArrayList<CTHoaDon> nhapHangTuDanhSach(ArrayList<CTHoaDon> danhSachNhap) {
+        if (danhSachNhap == null || danhSachNhap.isEmpty()) {
+            System.out.println("[!] Danh sách nhập rỗng, không thể cập nhật kho.");
+            return new ArrayList<>();
+        }
+
+        for (CTHoaDon ct : danhSachNhap) {
+            SanPham sp = timSanPham(ct.getMaSanPham());
+            if (sp != null) {
+                sp.setSoLuong(sp.getSoLuong() + ct.getSoLuong());
+            }
+        }
+        System.out.println("[+] Đã cập nhật xong " + danhSachNhap.size() + " mặt hàng vào kho.");
+        return danhSachNhap;
+    }
+
     public SanPham timSanPham(String maSP) {
         if (maSP == null)
             return null;
@@ -271,7 +347,7 @@ public class QuanKho extends NhanVien {
         return null;
     }
 
-    /** In danh sách các sản phẩm đang có trong kho duy nhất. */
+    /** In danh sách các sản phẩm đang có trong kho */
     public void inDanhSachKho() {
         System.out.println("\n=========================== DANH SÁCH SẢN PHẨM TRONG KHO ===========================");
         if (QuanLySanPham.danhSachSanPham.isEmpty()) {
