@@ -24,19 +24,13 @@ public class KeToan extends NhanVien {
     private final ArrayList<Boolean> daThanhToanCongNo = new ArrayList<>();
 
     public long tinhTongDoanhThu(ArrayList<HoaDon> dshd) {
-        long tienBan;
-        for (int i = 0; i < dshd.size(); i++) {
-            tienBan = 0;
-            if (dshd.get(i) instanceof HoaDonBanHang) {
-                tienBan = dshd.get(i).tinhTongTien();
-                doanhThu.add(tienBan);
+        long tongDoanhThu = 0;
+        for (HoaDon hoaDon : dshd) {
+            if (hoaDon instanceof HoaDonBanHang) {
+                tongDoanhThu += hoaDon.tinhTongTien();
             }
         }
-        long doanhthu = 0;
-        for (long i : doanhThu) {
-            doanhthu += i;
-        }
-        return doanhthu;
+        return tongDoanhThu;
     }
 
     public long tinhTongChiPhi(ArrayList<HoaDon> dshd) {

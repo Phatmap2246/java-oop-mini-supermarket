@@ -8,10 +8,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import dichvu.DanhSachSPKM;
 import dichvu.Danhsachkhuyenmai;
 import dichvu.KhuyenMaiPhanTram;
 import dichvu.KhuyenMaiTrucTiep;
 import dichvu.Khuyenmai;
+import dichvu.SanPhamKhuyenMai;
 import sanpham.QuanLySanPham;
 import sanpham.SanPham;
 import sanpham.ThucPham;
@@ -21,6 +23,7 @@ import utils.Validation;
 public class QuanLy extends NhanVien {
     DSNhanVien ds = new DSNhanVien();
     private final Danhsachkhuyenmai dsKhuyenMai = new Danhsachkhuyenmai();
+    private final DanhSachSPKM dsSanPhamKhuyenMai = new DanhSachSPKM();
 
     /** Khởi tạo quản lý với thông tin mặc định. */
     public QuanLy() {
@@ -48,15 +51,19 @@ public class QuanLy extends NhanVien {
         return dsKhuyenMai;
     }
 
+    public DanhSachSPKM getDanhSachSPKM() {
+        return dsSanPhamKhuyenMai;
+    }
+
     /** Hiển thị menu để thêm, xóa hoặc sửa nhân viên trong danh sách quản lý. */
     public void quanLyNhanSu(Scanner sc) {
+        while (true) {
         System.out.println("\n=== QUẢN LÝ NHÂN SỰ ===");
         System.out.println("1. Thêm nhân viên");
         System.out.println("2. Xóa nhân viên");
         System.out.println("3. Sửa thông tin nhân viên");
         System.out.println("4. Hoàn tất");
         int c = Validation.inputInt(sc, "Chọn chức năng: ");
-        while (true) {
             switch (c) {
                 case 1:
                     ds.themNV(sc);
@@ -399,30 +406,59 @@ public class QuanLy extends NhanVien {
             YeuCau.ghiDanhSach(filePath, dsYeuCau);
         }
     }
-    public void giamGiaCanHSD(Scanner sc){
-        QuanKho qk = new QuanKho(); 
-        ArrayList<ThucPham> dscanDate = qk.danhSachSapHetHan(7);  
-        dscanDate.toString(); 
-        System.out.println("Thêm giảm giá với thực phẩm cận hạn sử dụng: ");
-        for(ThucPham i : dscanDate)
-        {
-            System.out.println("1.Chọn giảm Phần Trăm");
-            System.out.println("2.Chọn giảm trực tiếp");
-            int luaChon = Validation.inputInt(sc, "Hãy chọn"); 
-            if(luaChon == 1) {
-
-                Khuyenmai km = new KhuyenMaiPhanTram(); 
-                km.setKM(sc);
-            }
-            else{
-                Khuyenmai km = new KhuyenMaiTrucTiep(); 
-                km.setKM(sc);
-            }
+    public void giamGiaCanHSD(Scanner sc, ArrayList<ThucPham> dscanDate) {
+        if (sc == null || dscanDate == null) {
+            throw new IllegalArgumentException("Scanner và danh sách thực phẩm không được null.");
+        }
+        if (dscanDate.isEmpty()) {
+            System.out.println("Không có thực phẩm cận hạn để tạo khuyến mãi.");
+            return;
         }
 
-                
+        LocalDate homNay = LocalDate.now();
+        for (ThucPham thucPham : dscanDate) {
+            if (thucPham == null || thucPham.getHanSuDung() == null
+                    || thucPham.getHanSuDung().isBefore(homNay)) {
+                continue;
+            }
+            if (thucPham.getSoLuong() <= 0) {
+                System.out.println("Bỏ qua " + thucPham.getMaSanPham()
+                        + " vì số lượng tồn không còn.");
+                continue;
+            }
+            if (dsSanPhamKhuyenMai.timKiemSanPhamKM(thucPham.getMaSanPham()) != -1) {
+                System.out.println("Bỏ qua " + thucPham.getMaSanPham()
+                        + " vì sản phẩm đã có khuyến mãi.");
+                continue;
+            }
 
+            System.out.printf("%s - %s | Tồn: %d | HSD: %s%n",
+                    thucPham.getMaSanPham(), thucPham.getTenSanPham(),
+                    thucPham.getSoLuong(), thucPham.getHanSuDung());
+            int luaChon = Validation.luaChon(
+                    sc, "Chọn loại giảm giá (1: phần trăm, 2: trực tiếp): ", 1, 2);
+            Khuyenmai khuyenMai = luaChon == 1
+                    ? new KhuyenMaiPhanTram()
+                    : new KhuyenMaiTrucTiep();
 
+            do {
+                khuyenMai.setKM(sc);
+                if (khuyenMai.getNgayBatDau().isBefore(homNay)
+                        || khuyenMai.getNgayKetThuc().isAfter(thucPham.getHanSuDung())) {
+                    System.out.println("[!] Thời gian khuyến mãi phải bắt đầu từ hôm nay "
+                            + "và kết thúc không muộn hơn hạn sử dụng.");
+                } else {
+                    break;
+                }
+            } while (true);
+
+            dsKhuyenMai.getKhuyenmais().add(khuyenMai);
+            dsSanPhamKhuyenMai.getSanPhamKhuyenMais().add(
+                    new SanPhamKhuyenMai(thucPham.getMaSanPham(),
+                            khuyenMai.getMaKhuyenMai()));
+            System.out.println("Đã gắn khuyến mãi " + khuyenMai.getMaKhuyenMai()
+                    + " cho sản phẩm " + thucPham.getMaSanPham() + ".");
+        }
     }
     public void themKhuyenMai(Scanner sc){
         while(true)

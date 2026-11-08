@@ -1,8 +1,9 @@
 package person;
 
 import hoadon.CTHoaDon;
+import hoadon.HoaDon;
 import hoadon.HoaDonBanHang;
-import sanpham.QuanLySanPham;
+import hoadon.HoaDonNhapHang;
 import utils.YeuCau;
 
 import java.io.IOException;
@@ -124,14 +125,19 @@ public class PersonPackageTest {
 
     private static void testKeToan() {
         KeToan accountant = new KeToan();
-        accountant.doanhThu.add(100_000L);
-        accountant.doanhThu.add(50_000L);
-        accountant.chiPhi.add(20_000L);
-        accountant.chiPhi.add(10_000L);
-        equal(150_000L, accountant.tinhTongDoanhThu(), "KeToan total revenue");
-        equal(30_000L, accountant.tinhTongChiPhi(), "KeToan total expenses");
-        equal(120_000L, accountant.tinhLoiNhuan(), "KeToan profit");
-        equal(1_920L, accountant.tinhLoiNhuanRong(), "KeToan current tax calculation");
+        HoaDonBanHang salesInvoice = new HoaDonBanHang("HD001", "KH001");
+        salesInvoice.themChiTiet(new CTHoaDon("SP001", "Rice", 3, 50_000, 0));
+        HoaDonNhapHang purchaseInvoice = new HoaDonNhapHang("HDN001", "Supplier", "NCC001", 0, 0);
+        purchaseInvoice.themChiTiet(new CTHoaDon("SP002", "Milk", 3, 10_000, 0));
+        ArrayList<HoaDon> invoices = new ArrayList<>();
+        invoices.add(salesInvoice);
+        invoices.add(purchaseInvoice);
+
+        equal(150_000L, accountant.tinhTongDoanhThu(invoices), "KeToan total revenue");
+        equal(150_000L, accountant.tinhTongDoanhThu(invoices), "KeToan repeated revenue calculation");
+        equal(30_000L, accountant.tinhTongChiPhi(invoices), "KeToan total expenses");
+        equal(120_000L, accountant.tinhLoiNhuan(invoices), "KeToan profit");
+        equal(1_920L, accountant.tinhLoiNhuanRong(invoices), "KeToan current tax calculation");
     }
 
     private static void testQuanKho() {
@@ -193,6 +199,7 @@ public class PersonPackageTest {
         HoaDonBanHang invoice = new HoaDonBanHang("HD001", "KH001");
         invoice.setNgayLap(LocalDate.of(2026, 11, 6));
         invoice.themChiTiet(new CTHoaDon("SP001", "Rice", 2, 50, 0));
+        invoice.setDaThanhToan(true);
         Field invoicesField = ThuNgan.class.getDeclaredField("dsHoaDonBanHang");
         invoicesField.setAccessible(true);
         invoicesField.set(cashier, new HoaDonBanHang[] {invoice});

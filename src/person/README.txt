@@ -159,7 +159,7 @@ Pop-Location
 if ($testResult -ne 0) { exit $testResult }
 ```
 
-- Kết quả gần nhất: **60 assertions đạt**. Các test đã phát hiện và sửa lỗi ở `Person.setEmail(String)`, `setHoten(String)` và `setSdt(String)`: trước đây các hàm kiểm tra giá trị cũ, khiến không thể gán giá trị mới khi đối tượng chưa có thông tin.
+- Kết quả trước cập nhật ngày 7/11/2026: **60 assertions đạt**. Các test đã phát hiện và sửa lỗi ở `Person.setEmail(String)`, `setHoten(String)` và `setSdt(String)`: trước đây các hàm kiểm tra giá trị cũ, khiến không thể gán giá trị mới khi đối tượng chưa có thông tin.
 - Bộ test bao phủ các luồng trọng yếu, không thay thế kiểm thử mọi nhánh nhập liệu tương tác hoặc toàn bộ nghiệp vụ cập nhật kho, hóa đơn và công nợ.
 ## Cập nhật ngày 7/11/2026
 
@@ -178,5 +178,7 @@ if ($testResult -ne 0) { exit $testResult }
 ### Kiểm tra mã nguồn
 
 - Biên dịch toàn bộ mã nguồn chính thành công với các thư viện trong `lib` bằng `javac -encoding UTF-8 -cp "lib/*"`.
-- Chưa biên dịch được `test/person/PersonPackageTest.java`: bốn kiểm thử gọi các hàm `KeToan.tinhTongDoanhThu()`, `tinhTongChiPhi()`, `tinhLoiNhuan()` và `tinhLoiNhuanRong()` không có tham số, trong khi các hàm hiện tại yêu cầu `ArrayList<HoaDon>`.
-- `git diff --check` không phát hiện lỗi khoảng trắng trong các tệp thuộc gói `person` đã chỉnh sửa ở lần kiểm tra này.
+- `KeToan.tinhTongDoanhThu(ArrayList<HoaDon>)` tính doanh thu trực tiếp từ hóa đơn bán hàng mà không cộng dồn lại kết quả vào trạng thái của đối tượng, nên các lần gọi lặp lại trả về cùng kết quả.
+- `test/person/PersonPackageTest.java` được cập nhật theo API hiện tại của `KeToan`; bài kiểm tra bàn giao ca đánh dấu hóa đơn đã thanh toán để phù hợp với cách tính tiền cuối ca.
+- Bộ kiểm thử chạy thành công: **62 assertions đạt**. Lệnh biên dịch và chạy nằm trong mục “Kiểm thử và đánh giá trước commit”.
+- `git diff --check` không phát hiện lỗi khoảng trắng trong các tệp thuộc gói `person` đã chỉnh sửa ở lần kiểm tra gần nhất.
