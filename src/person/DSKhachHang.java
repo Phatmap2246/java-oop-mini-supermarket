@@ -1,58 +1,110 @@
 package person;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 import utils.Validation;
 
 public class DSKhachHang {
-    ArrayList<KhachHang> list;
+    private KhachHang[] list;
+    private int n; // Số lượng khách hàng hiện tại
 
-    /** Khởi tạo danh sách khách hàng rỗng. */
+    /** Khởi tạo danh sách khách hàng ban đầu rỗng. */
     public DSKhachHang() {
-        list = new ArrayList<>();
+        this.list = new KhachHang[0];
+        this.n = 0;
     }
 
-    /** Khởi tạo danh sách bằng danh sách được truyền vào. */
-    public DSKhachHang(ArrayList<KhachHang> newList) {
-        list = newList;
+    /** Khởi tạo với số lượng khách hàng xác định trước. */
+    public DSKhachHang(int capacity) {
+        if (capacity < 0)
+            capacity = 0;
+        this.list = new KhachHang[capacity];
+        this.n = 0;
     }
 
-    /** Khởi tạo danh sách dùng chung danh sách của đối tượng nguồn. */
-    public DSKhachHang(DSKhachHang l) {
-        this.list = l.list;
+    /** Khởi tạo từ một mảng truyền vào */
+    public DSKhachHang(KhachHang[] arr, int soLuong) {
+        if (arr != null && soLuong > 0) {
+            this.n = soLuong;
+            this.list = new KhachHang[soLuong];
+            for (int i = 0; i < soLuong; i++) {
+                this.list[i] = arr[i];
+            }
+        } else {
+            this.list = new KhachHang[0];
+            this.n = 0;
+        }
     }
 
-    /** Trả về danh sách khách hàng. */
-    public ArrayList<KhachHang> getList() {
+    /** Khởi tạo sao chép từ một đối tượng DSKhachHang khác. */
+    public DSKhachHang(DSKhachHang other) {
+        if (other != null) {
+            this.n = other.n;
+            this.list = new KhachHang[other.n];
+            for (int i = 0; i < other.n; i++) {
+                this.list[i] = other.list[i];
+            }
+        } else {
+            this.list = new KhachHang[0];
+            this.n = 0;
+        }
+    }
+
+    /** Lấy mảng khách hàng hiện tại. */
+    public KhachHang[] getList() {
         return list;
     }
 
-    /** Cập nhật danh sách khách hàng. */
-    public void setList(ArrayList<KhachHang> list) {
-        this.list = list;
+    /** Cập nhật lại mảng khách hàng. */
+    public void setList(KhachHang[] newList, int soLuong) {
+        this.n = soLuong;
+        this.list = new KhachHang[soLuong];
+        for (int i = 0; i < soLuong; i++) {
+            this.list[i] = newList[i];
+        }
+    }
+
+    /** Lấy số lượng khách hàng thực tế. */
+    public int getSoLuong() {
+        return n;
+    }
+
+    // Phương thức
+    /**
+     * Thêm một khách hàng vào mảng
+     */
+    public void add(KhachHang kh) {
+        if (kh == null)
+            return;
+        KhachHang[] newList = new KhachHang[n + 1];
+        for (int i = 0; i < n; i++) {
+            newList[i] = list[i];
+        }
+        newList[n] = kh;
+        list = newList;
+        n++;
     }
 
     /** Nhập số lượng rồi nhập thông tin và thêm từng khách hàng vào danh sách. */
     public void taoDS(Scanner sc) {
-        int n = Validation.inputInt(sc, "Nhap so khach hang tao danh sach: ");
-        for (int i = 0; i < n; i++) {
+        int soLuong = Validation.inputInt(sc, "Nhap so khach hang tao danh sach: ");
+        for (int i = 0; i < soLuong; i++) {
             System.out.println("\n--- Nhap khach hang thu " + (i + 1) + " ---");
             KhachHang kh = new KhachHang();
             kh.nhapThongTin(sc);
-            list.add(kh);
+            add(kh);
         }
     }
 
     /** In thông tin từng khách hàng; thông báo nếu danh sách rỗng. */
     public void xuatDSKH() {
-        if (list == null || list.isEmpty()) {
+        if (n == 0 || list == null) {
             System.out.println("Danh sach khach hang rong.");
             return;
         }
 
         System.out.println("\n--- DANH SACH KHACH HANG ---");
-        for (KhachHang kh : list) {
-            System.out.println(kh.toString());
+        for (int i = 0; i < n; i++) {
+            System.out.println(list[i].toString());
         }
     }
 
@@ -67,17 +119,17 @@ public class DSKhachHang {
             return;
         }
 
-        list.add(kh);
+        add(kh);
         System.out.println("[+] Da them khach hang " + kh.getMaKhachHang() + " thanh cong!");
     }
 
     /** Tìm vị trí khách hàng theo mã; trả về -1 nếu không tìm thấy. */
     public int timKH(String maKH) {
-        if (maKH == null || list == null) {
+        if (maKH == null || n == 0) {
             return -1;
         }
-        for (int i = 0; i < list.size(); i++) {
-            String ma = list.get(i).getMaKhachHang();
+        for (int i = 0; i < n; i++) {
+            String ma = list[i].getMaKhachHang();
             if (ma != null && ma.trim().equalsIgnoreCase(maKH.trim())) {
                 return i;
             }
@@ -85,36 +137,67 @@ public class DSKhachHang {
         return -1;
     }
 
-    /** Tìm và trả về đối tượng khách hàng theo mã; trả về null nếu không tìm thấy. */
+    /**
+     * Tìm và trả về đối tượng khách hàng theo mã; trả về null nếu không tìm thấy.
+     */
     public KhachHang timKiemKH(String maKH) {
         int idx = timKH(maKH);
-        return (idx != -1) ? list.get(idx) : null;
+        return (idx != -1) ? list[idx] : null;
     }
 
-    /** Tìm danh sách khách hàng theo họ tên (tìm kiếm gần đúng). */
-    public ArrayList<KhachHang> timKiemTheoTen(String hoTen) {
-        ArrayList<KhachHang> ketQua = new ArrayList<>();
-        if (hoTen == null || list == null) return ketQua;
-        for (KhachHang kh : list) {
-            if (kh.getHoten() != null && kh.getHoten().toLowerCase().contains(hoTen.toLowerCase().trim())) {
-                ketQua.add(kh);
+    /**
+     * Tìm danh sách khách hàng theo họ tên (tìm kiếm gần đúng), trả về mảng thủ
+     * công.
+     */
+    public KhachHang[] timKiemTheoTen(String hoTen) {
+        if (hoTen == null || n == 0) {
+            return new KhachHang[0];
+        }
+
+        // Bước 1: Đếm số lượng khách hàng trùng khớp
+        int dem = 0;
+        for (int i = 0; i < n; i++) {
+            if (list[i].getHoten() != null && list[i].getHoten().toLowerCase().contains(hoTen.toLowerCase().trim())) {
+                dem++;
+            }
+        }
+
+        // Bước 2: Tạo mảng mới đúng kích thước đếm được và gán phần tử bằng vòng lặp
+        KhachHang[] ketQua = new KhachHang[dem];
+        int viTri = 0;
+        for (int i = 0; i < n; i++) {
+            if (list[i].getHoten() != null && list[i].getHoten().toLowerCase().contains(hoTen.toLowerCase().trim())) {
+                ketQua[viTri] = list[i];
+                viTri++;
             }
         }
         return ketQua;
     }
 
-    /** Xóa khách hàng theo mã hoặc thông báo nếu không tìm thấy. */
+    /**
+     * Xóa khách hàng theo mã:
+     */
     public void xoaKH(String maKH) {
         int idx = timKH(maKH);
-        if (idx != -1) {
-            list.remove(idx);
-            System.out.println("[+] Da xoa khach hang co ma " + maKH);
-        } else {
+        if (idx == -1) {
             System.out.println("Khong tim thay trong danh sach");
+            return;
         }
+
+        KhachHang[] newList = new KhachHang[n - 1];
+        int viTriMoi = 0;
+        for (int i = 0; i < n; i++) {
+            if (i != idx) {
+                newList[viTriMoi] = list[i];
+                viTriMoi++;
+            }
+        }
+        list = newList;
+        n--;
+        System.out.println("[+] Da xoa khach hang co ma " + maKH);
     }
 
-    /** Cập nhật thông tin khách hàng theo mã; trả về false nếu không tìm thấy. */
+    /** Cập nhật thông tin khách hàng */
     public boolean suaKH(String maKH, Scanner sc) {
         int idx = timKH(maKH);
         if (idx == -1) {
@@ -122,7 +205,7 @@ public class DSKhachHang {
             return false;
         }
 
-        KhachHang kh = list.get(idx);
+        KhachHang kh = list[idx];
         int choice;
         do {
             System.out.println("\n--- SUA THONG TIN KHACH HANG: " + kh.getMaKhachHang() + " ---");
@@ -146,8 +229,8 @@ public class DSKhachHang {
                     boolean biTrung;
                     do {
                         biTrung = false;
-                        for (int i = 0; i < list.size(); i++) {
-                            String maTrongDanhSach = list.get(i).getMaKhachHang();
+                        for (int i = 0; i < n; i++) {
+                            String maTrongDanhSach = list[i].getMaKhachHang();
                             if (i != idx && maTrongDanhSach != null && maTrongDanhSach.equalsIgnoreCase(maMoi)) {
                                 biTrung = true;
                                 maMoi = Validation.inputStringRegex(
@@ -199,26 +282,29 @@ public class DSKhachHang {
 
     /** Thống kê số lượng khách hàng theo từng hạng thành viên. */
     public void thongKeTheoHang() {
-        if (list == null || list.isEmpty()) {
+        if (n == 0 || list == null) {
             System.out.println("Danh sach khach hang rong.");
             return;
         }
 
         int dong = 0, bac = 0, vang = 0, kimCuong = 0;
-        for (KhachHang kh : list) {
-            String hang = kh.getHangThanhVien();
-            if ("Kim Cương".equalsIgnoreCase(hang)) kimCuong++;
-            else if ("Vàng".equalsIgnoreCase(hang)) vang++;
-            else if ("Bạc".equalsIgnoreCase(hang)) bac++;
-            else dong++;
+        for (int i = 0; i < n; i++) {
+            String hang = list[i].getHangThanhVien();
+            if ("Kim Cương".equalsIgnoreCase(hang))
+                kimCuong++;
+            else if ("Vàng".equalsIgnoreCase(hang))
+                vang++;
+            else if ("Bạc".equalsIgnoreCase(hang))
+                bac++;
+            else
+                dong++;
         }
 
         System.out.println("\n--- THONG KE HANG THANH VIEN ---");
-        System.out.println("Tong so khach hang: " + list.size());
+        System.out.println("Tong so khach hang: " + n);
         System.out.println("- Hang Dong: " + dong);
         System.out.println("- Hang Bac: " + bac);
         System.out.println("- Hang Vang: " + vang);
         System.out.println("- Hang Kim Cuong: " + kimCuong);
     }
 }
-
