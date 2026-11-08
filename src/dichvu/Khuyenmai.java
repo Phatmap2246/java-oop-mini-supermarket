@@ -25,6 +25,7 @@ public abstract class Khuyenmai {
         this.loaiKhuyenMai = loaiKhuyenMai ;
         this.ngayBatDau = ngayBatDau ;
         this.ngayKetThuc= ngayKetThuc ;
+        this.mucChiToiThieu = mucChiToiThieu;
     }
     public void setKM ( Scanner sc )
     {
@@ -90,6 +91,10 @@ public abstract class Khuyenmai {
     public boolean kiemTraHetHanKhuyenMai()
     {
         return LocalDate.now().isAfter(ngayKetThuc);
+    }
+
+    public boolean dangHoatDong(LocalDate ngay) {
+        return ngay != null && !ngay.isBefore(ngayBatDau) && !ngay.isAfter(ngayKetThuc);
     }
     @Override
     public String toString() {

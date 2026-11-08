@@ -86,6 +86,15 @@ public class Nhacungcap extends Doitac{
 
         }
     }
+    public boolean baoPhiVanChuyen(Scanner sc, HoaDonNhapHang hoaDonNhap,
+            Danhsachdoitac danhSachDoiTac) {
+        if (!super.getMaDoiTac().equalsIgnoreCase(hoaDonNhap.getMaNhaCungCap())) {
+            System.out.println("[!] Hóa đơn này không thuộc nhà cung cấp " + super.getMaDoiTac() + ".");
+            return false;
+        }
+        return hoaDonNhap.nhaCungCapKhaiBaoVanChuyen(sc, danhSachDoiTac);
+    }
+
     public void KhoiTaoDanhSachSPCungCap ( QuanLySanPham qlsp )
     {
         for ( SanPham sp: qlsp.getDanhSachSanPham() )

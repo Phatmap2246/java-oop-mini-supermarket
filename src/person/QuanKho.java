@@ -310,8 +310,8 @@ public class QuanKho extends NhanVien {
         System.out.print("Nhập hình thức yêu cầu (VD: Nhập hàng, Đổi trả NCC, Hủy hàng): ");
         String ht = sc.nextLine().trim();
 
-        System.out.print("Nhập nội dung chi tiết yêu cầu: ");
-        String nd = sc.nextLine().trim();
+    //     System.out.print("Nhập nội dung chi tiết yêu cầu: ");
+    //     String nd = sc.nextLine().trim();
 
         ghiYeuCauVaoFile(maNCC, ht, nd);
     }
