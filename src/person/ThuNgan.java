@@ -68,7 +68,7 @@ public class ThuNgan extends NhanVien {
                 data[2] = dsHoaDonBanHang[i].getTenDoiTac();
                 data[3] = dsHoaDonBanHang[i].getNgayLap().toString();
                 bw.newLine();
-                bw.write(String.join(";", data));
+                bw.write(String.join(",", data));
             }
             tn.tongTienDauCa = tinhTienCuoiCa();
         }

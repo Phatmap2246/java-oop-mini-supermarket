@@ -58,6 +58,16 @@ public class YeuCau {
         this.trangThai = trangThai;
     }
 
+    @Override
+    public String toString() {
+        return "YeuCau{"
+                + "maNV='" + maNV + '\''
+                + ", vaitro='" + vaitro + '\''
+                + ", noiDung='" + noiDung + '\''
+                + ", trangThai='" + trangThai + '\''
+                + '}';
+    }
+
     public static void themVaoFile(YeuCau yeuCau, Path filePath) throws IOException {
         ArrayList<BanGhiDataBase> danhSach = docDanhSach(filePath);
         danhSach.add(new BanGhiDataBase(yeuCau));
@@ -203,5 +213,5 @@ public class YeuCau {
 
         return new YeuCau(maNV, vaitro, noiDung, "ChoDuyet");
     }
-
+    
 }

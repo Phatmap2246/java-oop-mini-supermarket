@@ -21,36 +21,44 @@ public class KeToan extends NhanVien {
     private final ArrayList<String> tenNhaCungCapCongNo = new ArrayList<>();
     private final ArrayList<Long> soTienCongNo = new ArrayList<>();
     private final ArrayList<LocalDate> ngayDenHanCongNo = new ArrayList<>();
+    private final ArrayList<LocalDate> ngayThanhToanCongNo = new ArrayList<>();
+    private final ArrayList<String> nganHangThanhToanCongNo = new ArrayList<>();
     private final ArrayList<Boolean> daThanhToanCongNo = new ArrayList<>();
 
-    public long tinhTongDoanhThu(ArrayList<HoaDon> dshd) {
+    public long tinhTongDoanhThu(ArrayList<HoaDon> dshd,long songay) {
         long tongDoanhThu = 0;
-        for (HoaDon hoaDon : dshd) {
-            if (hoaDon instanceof HoaDonBanHang) {
-                tongDoanhThu += hoaDon.tinhTongTien();
+        LocalDate lastDay = dshd.get(dshd.size()-1).getNgayLap();
+        for (int i = dshd.size()-1; i>=0; i--) {
+            if (dshd.get(i) instanceof HoaDonBanHang && dshd.get(i).getNgayLap().isAfter( lastDay.minusDays(songay)) ) {
+                tongDoanhThu += dshd.get(i).tinhTongTien();
             }
         }
         return tongDoanhThu;
     }
 
-    public long tinhTongChiPhi(ArrayList<HoaDon> dshd) {
+    public long tinhTongChiPhi(ArrayList<HoaDon> dshd,long songay) {
         long tongChiPhi = 0;
-        for (int i = 0; i < dshd.size(); i++) {
-            if (dshd.get(i) instanceof HoaDonNhapHang) {
+        LocalDate lastDay = dshd.get(dshd.size()-1).getNgayLap();
+        for (int i = dshd.size()-1; i>=0; i--) {
+            if (dshd.get(i) instanceof HoaDonNhapHang && dshd.get(i).getNgayLap().isAfter( lastDay.minusDays(songay)) ) {
                 tongChiPhi += dshd.get(i).tinhTongTien();
             }
         }
         return tongChiPhi;
     }
 
-    public long tinhLoiNhuan(ArrayList<HoaDon> dshd) {
-        return tinhTongDoanhThu(dshd) - tinhTongChiPhi(dshd);
+    public long tinhLoiNhuan(ArrayList<HoaDon> dshd,long songay) {
+        return tinhTongDoanhThu(dshd,songay) - tinhTongChiPhi(dshd,songay);
     }
 
-    public long tinhLoiNhuanRong(ArrayList<HoaDon> dshd) {
-        double VAT = 0.08;
-        double TNDN = 0.2;
-        return (long) (tinhLoiNhuan(dshd) * VAT * TNDN);
+    public long tinhLoiNhuanRong(ArrayList<HoaDon> dshd,long songay) {
+        long loiNhuanTruocThue = tinhLoiNhuan(dshd,songay);
+        if (loiNhuanTruocThue <= 0) {
+            return loiNhuanTruocThue;
+        }
+
+        long thueTNDN = (long) (loiNhuanTruocThue * 0.2);
+        return loiNhuanTruocThue - thueTNDN;
     }
 
     private void doiChieuVaGhiNhanCongNo(Scanner sc, QuanLyHoaDon quanLyHoaDon) {
@@ -110,6 +118,8 @@ public class KeToan extends NhanVien {
         tenNhaCungCapCongNo.add(hdNhap.getTenDoiTac());
         soTienCongNo.add(tongTien);
         ngayDenHanCongNo.add(ngayDenHan);
+        ngayThanhToanCongNo.add(null);
+        nganHangThanhToanCongNo.add(null);
         daThanhToanCongNo.add(false);
 
         System.out.printf("[+] Đối chiếu thành công. Ghi nhận nợ %,d VND, hạn trả %s.%n",
@@ -167,6 +177,8 @@ public class KeToan extends NhanVien {
         System.out.printf("[+] Đã lập ủy nhiệm chi %,d VND tới %s (STK: %s).%n",
                 soTienCongNo.get(viTri), nganHang, stk);
         daThanhToanCongNo.set(viTri, true);
+        ngayThanhToanCongNo.set(viTri, LocalDate.now());
+        nganHangThanhToanCongNo.set(viTri, nganHang);
         System.out.println(">> Cập nhật trạng thái: Đã thanh toán thành công!");
     }
 
@@ -198,5 +210,27 @@ public class KeToan extends NhanVien {
                 hienThiVaThanhToanCongNo(sc);
             }
         }
+    }
+    public void thongKe(int songay,ArrayList<HoaDon> dshd){
+        System.out.println("BANG THONG KE: ");
+        System.out.println("1. Doanh thu tu " + songay +"truoc: "+ tinhTongDoanhThu(dshd, songay));
+        System.out.println("2. Loi nhuan tu " + songay +"truoc: "+ tinhLoiNhuanRong(dshd, songay));
+        ArrayList<Integer> dsChuaTra = new ArrayList<>();
+        System.out.println("\n=== CÔNG NỢ NHÀ CUNG CẤP ===");
+        for (int i = 0; i < maHoaDonCongNo.size(); i++) {
+            boolean daTra = daThanhToanCongNo.get(i);
+            LocalDate han = ngayDenHanCongNo.get(i);
+            String trangThai = daTra ? "Đã thanh toán"
+                    : han.isBefore(LocalDate.now()) ? "QUÁ HẠN" : "Chưa thanh toán";
+            if (!daTra) {
+                dsChuaTra.add(i);
+            }
+
+            System.out.printf("%d. HĐ: %s | NCC: %s | PNK: %s | Tiền: %,d VND | Hạn: %s | [%s]%n",
+                    i + 1, maHoaDonCongNo.get(i), tenNhaCungCapCongNo.get(i),
+                    maPhieuNhapCongNo.get(i), soTienCongNo.get(i),
+                    DateUtil.formatDate(han), trangThai);
+        }
+        
     }
 }
