@@ -1,8 +1,10 @@
 package person;
 
 import hoadon.CTHoaDon;
+import hoadon.HoaDon;
 import hoadon.HoaDonBanHang;
-import sanpham.QuanLySanPham;
+import hoadon.HoaDonNhapHang;
+import utils.YeuCau;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -123,14 +125,19 @@ public class PersonPackageTest {
 
     private static void testKeToan() {
         KeToan accountant = new KeToan();
-        accountant.doanhThu.add(100_000L);
-        accountant.doanhThu.add(50_000L);
-        accountant.chiPhi.add(20_000L);
-        accountant.chiPhi.add(10_000L);
-        equal(150_000L, accountant.tinhTongDoanhThu(), "KeToan total revenue");
-        equal(30_000L, accountant.tinhTongChiPhi(), "KeToan total expenses");
-        equal(120_000L, accountant.tinhLoiNhuan(), "KeToan profit");
-        equal(1_920L, accountant.tinhLoiNhuanRong(), "KeToan current tax calculation");
+        HoaDonBanHang salesInvoice = new HoaDonBanHang("HD001", "KH001");
+        salesInvoice.themChiTiet(new CTHoaDon("SP001", "Rice", 3, 50_000, 0));
+        HoaDonNhapHang purchaseInvoice = new HoaDonNhapHang("HDN001", "Supplier", "NCC001", 0, 0);
+        purchaseInvoice.themChiTiet(new CTHoaDon("SP002", "Milk", 3, 10_000, 0));
+        ArrayList<HoaDon> invoices = new ArrayList<>();
+        invoices.add(salesInvoice);
+        invoices.add(purchaseInvoice);
+
+        equal(150_000L, accountant.tinhTongDoanhThu(invoices), "KeToan total revenue");
+        equal(150_000L, accountant.tinhTongDoanhThu(invoices), "KeToan repeated revenue calculation");
+        equal(30_000L, accountant.tinhTongChiPhi(invoices), "KeToan total expenses");
+        equal(120_000L, accountant.tinhLoiNhuan(invoices), "KeToan profit");
+        equal(1_920L, accountant.tinhLoiNhuanRong(invoices), "KeToan current tax calculation");
     }
 
     private static void testQuanKho() {
@@ -146,10 +153,12 @@ public class PersonPackageTest {
         check(!Files.exists(requestFile), "Request test starts in isolated working directory");
 
         NhanVien employee = employee("NV003", "KeToan");
-        employee.taoYeuCau(new Scanner("Đề nghị duyệt thanh toán\n"));
-        equal("NV003|KeToan|Đề nghị duyệt thanh toán|ChoDuyet",
-                Files.readAllLines(requestFile, StandardCharsets.UTF_8).get(0),
-                "NhanVien writes request in expected format");
+        employee.taoYeuCau(new Scanner("Đề nghị duyệt thanh toán, nội dung | cần xét\n"));
+        ArrayList<YeuCau.BanGhiDataBase> requests = YeuCau.docDanhSach(requestFile);
+        equal(1, requests.size(), "NhanVien writes request in DataBase format");
+        equal("Đề nghị duyệt thanh toán, nội dung | cần xét",
+                requests.get(0).getNoiDung(), "Request content supports CSV separators");
+        equal("ChoDuyet", requests.get(0).getTrangThai(), "New request starts pending");
 
         ThuNgan cashier = new ThuNgan(
                 "cashier@example.com", "Tran Thi D", "0912345678", new DiaChi(),
@@ -163,21 +172,21 @@ public class PersonPackageTest {
         QuanLy manager = new QuanLy();
         equal("QuanLy", manager.getVaiTro(), "QuanLy role");
         manager.duyetYeuCau(new Scanner("1\n0\n1\n"));
-        ArrayList<String> requests = new ArrayList<>(
-                Files.readAllLines(requestFile, StandardCharsets.UTF_8));
-        equal("DaDuyet", requests.get(0).split("\\|", -1)[3], "QuanLy approves request");
-        equal("KhongDuyet", requests.get(1).split("\\|", -1)[3], "QuanLy rejects request");
-        equal("DaDuyet", requests.get(2).split("\\|", -1)[3], "QuanLy approves accountant request");
+        requests = YeuCau.docDanhSach(requestFile);
+        equal("DaDuyet", requests.get(0).getTrangThai(), "QuanLy approves request");
+        equal("KhongDuyet", requests.get(1).getTrangThai(), "QuanLy rejects request");
+        equal("DaDuyet", requests.get(2).getTrangThai(), "QuanLy approves accountant request");
 
         Files.write(requestFile, java.util.Arrays.asList(
                 "NV001|KeToan|bad|ChoDuyet|extra",
                 "NV002|KeToan|already done|DaDuyet",
                 "NV003|KeToan|pending|ChoDuyet"), StandardCharsets.UTF_8);
         manager.duyetYeuCau(new Scanner("1\n"));
-        requests = new ArrayList<>(Files.readAllLines(requestFile, StandardCharsets.UTF_8));
-        equal("NV001|KeToan|bad|ChoDuyet|extra", requests.get(0), "Manager preserves malformed request");
-        equal("NV002|KeToan|already done|DaDuyet", requests.get(1), "Manager preserves processed request");
-        equal("DaDuyet", requests.get(2).split("\\|", -1)[3], "Manager processes valid pending request");
+        requests = YeuCau.docDanhSach(requestFile);
+        equal("NV001|KeToan|bad|ChoDuyet|extra",
+                requests.get(0).getDongLoi(), "Manager preserves malformed request");
+        equal("DaDuyet", requests.get(2).getTrangThai(),
+                "Manager processes valid pending request");
     }
 
     private static void testThuNganShift() throws Exception {
@@ -190,6 +199,7 @@ public class PersonPackageTest {
         HoaDonBanHang invoice = new HoaDonBanHang("HD001", "KH001");
         invoice.setNgayLap(LocalDate.of(2026, 11, 6));
         invoice.themChiTiet(new CTHoaDon("SP001", "Rice", 2, 50, 0));
+        invoice.setDaThanhToan(true);
         Field invoicesField = ThuNgan.class.getDeclaredField("dsHoaDonBanHang");
         invoicesField.setAccessible(true);
         invoicesField.set(cashier, new HoaDonBanHang[] {invoice});
