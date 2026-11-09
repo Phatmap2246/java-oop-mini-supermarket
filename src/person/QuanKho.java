@@ -1,11 +1,5 @@
 package person;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -49,11 +43,13 @@ public class QuanKho extends NhanVien {
         return "QuanKho";
     }
 
-    // ========================= HÀM CHECK HSD (HẠN SỬ DỤNG) =========================
+    // ========================= HÀM CHECK HSD (HẠN SỬ DỤNG)
+    // =========================
 
     /**
      * Kiểm tra hạn sử dụng của một sản phẩm được truyền vào.
-     * Cảnh báo: Đã quá hạn, Hết hạn hôm nay, Sắp hết hạn (<= 7 ngày hoặc <= 30 ngày), Còn hạn sử dụng tốt.
+     * Cảnh báo: Đã quá hạn, Hết hạn hôm nay, Sắp hết hạn (<= 7 ngày hoặc <= 30
+     * ngày), Còn hạn sử dụng tốt.
      */
     public void checkHSD(SanPham sp) {
         if (sp == null) {
@@ -74,7 +70,8 @@ public class QuanKho extends NhanVien {
 
             if (hsd.isBefore(homNay)) {
                 long soNgayQuaHan = ChronoUnit.DAYS.between(hsd, homNay);
-                System.out.printf("[!] CẢNH BÁO QUÁ HẠN: Sản phẩm [%s - %s] ĐÃ HẾT HẠN từ ngày %s (quá hạn %d ngày). Cần lập yêu cầu xuất hủy!\n",
+                System.out.printf(
+                        "[!] CẢNH BÁO QUÁ HẠN: Sản phẩm [%s - %s] ĐÃ HẾT HẠN từ ngày %s (quá hạn %d ngày). Cần lập yêu cầu xuất hủy!\n",
                         tp.getMaSanPham(), tp.getTenSanPham(), DateUtil.formatDate(hsd), soNgayQuaHan);
             } else if (hsd.isEqual(homNay)) {
                 System.out.printf("[!] CẢNH BÁO KHẨN CẤP: Sản phẩm [%s - %s] HẾT HẠN HÔM NAY (%s)!\n",
@@ -82,7 +79,8 @@ public class QuanKho extends NhanVien {
             } else {
                 long soNgayConLai = ChronoUnit.DAYS.between(homNay, hsd);
                 if (soNgayConLai <= 7) {
-                    System.out.printf("[*] SẮP HẾT HẠN (KHẨN CẤP): Sản phẩm [%s - %s] chỉ còn %d ngày (HSD: %s). Cần ưu tiên giảm giá/xả hàng!\n",
+                    System.out.printf(
+                            "[*] SẮP HẾT HẠN (KHẨN CẤP): Sản phẩm [%s - %s] chỉ còn %d ngày (HSD: %s). Cần ưu tiên giảm giá/xả hàng!\n",
                             tp.getMaSanPham(), tp.getTenSanPham(), soNgayConLai, DateUtil.formatDate(hsd));
                 } else if (soNgayConLai <= 30) {
                     System.out.printf("[*] SẮP HẾT HẠN: Sản phẩm [%s - %s] còn %d ngày (HSD: %s).\n",
@@ -152,7 +150,9 @@ public class QuanKho extends NhanVien {
         return ketQua;
     }
 
-    /** Lấy danh sách các sản phẩm thực phẩm sắp hết hạn trong vòng số ngày chỉ định. */
+    /**
+     * Lấy danh sách các sản phẩm thực phẩm sắp hết hạn trong vòng số ngày chỉ định.
+     */
     public ArrayList<ThucPham> danhSachSapHetHan(int soNgay) {
         ArrayList<ThucPham> ketQua = new ArrayList<>();
         LocalDate homNay = LocalDate.now();
@@ -238,7 +238,8 @@ public class QuanKho extends NhanVien {
             switch (loai) {
                 case 1:
                     LocalDate hsd = Validation.inputLocalDateRegex(sc, "Nhập hạn sử dụng (dd/MM/yyyy): ");
-                    spMoi = new ThucPham(maSP, tenSP, maNCC, giaNhap, giaBan, soLuong, hsd) {};
+                    spMoi = new ThucPham(maSP, tenSP, maNCC, giaNhap, giaBan, soLuong, hsd) {
+                    };
                     break;
                 case 2:
                     int soThangBH = Validation.inputInt(sc, "Nhập số tháng bảo hành: ");
@@ -255,9 +256,13 @@ public class QuanKho extends NhanVien {
         }
     }
 
-    /** Tìm sản phẩm theo mã trong kho(file này là kho đk : QuanLySanPham.danhSachSanPham). */
+    /**
+     * Tìm sản phẩm theo mã trong kho(file này là kho đk :
+     * QuanLySanPham.danhSachSanPham).
+     */
     public SanPham timSanPham(String maSP) {
-        if (maSP == null) return null;
+        if (maSP == null)
+            return null;
         for (SanPham sp : QuanLySanPham.danhSachSanPham) {
             if (sp.getMaSanPham() != null && sp.getMaSanPham().trim().equalsIgnoreCase(maSP.trim())) {
                 return sp;
@@ -292,65 +297,47 @@ public class QuanKho extends NhanVien {
         }
         System.out.println("=====================================================================================");
     }
-    /**
-     * Nhận maHD được truyền vào, nhập hình thức và nội dung yêu cầu của Quản kho, sau đó ghi vào file YeuCauDuyet.text để Quản lý duyệt.
-     */
-    // @Override
-    // public void taoYeuCau(String maHD, Scanner sc) {
-    //     System.out.println("\n--- TẠO YÊU CẦU DUYỆT (QUẢN KHO) ---");
-    //     System.out.println("Mã nhân viên tạo: " + ((getMaNV() != null) ? getMaNV() : "N/A"));
-    //     System.out.println("Mã hóa đơn: " + ((maHD != null && !maHD.isEmpty()) ? maHD : "KHONG_CO"));
 
-    //     System.out.print("Nhập hình thức yêu cầu (VD: Nhập thêm hàng, Xuất hủy hàng hết date, Kiểm kê kho): ");
-    //     String ht = sc.nextLine().trim();
+    /**
+     * Nhận maNCC được truyền vào, nhập hình thức và nội dung yêu cầu của Quản kho,
+     * sau đó ghi vào file YeuCauDuyet.text để Quản lý duyệt.
+     */
+    public void yeuCau(String maNCC, Scanner sc) {
+        System.out.println("\n--- TẠO YÊU CẦU DUYỆT (QUẢN KHO) ---");
+        System.out.println("Mã nhân viên tạo: " + ((getMaNV() != null) ? getMaNV() : "N/A"));
+        System.out.println("Mã nhà cung cấp: " + ((maNCC != null && !maNCC.isEmpty()) ? maNCC : "KHONG_CO"));
+
+        System.out.print("Nhập hình thức yêu cầu (VD: Nhập hàng, Đổi trả NCC, Hủy hàng): ");
+        String ht = sc.nextLine().trim();
 
     //     System.out.print("Nhập nội dung chi tiết yêu cầu: ");
-    //     String nd = sc.nextLine().trim();
+    String nd = sc.nextLine().trim();
 
-    //     ghiYeuCauVaoFile(maHD, ht, nd);
-    // }
-
-    // ========================= Các hàm bổ trợ cho các hàm phương thức ở trên =========================
-
-    /** Ghi thông tin yêu cầu của Quản kho vào file YeuCauDuyet.text */
-    private void ghiYeuCauVaoFile(String maHD, String hinhThuc, String noiDung) {
-        File file = timFileYeuCauDuyet();
-        String thoiGian = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
-
-        String dongGhi = String.format("[%s] | MaNV: %s | VaiTro: QuanKho | HoTen: %s | MaHD: %s | HinhThuc: %s | NoiDung: %s | TrangThai: ChoDuyet",
-                thoiGian,
-                (getMaNV() != null ? getMaNV() : "N/A"),
-                (getHoten() != null ? getHoten() : "N/A"),
-                (maHD != null && !maHD.isEmpty() ? maHD : "KHONG_CO"),
-                hinhThuc,
-                noiDung);
-
-        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), StandardCharsets.UTF_8))) {
-            bw.write(dongGhi);
-            bw.newLine();
-            System.out.println("[+] Đã gửi yêu cầu thành công vào file: " + file.getPath());
-        } catch (IOException e) {
-            System.err.println("[!] Lỗi khi ghi yêu cầu vào file: " + e.getMessage());
-        }
+        ghiYeuCauVaoFile(maNCC, ht, nd);
     }
 
-    /** Tìm đường dẫn file YeuCauDuyet.text linh hoạt theo môi trường chạy. */
-    private File timFileYeuCauDuyet() {
-        String[] duongDanThuNghiem = {
-            "src/person/YeuCauDuyet.text",
-            "person/YeuCauDuyet.text",
-            "YeuCauDuyet.text"
-        };
-        for (String p : duongDanThuNghiem) {
-            File f = new File(p);
-            if (f.exists()) {
-                return f;
-            }
+    // ========================= Các hàm bổ trợ cho các hàm phương thức ở trên
+    // =========================
+
+    /** Ghi thông tin yêu cầu của Quản kho vào file YeuCauDuyet.text */
+    public void ghiYeuCauVaoFile(String maNCC, String hinhThuc, String noiDung) {
+        try {
+            java.io.FileWriter fw = new java.io.FileWriter("src/person/YeuCauDuyet.text", true);
+            java.io.PrintWriter pw = new java.io.PrintWriter(fw);
+
+            String thoiGian = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+            String dongGhi = "[" + thoiGian + "] | MaNV: " + (getMaNV() != null ? getMaNV() : "N/A")
+                    + " | VaiTro: QuanKho"
+                    + " | MaNCC: " + (maNCC != null && !maNCC.isEmpty() ? maNCC : "KHONG_CO")
+                    + " | HinhThuc: " + hinhThuc
+                    + " | NoiDung: " + noiDung
+                    + " | TrangThai: ChoDuyet";
+
+            pw.println(dongGhi);
+            pw.close();
+            System.out.println("[+] Đã gửi yêu cầu thành công vào file YeuCauDuyet.text!");
+        } catch (Exception e) {
+            System.out.println("[!] Lỗi ghi file yêu cầu: " + e.getMessage());
         }
-        File fMacDinh = new File("src/person/YeuCauDuyet.text");
-        if (fMacDinh.getParentFile() != null) {
-            fMacDinh.getParentFile().mkdirs();
-        }
-        return fMacDinh;
     }
 }
