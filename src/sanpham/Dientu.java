@@ -7,18 +7,18 @@ import utils.Validation;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
-public class Dientu extends SanPham
+public class DienTu extends SanPham
 {
     private int thoiGianBaoHanh ;
     private String chatLieu ;
-    public Dientu()
+    public DienTu()
     {
         super();
         thoiGianBaoHanh = 0 ;
         chatLieu = "" ;
         super.setThue(0.05) ;
     }
-    public Dientu( String maSanPham , String tenSanPham , String loaiSanPham , long giaNhap , long giaBan , int soLuongTonKho , String maNhaCungCap , double thue ,
+    public DienTu( String maSanPham , String tenSanPham , String loaiSanPham , long giaNhap , long giaBan , int soLuongTonKho , String maNhaCungCap , double thue ,
                    int thoiGianBaoHanh , long tienBaoHanh , String chatLieu , LocalDate ngayMua)
     {
         super( maSanPham, tenSanPham, loaiSanPham, giaNhap, giaBan, soLuongTonKho, maNhaCungCap , thue );

@@ -180,11 +180,9 @@ public class DSKhachHang {
      */
     public void xoaKH(String maKH) {
         int idx = timKH(maKH);
-        if (idx != -1) {
-            list.remove(idx);
-            System.out.println("[+] Đã xóa khách hàng có mã " + maKH + ".");
-        } else {
+        if (idx == -1) {
             System.out.println("[!] Không tìm thấy khách hàng trong danh sách.");
+            return;
         }
 
         KhachHang[] newList = new KhachHang[n - 1];
@@ -197,7 +195,7 @@ public class DSKhachHang {
         }
         list = newList;
         n--;
-        System.out.println("[+] Da xoa khach hang co ma " + maKH);
+        System.out.println("[+] Đã xóa khách hàng có mã " + maKH + ".");
     }
 
     /** Cập nhật thông tin khách hàng */

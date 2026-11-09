@@ -124,7 +124,7 @@ public class QuanKho extends NhanVien {
         ArrayList<ThucPham> ketQua = new ArrayList<>();
         LocalDate homNay = LocalDate.now();
 
-        for (SanPham sp : QuanLySanPham.danhSachSanPham) {
+        for (SanPham sp : new  QuanLySanPham().getDanhSachSanPham()) {
             if (sp instanceof ThucPham) {
                 ThucPham tp = (ThucPham) sp;
                 if (tp.getHanSuDung() != null && tp.getHanSuDung().isBefore(homNay)) {
@@ -143,7 +143,7 @@ public class QuanKho extends NhanVien {
             for (ThucPham tp : ketQua) {
                 long soNgay = ChronoUnit.DAYS.between(tp.getHanSuDung(), homNay);
                 System.out.printf("%-10s | %-25s | %-8d | %-12s | %d ngày\n",
-                        tp.getMaSanPham(), tp.getTenSanPham(), tp.getSoLuong(),
+                        tp.getMaSanPham(), tp.getTenSanPham(), tp.getSoLuongTonKho(),
                         DateUtil.formatDate(tp.getHanSuDung()), soNgay);
             }
         }
@@ -157,7 +157,7 @@ public class QuanKho extends NhanVien {
         ArrayList<ThucPham> ketQua = new ArrayList<>();
         LocalDate homNay = LocalDate.now();
 
-        for (SanPham sp : QuanLySanPham.danhSachSanPham) {
+        for (SanPham sp : new QuanLySanPham().getDanhSachSanPham()) {
             if (sp instanceof ThucPham) {
                 ThucPham tp = (ThucPham) sp;
                 LocalDate hsd = tp.getHanSuDung();
@@ -180,7 +180,7 @@ public class QuanKho extends NhanVien {
             for (ThucPham tp : ketQua) {
                 long conLai = ChronoUnit.DAYS.between(homNay, tp.getHanSuDung());
                 System.out.printf("%-10s | %-25s | %-8d | %-12s | %d ngày\n",
-                        tp.getMaSanPham(), tp.getTenSanPham(), tp.getSoLuong(),
+                        tp.getMaSanPham(), tp.getTenSanPham(), tp.getSoLuongTonKho(),
                         DateUtil.formatDate(tp.getHanSuDung()), conLai);
             }
         }
@@ -206,12 +206,12 @@ public class QuanKho extends NhanVien {
         if (sp != null) {
             // Đã tồn tại trong kho -> cộng thêm số lượng (+ số lượng)
             System.out.println("[+] Tìm thấy sản phẩm trong kho: " + sp.getTenSanPham()
-                    + " | Số lượng hiện tại: " + sp.getSoLuong());
+                    + " | Số lượng hiện tại: " + sp.getSoLuongTonKho());
             int slThem = Validation.inputInt(sc, "Nhập số lượng cộng thêm vào kho (+ số lượng): ");
-            int slCu = sp.getSoLuong();
-            sp.setSoLuong(slCu + slThem);
+            int slCu = sp.getSoLuongTonKho();
+            sp.setSoLuongTonKho(slCu + slThem);
             System.out.println("[+] CẬP NHẬT THÀNH CÔNG: Số lượng sản phẩm [" + sp.getTenSanPham()
-                    + "] từ " + slCu + " -> " + sp.getSoLuong());
+                    + "] từ " + slCu + " -> " + sp.getSoLuongTonKho());
         } else {
             // Chưa có trong kho -> nhập thông tin và thêm mới
             System.out.println("[!] Sản phẩm mã " + maSP + " chưa tồn tại trong kho. Tiến hành thêm sản phẩm mới!");
@@ -251,19 +251,19 @@ public class QuanKho extends NhanVien {
                     break;
             }
 
-            QuanLySanPham.danhSachSanPham.add(spMoi);
+            new QuanLySanPham().getDanhSachSanPham().add(spMoi);
             System.out.println("[+] THÊM MỚI THÀNH CÔNG: Đã thêm sản phẩm [" + tenSP + "] vào kho!");
         }
     }
 
     /**
      * Tìm sản phẩm theo mã trong kho(file này là kho đk :
-     * QuanLySanPham.danhSachSanPham).
+     * new QuanLySanPham().getDanhSachSanPham()).
      */
     public SanPham timSanPham(String maSP) {
         if (maSP == null)
             return null;
-        for (SanPham sp : QuanLySanPham.danhSachSanPham) {
+        for (SanPham sp : new QuanLySanPham().getDanhSachSanPham()) {
             if (sp.getMaSanPham() != null && sp.getMaSanPham().trim().equalsIgnoreCase(maSP.trim())) {
                 return sp;
             }
@@ -274,7 +274,7 @@ public class QuanKho extends NhanVien {
     /** In danh sách các sản phẩm đang có trong kho duy nhất. */
     public void inDanhSachKho() {
         System.out.println("\n=========================== DANH SÁCH SẢN PHẨM TRONG KHO ===========================");
-        if (QuanLySanPham.danhSachSanPham.isEmpty()) {
+        if (new QuanLySanPham().getDanhSachSanPham().isEmpty()) {
             System.out.println("                                [ Kho hiện đang trống ]");
             System.out.println("=====================================================================================");
             return;
@@ -284,7 +284,7 @@ public class QuanKho extends NhanVien {
                 "Mã SP", "Tên Sản Phẩm", "Loại", "SL", "Giá Nhập", "Giá Bán", "HSD/Bảo Hành");
         System.out.println("-------------------------------------------------------------------------------------");
 
-        for (SanPham sp : QuanLySanPham.danhSachSanPham) {
+        for (SanPham sp : new QuanLySanPham().getDanhSachSanPham()) {
             String thongTinPhu = "-";
             if (sp instanceof ThucPham) {
                 LocalDate hsd = ((ThucPham) sp).getHanSuDung();
@@ -293,7 +293,7 @@ public class QuanKho extends NhanVien {
 
             System.out.printf("%-8s | %-22s | %-10s | %-6d | %-12d | %-12d | %-15s\n",
                     sp.getMaSanPham(), sp.getTenSanPham(), sp.getLoaiSanPham(),
-                    sp.getSoLuong(), sp.getGiaNhap(), sp.getGiaBan(), thongTinPhu);
+                    sp.getSoLuongTonKho(), sp.getGiaNhap(), sp.getGiaBan(), thongTinPhu);
         }
         System.out.println("=====================================================================================");
     }

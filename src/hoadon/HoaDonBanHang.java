@@ -84,8 +84,8 @@ public class HoaDonBanHang extends HoaDon {
             String tenHienThi = ct.isHangKhuyenMai()
                     ? ct.getTenSanPham() + " (TẶNG)" : ct.getTenSanPham();
             System.out.printf("%-5d | %-25s | %-5d | %15d | %15d\n",
-                    stt, tenHienThi, ct.getSoLuong(), ct.getDonGia(), ct.tinhThanhTien());
-            tongHangGoc += (long) ct.getSoLuong() * ct.getDonGia();
+                    stt, tenHienThi, ct.getSoLuongTonKho(), ct.getDonGia(), ct.tinhThanhTien());
+            tongHangGoc += (long) ct.getSoLuongTonKho() * ct.getDonGia();
             tongSauKhuyenMaiSanPham += ct.tinhThanhTien();
             stt++;
         }

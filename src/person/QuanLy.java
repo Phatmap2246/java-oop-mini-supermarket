@@ -9,15 +9,18 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import dichvu.DanhSachSPKM;
+import dichvu.Danhsachdoitac;
 import dichvu.Danhsachkhuyenmai;
 import dichvu.KhuyenMaiPhanTram;
 import dichvu.KhuyenMaiTrucTiep;
 import dichvu.Khuyenmai;
+import dichvu.Nhacungcap;
 import dichvu.SanPhamKhuyenMai;
 import sanpham.QuanLySanPham;
 import sanpham.SanPham;
 import sanpham.ThucPham;
 import utils.YeuCau;
+import utils.DataBase;
 import utils.Validation;
 
 public class QuanLy extends NhanVien {
@@ -198,12 +201,7 @@ public class QuanLy extends NhanVien {
         }
 
     }
-    // TODO: Sau khi co danh sach sp + dieu chinh se sua lại
-    public void quanLySanPham() {
-        quanLySanPham(new Scanner(System.in));
-    }
-
-    public void quanLySanPham(Scanner sc) {
+    public void quanLySanPham(Scanner sc,QuanLySanPham dSanPham,ArrayList<Nhacungcap> dsNCC) {
         while (true) {
             System.out.println("\n=== QUẢN LÝ SẢN PHẨM ===");
             System.out.println("1. Xem danh sách sản phẩm");
@@ -216,16 +214,18 @@ public class QuanLy extends NhanVien {
 
             switch (luaChon) {
                 case 1:
-                    QuanLySanPham.inDanhSachSanPham();
+                    dSanPham.inDanhSachSanPham();
                     break;
                 case 2:
-                    new QuanKho().capNhatKho(sc);
+                    dSanPham.themSanPham(sc,dsNCC);
                     break;
                 case 3:
-                    xoaSanPham(sc);
+                    String c =Validation.inputStringRegex(sc, "Nhap ma san pham can sua (vi du: SP001)","^SPd+$", "Sai dinh dang ma san pham, nhap lai ");
+                    dSanPham.xoaSanPham(c);
                     break;
                 case 4:
-                    suaThongTinSanPham(sc);
+                    String d =Validation.inputStringRegex(sc, "Nhap ma san pham can sua (vi du: SP001)","^SPd+$", "Sai dinh dang ma san pham, nhap lai ");
+                    dSanPham.suaThongTinSanPham(sc,d,dsNCC);
                     break;
                 case 5:
                     dieuChinhGiaBan(sc);
@@ -236,82 +236,6 @@ public class QuanLy extends NhanVien {
                     throw new IllegalStateException("Lựa chọn quản lý sản phẩm không hợp lệ.");
             }
         }
-    }
-
-    private void xoaSanPham(Scanner sc){
-        ArrayList<SanPham> danhSach = QuanLySanPham.danhSachSanPham;
-        if(danhSach.isEmpty()){
-            System.out.println("Danh sách sản phẩm đang trống.");
-            return;
-        }
-
-        QuanLySanPham.inDanhSachSanPham();
-        String maSanPham = Validation.inputStringRegex(
-                sc, "Nhập mã sản phẩm cần xóa: ", "^SP\\d+$",
-                "Mã sản phẩm phải có dạng SP theo sau là chữ số.");
-        int viTri = timViTriSanPham(danhSach, maSanPham);
-        if(viTri == -1){
-            System.out.println("Không tìm thấy sản phẩm có mã " + maSanPham + ".");
-            return;
-        }
-
-        SanPham sanPham = danhSach.remove(viTri);
-        System.out.println("Đã xóa sản phẩm " + sanPham.getTenSanPham() + ".");
-    }
-
-    private void suaThongTinSanPham(Scanner sc){
-        SanPham sanPham = chonSanPham(sc);
-        if(sanPham == null){
-            return;
-        }
-
-        System.out.println("1. Sửa tên sản phẩm");
-        System.out.println("2. Sửa mã nhà cung cấp");
-        System.out.println("3. Sửa giá nhập");
-        System.out.println("4. Sửa số lượng");
-        if(sanPham instanceof ThucPham){
-            System.out.println("5. Sửa hạn sử dụng");
-            System.out.println("6. Quay lại");
-        }else{
-            System.out.println("5. Quay lại");
-        }
-
-        int soLuaChon = sanPham instanceof ThucPham ? 6 : 5;
-        int luaChon = Validation.luaChon(sc, "Chọn thông tin cần sửa: ", 1, soLuaChon);
-        switch(luaChon){
-            case 1:
-                String tenSanPham;
-                do{
-                    System.out.print("Nhập tên sản phẩm mới: ");
-                    tenSanPham = sc.nextLine().trim();
-                    if(tenSanPham.isEmpty()){
-                        System.out.println("Tên sản phẩm không được để trống.");
-                    }
-                }while(tenSanPham.isEmpty());
-                sanPham.setTenSanPham(tenSanPham);
-                break;
-            case 2:
-                sanPham.setMaNhaCungCap(Validation.inputStringRegex(
-                        sc, "Nhập mã nhà cung cấp mới: ", "^NCC\\d+$",
-                        "Mã nhà cung cấp phải có dạng NCC theo sau là chữ số."));
-                break;
-            case 3:
-                sanPham.setGiaNhap(nhapSoKhongAm(sc, "Nhập giá nhập mới: "));
-                break;
-            case 4:
-                sanPham.setSoLuong(nhapSoLuongKhongAm(sc));
-                break;
-            case 5:
-                if(!(sanPham instanceof ThucPham)){
-                    return;
-                }
-                ((ThucPham) sanPham).setHanSuDung(
-                        Validation.inputLocalDateRegex(sc, "Nhập hạn sử dụng mới (dd/MM/yyyy): "));
-                break;
-            default:
-                return;
-        }
-        System.out.println("Đã cập nhật thông tin sản phẩm.");
     }
 
     private void dieuChinhGiaBan(Scanner sc){
@@ -325,13 +249,13 @@ public class QuanLy extends NhanVien {
     }
 
     private SanPham chonSanPham(Scanner sc){
-        ArrayList<SanPham> danhSach = QuanLySanPham.danhSachSanPham;
+        ArrayList<SanPham> danhSach = new QuanLySanPham().getDanhSachSanPham();
         if(danhSach.isEmpty()){
             System.out.println("Danh sách sản phẩm đang trống.");
             return null;
         }
 
-        QuanLySanPham.inDanhSachSanPham();
+        new QuanLySanPham().getDanhSachSanPham().toString();
         String maSanPham = Validation.inputStringRegex(
                 sc, "Nhập mã sản phẩm: ", "^SP\\d+$",
                 "Mã sản phẩm phải có dạng SP theo sau là chữ số.");
@@ -363,16 +287,6 @@ public class QuanLy extends NhanVien {
         return giaTri;
     }
 
-    private int nhapSoLuongKhongAm(Scanner sc){
-        int soLuong;
-        do{
-            soLuong = Validation.inputInt(sc, "Nhập số lượng mới: ");
-            if(soLuong < 0){
-                System.out.println("Số lượng không được âm.");
-            }
-        }while(soLuong < 0);
-        return soLuong;
-    }
     public void duyetYeuCau(Scanner sc) throws IOException{
         Path filePath = Paths.get("YeuCau.txt");
         if (!Files.exists(filePath)) {
@@ -407,6 +321,7 @@ public class QuanLy extends NhanVien {
         }
     }
     public void giamGiaCanHSD(Scanner sc, ArrayList<ThucPham> dscanDate) {
+        //ràng điều kiện
         if (sc == null || dscanDate == null) {
             throw new IllegalArgumentException("Scanner và danh sách thực phẩm không được null.");
         }
@@ -421,7 +336,7 @@ public class QuanLy extends NhanVien {
                     || thucPham.getHanSuDung().isBefore(homNay)) {
                 continue;
             }
-            if (thucPham.getSoLuong() <= 0) {
+            if (thucPham.getSoLuongTonKho() <= 0) {
                 System.out.println("Bỏ qua " + thucPham.getMaSanPham()
                         + " vì số lượng tồn không còn.");
                 continue;
@@ -434,7 +349,7 @@ public class QuanLy extends NhanVien {
 
             System.out.printf("%s - %s | Tồn: %d | HSD: %s%n",
                     thucPham.getMaSanPham(), thucPham.getTenSanPham(),
-                    thucPham.getSoLuong(), thucPham.getHanSuDung());
+                    thucPham.getSoLuongTonKho(), thucPham.getHanSuDung());
             int luaChon = Validation.luaChon(
                     sc, "Chọn loại giảm giá (1: phần trăm, 2: trực tiếp): ", 1, 2);
             Khuyenmai khuyenMai = luaChon == 1
@@ -451,7 +366,7 @@ public class QuanLy extends NhanVien {
                     break;
                 }
             } while (true);
-
+// thêm sp giảm cận date vào dsSanPhamKhuyenMais
             dsKhuyenMai.getKhuyenmais().add(khuyenMai);
             dsSanPhamKhuyenMai.getSanPhamKhuyenMais().add(
                     new SanPhamKhuyenMai(thucPham.getMaSanPham(),
@@ -460,7 +375,7 @@ public class QuanLy extends NhanVien {
                     + " cho sản phẩm " + thucPham.getMaSanPham() + ".");
         }
     }
-    public void themKhuyenMai(Scanner sc){
+    public void themKhuyenMai(Scanner sc,DanhSachSPKM dspkm){
         while(true)
         {
             System.out.println("Tạo khuyến mãi cho nhóm sản phẩm:");
@@ -472,15 +387,15 @@ public class QuanLy extends NhanVien {
             switch (luaChon) {
                 case 1:
                     System.out.println("Đã chọn nhóm Thực phẩm.");
-                    dsKhuyenMai.themKhuyenMai(sc);
+                    dspkm.themSanPhamKhuyenMai(sc);
                     break;
                 case 2:
                     System.out.println("Đã chọn nhóm Gia dụng.");
-                    dsKhuyenMai.themKhuyenMai(sc);
+                    dspkm.themSanPhamKhuyenMai(sc);
                     break;
                 case 3:
                     System.out.println("Đã chọn nhóm Điện tử.");
-                    dsKhuyenMai.themKhuyenMai(sc);
+                    dspkm.themSanPhamKhuyenMai(sc);
                     break;
                 case 4:
                     return;
@@ -489,5 +404,10 @@ public class QuanLy extends NhanVien {
             }
         }
     }
-
+    public void xemLichSuDuyet(String file){
+       ArrayList<YeuCau> dsDuyet =  DataBase.docfile(YeuCau.class, file);
+       System.out.println("LICH SU YEU CAU DUYET");
+       for(YeuCau yc: dsDuyet)
+       yc.toString();
+    }
 }

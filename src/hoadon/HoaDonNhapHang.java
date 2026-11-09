@@ -89,7 +89,7 @@ public class HoaDonNhapHang extends HoaDon {
         int stt = 1;
         for (CTHoaDon ct : danhSachChiTiet) {
             System.out.printf("%-5d | %-25s | %-5d | %,15d | %,15d |\n",
-                    stt, ct.getTenSanPham(), ct.getSoLuong(), ct.getDonGia(), ct.tinhThanhTien());
+                    stt, ct.getTenSanPham(), ct.getSoLuongTonKho(), ct.getDonGia(), ct.tinhThanhTien());
             stt++;
         }
 

@@ -70,7 +70,7 @@ public class QuanLySanPham{
                 if (danhSachNhaCungCap == null) {
                     System.out.println("Vui lòng thêm nhà cung cấp!");
                 } else {
-                    sanPham = new Dientu();
+                    sanPham = new DienTu();
                     sanPham.setSanPham(sc);
                     System.out.println("Chọn nhà cung cấp: ");
                     for (int i = 0; i < danhSachNhaCungCap.size(); i++) {
@@ -241,7 +241,7 @@ public class QuanLySanPham{
                     System.out.println("Lựa chọn không hợp lệ!");
                     return;
             }
-        } else if (sanPham instanceof Dientu) {
+        } else if (sanPham instanceof DienTu) {
             System.out.println("Chọn thuộc tính cần sửa: ");
             System.out.println("1.Tên sản phẩm!");
             System.out.println("2.Giá nhập!");
@@ -266,11 +266,11 @@ public class QuanLySanPham{
                     sanPham.setSoLuongTonKho(Validation.inputInt(sc, "Nhập số lượng tồn kho mới cho sản phẩm: "));
                     break;
                 case 5:
-                    ((Dientu) sanPham).setThoiGianBaoHanh(Validation.inputInt(sc, "Nhập thời gian bảo hành mới (theo tháng): "));
+                    ((DienTu) sanPham).setThoiGianBaoHanh(Validation.inputInt(sc, "Nhập thời gian bảo hành mới (theo tháng): "));
                     break;
                 case 6:
                     System.out.println("Nhập chất liệu mới cho sản phẩm: ");
-                    ((Dientu) sanPham).setChatLieu(sc.nextLine());
+                    ((DienTu) sanPham).setChatLieu(sc.nextLine());
                     break;
                 case 7:
                     if (danhSachNhaCungCap == null || danhSachNhaCungCap.isEmpty()) {

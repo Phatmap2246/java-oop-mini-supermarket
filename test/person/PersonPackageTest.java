@@ -6,7 +6,9 @@ import hoadon.HoaDonBanHang;
 import hoadon.HoaDonNhapHang;
 import utils.YeuCau;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -137,7 +139,16 @@ public class PersonPackageTest {
         equal(150_000L, accountant.tinhTongDoanhThu(invoices), "KeToan repeated revenue calculation");
         equal(30_000L, accountant.tinhTongChiPhi(invoices), "KeToan total expenses");
         equal(120_000L, accountant.tinhLoiNhuan(invoices), "KeToan profit");
-        equal(1_920L, accountant.tinhLoiNhuanRong(invoices), "KeToan current tax calculation");
+        equal(96_000L, accountant.tinhLoiNhuanRong(invoices), "KeToan net profit after corporate income tax");
+
+        HoaDonBanHang lossSalesInvoice = new HoaDonBanHang("HD002", "KH001");
+        lossSalesInvoice.themChiTiet(new CTHoaDon("SP001", "Rice", 1, 10_000, 0));
+        HoaDonNhapHang lossPurchaseInvoice = new HoaDonNhapHang("HDN002", "Supplier", "NCC001", 0, 0);
+        lossPurchaseInvoice.themChiTiet(new CTHoaDon("SP002", "Milk", 3, 10_000, 0));
+        ArrayList<HoaDon> lossInvoices = new ArrayList<>();
+        lossInvoices.add(lossSalesInvoice);
+        lossInvoices.add(lossPurchaseInvoice);
+        equal(-20_000L, accountant.tinhLoiNhuanRong(lossInvoices), "KeToan net loss has no income tax");
     }
 
     private static void testQuanKho() {
@@ -177,10 +188,39 @@ public class PersonPackageTest {
         equal("KhongDuyet", requests.get(1).getTrangThai(), "QuanLy rejects request");
         equal("DaDuyet", requests.get(2).getTrangThai(), "QuanLy approves accountant request");
 
+        ByteArrayOutputStream historyOutput = new ByteArrayOutputStream();
+        PrintStream originalOutput = System.out;
+        PrintStream capturedOutput = new PrintStream(historyOutput, true, StandardCharsets.UTF_8);
+        try {
+            System.setOut(capturedOutput);
+            manager.xemLichSuDuyet(requestFile.toString());
+        } finally {
+            System.setOut(originalOutput);
+            capturedOutput.close();
+        }
+        String history = historyOutput.toString(StandardCharsets.UTF_8);
+        check(history.contains("NV003") && history.contains("DaDuyet"),
+                "Manager displays approved request in review history");
+        check(history.contains("NV004") && history.contains("KhongDuyet"),
+                "Manager displays rejected request in review history");
+
         Files.write(requestFile, java.util.Arrays.asList(
                 "NV001|KeToan|bad|ChoDuyet|extra",
                 "NV002|KeToan|already done|DaDuyet",
                 "NV003|KeToan|pending|ChoDuyet"), StandardCharsets.UTF_8);
+        historyOutput.reset();
+        capturedOutput = new PrintStream(historyOutput, true, StandardCharsets.UTF_8);
+        try {
+            System.setOut(capturedOutput);
+            manager.xemLichSuDuyet(requestFile.toString());
+        } finally {
+            System.setOut(originalOutput);
+            capturedOutput.close();
+        }
+        check(historyOutput.toString(StandardCharsets.UTF_8).contains(
+                "NV001|KeToan|bad|ChoDuyet|extra"),
+                "Manager reports malformed rows in review history");
+
         manager.duyetYeuCau(new Scanner("1\n"));
         requests = YeuCau.docDanhSach(requestFile);
         equal("NV001|KeToan|bad|ChoDuyet|extra",
