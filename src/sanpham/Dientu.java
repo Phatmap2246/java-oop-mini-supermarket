@@ -7,7 +7,7 @@ import utils.Validation;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
-public class DienTu extends SanPham
+public class DienTu extends SanPham // đã sửa
 {
     private int thoiGianBaoHanh ;
     private String chatLieu ;
