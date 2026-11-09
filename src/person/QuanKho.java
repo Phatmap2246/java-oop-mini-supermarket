@@ -311,7 +311,7 @@ public class QuanKho extends NhanVien {
         String ht = sc.nextLine().trim();
 
     //     System.out.print("Nhập nội dung chi tiết yêu cầu: ");
-    //     String nd = sc.nextLine().trim();
+    String nd = sc.nextLine().trim();
 
         ghiYeuCauVaoFile(maNCC, ht, nd);
     }
