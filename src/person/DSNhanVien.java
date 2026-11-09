@@ -3,6 +3,7 @@ package person;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import utils.DataBase;
 import utils.Validation;
 
 public class DSNhanVien {
@@ -32,6 +33,7 @@ public class DSNhanVien {
             nv.nhapThongTin(sc);
             list.add(nv);
         }
+        DataBase.ghiVaoFile(list, "NhanVien.txt", true);
     }
 
     /** In thông tin từng nhân viên; thông báo nếu danh sách rỗng. */
@@ -52,6 +54,8 @@ public class DSNhanVien {
         NhanVien nv = new NhanVien();
         nv.nhapThongTin(sc);
         list.add(nv);
+        DataBase.ghiVaoFile(list.getLast(), "NhanVien.txt", false);
+
     }
 
     /** Nhập thông tin k nhân viên mới rồi thêm vào danh sách. */
@@ -61,6 +65,8 @@ public class DSNhanVien {
             NhanVien nv = new NhanVien();
             nv.nhapThongTin(sc);
             list.add(nv);
+            DataBase.ghiVaoFile(list.getLast(), "NhanVien.txt", false);
+
         }
     }
 
@@ -91,15 +97,25 @@ public class DSNhanVien {
         return null;
     }
 
-    /** Xóa nhân viên theo mã hoặc thông báo nếu không tìm thấy. */
-    public void xoaNV(String maNV) {
+    /** Đánh dấu nhân viên đã sa thải nhưng vẫn giữ hồ sơ trong danh sách. */
+    public boolean saThai(String maNV) {
         int viTri = timNV(maNV);
-        if (viTri != -1) {
-            list.remove(viTri);
-            System.out.println("[+] Đã xóa nhân viên " + maNV + ".");
-        } else {
+        if (viTri == -1) {
             System.out.println("[!] Không tìm thấy nhân viên trong danh sách.");
+            return false;
         }
+
+        NhanVien nv = list.get(viTri);
+        if (nv.isSaThai()) {
+            System.out.println("[!] Nhân viên này đã được sa thải.");
+            return false;
+        }
+
+        nv.setSaThai(true);
+        DataBase.ghiVaoFile(list, "NhanVien.txt", true);
+        System.out.println("[+] Đã cập nhật trạng thái sa thải cho nhân viên " + maNV + ".");
+        DataBase.ghiVaoFile(list, "NhanVien.txt", true);
+        return true;
     }
 
     /** Cập nhật thông tin nhân viên theo mã; trả về false nếu không tìm thấy. */
@@ -123,8 +139,9 @@ public class DSNhanVien {
             System.out.println("7. Vai trò");
             System.out.println("8. Lương");
             System.out.println("9. Phụ cấp trách nhiệm");
+            System.out.println("10. Trạng thái làm việc");
             System.out.println("0. Hoàn tất");
-            choice = Validation.luaChon(sc, "Chọn thông tin cần sửa (0-9): ", 0, 9);
+            choice = Validation.luaChon(sc, "Chọn thông tin cần sửa (0-10): ", 0, 10);
 
             switch (choice) {
                 case 1:
@@ -175,14 +192,18 @@ public class DSNhanVien {
                 case 9:
                     nv.setPhuCapTrachNhiem(sc);
                     break;
+                case 10:
+                    int trangThai = Validation.luaChon(
+                            sc, "Chọn trạng thái: 1. Đang làm | 2. Đã sa thải: ", 1, 2);
+                    nv.setSaThai(trangThai == 2);
+                    break;
                 case 0:
                     break;
                 default:
                     System.out.println("[!] Lựa chọn không hợp lệ, vui lòng thử lại.");
             }
         } while (choice != 0);
-
+        DataBase.ghiVaoFile(list, "NhanVien.txt", true);
         return true;
     }
-    // TODO: Bổ sung chức năng lưu và đọc danh sách nhân viên.
 }

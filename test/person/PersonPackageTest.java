@@ -4,6 +4,7 @@ import hoadon.CTHoaDon;
 import hoadon.HoaDon;
 import hoadon.HoaDonBanHang;
 import hoadon.HoaDonNhapHang;
+import utils.DataBase;
 import utils.YeuCau;
 
 import java.io.ByteArrayOutputStream;
@@ -69,6 +70,22 @@ public class PersonPackageTest {
         equal(15_000L, employee.getLuong(), "NhanVien total salary getter");
         equal(15_000L, employee.tinhLuong(), "NhanVien salary calculation");
         equal("ThuNgan", employee.getVaiTro(), "NhanVien role");
+        check(!employee.isSaThai(), "NhanVien defaults to active");
+        employee.setSaThai(true);
+        check(employee.isSaThai(), "NhanVien dismissal state setter");
+        NhanVien copy = new NhanVien(employee);
+        check(copy.isSaThai(), "NhanVien copy preserves dismissal state");
+        check(copy.toString().contains("Đã sa thải"), "NhanVien display includes dismissal state");
+        NhanVien restored = DataBase.taoObject(
+                NhanVien.class,
+                "maNV,vaitro,luong,phuCapTrachNhiem,isSaThai",
+                "NV001,ThuNgan,0,0,true");
+        check(restored.isSaThai(), "NhanVien persistence reads dismissal state");
+        NhanVien legacyRecord = DataBase.taoObject(
+                NhanVien.class,
+                "maNV,vaitro,luong,phuCapTrachNhiem",
+                "NV001,ThuNgan,0,0");
+        check(!legacyRecord.isSaThai(), "NhanVien legacy records default to active");
     }
 
     private static void testDSNhanVien() {
@@ -80,8 +97,10 @@ public class PersonPackageTest {
         check(list.suaNV("NV002", new Scanner("2\nTran Thi B\n0\n")), "DSNhanVien edits existing employee");
         equal("Tran Thi B", employee.getHoten(), "DSNhanVien edit persists");
         check(!list.suaNV("NV999", new Scanner("0\n")), "DSNhanVien reports missing employee");
-        list.xoaNV("NV002");
-        equal(-1, list.timNV("NV002"), "DSNhanVien removes employee");
+        check(list.saThai("NV002"), "DSNhanVien dismisses existing employee");
+        equal(0, list.timNV("NV002"), "DSNhanVien retains dismissed employee");
+        check(employee.isSaThai(), "DSNhanVien marks employee as dismissed");
+        check(!list.saThai("NV002"), "DSNhanVien does not dismiss an employee twice");
         check(new DSNhanVien(list).list == list.list, "DSNhanVien copy shares backing list");
     }
 

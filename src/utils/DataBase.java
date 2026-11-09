@@ -60,6 +60,11 @@ public class DataBase {
         if(targetType == int.class){
             return Integer.parseInt(value);
         }
+        else if(targetType == boolean.class){
+            if (value.equalsIgnoreCase("true")) return true;
+            if (value.equalsIgnoreCase("false")) return false;
+            throw new IllegalArgumentException("Giá trị boolean không hợp lệ: " + value);
+        }
         else if(targetType == double.class){
             return Double.parseDouble(value);
         }
