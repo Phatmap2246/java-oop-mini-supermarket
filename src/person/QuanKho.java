@@ -239,16 +239,41 @@ public class QuanKho extends NhanVien {
             switch (loai) {
                 case 1:
                     LocalDate hsd = Validation.inputLocalDateRegex(sc, "Nhập hạn sử dụng (dd/MM/yyyy): ");
-                    spMoi = new ThucPham(maSP, tenSP, maNCC, giaNhap, giaBan, soLuong, hsd) {
-                    };
+                    ThucPham tp = new ThucPham();
+                    tp.setMaSanPham(maSP);
+                    tp.setTenSanPham(tenSP);
+                    tp.setMaNhaCungCap(maNCC);
+                    tp.setLoaiSanPham("Thực phẩm");
+                    tp.setGiaNhap(giaNhap);
+                    tp.setGiaBan(giaBan);
+                    tp.setSoLuongTonKho(soLuong);
+                    tp.setHanSuDung(hsd);
+                    spMoi = tp;
                     break;
                 case 2:
                     int soThangBH = Validation.inputInt(sc, "Nhập số tháng bảo hành: ");
-                    spMoi = new DienTu(maSP, tenSP, maNCC, giaNhap, giaBan, soLuong, soThangBH);
+                    DienTu dt = new DienTu();
+                    dt.setMaSanPham(maSP);
+                    dt.setTenSanPham(tenSP);
+                    dt.setMaNhaCungCap(maNCC);
+                    dt.setLoaiSanPham("Điện tử");
+                    dt.setGiaNhap(giaNhap);
+                    dt.setGiaBan(giaBan);
+                    dt.setSoLuongTonKho(soLuong);
+                    dt.setThoiGianBaoHanh(soThangBH);
+                    spMoi = dt;
                     break;
                 case 3:
                 default:
-                    spMoi = new TieuDung(maSP, tenSP, maNCC, giaNhap, giaBan, soLuong);
+                    TieuDung td = new TieuDung();
+                    td.setMaSanPham(maSP);
+                    td.setTenSanPham(tenSP);
+                    td.setMaNhaCungCap(maNCC);
+                    td.setLoaiSanPham("Tiêu dùng");
+                    td.setGiaNhap(giaNhap);
+                    td.setGiaBan(giaBan);
+                    td.setSoLuongTonKho(soLuong);
+                    spMoi = td;
                     break;
             }
 
