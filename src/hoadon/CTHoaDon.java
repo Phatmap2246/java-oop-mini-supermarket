@@ -103,7 +103,7 @@ public class CTHoaDon {
             }
 
             int daNhap = QuanLyTonKho.soLuongDaCo(chiTietDaNhap, maSanPham);
-            int conLai = sanPham.getSoLuong() - daNhap;
+            int conLai = sanPham.getSoLuongTonKho() - daNhap;
             if (conLai <= 0) {
                 System.out.println("[!] Sản phẩm đã hết số lượng có thể bán.");
                 continue;
@@ -159,7 +159,7 @@ public class CTHoaDon {
         this.tenSanPham = tenSanPham;
     }
 
-    public int getSoLuong() {
+    public int getSoLuongTonKho() {
         return soLuong;
     }
 

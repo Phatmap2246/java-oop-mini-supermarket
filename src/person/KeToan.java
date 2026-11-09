@@ -92,9 +92,9 @@ public class KeToan extends NhanVien {
             int slThucTe = Validation.inputInt(sc, "  - Nhập số lượng thực nhận: ");
             long giaThucTe = Validation.inputLong(sc, "  - Nhập đơn giá thực nhận: ");
 
-            if (slThucTe != ct.getSoLuong() || Math.abs(giaThucTe - ct.getDonGia()) > 0.005) {
+            if (slThucTe != ct.getSoLuongTonKho() || Math.abs(giaThucTe - ct.getDonGia()) > 0.005) {
                 System.out.printf("[!] Không khớp mã %s. Hóa đơn ghi: SL %d, giá %,.0f VND.%n",
-                        ct.getMaSanPham(), ct.getSoLuong(), (double) ct.getDonGia());
+                        ct.getMaSanPham(), ct.getSoLuongTonKho(), (double) ct.getDonGia());
                 return;
             }
         }
@@ -231,6 +231,6 @@ public class KeToan extends NhanVien {
                     maPhieuNhapCongNo.get(i), soTienCongNo.get(i),
                     DateUtil.formatDate(han), trangThai);
         }
-        
+
     }
 }

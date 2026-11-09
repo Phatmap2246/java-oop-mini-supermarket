@@ -30,16 +30,16 @@ public abstract class HoaDon {
     public void themChiTiet(CTHoaDon ct){
         for (CTHoaDon existing : this.danhSachChiTiet) {
             boolean dongCuChuaGiam = existing.tinhThanhTien()
-                    == (long) existing.getSoLuong() * existing.getDonGia();
+                    == (long) existing.getSoLuongTonKho() * existing.getDonGia();
             boolean dongMoiChuaGiam = ct.tinhThanhTien()
-                    == (long) ct.getSoLuong() * ct.getDonGia();
+                    == (long) ct.getSoLuongTonKho() * ct.getDonGia();
             if (existing.getMaSanPham().equalsIgnoreCase(ct.getMaSanPham())
                     && existing.getTenSanPham().equalsIgnoreCase(ct.getTenSanPham())
                     && existing.getDonGia() == ct.getDonGia()
                     && existing.getChietKhau() == ct.getChietKhau()
                     && existing.isHangKhuyenMai() == ct.isHangKhuyenMai()
                     && dongCuChuaGiam && dongMoiChuaGiam) {
-                existing.setSoLuong(existing.getSoLuong() + ct.getSoLuong());
+                existing.setSoLuong(existing.getSoLuongTonKho() + ct.getSoLuongTonKho());
                 return;
             }
         }

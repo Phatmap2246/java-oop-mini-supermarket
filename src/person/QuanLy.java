@@ -9,10 +9,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import dichvu.DanhSachSPKM;
+import dichvu.Danhsachdoitac;
 import dichvu.Danhsachkhuyenmai;
 import dichvu.KhuyenMaiPhanTram;
 import dichvu.KhuyenMaiTrucTiep;
 import dichvu.Khuyenmai;
+import dichvu.Nhacungcap;
 import dichvu.SanPhamKhuyenMai;
 import sanpham.QuanLySanPham;
 import sanpham.SanPham;
@@ -199,7 +201,7 @@ public class QuanLy extends NhanVien {
         }
 
     }
-    public void quanLySanPham(Scanner sc,QuanLySanPham dSanPham) {
+    public void quanLySanPham(Scanner sc,QuanLySanPham dSanPham,ArrayList<Nhacungcap> dsNCC) {
         while (true) {
             System.out.println("\n=== QUẢN LÝ SẢN PHẨM ===");
             System.out.println("1. Xem danh sách sản phẩm");
@@ -215,13 +217,15 @@ public class QuanLy extends NhanVien {
                     dSanPham.inDanhSachSanPham();
                     break;
                 case 2:
-                    dSanPham.taoSanPham(sc);
+                    dSanPham.themSanPham(sc,dsNCC);
                     break;
                 case 3:
-                    dSanPham.xoaSanPham(sc);
+                    String c =Validation.inputStringRegex(sc, "Nhap ma san pham can sua (vi du: SP001)","^SPd+$", "Sai dinh dang ma san pham, nhap lai ");
+                    dSanPham.xoaSanPham(c);
                     break;
                 case 4:
-                    dSanPham.suaThongTinSanPham(sc);
+                    String d =Validation.inputStringRegex(sc, "Nhap ma san pham can sua (vi du: SP001)","^SPd+$", "Sai dinh dang ma san pham, nhap lai ");
+                    dSanPham.suaThongTinSanPham(sc,d,dsNCC);
                     break;
                 case 5:
                     dieuChinhGiaBan(sc);
@@ -251,7 +255,7 @@ public class QuanLy extends NhanVien {
             return null;
         }
 
-        QuanLySanPham.inDanhSachSanPham();
+        new QuanLySanPham().getDanhSachSanPham().toString();
         String maSanPham = Validation.inputStringRegex(
                 sc, "Nhập mã sản phẩm: ", "^SP\\d+$",
                 "Mã sản phẩm phải có dạng SP theo sau là chữ số.");
@@ -332,7 +336,7 @@ public class QuanLy extends NhanVien {
                     || thucPham.getHanSuDung().isBefore(homNay)) {
                 continue;
             }
-            if (thucPham.getSoLuong() <= 0) {
+            if (thucPham.getSoLuongTonKho() <= 0) {
                 System.out.println("Bỏ qua " + thucPham.getMaSanPham()
                         + " vì số lượng tồn không còn.");
                 continue;
@@ -345,7 +349,7 @@ public class QuanLy extends NhanVien {
 
             System.out.printf("%s - %s | Tồn: %d | HSD: %s%n",
                     thucPham.getMaSanPham(), thucPham.getTenSanPham(),
-                    thucPham.getSoLuong(), thucPham.getHanSuDung());
+                    thucPham.getSoLuongTonKho(), thucPham.getHanSuDung());
             int luaChon = Validation.luaChon(
                     sc, "Chọn loại giảm giá (1: phần trăm, 2: trực tiếp): ", 1, 2);
             Khuyenmai khuyenMai = luaChon == 1

@@ -151,9 +151,9 @@ public class KhachHang extends Person {
         }
         for (CTHoaDon item : gioHang) {
             if (item.getMaSanPham().equalsIgnoreCase(ct.getMaSanPham())) {
-                item.setSoLuong(item.getSoLuong() + ct.getSoLuong());
+                item.setSoLuong(item.getSoLuongTonKho() + ct.getSoLuongTonKho());
                 System.out.printf("[+] Đã cập nhật %s: %d sản phẩm.%n",
-                        ct.getTenSanPham(), item.getSoLuong());
+                        ct.getTenSanPham(), item.getSoLuongTonKho());
                 return;
             }
         }
@@ -256,7 +256,7 @@ public class KhachHang extends Person {
         int stt = 1;
         for (CTHoaDon ct : gioHang) {
             System.out.printf("%-4d | %-10s | %-24s | %5d | %,12d | %,14d%n",
-                    stt++, ct.getMaSanPham(), ct.getTenSanPham(), ct.getSoLuong(), ct.getDonGia(), ct.tinhThanhTien());
+                    stt++, ct.getMaSanPham(), ct.getTenSanPham(), ct.getSoLuongTonKho(), ct.getDonGia(), ct.tinhThanhTien());
         }
         System.out.println("--------------------------------------------------------------------------");
         System.out.printf("Tổng tạm tính: %,d VND%n", tinhTongTienGioHang());

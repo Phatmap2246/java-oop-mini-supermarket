@@ -30,7 +30,7 @@ public final class KhuyenMaiService {
         ArrayList<CTHoaDon> chiTietHoaDon = hoaDon.getDanhSachChiTiet();
         chiTietHoaDon.removeIf(CTHoaDon::isHangKhuyenMai);
         for (CTHoaDon chiTiet : chiTietHoaDon) {
-            chiTiet.setThanhTienSauKhuyenMai((long) chiTiet.getSoLuong() * chiTiet.getDonGia());
+            chiTiet.setThanhTienSauKhuyenMai((long) chiTiet.getSoLuongTonKho() * chiTiet.getDonGia());
         }
 
         if (danhSachSanPhamKhuyenMai == null || danhSachKhuyenMai == null) {
@@ -40,7 +40,7 @@ public final class KhuyenMaiService {
 
         long tongTienHang = 0;
         for (CTHoaDon chiTiet : chiTietHoaDon) {
-            tongTienHang += (long) chiTiet.getSoLuong() * chiTiet.getDonGia();
+            tongTienHang += (long) chiTiet.getSoLuongTonKho() * chiTiet.getDonGia();
         }
 
         Map<String, Khuyenmai> khuyenMaiApDung = new LinkedHashMap<>();
@@ -73,7 +73,7 @@ public final class KhuyenMaiService {
             if (khuyenMai instanceof KhuyenMaiMuaTang) {
                 String khoaSanPham = maKhuyenMai + "|" + chiTiet.getMaSanPham().toUpperCase();
                 soLuongMuaTheoKhuyenMaiVaSanPham.merge(
-                        khoaSanPham, (long) chiTiet.getSoLuong(), Long::sum);
+                        khoaSanPham, (long) chiTiet.getSoLuongTonKho(), Long::sum);
                 sanPhamTheoKhuyenMaiVaSanPham.putIfAbsent(khoaSanPham, chiTiet);
             }
         }
@@ -103,7 +103,7 @@ public final class KhuyenMaiService {
                         .getOrDefault(sanPham.getMaSanPham().toUpperCase(), 0L);
                 if (sanPhamTrongKho == null
                         || soLuongDaCo + soLuongTangDaDuKien + soLuongTang
-                                > sanPhamTrongKho.getSoLuong()) {
+                                > sanPhamTrongKho.getSoLuongTonKho()) {
                     System.out.println("[!] Không đủ tồn kho để cấp hàng tặng "
                             + sanPham.getTenSanPham() + "; bỏ qua phần quà này.");
                     continue;
