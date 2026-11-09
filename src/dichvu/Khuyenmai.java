@@ -19,13 +19,14 @@ public abstract class Khuyenmai {
         maKhuyenMai = (Validation.taoMa("KM%03d" , Khuyenmai.getSoThuTu())) ;
         soThuTu++ ;
     }
-    public Khuyenmai ( String maKhuyenMai , String loaiKhuyenMai , LocalDate ngayBatDau , LocalDate ngayKetThuc , long mucChiToiThieu , ArrayList<SanPham> danhSachKhuyenMai)
+    public Khuyenmai ( String maKhuyenMai , String loaiKhuyenMai , LocalDate ngayBatDau , LocalDate ngayKetThuc , long mucChiToiThieu , int soThuTu)
     {
         this.maKhuyenMai = maKhuyenMai ;
         this.loaiKhuyenMai = loaiKhuyenMai ;
         this.ngayBatDau = ngayBatDau ;
         this.ngayKetThuc= ngayKetThuc ;
         this.mucChiToiThieu = mucChiToiThieu;
+        Khuyenmai.soThuTu = soThuTu ;
     }
     public void setKM ( Scanner sc )
     {
@@ -100,4 +101,5 @@ public abstract class Khuyenmai {
     public String toString() {
         return "Mã khuyến mãi: " + maKhuyenMai + " | Loại khuyến mãi: " + loaiKhuyenMai + " | Ngày bắt đầu: " + ngayBatDau + " | Ngày kết thúc: " + ngayKetThuc +  " | Mức chi tiêu tối thiểu: " + mucChiToiThieu ;
     }
+
 }

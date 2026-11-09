@@ -14,14 +14,14 @@ public abstract class SanPham {
     private static int soThuTu = 1 ;
     public SanPham()
     {
-        maSanPham = tenSanPham = loaiSanPham = maNhaCungCap = "" ;
+        tenSanPham = loaiSanPham = maNhaCungCap = "" ;
         giaNhap = giaBan = 0 ;
         soLuongTonKho = 0 ;
         thue = 0 ;
         maSanPham = Validation.taoMa("SP%03d" , soThuTu) ;
         soThuTu++ ;
     }
-    public SanPham( String maSanPham , String tenSanPham , String loaiSanPham , long giaNhap , long giaBan , int soLuongTonKho , String maNhaCungCap , double thue )
+    public SanPham( String maSanPham , String tenSanPham , String loaiSanPham , long giaNhap , long giaBan , int soLuongTonKho , String maNhaCungCap , double thue , int soThuTu)
     {
         this.maSanPham = maSanPham ;
         this.tenSanPham = tenSanPham ;
@@ -31,6 +31,7 @@ public abstract class SanPham {
         this.soLuongTonKho = soLuongTonKho ;
         this.maNhaCungCap = maNhaCungCap ;
         this.thue = thue ;
+        SanPham.soThuTu = soThuTu ;
     }
 
     public static int getSoThuTu() {
@@ -119,4 +120,5 @@ public abstract class SanPham {
     public String toString() {
         return "Mã sản phẩm: " + maSanPham + " | Tên sản phẩm: " + tenSanPham + " | Giá nhập: " + giaNhap + " | Giá bán: " + giaBan + " | Số sản phẩm tồn kho : " + soLuongTonKho + " | Nhà cung cấp : " + maNhaCungCap;
     }
+
 }

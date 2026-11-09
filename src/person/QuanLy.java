@@ -229,7 +229,7 @@ public class QuanLy extends NhanVien {
         QuanLySanPham.inDanhSachSanPham();
         String maSanPham = Validation.inputStringRegex(
                 sc, "Nhập mã sản phẩm cần xóa: ", "^SP\\d+$",
-                "Mã sản phẩm phải có dạng SP theo sau là chữ số.");
+                "Mã sản phẩm phải có dạng SP theo sau là chữ số.", sanpham.SanPham.getSoThuTu());
         int viTri = timViTriSanPham(danhSach, maSanPham);
         if(viTri == -1){
             System.out.println("Không tìm thấy sản phẩm có mã " + maSanPham + ".");
@@ -274,7 +274,7 @@ public class QuanLy extends NhanVien {
             case 2:
                 sanPham.setMaNhaCungCap(Validation.inputStringRegex(
                         sc, "Nhập mã nhà cung cấp mới: ", "^NCC\\d+$",
-                        "Mã nhà cung cấp phải có dạng NCC theo sau là chữ số."));
+                        "Mã nhà cung cấp phải có dạng NCC theo sau là chữ số.", dichvu.Doitac.getSoThuTuNCC()));
                 break;
             case 3:
                 sanPham.setGiaNhap(nhapSoKhongAm(sc, "Nhập giá nhập mới: "));
@@ -315,7 +315,7 @@ public class QuanLy extends NhanVien {
         QuanLySanPham.inDanhSachSanPham();
         String maSanPham = Validation.inputStringRegex(
                 sc, "Nhập mã sản phẩm: ", "^SP\\d+$",
-                "Mã sản phẩm phải có dạng SP theo sau là chữ số.");
+                "Mã sản phẩm phải có dạng SP theo sau là chữ số.", sanpham.SanPham.getSoThuTu());
         int viTri = timViTriSanPham(danhSach, maSanPham);
         if(viTri == -1){
             System.out.println("Không tìm thấy sản phẩm có mã " + maSanPham + ".");

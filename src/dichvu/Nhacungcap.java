@@ -22,9 +22,10 @@ public class Nhacungcap extends Doitac{
         super.setMaDoiTac(Validation.taoMa("NCC%03d" , Doitac.getSoThuTuNCC()));
         Doitac.setSoThuTuNCC(Doitac.getSoThuTuNCC()+1);
     }
-    public Nhacungcap ( String maDoiTac , String tenDoiTac , String soDienThoai , String diaChi , String maSoThue , String email , String loaiDoiTac , String nganhHangCungCap , String maDonViVanChuyen , long hanMucNoCong  )
+    public Nhacungcap ( String maDoiTac , String tenDoiTac , String soDienThoai , String diaChi , String maSoThue , String email , String loaiDoiTac , String nganhHangCungCap , String maDonViVanChuyen , long hanMucNoCong , int soThuTu)
     {
         super(maDoiTac, tenDoiTac, soDienThoai, diaChi, maSoThue, email , loaiDoiTac);
+        Doitac.setSoThuTuNCC(soThuTu);
         this.nganhHangCungCap = nganhHangCungCap;
         this.hanMucNoCong = hanMucNoCong;
         this.maDonViVanChuyen = maDonViVanChuyen ;
@@ -115,4 +116,5 @@ public class Nhacungcap extends Doitac{
     {
         return super.toString() + " | Ngành hàng cung cấp: " + nganhHangCungCap + " | Hạn mức nợ công: " + hanMucNoCong ;
     }
+
 }

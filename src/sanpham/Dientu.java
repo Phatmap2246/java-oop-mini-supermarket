@@ -19,9 +19,9 @@ public class Dientu extends SanPham
         super.setThue(0.05) ;
     }
     public Dientu( String maSanPham , String tenSanPham , String loaiSanPham , long giaNhap , long giaBan , int soLuongTonKho , String maNhaCungCap , double thue ,
-                   int thoiGianBaoHanh , long tienBaoHanh , String chatLieu , LocalDate ngayMua)
+                   int thoiGianBaoHanh , long tienBaoHanh , String chatLieu , LocalDate ngayMua , int soThuTu)
     {
-        super( maSanPham, tenSanPham, loaiSanPham, giaNhap, giaBan, soLuongTonKho, maNhaCungCap , thue );
+        super( maSanPham, tenSanPham, loaiSanPham, giaNhap, giaBan, soLuongTonKho, maNhaCungCap , thue , soThuTu);
         this.thoiGianBaoHanh = thoiGianBaoHanh ;
         this.chatLieu = chatLieu ;
     }
@@ -68,4 +68,5 @@ public class Dientu extends SanPham
     {
         return LocalDate.now().isAfter(ngayHetHanBaoHanh(ngayMua)) ;
     }
+
 }

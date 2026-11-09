@@ -108,6 +108,26 @@ public class Validation {
         }
     }
     
+    /** soThuTuTiepTheo la bo dem cua loai doi tuong dang duoc tra cuu. */
+    public static String inputStringRegex(Scanner sc, String message, String regex,
+            String errorMessage, int soThuTuTiepTheo) {
+        if (soThuTuTiepTheo <= 1) {
+            throw new IllegalStateException("Chua co ma nao duoc cap cho loai doi tuong nay.");
+        }
+        while (true) {
+            String value = inputStringRegex(sc, message, regex, errorMessage);
+            String phanSo = value.replaceFirst("^[A-Za-z]+", "");
+            if (phanSo.matches("[0-9]+")) {
+                java.math.BigInteger soThuTu = new java.math.BigInteger(phanSo);
+                if (soThuTu.signum() > 0 && soThuTu.compareTo(
+                        java.math.BigInteger.valueOf(soThuTuTiepTheo)) < 0) {
+                    return value;
+                }
+            }
+            System.out.println("[!] Ma chua duoc cap. Vui long nhap lai!");
+        }
+    }
+
     // 4. Hàm tự động tạo mã (VD: NV001, KH001)
     public static String taoMa(String regex, int soTiepTheo) {
         return String.format(regex, soTiepTheo);

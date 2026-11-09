@@ -1,61 +1,27 @@
 package hoadon;
 
-import java.util.ArrayList;
+import utils.Validation;
 import java.time.LocalDate;
 
 public abstract class HoaDon {
-    protected String maHoaDon;
-    protected LocalDate ngayLap;
-    protected String tenDoiTac;
-    private static int demHoaDon = 0; // Sửa: Thêm = 0
-    protected ArrayList<CTHoaDon> danhSachChiTiet;
+    private String maHoaDon;
+    private LocalDate ngayLap;
+    private String maNhanVien ;
+    private static int demHoaDon = 1; // Sửa: Thêm = 0
     
     public HoaDon() {
-        this.maHoaDon = "";
+        this.maHoaDon = Validation.taoMa("HD%03d" , demHoaDon) ;
         this.ngayLap = LocalDate.now(); 
-        this.tenDoiTac = "";
-        this.danhSachChiTiet = new ArrayList<>();
+        this.maNhanVien = "" ;
         demHoaDon++;
     }
 
-    public HoaDon(String maHoaDon, String tenDoiTac) {
+    public HoaDon(String maHoaDon, String maNhanVien , LocalDate ngayLap , int DemHoaDon) {
         this.maHoaDon = maHoaDon;
-        this.ngayLap = LocalDate.now();
-        this.tenDoiTac = tenDoiTac;
-        this.danhSachChiTiet = new ArrayList<>();
-        demHoaDon++;
+        this.ngayLap = ngayLap ;
+        this.maNhanVien = maNhanVien ;
+        demHoaDon = DemHoaDon ;
     }
-
-    // SỬA: Tự động gộp số lượng nếu thêm trùng mã sản phẩm
-    public void themChiTiet(CTHoaDon ct){
-        for (CTHoaDon existing : this.danhSachChiTiet) {
-            boolean dongCuChuaGiam = existing.tinhThanhTien()
-                    == (long) existing.getSoLuong() * existing.getDonGia();
-            boolean dongMoiChuaGiam = ct.tinhThanhTien()
-                    == (long) ct.getSoLuong() * ct.getDonGia();
-            if (existing.getMaSanPham().equalsIgnoreCase(ct.getMaSanPham())
-                    && existing.getTenSanPham().equalsIgnoreCase(ct.getTenSanPham())
-                    && existing.getDonGia() == ct.getDonGia()
-                    && existing.getChietKhau() == ct.getChietKhau()
-                    && existing.isHangKhuyenMai() == ct.isHangKhuyenMai()
-                    && dongCuChuaGiam && dongMoiChuaGiam) {
-                existing.setSoLuong(existing.getSoLuong() + ct.getSoLuong());
-                return;
-            }
-        }
-        this.danhSachChiTiet.add(ct);
-    }
-
-    public boolean xoaChiTietMSP(String maSanPham){
-        for( int i = 0 ; i<this.danhSachChiTiet.size();i++){
-            if (danhSachChiTiet.get(i).getMaSanPham().equals(maSanPham)) {
-                danhSachChiTiet.remove(i);
-                return true;
-            }
-        }
-        return false;
-    }
-
     public static int getDemHoaDon(){ return demHoaDon; }
     
     public abstract long tinhTongTien();
@@ -65,8 +31,21 @@ public abstract class HoaDon {
     public void setMaHoaDon(String maHoaDon) { this.maHoaDon = maHoaDon; }
     public LocalDate getNgayLap() { return ngayLap; }
     public void setNgayLap(LocalDate ngayLap) { this.ngayLap = ngayLap; }
-    public String getTenDoiTac() { return tenDoiTac; }
-    public void setTenDoiTac(String tenDoiTac) { this.tenDoiTac = tenDoiTac; }
-    public ArrayList<CTHoaDon> getDanhSachChiTiet() { return danhSachChiTiet; }
-    public void setDanhSachChiTiet(ArrayList<CTHoaDon> danhSachChiTiet) { this.danhSachChiTiet = danhSachChiTiet; }
+
+    public static void setDemHoaDon(int demHoaDon) {
+        HoaDon.demHoaDon = demHoaDon;
+    }
+
+    public String getMaNhanVien() {
+        return maNhanVien;
+    }
+
+    public void setMaNhanVien(String maNhanVien) {
+        this.maNhanVien = maNhanVien;
+    }
+
+    @Override
+    public String toString() {
+        return "Mã hoá đơn: " + maHoaDon + " | Mã nhân viên: " + maNhanVien + " | Ngày lập: " + ngayLap ;
+    }
 }

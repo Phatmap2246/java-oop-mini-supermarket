@@ -14,9 +14,10 @@ public class Donvivanchuyen extends Doitac {
         super.setMaDoiTac(Validation.taoMa("DVVC%03d" , Doitac.getSoThuTuDVVC()));
         Doitac.setSoThuTuDVVC(Doitac.getSoThuTuDVVC()+1);
     }
-    public Donvivanchuyen( String maDoiTac , String tenDoiTac , String soDienThoai , String diaChi , String maSoThue , String email , String loaiDoiTac , ArrayList<Xe> danhSachXe  )
+    public Donvivanchuyen( String maDoiTac , String tenDoiTac , String soDienThoai , String diaChi , String maSoThue , String email , String loaiDoiTac , ArrayList<Xe> danhSachXe , int soThuTu)
     {
         super(maDoiTac, tenDoiTac, soDienThoai, diaChi, maSoThue, email , loaiDoiTac);
+        Doitac.setSoThuTuDVVC(soThuTu);
         this.danhSachXe = danhSachXe;
     }
 
@@ -151,4 +152,5 @@ public class Donvivanchuyen extends Doitac {
             xe.setMaXe(utils.Validation.inputStringRegex(sc , "Nhập mã xe: " , "XE\\d{3}" , "Mã xe không đúng định dạng vui lòng nhập lại!(VD hợp lệ: XE001"));
         }
     }
+
 }

@@ -11,9 +11,9 @@ public class TieuDung extends SanPham
         super.setThue(0.05);
     }
     public TieuDung( String maSanPham , String tenSanPham , String loaiSanPham , long giaNhap , long giaBan , int soLuongTonKho , String maNhaCungCap , double thue ,
-                     String thuongHieu , String noiSanXuat , String phanLoai , String luuYAnToan)
+                     String thuongHieu , String noiSanXuat , String phanLoai , String luuYAnToan , int soThuTu)
     {
-        super( maSanPham, tenSanPham, loaiSanPham, giaNhap, giaBan, soLuongTonKho, maNhaCungCap , thue);
+        super( maSanPham, tenSanPham, loaiSanPham, giaNhap, giaBan, soLuongTonKho, maNhaCungCap , thue , soThuTu);
         this.thuongHieu = thuongHieu ;
         this.noiSanXuat = noiSanXuat ;
         this.phanLoai = phanLoai ;
@@ -78,4 +78,5 @@ public class TieuDung extends SanPham
     {
         return "Mã sản phẩm: " + super.getMaSanPham() + " | Tên sản phẩm: " + super.getTenSanPham() + " | Giá bán: " + super.getGiaBan() + " | Phân loại: " + phanLoai + " | Nơi sản xuất: " + noiSanXuat + " | Phân loại: " + phanLoai + " | Lưu ý an toàn: " + luuYAnToan;
     }
+
 }

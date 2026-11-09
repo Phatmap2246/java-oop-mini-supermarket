@@ -46,7 +46,7 @@ public class KeToan extends NhanVien {
 
     private void doiChieuVaGhiNhanCongNo(Scanner sc, QuanLyHoaDon quanLyHoaDon) {
         String maHoaDon = Validation.inputStringRegex(sc, "Nhập mã hóa đơn nhà cung cấp: ",
-                HoaDonNhapHang.MA_HD_NHAP_REGEX, "Mã hóa đơn nhập không hợp lệ!");
+                HoaDonNhapHang.MA_HD_NHAP_REGEX, "Mã hóa đơn nhập không hợp lệ!", hoadon.HoaDon.getDemHoaDon());
         HoaDon hoaDon = quanLyHoaDon.timKiemTheoMa(maHoaDon);
         if (!(hoaDon instanceof HoaDonNhapHang)) {
             System.out.println("Không tìm thấy hóa đơn nhập hàng có mã " + maHoaDon + ".");
@@ -76,7 +76,7 @@ public class KeToan extends NhanVien {
         for (int i = 0; i < soMatHang; i++) {
             System.out.println("--- Mặt hàng thực nhận thứ " + (i + 1) + " ---");
             String maSanPham = Validation.inputStringRegex(sc, "Nhập mã sản phẩm: ",
-                    CTHoaDon.MA_SP_REGEX, "Mã sản phẩm không hợp lệ!").toUpperCase();
+                    CTHoaDon.MA_SP_REGEX, "Mã sản phẩm không hợp lệ!", sanpham.SanPham.getSoThuTu()).toUpperCase();
                 int soLuong = Validation.inputInt(sc, "Nhập số lượng thực nhận: ");
 
             long donGia = Validation.inputLong(sc, "Nhập đơn giá theo hóa đơn/hợp đồng: ");

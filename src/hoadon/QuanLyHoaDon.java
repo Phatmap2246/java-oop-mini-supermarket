@@ -250,7 +250,7 @@ public class QuanLyHoaDon {
                         }
                     } else if (hd instanceof HoaDonNhapHang) {
                         HoaDonNhapHang hdNhap = (HoaDonNhapHang) hd;
-                        String maNCCMoi = Validation.inputStringRegex(sc, "Nhập mã NCC mới: ", HoaDonNhapHang.MA_NCC_REGEX, "Lỗi: Mã NCC không đúng!");
+                        String maNCCMoi = Validation.inputStringRegex(sc, "Nhập mã NCC mới: ", HoaDonNhapHang.MA_NCC_REGEX, "Lỗi: Mã NCC không đúng!", dichvu.Doitac.getSoThuTuNCC());
                         hdNhap.setMaNhaCungCap(maNCCMoi);
                         System.out.println("Đã cập nhật Mã NCC!");
                     }
@@ -345,11 +345,11 @@ public class QuanLyHoaDon {
                     maHoa(hoaDonBan.getMaHoaDon()),
                     maHoa(hoaDonBan.getTenDoiTac()),
                     hoaDonBan.getNgayLap().toString(),
-                    Long.toString(hoaDonBan.getTienKhuyenMai()),
+                    "0",
                     Boolean.toString(hoaDonBan.isDaThanhToan()),
-                    Boolean.toString(hoaDonBan.isKhuyenMaiPhanBoTheoChiTiet()),
-                    hoaDonBan.getKieuChietKhauHoaDon(),
-                    hoaDonBan.getGiaTriChietKhauHoaDon()));
+                    "true",
+                    "NONE",
+                    "0"));
             for (CTHoaDon chiTiet : hoaDonBan.getDanhSachChiTiet()) {
                 dongDuLieu.add(ghiChiTietMoi(chiTiet));
             }
@@ -443,10 +443,7 @@ public class QuanLyHoaDon {
             }
             hoaDon = new HoaDonBanHang(giaiMa(truong[1]), giaiMa(truong[2]));
             hoaDon.setNgayLap(LocalDate.parse(truong[3]));
-            hoaDon.setTienKhuyenMai(Long.parseLong(truong[4]));
             hoaDon.setDaThanhToan(docBoolean(truong[5]));
-            hoaDon.setKhuyenMaiPhanBoTheoChiTiet(docBoolean(truong[6]));
-            hoaDon.setChietKhauHoaDon(truong[7], truong[8]);
             return hoaDon;
         }
 
@@ -456,12 +453,7 @@ public class QuanLyHoaDon {
             throw new IllegalArgumentException("Dòng hóa đơn bán cũ sai định dạng.");
         }
         hoaDon = new HoaDonBanHang(truong[1], truong[2]);
-        hoaDon.setTienKhuyenMai(Long.parseLong(truong[3]));
         hoaDon.setDaThanhToan(docBoolean(truong[4]));
-        hoaDon.setKhuyenMaiPhanBoTheoChiTiet(!"BAN".equals(truong[0]));
-        if (coChietKhau) {
-            hoaDon.setChietKhauHoaDon(truong[5], truong[6]);
-        }
         return hoaDon;
     }
 
@@ -612,21 +604,9 @@ public class QuanLyHoaDon {
             for (HoaDon hd : this.danhSachHoaDon) {
                 if (hd instanceof HoaDonBanHang) {
                     HoaDonBanHang hdBan = (HoaDonBanHang) hd;
-                    String loaiHoaDonBan;
-                    if (!hdBan.isKhuyenMaiPhanBoTheoChiTiet()) {
-                        loaiHoaDonBan = "BAN";
-                    } else if (!"NONE".equals(hdBan.getKieuChietKhauHoaDon())) {
-                        loaiHoaDonBan = "BAN3";
-                    } else {
-                        loaiHoaDonBan = "BAN2";
-                    }
-                    bw.write(loaiHoaDonBan + "|" + hdBan.getMaHoaDon() + "|"
-                            + hdBan.getTenDoiTac() + "|" + hdBan.getTienKhuyenMai()
-                            + "|" + hdBan.isDaThanhToan());
-                    if (loaiHoaDonBan.equals("BAN3")) {
-                        bw.write("|" + hdBan.getKieuChietKhauHoaDon()
-                                + "|" + hdBan.getGiaTriChietKhauHoaDon());
-                    }
+                    // Retain legacy field positions for BAN2 readers.
+                    bw.write("BAN2|" + hdBan.getMaHoaDon() + "|"
+                            + hdBan.getTenDoiTac() + "|0|" + hdBan.isDaThanhToan());
                     bw.newLine();
                     bw.newLine();
                 } else if (hd instanceof HoaDonNhapHang) {
@@ -665,14 +645,7 @@ public class QuanLyHoaDon {
                             || (loai.equals("BAN3") && parts.length == 7)) {
                         if (timKiemTheoMa(parts[1]) == null) {
                             hdHienTai = new HoaDonBanHang(parts[1], parts[2]);
-                            ((HoaDonBanHang) hdHienTai).setTienKhuyenMai(Long.parseLong(parts[3]));
                             ((HoaDonBanHang) hdHienTai).setDaThanhToan(Boolean.parseBoolean(parts[4]));
-                            ((HoaDonBanHang) hdHienTai)
-                                    .setKhuyenMaiPhanBoTheoChiTiet(!loai.equals("BAN"));
-                            if (loai.equals("BAN3")) {
-                                ((HoaDonBanHang) hdHienTai)
-                                        .setChietKhauHoaDon(parts[5], parts[6]);
-                            }
                             this.danhSachHoaDon.add(hdHienTai);
                         } else {
                             System.out.println("[!] Cảnh báo: Bỏ qua hóa đơn trùng mã " + parts[1] + " trong file!");

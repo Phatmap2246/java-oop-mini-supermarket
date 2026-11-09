@@ -16,9 +16,9 @@ public class KhuyenMaiPhanTram extends  Khuyenmai{
         mucGiamToiDa = 0 ;
         super.setLoaiKhuyenMai("Giảm theo phần trăm");
     }
-    public KhuyenMaiPhanTram(String maKhuyenMai , String loaiKhuyenMai , LocalDate ngayBatDau , LocalDate ngayKetThuc , long mucChiToiThieu , ArrayList<SanPham> danhSachKhuyenMai , double phanTramGiamGia , long mucGiamToiDa )
+    public KhuyenMaiPhanTram(String maKhuyenMai , String loaiKhuyenMai , LocalDate ngayBatDau , LocalDate ngayKetThuc , long mucChiToiThieu , ArrayList<SanPham> danhSachKhuyenMai , double phanTramGiamGia , long mucGiamToiDa , int soThuTu)
     {
-        super(maKhuyenMai, loaiKhuyenMai, ngayBatDau, ngayKetThuc, mucChiToiThieu, danhSachKhuyenMai);
+        super(maKhuyenMai, loaiKhuyenMai, ngayBatDau, ngayKetThuc, mucChiToiThieu, soThuTu);
         setPhanTramGiamGia(phanTramGiamGia > 1
                 ? phanTramGiamGia / 100.0 : phanTramGiamGia);
         this.mucGiamToiDa = mucGiamToiDa ;
@@ -62,4 +62,5 @@ public class KhuyenMaiPhanTram extends  Khuyenmai{
                 " | Phần trăm giảm giá: %.2f%% | Mức giảm tối đa: %d",
                 phanTramGiamGia * 100, mucGiamToiDa);
     }
+
 }

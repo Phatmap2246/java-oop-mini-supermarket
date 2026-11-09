@@ -34,7 +34,6 @@ public final class KhuyenMaiService {
         }
 
         if (danhSachSanPhamKhuyenMai == null || danhSachKhuyenMai == null) {
-            hoaDon.setTienKhuyenMai(0);
             return 0;
         }
 
@@ -161,7 +160,6 @@ public final class KhuyenMaiService {
             }
         }
 
-        hoaDon.setTienKhuyenMai(tienGiam);
         return tienGiam;
     }
 

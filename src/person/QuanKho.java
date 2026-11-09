@@ -117,7 +117,7 @@ public class QuanKho extends NhanVien {
     /** Kiểm tra HSD bằng cách nhập mã sản phẩm từ Scanner. */
     public void checkHSD(Scanner sc) {
         String maSP = Validation.inputStringRegex(sc, "Nhập mã sản phẩm cần kiểm tra HSD (VD: SP001): ",
-                "^SP\\d+$", "Mã sản phẩm không đúng định dạng (VD: SP001)!");
+                "^SP\\d+$", "Mã sản phẩm không đúng định dạng (VD: SP001)!", sanpham.SanPham.getSoThuTu());
         checkHSD(maSP);
     }
 
@@ -199,7 +199,7 @@ public class QuanKho extends NhanVien {
         String maSP = Validation.inputStringRegex(sc,
                 "Nhập mã sản phẩm (VD: SP001): ",
                 "^SP\\d+$",
-                "Mã sản phẩm không đúng định dạng (VD: SP001)!");
+                "Mã sản phẩm không đúng định dạng (VD: SP001)!", sanpham.SanPham.getSoThuTu());
 
         SanPham sp = timSanPham(maSP);
 
@@ -222,7 +222,7 @@ public class QuanKho extends NhanVien {
             String maNCC = Validation.inputStringRegex(sc,
                     "Nhập mã nhà cung cấp (VD: NCC01): ",
                     "^NCC\\d+$",
-                    "Mã NCC phải bắt đầu bằng NCC theo sau là số!");
+                    "Mã NCC phải bắt đầu bằng NCC theo sau là số!", dichvu.Doitac.getSoThuTuNCC());
 
             long giaNhap = Validation.inputLong(sc, "Nhập giá nhập (VND): ");
             long giaBan = Validation.inputLong(sc, "Nhập giá bán (VND): ");

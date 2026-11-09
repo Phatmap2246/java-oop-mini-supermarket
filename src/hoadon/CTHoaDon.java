@@ -1,147 +1,115 @@
 package hoadon;
 import java.util.Scanner;
-import java.util.List;
-import sanpham.QuanLyTonKho;
+
+import dichvu.*;
 import sanpham.SanPham;
 import utils.Validation;
-public class CTHoaDon {
+import sanpham.QuanLySanPham;
+
+public interface CTHoaDon
+{
+    String getMaSanPham();
+    String getTenSanPham();
+    int getSoLuong();
+    long getDonGia();
+    long tinhThanhTien() ;
+}
+class CTHoaDonBan implements CTHoaDon {
     private String maSanPham;
     private String tenSanPham;
     private  int soLuong;
     private  long donGia;
-    private long thanhTienSauKhuyenMai;
-    private double chietKhau;
-    private boolean hangKhuyenMai;
+    private long mucGiamGia; // Tổng số tiền giảm cho cả dòng sản phẩm.\
+    private String loaiKhuyenMai ;
 
     // TODO: Tạm thời khai báo ở đây, sau này class SanPham có thể chuyển sang đó
     public static final String MA_SP_REGEX = "^SP\\d+$";
     //
 
-    // constructor
-    public CTHoaDon() {
+    // Khởi tạo giá trị mặc định.
+    public CTHoaDonBan() {
         this.maSanPham = "";
         this.tenSanPham = "";
         this.soLuong = 0;
         this.donGia = 0;
-        this.thanhTienSauKhuyenMai = 0;
-        this.chietKhau = 0.0;
-        this.hangKhuyenMai = false;
+        this.mucGiamGia = 0;
+        this.loaiKhuyenMai = "" ;
     }
 
-    public CTHoaDon(String maSanPham, String tenSanPham, int soLuong,
-            long donGia, double chietKhau) {
-        this(maSanPham, tenSanPham, soLuong, donGia, chietKhau, false);
-    }
-
-    public CTHoaDon(String maSanPham, String tenSanPham, int soLuong,
-            long donGia, double chietKhau, boolean hangKhuyenMai) {
+    // Khôi phục đầy đủ dữ liệu chi tiết hóa đơn khi đọc file.
+    public CTHoaDonBan(String maSanPham, String tenSanPham, int soLuong,
+                       long donGia, long mucGiamGia , String loaiKhuyenMai) {
         this.maSanPham = maSanPham;
         this.tenSanPham = tenSanPham;
         this.soLuong = soLuong;
         this.donGia = donGia;
-        this.chietKhau = chietKhau;
-        this.hangKhuyenMai = hangKhuyenMai;
-        this.thanhTienSauKhuyenMai = tinhThanhTienTheoChietKhauCu();
+        this.mucGiamGia = mucGiamGia ;
+        this.loaiKhuyenMai = loaiKhuyenMai ;
     }
-
-    public CTHoaDon(String maSanPham, String tenSanPham, int soLuong,
-            long donGia, long donGiaSauKhuyenMai, double chietKhau) {
-        this.maSanPham = maSanPham;
-        this.tenSanPham = tenSanPham;
-        this.soLuong = soLuong;
-        this.donGia = donGia;
-        this.thanhTienSauKhuyenMai = (long) soLuong * donGiaSauKhuyenMai;
-        this.chietKhau = chietKhau;
-        this.hangKhuyenMai = false;
-    }
-
-    public CTHoaDon(String maSanPham, String tenSanPham, int soLuong, long donGia,
-            double chietKhau, boolean hangKhuyenMai, long thanhTienSauKhuyenMai) {
-        this(maSanPham, tenSanPham, soLuong, donGia, chietKhau, hangKhuyenMai);
-        setThanhTienSauKhuyenMai(thanhTienSauKhuyenMai);
-    }
-
-    public CTHoaDon(String maSanPham, String tenSanPham, int soLuong,
-            long donGia, long donGiaSauKhuyenMai,
-            double chietKhau, boolean hangKhuyenMai) {
-        this(maSanPham, tenSanPham, soLuong, donGia, donGiaSauKhuyenMai, chietKhau);
-        this.hangKhuyenMai = hangKhuyenMai;
-    }
-
     // methods
-    public void nhapThongTin(Scanner sc, boolean isBanHang){
-        this.maSanPham = Validation.inputStringRegex(sc, "Nhập mã sản phẩm (VD: SP01): ", MA_SP_REGEX, "Lỗi: Mã SP phải bắt đầu bằng SP in hoa và theo sau là số!");
-        System.out.print("Nhập tên sản phẩm: ");
-        this.tenSanPham = sc.nextLine();
-        do {
-            this.soLuong = Validation.inputInt(sc, "Nhập số lượng: ");
-            if (this.soLuong == 0) {
-                System.out.println("[!] Số lượng phải lớn hơn 0.");
-            }
-        } while (this.soLuong == 0);
-        do {
-            this.donGia = Validation.inputLong(sc, "Nhập đơn giá: ");
-            if (this.donGia == 0) {
-                System.out.println("[!] Đơn giá phải lớn hơn 0.");
-            }
-        } while (this.donGia == 0);
-        this.chietKhau = 0;
-        this.thanhTienSauKhuyenMai = (long) this.soLuong * this.donGia;
-        this.hangKhuyenMai = false;
-    }
-
-    public void nhapThongTinBan(Scanner sc, List<SanPham> danhSachSanPham,
-            List<CTHoaDon> chiTietDaNhap) {
-        while (true) {
-            this.maSanPham = Validation.inputStringRegex(sc,
-                    "Nhập mã sản phẩm (VD: SP01): ", MA_SP_REGEX,
-                    "Lỗi: Mã SP phải bắt đầu bằng SP và theo sau là số!");
-            SanPham sanPham = QuanLyTonKho.timSanPham(danhSachSanPham, maSanPham);
-            if (sanPham == null) {
-                System.out.println("[!] Mã sản phẩm không có trong danh mục/tồn kho.");
-                continue;
-            }
-
-            int daNhap = QuanLyTonKho.soLuongDaCo(chiTietDaNhap, maSanPham);
-            int conLai = sanPham.getSoLuong() - daNhap;
-            if (conLai <= 0) {
-                System.out.println("[!] Sản phẩm đã hết số lượng có thể bán.");
-                continue;
-            }
-
-            this.tenSanPham = sanPham.getTenSanPham();
-            this.donGia = sanPham.getGiaBan();
-            do {
-                this.soLuong = Validation.inputInt(sc,
-                        "Nhập số lượng (còn " + conLai + "): ");
-                if (this.soLuong == 0 || this.soLuong > conLai) {
-                    System.out.println("[!] Số lượng phải từ 1 đến " + conLai + ".");
-                }
-            } while (this.soLuong == 0 || this.soLuong > conLai);
-
-            this.chietKhau = 0;
-            this.thanhTienSauKhuyenMai = (long) this.soLuong * this.donGia;
-            this.hangKhuyenMai = false;
+    public void nhapCTHoaDon(Scanner sc , Danhsachkhuyenmai dskm , SanPhamKhuyenMai spkm , QuanLySanPham qlsp ){
+        this.maSanPham = Validation.inputStringRegex(sc, "Nhập mã sản phẩm (VD: SP001): ", MA_SP_REGEX, "Lỗi: Mã SP phải bắt đầu bằng SP in hoa và theo sau là số!", sanpham.SanPham.getSoThuTu());
+        SanPham sanPhamDangXet = qlsp.getDanhSachSanPham().get(qlsp.timKiemSanPham(maSanPham)) ;
+        this.tenSanPham = sanPhamDangXet.getTenSanPham();
+        this.soLuong = Validation.inputInt(sc, "Nhập số lượng: ");
+        if ( sanPhamDangXet.getSoLuongTonKho() == 0 )
+        {
+            System.out.println("San phẩm đã hết vui lòng chọn sản phẩm khác!");
             return;
         }
+        while ( soLuong > sanPhamDangXet.getSoLuongTonKho() )
+        {
+            System.out.println(tenSanPham +" chỉ còn lại " + sanPhamDangXet.getSoLuongTonKho() + " sản phẩm bạn có muốn mua không(Có/Không): ");
+            if ( Validation.inputCoKhong(sc , "Nhập lựa chọn của khách hàng: "))
+            {
+                soLuong = sanPhamDangXet.getSoLuongTonKho() ;
+            }
+            else
+            {
+                soLuong = 0 ;
+                return;
+            }
+        }
+        this.donGia  =sanPhamDangXet.getGiaBan() ;
+        String maGiamGia = spkm.getMaKhuyenMai() ;
+        Khuyenmai km = dskm.getKhuyenmais().get(dskm.traCuuThongTinKhuyenMai(maGiamGia)) ;
+        if ( !km.kiemTraHetHanKhuyenMai() && donGia*soLuong >= km.getMucChiToiThieu())
+        {
+            switch (km) {
+                case KhuyenMaiPhanTram khuyenMaiPhanTram -> {
+                    mucGiamGia = (long) ((long) donGia * soLuong * khuyenMaiPhanTram.getPhanTramGiamGia());
+                    if (mucGiamGia > khuyenMaiPhanTram.getMucGiamToiDa())
+                        mucGiamGia = khuyenMaiPhanTram.getMucGiamToiDa();
+                }
+                case KhuyenMaiTrucTiep khuyenMaiTrucTiep ->
+                        mucGiamGia = khuyenMaiTrucTiep.getSoTienGiam();
+                case KhuyenMaiMuaTang khuyenMaiMuaTang -> {
+                    int tiLeSanPhamMuaTrenSanPhamTang = soLuong / khuyenMaiMuaTang.getSoLuongMuaToiThieu();
+                    mucGiamGia = khuyenMaiMuaTang.getSoLuongTang() * donGia * tiLeSanPhamMuaTrenSanPhamTang;
+                }
+                default -> {
+                }
+            }
+        }
+        loaiKhuyenMai = km.getLoaiKhuyenMai() ;
+        System.out.println("Nhập chi tiết sản phẩm thành công!");
     }
 
-    private long tinhThanhTienTheoChietKhauCu() {
-        long tienGoc = (long) soLuong * donGia;
-        long tienGiam = (long) (tienGoc * (chietKhau / 100.0));
-        return tienGoc - tienGiam;
-    }
-
+    @Override
     public long tinhThanhTien() {
-        return thanhTienSauKhuyenMai;
+        return donGia*soLuong - mucGiamGia ;
     }
 
-    public void hienThiChiTiet(){
-        String tenHienThi = hangKhuyenMai ? tenSanPham + " (TẶNG)" : tenSanPham;
-        System.out.printf("  - Mã SP: %-10s | Tên: %-20s | SL: %-5d | Đơn giá gốc: %-10d | Thành tiền sau KM: %d\n",
-                maSanPham, tenHienThi, soLuong, donGia, tinhThanhTien());
-    }
 
+//    public void hienThiChiTiet(){
+//        String tenHienThi = hangKhuyenMai ? tenSanPham + " (TẶNG)" : tenSanPham;
+//        System.out.printf("  - Mã SP: %-10s | Tên: %-20s | SL: %-5d | Đơn giá gốc: %-10d | Thành tiền sau KM: %d\n",
+//                maSanPham, tenHienThi, soLuong, donGia, tinhThanhTien());
+//    } chờ cần xét lại
+    public String toString()
+    {
+        return "Mã sản phẩm: " + maSanPham + " | Tên sản phẩm: " + tenSanPham + " | Số lượng: " + soLuong + " | Đơn giá: " + donGia + " | Tổng tiền: " + tinhThanhTien()+mucGiamGia + " | Thành tiền: " + tinhThanhTien() + " | Loại khuyến mãi: " + loaiKhuyenMai ;
+    }
     // getters - setters
     public String getMaSanPham() {
         return maSanPham;
@@ -165,7 +133,6 @@ public class CTHoaDon {
 
     public void setSoLuong(int soLuong) {
         this.soLuong = soLuong;
-        this.thanhTienSauKhuyenMai = tinhThanhTienTheoChietKhauCu();
     }
 
     public long getDonGia() {
@@ -174,40 +141,96 @@ public class CTHoaDon {
 
     public void setDonGia(long donGia) {
         this.donGia = donGia;
-        this.thanhTienSauKhuyenMai = tinhThanhTienTheoChietKhauCu();
     }
 
-    public double getChietKhau() {
-        return chietKhau;
+    public long getMucGiamGia() {
+        return mucGiamGia;
     }
 
-    public void setChietKhau(double chietKhau) {
-        this.chietKhau = chietKhau;
-        this.thanhTienSauKhuyenMai = tinhThanhTienTheoChietKhauCu();
-    }
-
-    public boolean isHangKhuyenMai() {
-        return hangKhuyenMai;
-    }
-
-    public void setHangKhuyenMai(boolean hangKhuyenMai) {
-        this.hangKhuyenMai = hangKhuyenMai;
-    }
 
     public static String getMaSpRegex() {
         return MA_SP_REGEX;
     }
+}
+class CTHoaDonNhap implements CTHoaDon
+{
+    private String maSanPham, tenSanPham;
+    private int soLuong;
+    private long donGia;
 
-
-    public long getThanhTienSauKhuyenMai() {
-        return thanhTienSauKhuyenMai;
+    public CTHoaDonNhap() {
+        maSanPham = tenSanPham = "";
+        soLuong = 0;
+        donGia = 0;
     }
 
-    public void setThanhTienSauKhuyenMai(long thanhTienSauKhuyenMai) {
-        if (thanhTienSauKhuyenMai < 0) {
-            throw new IllegalArgumentException("Thành tiền sau khuyến mãi không được âm.");
+    public CTHoaDonNhap(String maSanPham, String tenSanPham, int soLuong, long donGia) {
+        this.maSanPham = maSanPham;
+        this.tenSanPham = tenSanPham;
+        this.soLuong = soLuong;
+        this.donGia = donGia;
+    }
+
+    @Override
+    public String getMaSanPham() {
+        return maSanPham;
+    }
+
+    public void setMaSanPham(String maSanPham) {
+        this.maSanPham = maSanPham;
+    }
+
+    @Override
+    public String getTenSanPham() {
+        return tenSanPham;
+    }
+
+    public void setTenSanPham(String tenSanPham) {
+        this.tenSanPham = tenSanPham;
+    }
+
+    @Override
+    public int getSoLuong() {
+        return soLuong;
+    }
+
+    public void setSoLuong(int soLuong) {
+        this.soLuong = soLuong;
+    }
+
+    @Override
+    public long getDonGia() {
+        return donGia;
+    }
+
+    public void setDonGia(long donGia) {
+        this.donGia = donGia;
+    }
+
+    @Override
+    public long tinhThanhTien() {
+        return soLuong * donGia;
+    }
+
+    public void setHoaDonNhap(Scanner sc, QuanLySanPham quanLySanPham) {
+        maSanPham = Validation.inputStringRegex(sc, "Nhập mã sản phẩm: ",
+                "SP\\d{3}", "Mã sản phẩm không hợp lệ (VD: SP001)!", sanpham.SanPham.getSoThuTu());
+        int index = quanLySanPham.timKiemSanPham(maSanPham);
+        while (index == -1) {
+            System.out.println("Mã sản phẩm không tồn tại vui lòng nhập lại!");
+            maSanPham = Validation.inputStringRegex(sc, "Nhập mã sản phẩm: ",
+                    "SP\\d{3}", "Mã sản phẩm không hợp lệ (VD: SP001)!", sanpham.SanPham.getSoThuTu());
+            index = quanLySanPham.timKiemSanPham(maSanPham);
         }
-        this.thanhTienSauKhuyenMai = thanhTienSauKhuyenMai;
+        soLuong = Validation.inputInt(sc, "Nhập số lượng sản phẩm cần nhập: ");
+        SanPham sanPham = quanLySanPham.getDanhSachSanPham().get(index);
+        tenSanPham = sanPham.getTenSanPham();
+        donGia = sanPham.getGiaNhap();
     }
 
+    @Override
+    public String toString() {
+        return "Mã sản phẩm: " + maSanPham + " | Tên sản phẩm: " + tenSanPham
+                + " | Số lượng: " + soLuong + " | Đơn giá: " + donGia;
+    }
 }

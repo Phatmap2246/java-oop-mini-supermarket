@@ -241,4 +241,5 @@ public class HoaDonNhapHang extends HoaDon {
         this.trangThai = TRANG_THAI_DA_DUYET;
         return true;
     }
+
 }

@@ -17,9 +17,9 @@ public class ThucPham extends SanPham
         super.setThue(0.08);
     }
     public ThucPham ( String maSanPham , String tenSanPham , String loaiSanPham , long giaNhap , long giaBan , int soLuongTonKho , String maNhaCungCap , double thue ,
-                      LocalDate ngaySanXuat , LocalDate hanSuDung , double nhietDoBaoQuan , String baoQuan)
+                      LocalDate ngaySanXuat , LocalDate hanSuDung , double nhietDoBaoQuan , String baoQuan , int soThuTu)
     {
-        super( maSanPham, tenSanPham, loaiSanPham, giaNhap, giaBan, soLuongTonKho, maNhaCungCap , thue );
+        super( maSanPham, tenSanPham, loaiSanPham, giaNhap, giaBan, soLuongTonKho, maNhaCungCap , thue , soThuTu);
         this.ngaySanXuat = ngaySanXuat ;
         this.hanSuDung = hanSuDung ;
         this.nhietDoBaoQuan = nhietDoBaoQuan ;
@@ -88,4 +88,5 @@ public class ThucPham extends SanPham
     public String toString() {
         return super.toString() + " | Ngày sản xuất: " + ngaySanXuat + " | Hạn sử dụng: " + hanSuDung + " | Môi trường bảo quản: " + baoQuan + " | Nhiệt độ bảo quản : " + nhietDoBaoQuan;
     }
+
 }

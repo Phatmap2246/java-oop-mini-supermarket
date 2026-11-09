@@ -14,9 +14,9 @@ public class KhuyenMaiTrucTiep extends Khuyenmai{
         soTienGiam = 0 ;
         super.setLoaiKhuyenMai("Giảm giá trực tiếp");
     }
-    public KhuyenMaiTrucTiep(String maKhuyenMai , String loaiKhuyenMai , LocalDate ngayBatDau , LocalDate ngayKetThuc , long mucChiToiThieu , ArrayList<SanPham> danhSachKhuyenMai , long soTienGiam)
+    public KhuyenMaiTrucTiep(String maKhuyenMai , String loaiKhuyenMai , LocalDate ngayBatDau , LocalDate ngayKetThuc , long mucChiToiThieu , ArrayList<SanPham> danhSachKhuyenMai , long soTienGiam , int soThuTu)
     {
-        super(maKhuyenMai, loaiKhuyenMai, ngayBatDau, ngayKetThuc, mucChiToiThieu, danhSachKhuyenMai);
+        super(maKhuyenMai, loaiKhuyenMai, ngayBatDau, ngayKetThuc, mucChiToiThieu, soThuTu);
         this.soTienGiam = soTienGiam ;
     }
 
@@ -36,5 +36,6 @@ public class KhuyenMaiTrucTiep extends Khuyenmai{
     {
         return super.toString() + " | Số tiền giảm giá trực tiếp: " + soTienGiam ;
     }
+
 
 }

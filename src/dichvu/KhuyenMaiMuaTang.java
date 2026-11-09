@@ -14,9 +14,9 @@ public class KhuyenMaiMuaTang extends Khuyenmai{
         soLuongMuaToiThieu = soLuongTang = 0;
         super.setLoaiKhuyenMai("Khuyến mãi mua tặng");
     }
-    public KhuyenMaiMuaTang(String maKhuyenMai , String loaiKhuyenMai , LocalDate ngayBatDau , LocalDate ngayKetThuc , long mucChiToiThieu , ArrayList<SanPham> danhSachKhuyenMai , int soLuongMuaToiThieu , int soLuongTang)
+    public KhuyenMaiMuaTang(String maKhuyenMai , String loaiKhuyenMai , LocalDate ngayBatDau , LocalDate ngayKetThuc , long mucChiToiThieu , ArrayList<SanPham> danhSachKhuyenMai , int soLuongMuaToiThieu , int soLuongTang , int soThuTu)
     {
-        super(maKhuyenMai, loaiKhuyenMai, ngayBatDau, ngayKetThuc, mucChiToiThieu, danhSachKhuyenMai);
+        super(maKhuyenMai, loaiKhuyenMai, ngayBatDau, ngayKetThuc, mucChiToiThieu, soThuTu);
         this.soLuongMuaToiThieu = soLuongMuaToiThieu ;
         this.soLuongTang = soLuongTang ;
     }
@@ -43,4 +43,5 @@ public class KhuyenMaiMuaTang extends Khuyenmai{
         soLuongTang = Validation.inputInt(sc , "Nhập số lượng sản phẩm tặng: ") ;
         super.setLoaiKhuyenMai("Mua " + soLuongMuaToiThieu + " tặng " + soLuongTang );
     }
+
 }
