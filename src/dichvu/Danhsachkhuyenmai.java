@@ -2,23 +2,39 @@ package dichvu ;
 
 import utils.Validation;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.Scanner;
 
 public class Danhsachkhuyenmai {
-    private ArrayList<Khuyenmai> khuyenmais ;
+    private Khuyenmai[] khuyenmais;
+    private int soLuongKhuyenMai;
     public Danhsachkhuyenmai()
     {
-        khuyenmais = new ArrayList<>() ;
+        soLuongKhuyenMai = 0;
+        khuyenmais = new Khuyenmai[soLuongKhuyenMai];
     }
 
-    public void setKhuyenmais(ArrayList<Khuyenmai> khuyenmais) {
+    public void setKhuyenmais(Khuyenmai[] khuyenmais) {
         this.khuyenmais = khuyenmais;
+        this.soLuongKhuyenMai = khuyenmais.length;
     }
 
-    public ArrayList<Khuyenmai> getKhuyenmais() {
+    public Khuyenmai[] getKhuyenmais() {
         return khuyenmais;
     }
+    public int getSoLuongKhuyenMai() {
+        return soLuongKhuyenMai;
+    }
+
+    public void themKhuyenMai(Khuyenmai khuyenMai) {
+        int newSoLuongKhuyenMai = soLuongKhuyenMai + 1;
+        Khuyenmai[] tam = new Khuyenmai[newSoLuongKhuyenMai];
+        System.arraycopy(khuyenmais, 0, tam, 0, soLuongKhuyenMai);
+        tam[soLuongKhuyenMai] = khuyenMai;
+        khuyenmais = tam;
+        soLuongKhuyenMai = newSoLuongKhuyenMai;
+    }
+
     public void themKhuyenMai(Scanner sc )
     {
         Khuyenmai new_km ;
@@ -32,17 +48,17 @@ public class Danhsachkhuyenmai {
             case 1:
                 new_km = new KhuyenMaiPhanTram() ;
                 new_km.setKM(sc);
-                khuyenmais.add(new_km) ;
+                themKhuyenMai(new_km);
                 break;
             case 2:
                 new_km = new KhuyenMaiTrucTiep() ;
                 new_km.setKM(sc);
-                khuyenmais.add(new_km) ;
+                themKhuyenMai(new_km);
                 break;
             case 3:
                 new_km = new KhuyenMaiMuaTang() ;
                 new_km.setKM(sc);
-                khuyenmais.add(new_km) ;
+                themKhuyenMai(new_km);
                 break;
             default:
                 System.out.println("Lựa chọn không hợp lệ!");
@@ -64,21 +80,28 @@ public class Danhsachkhuyenmai {
     }
     public int traCuuThongTinKhuyenMai( String maKhuyenMai )
     {
-        for ( int i = 0 ; i < khuyenmais.size() ; i++ )
+        for ( int i = 0 ; i < soLuongKhuyenMai ; i++ )
         {
-            if ( khuyenmais.get(i).getMaKhuyenMai().equalsIgnoreCase(maKhuyenMai))
+            if ( khuyenmais[i].getMaKhuyenMai().equalsIgnoreCase(maKhuyenMai))
                 return i ;
         }
         return -1 ;
     }
     public void xoaKhuyenMai(String maKhuyenmai )
     {
-        if ( traCuuThongTinKhuyenMai(maKhuyenmai) == -1 )
+        int index = traCuuThongTinKhuyenMai(maKhuyenmai);
+        if (index == -1)
         {
             System.out.println("Mã khuyến mãi không tồn tại!");
             return;
         }
-        khuyenmais.remove(traCuuThongTinKhuyenMai(maKhuyenmai)) ;
+        int newSoLuongKhuyenMai = soLuongKhuyenMai - 1;
+        Khuyenmai[] tam = new Khuyenmai[newSoLuongKhuyenMai];
+        System.arraycopy(khuyenmais, 0, tam, 0, index);
+        System.arraycopy(khuyenmais, index + 1, tam, index,
+                soLuongKhuyenMai - index - 1);
+        khuyenmais = tam;
+        soLuongKhuyenMai = newSoLuongKhuyenMai;
         System.out.println("Xoá khuyến mãi thành công!");
     }
     public void suaThongTinKhuyenMai( String maKhuyenMai , Scanner sc )
@@ -89,7 +112,7 @@ public class Danhsachkhuyenmai {
             System.out.println("Mã khuyến mãi không tồn tại!");
             return;
         }
-        Khuyenmai km = khuyenmais.get(index);
+        Khuyenmai km = khuyenmais[index];
         int luaChon ;
         System.out.println("Chọn các giá trị cần sửa thông tin!");
         System.out.println("1. Ngày bắt đầu!");
@@ -205,7 +228,7 @@ public class Danhsachkhuyenmai {
             return;
         }
         System.out.println("Khuyến mãi cần tìm!");
-        System.out.println(khuyenmais.get(index));
+        System.out.println(khuyenmais[index]);
     }
     public void inDanhSachKhuyenMai()
     {
@@ -227,21 +250,25 @@ public class Danhsachkhuyenmai {
             switch (Luachon)
             {
                 case 1:
-                    khuyenmais.removeIf(Khuyenmai::kiemTraHetHanKhuyenMai);
+                    for (int i = soLuongKhuyenMai - 1; i >= 0; i--) {
+                        if (khuyenmais[i].kiemTraHetHanKhuyenMai()) {
+                            xoaKhuyenMai(khuyenmais[i].getMaKhuyenMai());
+                        }
+                    }
                     System.out.println("Xoá tất cả khuyến mãi hết hạn thành công!");
                     break;
                 case 2:
                     while (true)
                     {
 
-                        String maKhuyenMai = Validation.inputStringRegex( sc , "Nhập mã khuyến mãi bạn muốn xoá: ", "KM\\d{3}" , "Mã khuyến mãi không đúng định dạng vui lòng nhập lại(ví dụ hợp lệ: KM001): ", dichvu.Khuyenmai.getSoThuTu());
+                        String maKhuyenMai = Validation.inputStringRegex( sc , "Nhập mã khuyến mãi bạn muốn xoá: ", "KM\\d{3}" , "Mã khuyến mãi không đúng định dạng vui lòng nhập lại(ví dụ hợp lệ: KM001): ", Khuyenmai.getSoThuTu());
                         int index = traCuuThongTinKhuyenMai(maKhuyenMai) ;
                         if ( index == -1 )
                         {
                             System.out.println("Mã khuyến mãi không tồn tại!");
                             continue;
                         }
-                        else if ( !khuyenmais.get(index).kiemTraHetHanKhuyenMai() )
+                        else if ( !khuyenmais[index].kiemTraHetHanKhuyenMai() )
                         {
                             if ( Validation.inputCoKhong(sc , "Khuyến mãi vẫn còn thời hạn bạn vẫn muốn xoá?(Có/Không): " ))
                                 xoaKhuyenMai(maKhuyenMai);
@@ -256,5 +283,84 @@ public class Danhsachkhuyenmai {
                     break;
             }
         }
+    }
+    public void themKSanPhamKM( Scanner sc , int kSanPham )
+    {
+        System.out.println("Nhập sản phẩm khuyến mãi muốn thêm!");
+        for ( int i = 0 ; i < kSanPham ; i++ )
+        {
+            themKhuyenMai(sc);
+        }
+        System.out.println("Thêm k sản phẩm khuyến mãi thành công!");
+    }
+    public void thongKeCacLoaiKhuyenMai()
+    {
+        System.out.println("Thống kê theo loại khuyến mãi!");
+        System.out.println("Khuyến mãi theo phần trăm!");
+        for ( Khuyenmai km: khuyenmais )
+            if (km instanceof KhuyenMaiPhanTram)
+                System.out.println(km);
+        System.out.println("Khuyến mãi theo giảm giá trực tiếp sản phẩm!");
+        for ( Khuyenmai km: khuyenmais )
+            if (km instanceof KhuyenMaiTrucTiep)
+                System.out.println(km);
+        System.out.println("Khuyến mãi mua sản phẩm tặng sản phẩm!");
+        for ( Khuyenmai km: khuyenmais )
+            if (km instanceof KhuyenMaiMuaTang)
+                System.out.println(km);
+    }
+    public void thongKeTrangThaiKhuyenMai()
+    {
+         System.out.println("Trạng thái của từng khuyến mãi!");
+         System.out.println("Các khuyến mãi đang hoạt động!");
+         for( Khuyenmai km : khuyenmais)
+             if (km.dangHoatDong(LocalDate.now()))
+                 System.out.println(km);
+        System.out.println("Các khuyến mãi hết hạn!");
+        for( Khuyenmai km : khuyenmais)
+            if (km.kiemTraHetHanKhuyenMai())
+                System.out.println(km);
+        System.out.println("Các khuyến mãi chưa đến thời gian hoạt động!");
+        for( Khuyenmai km : khuyenmais)
+            if (km.chuaHoatDong())
+                System.out.println(km);
+    }
+    public void timKiemNhieuKhoa ( String message )
+    {
+        if ( message == null || message.isBlank() )
+        {
+            System.out.println("Vui lòng nhập từ khoá!");
+            return;
+        }
+        boolean flag = false ;
+        System.out.println("Kết quả tìm kiếm trả về: ");
+        for ( Khuyenmai km: khuyenmais)
+        {
+            if ( (km.getMaKhuyenMai().contains(message) || km.getLoaiKhuyenMai().contains(message)))
+            {
+                System.out.println(km);
+                flag = true ;
+            }
+        }
+        if (!flag)
+            System.out.println("Không tìm thấy khuyến mãi phù hợp!");
+    }
+    public void timKiemTheoKhoa( LocalDate time )
+    {
+        if ( time == null )
+        {
+            System.out.println("Vui lòng nhập từ khoá!");
+            return;
+        }
+        boolean flag = false ;
+        for ( Khuyenmai km: khuyenmais )
+        {
+            if ( km.getNgayBatDau().equals(time) || km.getNgayKetThuc().equals(time ))
+            {
+                System.out.println(km);
+                flag = true ;
+            }
+        }
+        if (!flag ) System.out.println("Không tìm thấy khuyến mãi phù hợp!");
     }
 }
