@@ -30,17 +30,16 @@ public final class KhuyenMaiService {
         ArrayList<CTHoaDon> chiTietHoaDon = hoaDon.getDanhSachChiTiet();
         chiTietHoaDon.removeIf(CTHoaDon::isHangKhuyenMai);
         for (CTHoaDon chiTiet : chiTietHoaDon) {
-            chiTiet.setThanhTienSauKhuyenMai((long) chiTiet.getSoLuongTonKho() * chiTiet.getDonGia());
+            chiTiet.setThanhTienSauKhuyenMai((long) chiTiet.getSoLuong() * chiTiet.getDonGia());
         }
 
         if (danhSachSanPhamKhuyenMai == null || danhSachKhuyenMai == null) {
-            hoaDon.setTienKhuyenMai(0);
             return 0;
         }
 
         long tongTienHang = 0;
         for (CTHoaDon chiTiet : chiTietHoaDon) {
-            tongTienHang += (long) chiTiet.getSoLuongTonKho() * chiTiet.getDonGia();
+            tongTienHang += (long) chiTiet.getSoLuong() * chiTiet.getDonGia();
         }
 
         Map<String, Khuyenmai> khuyenMaiApDung = new LinkedHashMap<>();
@@ -73,7 +72,7 @@ public final class KhuyenMaiService {
             if (khuyenMai instanceof KhuyenMaiMuaTang) {
                 String khoaSanPham = maKhuyenMai + "|" + chiTiet.getMaSanPham().toUpperCase();
                 soLuongMuaTheoKhuyenMaiVaSanPham.merge(
-                        khoaSanPham, (long) chiTiet.getSoLuongTonKho(), Long::sum);
+                        khoaSanPham, (long) chiTiet.getSoLuong(), Long::sum);
                 sanPhamTheoKhuyenMaiVaSanPham.putIfAbsent(khoaSanPham, chiTiet);
             }
         }
@@ -103,7 +102,7 @@ public final class KhuyenMaiService {
                         .getOrDefault(sanPham.getMaSanPham().toUpperCase(), 0L);
                 if (sanPhamTrongKho == null
                         || soLuongDaCo + soLuongTangDaDuKien + soLuongTang
-                                > sanPhamTrongKho.getSoLuongTonKho()) {
+                                > sanPhamTrongKho.getSoLuong()) {
                     System.out.println("[!] Không đủ tồn kho để cấp hàng tặng "
                             + sanPham.getTenSanPham() + "; bỏ qua phần quà này.");
                     continue;
@@ -161,7 +160,6 @@ public final class KhuyenMaiService {
             }
         }
 
-        hoaDon.setTienKhuyenMai(tienGiam);
         return tienGiam;
     }
 

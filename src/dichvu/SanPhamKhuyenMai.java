@@ -32,8 +32,8 @@ public class SanPhamKhuyenMai {
     }
     public void setSanPhamKhuyenMai(Scanner sc )
     {
-        maSanPham = Validation.inputStringRegex(sc , "Nhập mã sản phẩm: " , "SP\\d{3}" , "Mã sản phẩm không đúng đi dạng vui lòng nhập lại!(ví dụ hợp lệ: SP001)");
-        maKhuyenMai = Validation.inputStringRegex( sc , "Nhập mã khuyến mãi: " , "KM\\d{3}" , "Mã khuyến mãi không đúng định dạng vui lòng nhập lại!(ví dụ hợp lệ: KM001");
+        maSanPham = Validation.inputStringRegex(sc , "Nhập mã sản phẩm: " , "SP\\d{3}" , "Mã sản phẩm không đúng đi dạng vui lòng nhập lại!(ví dụ hợp lệ: SP001)", sanpham.SanPham.getSoThuTu());
+        maKhuyenMai = Validation.inputStringRegex( sc , "Nhập mã khuyến mãi: " , "KM\\d{3}" , "Mã khuyến mãi không đúng định dạng vui lòng nhập lại!(ví dụ hợp lệ: KM001", dichvu.Khuyenmai.getSoThuTu());
     }
     @Override
     public String toString() {

@@ -156,10 +156,30 @@ public class Danhsachkhuyenmai {
             switch (luaChon )
             {
                 case 1:
-                    km.setNgayBatDau(Validation.inputLocalDateRegex(sc , "Nhập ngày bắt đầu giảm giá mới: "));
+                    while (true)
+                    {
+                        try{
+                            km.setNgayBatDau(Validation.inputLocalDateRegex(sc , "Nhập ngày bắt đầu giảm giá mới: "));
+                            break;
+                        }
+                        catch (IllegalArgumentException e )
+                        {
+                            System.out.println(e.getMessage());
+                        }
+                    }
                     break;
                 case 2:
-                    km.setNgayKetThuc(Validation.inputLocalDateRegex(sc , "Nhập ngày kết thúc mới: "));
+                    while (true)
+                    {
+                        try{
+                            km.setNgayKetThuc(Validation.inputLocalDateRegex(sc , "Nhập ngày kết thúc giảm giá mới: "));
+                            break;
+                        }
+                        catch (IllegalArgumentException e )
+                        {
+                            System.out.println(e.getMessage());
+                        }
+                    }
                     break;
                 case 3:
                     km.setMucChiToiThieu(Validation.inputLong(sc , "Nhập mức chi tiêu tối thiểu mới: "));
@@ -207,15 +227,14 @@ public class Danhsachkhuyenmai {
             switch (Luachon)
             {
                 case 1:
-                    for ( Khuyenmai km: khuyenmais )
-                        if ( km.kiemTraHetHanKhuyenMai() ) xoaKhuyenMai(km.getMaKhuyenMai());
+                    khuyenmais.removeIf(Khuyenmai::kiemTraHetHanKhuyenMai);
                     System.out.println("Xoá tất cả khuyến mãi hết hạn thành công!");
                     break;
                 case 2:
                     while (true)
                     {
 
-                        String maKhuyenMai = Validation.inputStringRegex( sc , "Nhập mã khuyến mãi bạn muốn xoá: ", "KM\\d{3}" , "Mã khuyến mãi không đúng định dạng vui lòng nhập lại(ví dụ hợp lệ: KM001): ");
+                        String maKhuyenMai = Validation.inputStringRegex( sc , "Nhập mã khuyến mãi bạn muốn xoá: ", "KM\\d{3}" , "Mã khuyến mãi không đúng định dạng vui lòng nhập lại(ví dụ hợp lệ: KM001): ", dichvu.Khuyenmai.getSoThuTu());
                         int index = traCuuThongTinKhuyenMai(maKhuyenMai) ;
                         if ( index == -1 )
                         {
@@ -231,9 +250,10 @@ public class Danhsachkhuyenmai {
                         System.out.println("Xoá khuyến mãi thành công!");
                         if ( !Validation.inputCoKhong(sc ,"Bạn có muốn tiếp tục(Có/Không): " )) break;
                     }
+                    break;
                 default:
                     System.out.println("Lựa chọn không hợp lệ!");
-                    return;
+                    break;
             }
         }
     }
