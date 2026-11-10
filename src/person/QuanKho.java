@@ -13,6 +13,7 @@ import sanpham.QuanLySanPham;
 import sanpham.SanPham;
 import sanpham.ThucPham;
 import sanpham.TieuDung;
+import utils.DataBase;
 import utils.DateUtil;
 import utils.Validation;
 
@@ -459,56 +460,23 @@ public class QuanKho extends NhanVien {
         ghiFileLichSuNhap(maPhieu, maNCC, maSP, tenSP, soLuong, donGia, tienHang, tienVanChuyen, thanhTien);
     }
 
-    // ========================= Các hàm bổ trợ cho các hàm phương thức ở trên
-    // ============
+    // ========================= Các hàm bổ trợ cho các hàm phương thức ở
+    // trên=========
     /**
-     * Ghi phiếu nhập kho vào file LichSuNhapHang.txt
+     * Ghi phiếu nhập kho vào file LichSuNhapHang.txt bằng DataBase.ghiVaoFile
      */
     public void ghiFileLichSuNhap(String maPhieu, String maNCC, String maSP, String tenSP,
             int soLuong, long donGia, long tienHang, long tienVanChuyen, long thanhTien) {
-        try {
-            java.io.FileWriter fw = new java.io.FileWriter("src/hoadon/LichSuNhapHang.txt", true);
-            java.io.PrintWriter pw = new java.io.PrintWriter(fw);
-
-            String thoiGian = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
-            String dongGhi = "[" + thoiGian + "] | MaPhieu: " + maPhieu
-                    + " | MaNV: " + (getMaNV() != null ? getMaNV() : "N/A")
-                    + " | MaNCC: " + maNCC
-                    + " | MaSP: " + maSP
-                    + " | TenSP: " + tenSP
-                    + " | SL: " + soLuong
-                    + " | DonGia: " + donGia
-                    + " | TienHang: " + tienHang
-                    + " | TienVanChuyen: " + tienVanChuyen
-                    + " | ThanhTien: " + thanhTien;
-
-            pw.println(dongGhi);
-            pw.close();
-            System.out.println("[+] Đã lưu phiếu nhập vào file LichSuNhapHang.txt thành công!");
-        } catch (Exception e) {
-            System.out.println("[!] Lỗi khi ghi file lịch sử nhập hàng: " + e.getMessage());
-        }
+        hoadon.PhieuNhapKho pnk = new hoadon.PhieuNhapKho(maPhieu, (getMaNV() != null ? getMaNV() : "N/A"),
+                maNCC, maSP, tenSP, soLuong, donGia, tienHang, tienVanChuyen, thanhTien);
+        DataBase.ghiVaoFile(pnk, "src/hoadon/LichSuNhapHang.txt", false);
+        System.out.println("[+] Đã lưu phiếu nhập vào file src/hoadon/LichSuNhapHang.txt bằng DataBase thành công!");
     }
 
-    /** Ghi thông tin yêu cầu của Quản kho vào file YeuCauDuyet.text */
+    /** Ghi thông tin yêu cầu của Quản kho vào file YeuCauDuyet.text bằng DataBase.ghiVaoFile */
     public void ghiYeuCauVaoFile(String maNCC, String hinhThuc, String noiDung) {
-        try {
-            java.io.FileWriter fw = new java.io.FileWriter("src/person/YeuCauDuyet.text", true);
-            java.io.PrintWriter pw = new java.io.PrintWriter(fw);
-
-            String thoiGian = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
-            String dongGhi = "[" + thoiGian + "] | MaNV: " + (getMaNV() != null ? getMaNV() : "N/A")
-                    + " | VaiTro: QuanKho"
-                    + " | MaNCC: " + (maNCC != null && !maNCC.isEmpty() ? maNCC : "KHONG_CO")
-                    + " | HinhThuc: " + hinhThuc
-                    + " | NoiDung: " + noiDung
-                    + " | TrangThai: ChoDuyet";
-
-            pw.println(dongGhi);
-            pw.close();
-            System.out.println("[+] Đã gửi yêu cầu thành công vào file YeuCauDuyet.text!");
-        } catch (Exception e) {
-            System.out.println("[!] Lỗi ghi file yêu cầu: " + e.getMessage());
-        }
+        YeuCauDuyetKho yc = new YeuCauDuyetKho((getMaNV() != null ? getMaNV() : "N/A"), maNCC, hinhThuc, noiDung);
+        DataBase.ghiVaoFile(yc, "src/person/YeuCauDuyet.text", false);
+        System.out.println("[+] Đã gửi yêu cầu vào file src/person/YeuCauDuyet.text bằng DataBase thành công!");
     }
 }

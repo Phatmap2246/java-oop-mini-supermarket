@@ -1,6 +1,7 @@
 package person;
 
 import java.util.Scanner;
+import utils.DataBase;
 import utils.Validation;
 
 public class DSKhachHang {
@@ -192,41 +193,21 @@ public class DSKhachHang {
     }
 
     /**
-     * Ghi đè toàn bộ danh sách khách hàng vào file KhachHang.txt
+     * Ghi đè toàn bộ danh sách khách hàng vào file KhachHang.txt bằng DataBase.ghiVaoFile
      */
     public void ghiFileKhachHang() {
-        try {
-            java.io.FileWriter fw = new java.io.FileWriter("src/person/KhachHang.txt", false);
-            java.io.PrintWriter pw = new java.io.PrintWriter(fw);
-
-            // Ghi dòng tiêu đề
-            pw.println("# MaKH\tHoTen\tSDT\tEmail\tNgaySinh\tDiaChi\tNgayDangKy\tTongChiTieu\tHangThanhVien\tDiemTichLuy\tisTonTai");
-
-            for (int i = 0; i < n; i++) {
-                KhachHang kh = list[i];
-                String diaChiStr = (kh.getDiachi() != null) ? kh.getDiachi() : "";
-                String ngSinhStr = (kh.getNgsinh() != null) ? utils.DateUtil.formatDate(kh.getNgsinh()) : "";
-                String ngDkStr = (kh.getNgayDangKy() != null) ? utils.DateUtil.formatDate(kh.getNgayDangKy()) : "";
-
-                String dong = kh.getMaKhachHang() + "\t"
-                        + kh.getHoten() + "\t"
-                        + kh.getSdt() + "\t"
-                        + kh.getEmail() + "\t"
-                        + ngSinhStr + "\t"
-                        + diaChiStr + "\t"
-                        + ngDkStr + "\t"
-                        + kh.getTongChiTieu() + "\t"
-                        + kh.getHangThanhVien() + "\t"
-                        + kh.getDiemTichLuy() + "\t"
-                        + kh.isTonTai();
-
-                pw.println(dong);
-            }
-            pw.close();
-            System.out.println("[+] Da ghi de danh sach vao file KhachHang.txt thanh cong!");
-        } catch (Exception e) {
-            System.out.println("[!] Loi khi ghi file KhachHang.txt: " + e.getMessage());
+        if (n == 0 || list == null) {
+            System.out.println("[!] Danh sach khach hang rong, khong co du lieu de ghi file.");
+            return;
         }
+
+        java.util.ArrayList<Object> objs = new java.util.ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            objs.add(list[i]);
+        }
+
+        DataBase.ghiVaoFile(objs, "src/person/KhachHang.txt", true);
+        System.out.println("[+] Da ghi de danh sach vao file KhachHang.txt bang DataBase thanh cong!");
     }
 
     /** Cập nhật thông tin khách hàng */

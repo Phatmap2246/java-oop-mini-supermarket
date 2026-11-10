@@ -12,7 +12,7 @@ public class KhachHang extends Person {
     private long tongChiTieu;
     private String hangThanhVien;
     private int diemTichLuy;
-    private boolean isTonTai; // true: đang hoạt động, false: đã bị xóa mềm
+    private boolean isTonTai;
 
     // ========================= CONSTRUCTOR =========================
 
@@ -38,7 +38,8 @@ public class KhachHang extends Person {
     }
 
     public KhachHang(String email, String hoTen, String soDienThoai, DiaChi diaChi, LocalDate ngaySinh,
-            String maKhachHang, LocalDate ngayDangKy, long tongChiTieu, String hangThanhVien, int diemTichLuy, boolean isTonTai) {
+            String maKhachHang, LocalDate ngayDangKy, long tongChiTieu, String hangThanhVien, int diemTichLuy,
+            boolean isTonTai) {
         super(email, hoTen, soDienThoai, diaChi, ngaySinh);
         this.maKhachHang = maKhachHang;
         this.ngayDangKy = (ngayDangKy != null) ? ngayDangKy : LocalDate.now();
