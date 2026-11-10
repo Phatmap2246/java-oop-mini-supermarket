@@ -1,25 +1,35 @@
 package dichvu;
 
 import utils.Validation;
-
-import java.util.ArrayList;
+import sanpham.SanPham ;
 import java.util.Scanner;
 
-public class DanhSachSPKM {
-    private ArrayList<SanPhamKhuyenMai> sanPhamKhuyenMais ;
+public class DanhSachSPKM
+{
+    private SanPhamKhuyenMai[] sanPhamKhuyenMais ;
+    private int soLuongSanPham ;
     public DanhSachSPKM()
     {
-        sanPhamKhuyenMais = new ArrayList<>() ;
+        soLuongSanPham = 0 ;
+        sanPhamKhuyenMais = new SanPhamKhuyenMai[soLuongSanPham] ;
+    }
+    public void setSanPhamKhuyenMais(SanPhamKhuyenMai[] sanPhamKhuyenMais) {
+        this.sanPhamKhuyenMais = sanPhamKhuyenMais;
     }
 
-    public ArrayList<SanPhamKhuyenMai> getSanPhamKhuyenMais() {
+    public SanPhamKhuyenMai[] getSanPhamKhuyenMais() {
         return sanPhamKhuyenMais;
     }
 
-    public void setSanPhamKhuyenMais(ArrayList<SanPhamKhuyenMai> sanPhamKhuyenMais) {
-        this.sanPhamKhuyenMais = sanPhamKhuyenMais;
+    public int getSoLuongSanPham() {
+        return soLuongSanPham;
     }
-    public void themSanPhamKhuyenMai(Scanner sc)
+
+    public void setSoLuongSanPham(int soLuongSanPham) {
+        this.soLuongSanPham = soLuongSanPham;
+    }
+
+    public void themSanPhamKhuyenMai(Scanner sc )
     {
         System.out.println("Thêm sản phẩm khuyến mãi!");
         SanPhamKhuyenMai spkm = new SanPhamKhuyenMai() ;
@@ -29,7 +39,18 @@ public class DanhSachSPKM {
             System.out.println("Bạn không thể dùng hai mã khuyến mãi trên 1 loại sản phẩm!");
             spkm.setSanPhamKhuyenMai(sc);
         }
-        sanPhamKhuyenMais.add(spkm) ;
+        themSanPhamKhuyenMai(spkm);
+    }
+
+    public void themSanPhamKhuyenMai(SanPhamKhuyenMai spkm)
+    {
+        int newSoLuongSanPham = soLuongSanPham + 1 ;
+        SanPhamKhuyenMai[] tam = new SanPhamKhuyenMai[newSoLuongSanPham];
+        System.arraycopy(sanPhamKhuyenMais, 0, tam, 0, soLuongSanPham);
+        tam[soLuongSanPham] = spkm ;
+        sanPhamKhuyenMais = tam ;
+        soLuongSanPham = newSoLuongSanPham ;
+        System.out.println("Thêm sản phẩm mới thành công");
     }
     public void khoiTaoDanhSachSanPhamKhuyenMai(Scanner sc )
     {
@@ -39,14 +60,6 @@ public class DanhSachSPKM {
         } while (Validation.inputCoKhong(sc, "Bạn có muốn tiếp tục thêm sản phẩm khuyến mãi(Có/Không): "));
         System.out.println("Tạo dữ liệu sản phẩm khuyến mãi thành công!");
     }
-    public int timKiemSanPhamKM( String maSanPham )
-    {
-        for ( int i = 0 ; i < sanPhamKhuyenMais.size() ; i++ )
-        {
-            if ( sanPhamKhuyenMais.get(i).getMaSanPham().equalsIgnoreCase(maSanPham)) return i ;
-        }
-        return -1 ;
-    }
     public void xoaSanPhamKM( String maSanPham )
     {
         int index = timKiemSanPhamKM(maSanPham) ;
@@ -55,7 +68,13 @@ public class DanhSachSPKM {
             System.out.println("Mã sản phẩm không tồn tại");
             return;
         }
-        sanPhamKhuyenMais.remove(index) ;
+        int newSoLuongSanPham = soLuongSanPham - 1 ;
+        SanPhamKhuyenMai[] tam = new SanPhamKhuyenMai[newSoLuongSanPham] ;
+        if (index >= 0) System.arraycopy(sanPhamKhuyenMais, 0, tam, 0, index);
+        if (soLuongSanPham - (index + 1) >= 0)
+            System.arraycopy(sanPhamKhuyenMais, index + 1, tam, index, soLuongSanPham - (index + 1));
+        soLuongSanPham = newSoLuongSanPham ;
+        sanPhamKhuyenMais = tam ;
         System.out.println("Xoá sản phẩm khuyến mãi thành công!");
     }
     public void suaThongTinSanPhamKhuyenMai( Scanner sc , String maSanPham)
@@ -73,15 +92,15 @@ public class DanhSachSPKM {
         switch (luaChon)
         {
             case 1:
-                sanPhamKhuyenMais.get(index).setMaSanPham(Validation.inputStringRegex( sc , "Nhập mã sản phẩm mới: " , "SP\\d{3}" , "Mã sản phẩm không hợp lệ vui lòng nhập lại!(ví dụ hợp lệ: SP001)", sanpham.SanPham.getSoThuTu()));
-                while (kiemTraSanPhamTrung(sanPhamKhuyenMais.get(index).getMaSanPham()) )
+                sanPhamKhuyenMais[index].setMaSanPham(Validation.inputStringRegex( sc , "Nhập mã sản phẩm mới: " , "SP\\d{3}" , "Mã sản phẩm không hợp lệ vui lòng nhập lại!(ví dụ hợp lệ: SP001)", SanPham.getSoThuTu()));
+                while (kiemTraSanPhamTrung(sanPhamKhuyenMais[index].getMaSanPham()) )
                 {
                     System.out.println("Bạn không thể dùng hai mã khuyến mãi trên 1 loại sản phẩm vui lòng nhập lại!");
-                    sanPhamKhuyenMais.get(index).setMaSanPham(Validation.inputStringRegex( sc , "Nhập mã sản phẩm mới: " , "SP\\d{3}" , "Mã sản phẩm không hợp lệ vui lòng nhập lại!(ví dụ hợp lệ: SP001)", sanpham.SanPham.getSoThuTu()));
+                    sanPhamKhuyenMais[index].setMaSanPham(Validation.inputStringRegex( sc , "Nhập mã sản phẩm mới: " , "SP\\d{3}" , "Mã sản phẩm không hợp lệ vui lòng nhập lại!(ví dụ hợp lệ: SP001)", SanPham.getSoThuTu()));
                 }
                 break;
             case 2:
-                sanPhamKhuyenMais.get(index).setMaKhuyenMai(Validation.inputStringRegex(sc , "Nhập mã khuyến mãi mới: " , "KM\\d{3}" , "Mã khuyến mãi sai định dạng vui lòng nhập lại!(ví dụ hợp lệ: KM001)", dichvu.Khuyenmai.getSoThuTu()));
+                sanPhamKhuyenMais[index].setMaKhuyenMai(Validation.inputStringRegex(sc , "Nhập mã khuyến mãi mới: " , "KM\\d{3}" , "Mã khuyến mãi sai định dạng vui lòng nhập lại!(ví dụ hợp lệ: KM001)", dichvu.Khuyenmai.getSoThuTu()));
                 break;
             default:
                 System.out.println("Lựa chọn không hợp lệ!");
@@ -101,5 +120,13 @@ public class DanhSachSPKM {
         System.out.println("Danh sách sản phẩm khuyến mãi!");
         for ( SanPhamKhuyenMai spkm: sanPhamKhuyenMais )
             System.out.println(spkm);
+    }
+    public int timKiemSanPhamKM( String maSanPham )
+    {
+        for ( int i = 0 ; i < soLuongSanPham ; i++ )
+        {
+            if ( sanPhamKhuyenMais[i].getMaSanPham().equalsIgnoreCase(maSanPham)) return i ;
+        }
+        return -1 ;
     }
 }

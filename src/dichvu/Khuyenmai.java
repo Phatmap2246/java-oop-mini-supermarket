@@ -93,7 +93,7 @@ public abstract class Khuyenmai {
     }
     public boolean kiemTraHetHanKhuyenMai()
     {
-        return ngayKetThuc != null && LocalDate.now().isAfter(ngayKetThuc);
+        return ngayKetThuc != null && LocalDate.now().isAfter(ngayKetThuc) ;
     }
 
     public boolean dangHoatDong(LocalDate ngay) {
@@ -102,6 +102,10 @@ public abstract class Khuyenmai {
                 && ngayKetThuc != null
                 && !ngay.isBefore(ngayBatDau)
                 && !ngay.isAfter(ngayKetThuc);
+    }
+    public boolean chuaHoatDong()
+    {
+        return ngayBatDau != null && LocalDate.now().isBefore(ngayBatDau) ;
     }
     @Override
     public String toString() {
