@@ -23,14 +23,23 @@ public class DSNhanVien {
     public DSNhanVien(DSNhanVien l) {
         this.list = l.list;
     }
-
+    public boolean isTrungMa(String maNV){
+        for(NhanVien i: list)
+            if(i.getMaNV().equalsIgnoreCase(maNV))
+                {
+                    System.out.println("Ma bi trung, hay nhap lai");
+                    return false; 
+                } 
+        return true; 
+    }
     /** Nhập số lượng rồi nhập thông tin và thêm từng nhân viên vào danh sách. */
     public void taoDS(Scanner sc) {
         int n = Validation.inputInt(sc, "Nhập số nhân viên cần tạo: ");
         for (int i = 0; i < n; i++) {
             System.out.printf("%n--- Nhập nhân viên %d/%d ---%n", i + 1, n);
             NhanVien nv = new NhanVien();
-            nv.nhapThongTin(sc);
+            do{nv.nhapThongTin(sc);}
+            while(isTrungMa(nv.getMaNV())); 
             list.add(nv);
         }
         DataBase.ghiVaoFile(list, "NhanVien.txt", true);
@@ -52,7 +61,11 @@ public class DSNhanVien {
     /** Nhập thông tin một nhân viên mới rồi thêm vào danh sách. */
     public void themNV(Scanner sc) {
         NhanVien nv = new NhanVien();
-        nv.nhapThongTin(sc);
+        do{
+            nv.nhapThongTin(sc);
+        }
+        while(isTrungMa(nv.getMaNV()));         
+
         list.add(nv);
         DataBase.ghiVaoFile(list.getLast(), "NhanVien.txt", false);
 
@@ -63,7 +76,11 @@ public class DSNhanVien {
         for (int i = 1; i <= k; i++) {
             System.out.printf("%n--- Nhập nhân viên %d/%d ---%n", i, k);
             NhanVien nv = new NhanVien();
+        do{
             nv.nhapThongTin(sc);
+        }
+        while(isTrungMa(nv.getMaNV()));         
+
             list.add(nv);
             DataBase.ghiVaoFile(list.getLast(), "NhanVien.txt", false);
 
@@ -145,23 +162,13 @@ public class DSNhanVien {
 
             switch (choice) {
                 case 1:
-                    String maMoi = Validation.inputStringRegex(
+                    String maMoi ;
+                    do{
+                             maMoi = Validation.inputStringRegex(
                             sc, "Nhập mã nhân viên mới: ", Validation.MaNV_REGEX,
-                            "Mã nhân viên không đúng định dạng (NVxxx).");
-                    boolean biTrung;
-                    do {
-                        biTrung = false;
-                        for (int i = 0; i < list.size(); i++) {
-                            String maTrongDanhSach = list.get(i).getMaNV();
-                            if (i != idx && maTrongDanhSach != null && maTrongDanhSach.equalsIgnoreCase(maMoi)) {
-                                biTrung = true;
-                                maMoi = Validation.inputStringRegex(sc, "Mã đã tồn tại, nhập mã khác: ",
-                                    Validation.MaNV_REGEX,
-                                    "Mã nhân viên không đúng định dạng (NVxxx).");
-                                break;
-                            }
-                        }
-                    } while (biTrung);
+                            "Mã nhân viên không đúng định dạng (NVxxx).");                        
+                    }
+                    while(isTrungMa(maMoi));         
                     nv.setMaNV(maMoi);
                     break;
                 case 2:
