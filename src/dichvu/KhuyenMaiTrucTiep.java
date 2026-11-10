@@ -25,6 +25,8 @@ public class KhuyenMaiTrucTiep extends Khuyenmai{
     }
 
     public void setSoTienGiam(long soTienGiam) {
+        if ( soTienGiam <= 0 )
+            throw new IllegalArgumentException("Số tiền giảm phải lớn hơn 0!") ;
         this.soTienGiam = soTienGiam;
     }
     public void setKM( Scanner sc )

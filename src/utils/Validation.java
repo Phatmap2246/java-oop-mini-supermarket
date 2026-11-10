@@ -135,10 +135,10 @@ public class Validation {
     
     // 5. Hàm nhập ngày tháng (dd/MM/yyyy)
     public static LocalDate inputLocalDateRegex(Scanner sc, String message) {
-        DateTimeFormatter khuon = DateTimeFormatter.ofPattern("dd/MM/yyyy").withResolverStyle(ResolverStyle.STRICT);
+        DateTimeFormatter khuon = DateTimeFormatter.ofPattern("dd/MM/uuuu").withResolverStyle(ResolverStyle.STRICT);
         while(true) {
             System.out.print(message);
-            String date = sc.nextLine();
+            String date = sc.nextLine().trim();
             if (!date.matches(DATE_REGEX)) {
                 System.out.println("[!] Bạn nhập sai định dạng (dd/MM/yyyy). Vui lòng nhập lại!");
                 continue;

@@ -1,8 +1,6 @@
 package dichvu ;
-import sanpham.SanPham;
 import utils.Validation;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public abstract class Khuyenmai {
@@ -14,7 +12,7 @@ public abstract class Khuyenmai {
     public Khuyenmai()
     {
         maKhuyenMai = loaiKhuyenMai = "" ;
-        ngayBatDau = ngayKetThuc = LocalDate.now() ;
+        ngayBatDau = ngayKetThuc = null ;
         mucChiToiThieu = 0 ;
         maKhuyenMai = (Validation.taoMa("KM%03d" , Khuyenmai.getSoThuTu())) ;
         soThuTu++ ;
@@ -75,6 +73,8 @@ public abstract class Khuyenmai {
     }
 
     public void setNgayBatDau(LocalDate ngayBatDau) {
+        if ( ngayKetThuc != null && ngayBatDau.isAfter(ngayKetThuc) )
+            throw new IllegalArgumentException("Ngày bắt đầu không được sau ngày kêt thúc!") ;
         this.ngayBatDau = ngayBatDau;
     }
 
@@ -83,6 +83,8 @@ public abstract class Khuyenmai {
     }
 
     public void setNgayKetThuc(LocalDate ngayKetThuc) {
+        if ( ngayBatDau != null && ngayKetThuc.isBefore(ngayBatDau))
+            throw new IllegalArgumentException("Ngày kết thúc không được bé hơn ngày bắt đầu!!") ;
         this.ngayKetThuc = ngayKetThuc;
     }
 
@@ -91,11 +93,15 @@ public abstract class Khuyenmai {
     }
     public boolean kiemTraHetHanKhuyenMai()
     {
-        return LocalDate.now().isAfter(ngayKetThuc);
+        return ngayKetThuc != null && LocalDate.now().isAfter(ngayKetThuc);
     }
 
     public boolean dangHoatDong(LocalDate ngay) {
-        return ngay != null && !ngay.isBefore(ngayBatDau) && !ngay.isAfter(ngayKetThuc);
+        return ngay != null
+                && ngayBatDau != null
+                && ngayKetThuc != null
+                && !ngay.isBefore(ngayBatDau)
+                && !ngay.isAfter(ngayKetThuc);
     }
     @Override
     public String toString() {

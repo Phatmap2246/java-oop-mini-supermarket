@@ -74,7 +74,7 @@ public class DanhSachSPKM {
         {
             case 1:
                 sanPhamKhuyenMais.get(index).setMaSanPham(Validation.inputStringRegex( sc , "Nhập mã sản phẩm mới: " , "SP\\d{3}" , "Mã sản phẩm không hợp lệ vui lòng nhập lại!(ví dụ hợp lệ: SP001)", sanpham.SanPham.getSoThuTu()));
-                while (kiemTraSanPhamTrung(sanPhamKhuyenMais.get(index).getMaKhuyenMai()) )
+                while (kiemTraSanPhamTrung(sanPhamKhuyenMais.get(index).getMaSanPham()) )
                 {
                     System.out.println("Bạn không thể dùng hai mã khuyến mãi trên 1 loại sản phẩm vui lòng nhập lại!");
                     sanPhamKhuyenMais.get(index).setMaSanPham(Validation.inputStringRegex( sc , "Nhập mã sản phẩm mới: " , "SP\\d{3}" , "Mã sản phẩm không hợp lệ vui lòng nhập lại!(ví dụ hợp lệ: SP001)", sanpham.SanPham.getSoThuTu()));

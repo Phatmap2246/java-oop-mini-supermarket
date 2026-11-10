@@ -25,7 +25,7 @@ public class KhuyenMaiPhanTram extends  Khuyenmai{
     }
 
     public void setPhanTramGiamGia(double phanTramGiamGia) {
-        this.phanTramGiamGia = Math.max(0, Math.min(1, phanTramGiamGia));
+        this.phanTramGiamGia = Math.clamp(phanTramGiamGia, 0, 1);
     }
 
     public double getPhanTramGiamGia() {
@@ -37,6 +37,8 @@ public class KhuyenMaiPhanTram extends  Khuyenmai{
     }
 
     public void setMucGiamToiDa(long mucGiamToiDa) {
+        if (mucGiamToiDa <= 0 )
+            throw new IllegalArgumentException("Mức giảm tối đa phải lớn hơn 0") ;
         this.mucGiamToiDa = mucGiamToiDa;
     }
 
