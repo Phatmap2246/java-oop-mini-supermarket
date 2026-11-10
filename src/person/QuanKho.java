@@ -1,5 +1,6 @@
 package person;
 
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,9 +14,9 @@ import sanpham.QuanLySanPham;
 import sanpham.SanPham;
 import sanpham.ThucPham;
 import sanpham.TieuDung;
-import utils.DataBase;
 import utils.DateUtil;
 import utils.Validation;
+import utils.YeuCau;
 
 public class QuanKho extends NhanVien {
 
@@ -126,7 +127,7 @@ public class QuanKho extends NhanVien {
         ArrayList<ThucPham> ketQua = new ArrayList<>();
         LocalDate homNay = LocalDate.now();
 
-        for (SanPham sp : QuanLySanPham.danhSachSanPham) {
+        for (SanPham sp : new QuanLySanPham().getDanhSachSanPham()) {
             if (sp instanceof ThucPham) {
                 ThucPham tp = (ThucPham) sp;
                 if (tp.getHanSuDung() != null && tp.getHanSuDung().isBefore(homNay)) {
@@ -145,7 +146,7 @@ public class QuanKho extends NhanVien {
             for (ThucPham tp : ketQua) {
                 long soNgay = ChronoUnit.DAYS.between(tp.getHanSuDung(), homNay);
                 System.out.printf("%-10s | %-25s | %-8d | %-12s | %d ngày\n",
-                        tp.getMaSanPham(), tp.getTenSanPham(), tp.getSoLuong(),
+                        tp.getMaSanPham(), tp.getTenSanPham(), tp.getSoLuongTonKho(),
                         DateUtil.formatDate(tp.getHanSuDung()), soNgay);
             }
         }
@@ -159,7 +160,7 @@ public class QuanKho extends NhanVien {
         ArrayList<ThucPham> ketQua = new ArrayList<>();
         LocalDate homNay = LocalDate.now();
 
-        for (SanPham sp : QuanLySanPham.danhSachSanPham) {
+        for (SanPham sp : new QuanLySanPham().getDanhSachSanPham()) {
             if (sp instanceof ThucPham) {
                 ThucPham tp = (ThucPham) sp;
                 LocalDate hsd = tp.getHanSuDung();
@@ -182,7 +183,7 @@ public class QuanKho extends NhanVien {
             for (ThucPham tp : ketQua) {
                 long conLai = ChronoUnit.DAYS.between(homNay, tp.getHanSuDung());
                 System.out.printf("%-10s | %-25s | %-8d | %-12s | %d ngày\n",
-                        tp.getMaSanPham(), tp.getTenSanPham(), tp.getSoLuong(),
+                        tp.getMaSanPham(), tp.getTenSanPham(), tp.getSoLuongTonKho(),
                         DateUtil.formatDate(tp.getHanSuDung()), conLai);
             }
         }
@@ -208,12 +209,12 @@ public class QuanKho extends NhanVien {
         if (sp != null) {
             // Đã tồn tại trong kho -> cộng thêm số lượng (+ số lượng)
             System.out.println("[+] Tìm thấy sản phẩm trong kho: " + sp.getTenSanPham()
-                    + " | Số lượng hiện tại: " + sp.getSoLuong());
+                    + " | Số lượng hiện tại: " + sp.getSoLuongTonKho());
             int slThem = Validation.inputInt(sc, "Nhập số lượng cộng thêm vào kho (+ số lượng): ");
-            int slCu = sp.getSoLuong();
-            sp.setSoLuong(slCu + slThem);
+            int slCu = sp.getSoLuongTonKho();
+            sp.setSoLuongTonKho(slCu + slThem);
             System.out.println("[+] CẬP NHẬT THÀNH CÔNG: Số lượng sản phẩm [" + sp.getTenSanPham()
-                    + "] từ " + slCu + " -> " + sp.getSoLuong());
+                    + "] từ " + slCu + " -> " + sp.getSoLuongTonKho());
         } else {
             // Chưa có trong kho -> nhập thông tin và thêm mới
             System.out.println("[!] Sản phẩm mã " + maSP + " chưa tồn tại trong kho. Tiến hành thêm sản phẩm mới!");
@@ -240,19 +241,19 @@ public class QuanKho extends NhanVien {
             switch (loai) {
                 case 1:
                     LocalDate hsd = Validation.inputLocalDateRegex(sc, "Nhập hạn sử dụng (dd/MM/yyyy): ");
-                    spMoi = new ThucPham(maSP, tenSP, maNCC, giaNhap, giaBan, soLuong, hsd);
+                    spMoi = new ThucPham(maSP, tenSP, "Thực phẩm", giaNhap, giaBan, soLuong, maNCC, 0.08, LocalDate.now(), hsd, 25.0, "Thường");
                     break;
                 case 2:
                     int soThangBH = Validation.inputInt(sc, "Nhập số tháng bảo hành: ");
-                    spMoi = new DienTu(maSP, tenSP, maNCC, giaNhap, giaBan, soLuong, soThangBH);
+                    spMoi = new DienTu(maSP, tenSP, "Điện tử", giaNhap, giaBan, soLuong, maNCC, 0.05, soThangBH, 0L, "Nhựa/Kim loại", LocalDate.now());
                     break;
                 case 3:
                 default:
-                    spMoi = new TieuDung(maSP, tenSP, maNCC, giaNhap, giaBan, soLuong);
+                    spMoi = new TieuDung(maSP, tenSP, "Tiêu dùng", giaNhap, giaBan, soLuong, maNCC, 0.05, "N/A", "Việt Nam", "Tiêu dùng", "Để nơi khô ráo");
                     break;
             }
 
-            QuanLySanPham.danhSachSanPham.add(spMoi);
+            new QuanLySanPham().getDanhSachSanPham().add(spMoi);
             System.out.println("[+] THÊM MỚI THÀNH CÔNG: Đã thêm sản phẩm [" + tenSP + "] vào kho!");
         }
     }
@@ -285,7 +286,7 @@ public class QuanKho extends NhanVien {
             if (sp != null) {
                 tenSP = sp.getTenSanPham();
                 donGiaNhap = sp.getGiaNhap();
-                System.out.println("[+] Sản phẩm có sẵn: " + tenSP + " | Tồn kho hiện tại: " + sp.getSoLuong()
+                System.out.println("[+] Sản phẩm có sẵn: " + tenSP + " | Tồn kho hiện tại: " + sp.getSoLuongTonKho()
                         + " | Giá nhập chuẩn: " + donGiaNhap + " VND");
             } else {
                 System.out.println("[!] Sản phẩm chưa có trong kho, vui lòng nhập thông tin ban đầu:");
@@ -298,7 +299,7 @@ public class QuanKho extends NhanVien {
 
             // Cập nhật tồn kho nếu sản phẩm đã có trong kho
             if (sp != null) {
-                sp.setSoLuong(sp.getSoLuong() + soLuongNhap);
+                sp.setSoLuongTonKho(sp.getSoLuongTonKho() + soLuongNhap);
             }
 
             // Tạo chi tiết nhập (CTHoaDon: maSP, tenSP, soLuong, donGia, chietKhau = 0)
@@ -329,17 +330,21 @@ public class QuanKho extends NhanVien {
         for (CTHoaDon ct : danhSachNhap) {
             SanPham sp = timSanPham(ct.getMaSanPham());
             if (sp != null) {
-                sp.setSoLuong(sp.getSoLuong() + ct.getSoLuong());
+                sp.setSoLuongTonKho(sp.getSoLuongTonKho() + ct.getSoLuongTonKho());
             }
         }
         System.out.println("[+] Đã cập nhật xong " + danhSachNhap.size() + " mặt hàng vào kho.");
         return danhSachNhap;
     }
 
+    /**
+     * Tìm sản phẩm theo mã trong kho (new QuanLySanPham().getDanhSachSanPham()).
+     */
+
     public SanPham timSanPham(String maSP) {
         if (maSP == null)
             return null;
-        for (SanPham sp : QuanLySanPham.danhSachSanPham) {
+        for (SanPham sp : new QuanLySanPham().getDanhSachSanPham()) {
             if (sp.getMaSanPham() != null && sp.getMaSanPham().trim().equalsIgnoreCase(maSP.trim())) {
                 return sp;
             }
@@ -350,7 +355,7 @@ public class QuanKho extends NhanVien {
     /** In danh sách các sản phẩm đang có trong kho */
     public void inDanhSachKho() {
         System.out.println("\n=========================== DANH SÁCH SẢN PHẨM TRONG KHO ===========================");
-        if (QuanLySanPham.danhSachSanPham.isEmpty()) {
+        if (new QuanLySanPham().getDanhSachSanPham().isEmpty()) {
             System.out.println("                                [ Kho hiện đang trống ]");
             System.out.println("=====================================================================================");
             return;
@@ -360,7 +365,7 @@ public class QuanKho extends NhanVien {
                 "Mã SP", "Tên Sản Phẩm", "Loại", "SL", "Giá Nhập", "Giá Bán", "HSD/Bảo Hành");
         System.out.println("-------------------------------------------------------------------------------------");
 
-        for (SanPham sp : QuanLySanPham.danhSachSanPham) {
+        for (SanPham sp : new QuanLySanPham().getDanhSachSanPham()) {
             String thongTinPhu = "-";
             if (sp instanceof ThucPham) {
                 LocalDate hsd = ((ThucPham) sp).getHanSuDung();
@@ -369,7 +374,7 @@ public class QuanKho extends NhanVien {
 
             System.out.printf("%-8s | %-22s | %-10s | %-6d | %-12d | %-12d | %-15s\n",
                     sp.getMaSanPham(), sp.getTenSanPham(), sp.getLoaiSanPham(),
-                    sp.getSoLuong(), sp.getGiaNhap(), sp.getGiaBan(), thongTinPhu);
+                    sp.getSoLuongTonKho(), sp.getGiaNhap(), sp.getGiaBan(), thongTinPhu);
         }
         System.out.println("=====================================================================================");
     }
@@ -433,7 +438,7 @@ public class QuanKho extends NhanVien {
         if (sp != null) {
             tenSP = sp.getTenSanPham();
             donGia = sp.getGiaNhap();
-            System.out.println("[+] Tìm thấy sản phẩm: " + tenSP + " | Tồn kho hiện tại: " + sp.getSoLuong());
+            System.out.println("[+] Tìm thấy sản phẩm: " + tenSP + " | Tồn kho hiện tại: " + sp.getSoLuongTonKho());
         } else {
             System.out.print("Sản phẩm mới - Nhập tên sản phẩm: ");
             tenSP = sc.nextLine().trim();
@@ -453,7 +458,7 @@ public class QuanKho extends NhanVien {
 
         // Cập nhật số lượng vào kho
         if (sp != null) {
-            sp.setSoLuong(sp.getSoLuong() + soLuong);
+            sp.setSoLuongTonKho(sp.getSoLuongTonKho() + soLuong);
         }
 
         // Lưu vào file LichSuNhapHang.txt bằng hàm ghi file
@@ -463,20 +468,48 @@ public class QuanKho extends NhanVien {
     // ========================= Các hàm bổ trợ cho các hàm phương thức ở
     // trên=========
     /**
-     * Ghi phiếu nhập kho vào file LichSuNhapHang.txt bằng DataBase.ghiVaoFile
+     * Ghi phiếu nhập kho vào file LichSuNhapHang.txt bằng FileWriter
      */
     public void ghiFileLichSuNhap(String maPhieu, String maNCC, String maSP, String tenSP,
             int soLuong, long donGia, long tienHang, long tienVanChuyen, long thanhTien) {
-        hoadon.PhieuNhapKho pnk = new hoadon.PhieuNhapKho(maPhieu, (getMaNV() != null ? getMaNV() : "N/A"),
-                maNCC, maSP, tenSP, soLuong, donGia, tienHang, tienVanChuyen, thanhTien);
-        DataBase.ghiVaoFile(pnk, "src/hoadon/LichSuNhapHang.txt", false);
-        System.out.println("[+] Đã lưu phiếu nhập vào file src/hoadon/LichSuNhapHang.txt bằng DataBase thành công!");
+        try {
+            java.io.FileWriter fw = new java.io.FileWriter("src/person/LichSuNhapHang.txt", true);
+            java.io.PrintWriter pw = new java.io.PrintWriter(fw);
+
+            String thoiGian = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+            String dongGhi = "[" + thoiGian + "] | MaPhieu: " + maPhieu
+                    + " | MaNV: " + (getMaNV() != null ? getMaNV() : "N/A")
+                    + " | MaNCC: " + maNCC
+                    + " | MaSP: " + maSP
+                    + " | TenSP: " + tenSP
+                    + " | SL: " + soLuong
+                    + " | DonGia: " + donGia
+                    + " | TienHang: " + tienHang
+                    + " | TienVanChuyen: " + tienVanChuyen
+                    + " | ThanhTien: " + thanhTien;
+
+            pw.println(dongGhi);
+            pw.close();
+            System.out.println("[+] Đã lưu phiếu nhập vào file LichSuNhapHang.txt thành công!");
+        } catch (Exception e) {
+            System.out.println("[!] Lỗi khi ghi file lịch sử nhập hàng: " + e.getMessage());
+        }
     }
 
-    /** Ghi thông tin yêu cầu của Quản kho vào file YeuCauDuyet.text bằng DataBase.ghiVaoFile */
+    /**
+     * Ghi thông tin yêu cầu của Quản kho vào YeuCau.txt bằng YeuCau.themVaoFile (đồng bộ hệ thống)
+     */
     public void ghiYeuCauVaoFile(String maNCC, String hinhThuc, String noiDung) {
-        YeuCauDuyetKho yc = new YeuCauDuyetKho((getMaNV() != null ? getMaNV() : "N/A"), maNCC, hinhThuc, noiDung);
-        DataBase.ghiVaoFile(yc, "src/person/YeuCauDuyet.text", false);
-        System.out.println("[+] Đã gửi yêu cầu vào file src/person/YeuCauDuyet.text bằng DataBase thành công!");
+        String chiTietYeuCau = "Hình thức: " + hinhThuc
+                + " | Mã NCC: " + (maNCC != null && !maNCC.isEmpty() ? maNCC : "KHONG_CO")
+                + " | Nội dung: " + noiDung;
+
+        YeuCau yc = new YeuCau((getMaNV() != null ? getMaNV() : "N/A"), getVaiTro(), chiTietYeuCau, "ChoDuyet");
+        try {
+            YeuCau.themVaoFile(yc, Paths.get("YeuCau.txt"));
+            System.out.println("[+] Đã thêm yêu cầu vào YeuCau.txt thành công!");
+        } catch (Exception e) {
+            System.out.println("[!] Lỗi khi ghi yêu cầu: " + e.getMessage());
+        }
     }
 }

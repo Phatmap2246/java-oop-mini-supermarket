@@ -26,7 +26,7 @@ public final class QuanLyTonKho {
         long soLuong = 0;
         for (CTHoaDon chiTiet : chiTietHoaDon) {
             if (chiTiet.getMaSanPham().equalsIgnoreCase(maSanPham)) {
-                soLuong += chiTiet.getSoLuong();
+                soLuong += chiTiet.getSoLuongTonKho();
             }
         }
         return soLuong > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) soLuong;
@@ -45,9 +45,9 @@ public final class QuanLyTonKho {
                 System.out.println("[!] Không tìm thấy sản phẩm " + entry.getKey() + " trong danh mục.");
                 return false;
             }
-            if (entry.getValue() > sanPham.getSoLuong()) {
+            if (entry.getValue() > sanPham.getSoLuongTonKho()) {
                 System.out.println("[!] Sản phẩm " + sanPham.getTenSanPham()
-                        + " chỉ còn " + sanPham.getSoLuong()
+                        + " chỉ còn " + sanPham.getSoLuongTonKho()
                         + ", hóa đơn yêu cầu " + entry.getValue() + ".");
                 return false;
             }
@@ -62,7 +62,7 @@ public final class QuanLyTonKho {
         }
         for (Map.Entry<String, Long> entry : tongSoLuongTheoMa(chiTietHoaDon).entrySet()) {
             SanPham sanPham = timSanPham(danhSachSanPham, entry.getKey());
-            sanPham.setSoLuong(sanPham.getSoLuong() - entry.getValue().intValue());
+            sanPham.setSoLuongTonKho(sanPham.getSoLuongTonKho() - entry.getValue().intValue());
         }
         return true;
     }
@@ -83,7 +83,7 @@ public final class QuanLyTonKho {
                         + entry.getKey() + " chưa có trong danh mục sản phẩm.");
                 return false;
             }
-            if (entry.getValue() > Integer.MAX_VALUE - (long) sanPham.getSoLuong()) {
+            if (entry.getValue() > Integer.MAX_VALUE - (long) sanPham.getSoLuongTonKho()) {
                 System.out.println("[!] Không thể cập nhật tồn kho cho "
                         + sanPham.getTenSanPham() + ": số lượng vượt giới hạn.");
                 return false;
@@ -93,7 +93,7 @@ public final class QuanLyTonKho {
 
         for (Map.Entry<String, Long> entry : soLuongTheoMa.entrySet()) {
             SanPham sanPham = sanPhamTheoMa.get(entry.getKey().toUpperCase());
-            sanPham.setSoLuong(sanPham.getSoLuong() + entry.getValue().intValue());
+            sanPham.setSoLuongTonKho(sanPham.getSoLuongTonKho() + entry.getValue().intValue());
         }
         return true;
     }
@@ -102,7 +102,7 @@ public final class QuanLyTonKho {
         Map<String, Long> soLuongTheoMa = new LinkedHashMap<>();
         for (CTHoaDon chiTiet : chiTietHoaDon) {
             String maSanPham = chiTiet.getMaSanPham().toUpperCase();
-            soLuongTheoMa.merge(maSanPham, (long) chiTiet.getSoLuong(), Long::sum);
+            soLuongTheoMa.merge(maSanPham, (long) chiTiet.getSoLuongTonKho(), Long::sum);
         }
         return soLuongTheoMa;
     }

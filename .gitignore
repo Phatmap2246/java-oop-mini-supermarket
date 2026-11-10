@@ -14,8 +14,6 @@ target/
 # 3. File cấu hình của các IDE/Editor
 # Chặn toàn bộ thư mục .vscode...
 .vscode/
-# ...NHƯNG CHO PHÉP đẩy file cấu hình này lên (chứa classpath của thư viện ZXing)
-!.vscode/settings.json
 
 # IntelliJ IDEA
 .idea/

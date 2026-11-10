@@ -116,7 +116,7 @@ public class DSKhachHang {
 
         // Kiểm tra xem mã khách hàng đã tồn tại trong danh sách chưa
         if (timKH(kh.getMaKhachHang()) != -1) {
-            System.out.println("[!] Ma khach hang da ton tai trong danh sach. Khong the them!");
+            System.out.println("[!] Mã khách hàng đã tồn tại, không thể thêm.");
             return;
         }
 
@@ -183,7 +183,7 @@ public class DSKhachHang {
     public void xoaKH(String maKH) {
         int idx = timKH(maKH);
         if (idx == -1) {
-            System.out.println("Khong tim thay trong danh sach");
+            System.out.println("[!] Không tìm thấy khách hàng trong danh sách.");
             return;
         }
 
@@ -200,7 +200,6 @@ public class DSKhachHang {
             System.out.println("[!] Danh sach khach hang rong, khong co du lieu de ghi file.");
             return;
         }
-
         java.util.ArrayList<Object> objs = new java.util.ArrayList<>();
         for (int i = 0; i < n; i++) {
             objs.add(list[i]);
@@ -214,31 +213,31 @@ public class DSKhachHang {
     public boolean suaKH(String maKH, Scanner sc) {
         int idx = timKH(maKH);
         if (idx == -1) {
-            System.out.println("Khong tim thay trong danh sach");
+            System.out.println("[!] Không tìm thấy khách hàng trong danh sách.");
             return false;
         }
 
         KhachHang kh = list[idx];
         int choice;
         do {
-            System.out.println("\n--- SUA THONG TIN KHACH HANG: " + kh.getMaKhachHang() + " ---");
-            System.out.println("1. Ma khach hang");
-            System.out.println("2. Ho ten");
+            System.out.println("\n=== CẬP NHẬT KHÁCH HÀNG: " + kh.getMaKhachHang() + " ===");
+            System.out.println("1. Mã khách hàng");
+            System.out.println("2. Họ tên");
             System.out.println("3. Email");
-            System.out.println("4. So dien thoai");
-            System.out.println("5. Ngay sinh");
-            System.out.println("6. Dia chi");
-            System.out.println("7. Ngay dang ky");
-            System.out.println("8. Tong chi tieu");
-            System.out.println("9. Diem tich luy");
-            System.out.println("0. Hoan tat");
-            choice = Validation.inputInt(sc, "Chon thong tin muon sua: ");
+            System.out.println("4. Số điện thoại");
+            System.out.println("5. Ngày sinh");
+            System.out.println("6. Địa chỉ");
+            System.out.println("7. Ngày đăng ký");
+            System.out.println("8. Tổng chi tiêu");
+            System.out.println("9. Điểm tích lũy");
+            System.out.println("0. Hoàn tất");
+            choice = Validation.luaChon(sc, "Chọn thông tin cần sửa (0-9): ", 0, 9);
 
             switch (choice) {
                 case 1:
                     String maMoi = Validation.inputStringRegex(
-                            sc, "Nhap ma khach hang moi: ", Validation.MaKH_REGEX,
-                            "Ma khach hang chua dung dinh dang (KHxxx)!");
+                            sc, "Nhập mã khách hàng mới: ", Validation.MaKH_REGEX,
+                            "Mã khách hàng không đúng định dạng (KHxxx).");
                     boolean biTrung;
                     do {
                         biTrung = false;
@@ -247,9 +246,9 @@ public class DSKhachHang {
                             if (i != idx && maTrongDanhSach != null && maTrongDanhSach.equalsIgnoreCase(maMoi)) {
                                 biTrung = true;
                                 maMoi = Validation.inputStringRegex(
-                                        sc, "Ma da ton tai, nhap ma khach hang khac: ",
+                                        sc, "Mã đã tồn tại, nhập mã khác: ",
                                         Validation.MaKH_REGEX,
-                                        "Ma khach hang chua dung dinh dang (KHxxx)!");
+                                        "Mã khách hàng không đúng định dạng (KHxxx).");
                                 break;
                             }
                         }
@@ -272,21 +271,22 @@ public class DSKhachHang {
                     kh.setDiachi(sc);
                     break;
                 case 7:
-                    kh.setNgayDangKy(Validation.inputLocalDateRegex(sc, "Nhap ngay dang ky moi (dd/MM/yyyy): "));
+                    kh.setNgayDangKy(Validation.inputLocalDateRegex(
+                            sc, "Nhập ngày đăng ký mới (dd/MM/yyyy): "));
                     break;
                 case 8:
-                    long tongChiTieuMoi = Validation.inputLong(sc, "Nhap tong chi tieu moi (VND): ");
+                    long tongChiTieuMoi = Validation.inputLong(sc, "Nhập tổng chi tiêu mới (VND): ");
                     kh.setTongChiTieu(tongChiTieuMoi);
                     kh.capNhatThuHang();
                     break;
                 case 9:
-                    int diemMoi = Validation.inputInt(sc, "Nhap diem tich luy moi: ");
+                    int diemMoi = Validation.inputInt(sc, "Nhập điểm tích lũy mới: ");
                     kh.setDiemTichLuy(diemMoi);
                     break;
                 case 0:
                     break;
                 default:
-                    System.out.println("Lua chon khong hop le, vui long chon lai.");
+                    System.out.println("[!] Lựa chọn không hợp lệ, vui lòng thử lại.");
             }
         } while (choice != 0);
 
