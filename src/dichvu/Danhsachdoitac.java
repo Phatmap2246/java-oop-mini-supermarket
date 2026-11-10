@@ -1,4 +1,4 @@
-package dichvu;
+package dichvu ;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -22,16 +22,11 @@ public class Danhsachdoitac {
     public void setDanhSachDoiTac(ArrayList<Doitac> danhSachDoiTac) {
         this.danhSachDoiTac = danhSachDoiTac;
     }
-    
-    public void themDoiTac(Scanner sc)
-    {
-        System.out.println("Chọn loại đối tác cần thêm:");
-        System.out.println("1. Nhà cung cấp!");
-        System.out.println("2. Đơn vị vận chuyển!");
-        int luaChon = Validation.luaChon(sc, "Nhập lựa chọn: ", 1, 2);
-        if (luaChon == 1) themNhaCungCap(sc);
-        else themDonViVanChuyen(sc);
+
+    public void themDoiTac(Scanner sc) {
+        themNhaCungCap(sc);
     }
+
     public void themNhaCungCap(Scanner sc)
     {
         Nhacungcap nhaCungCap = new Nhacungcap();
@@ -40,49 +35,12 @@ public class Danhsachdoitac {
         danhSachDoiTac.add(nhaCungCap);
         System.out.println("Thêm nhà cung cấp thành công!");
     }
-    public void themDonViVanChuyen(Scanner sc)
-    {
-        Donvivanchuyen donViVanChuyen = new Donvivanchuyen();
-        donViVanChuyen.setDoiTac(sc);
-        kiemTraTrung(sc, donViVanChuyen);
-        danhSachDoiTac.add(donViVanChuyen);
-        System.out.println("Thêm đơn vị vận chuyển thành công!");
-    }
-
-    public void taoDanhSachXeChoDonViVanChuyen(Scanner sc)
-    {
-        ArrayList<Donvivanchuyen> donViVanChuyens = new ArrayList<>();
-        for (Doitac doiTac : danhSachDoiTac)
-        {
-            if (doiTac instanceof Donvivanchuyen)
-            {
-                donViVanChuyens.add((Donvivanchuyen) doiTac);
-            }
-        }
-        if (donViVanChuyens.isEmpty())
-        {
-            System.out.println("Chưa có đơn vị vận chuyển trong danh sách đối tác.");
-            return;
-        }
-
-        System.out.println("Chọn đơn vị vận chuyển cần đăng ký xe:");
-        for (int i = 0; i < donViVanChuyens.size(); i++)
-        {
-            Doitac donVi = donViVanChuyens.get(i);
-            System.out.println((i + 1) + ". " + donVi.getTenDoiTac()
-                    + " (" + donVi.getMaDoiTac() + ")");
-        }
-        int luaChon = Validation.luaChon(sc, "Chọn đơn vị: ", 1, donViVanChuyens.size());
-        donViVanChuyens.get(luaChon - 1).taoDanhSachXe(sc);
-    }
-
     public void taoDuLieuDoiTac(Scanner sc)
     {
         System.out.println("Tạo danh sách đối tác!");
         do {
             themDoiTac(sc);}
         while (Validation.luaChon(sc, "Bạn có muốn tiếp tục thêm đối tác(1/0): ", 0, 1) == 1);
-            themDoiTac(sc);
         System.out.println("Tạo dữ liệu đối tác thành công!");
     }
     public int traCuuThongTinDoiTac(String maDoiTac)
@@ -140,10 +98,9 @@ public class Danhsachdoitac {
         {
             System.out.println("6. Ngành hàng cung cấp!");
             System.out.println("7. Hạn mức nợ công!");
-            System.out.println("8. Đơn vị vận chuyển mặc định!");
         }
         int luaChon = Validation.luaChon(sc, "Nhập lựa chọn: ", 1,
-                doiTac instanceof Nhacungcap ? 8 : 5);
+                doiTac instanceof Nhacungcap ? 7 : 5);
         switch (luaChon)
         {
             case 1:
@@ -179,18 +136,7 @@ public class Danhsachdoitac {
                 assert doiTac instanceof Nhacungcap;
                 ((Nhacungcap) doiTac).setHanMucNoCong(hanMuc);
                 break;
-            case 8:
-                String maVanChuyen = Validation.inputStringRegex(sc, "Nhập mã đơn vị vận chuyển: ",
-                        "DT\\d{3}", "Mã đối tác không đúng định dạng (VD: DT001)!");
-                int viTri = traCuuThongTinDoiTac(maVanChuyen);
-                if (viTri == -1 || !(danhSachDoiTac.get(viTri) instanceof Donvivanchuyen))
-                {
-                    System.out.println("Mã đơn vị vận chuyển không tồn tại!");
-                    return;
-                }
-                assert doiTac instanceof Nhacungcap;
-                ((Nhacungcap) doiTac).setMaDonViVanChuyen(danhSachDoiTac.get(viTri).getMaDoiTac());
-                break;
+
         }
         System.out.println("Sửa thông tin đối tác thành công!");
     }
@@ -205,11 +151,5 @@ public class Danhsachdoitac {
         System.out.println("Danh sách nhà cung cấp!");
         for (Doitac doiTac : danhSachDoiTac)
             if (doiTac instanceof Nhacungcap) System.out.println(doiTac);
-    }
-    public void inDanhSachDonViVanChuyen()
-    {
-        System.out.println("Danh sách đơn vị vận chuyển!");
-        for (Doitac doiTac : danhSachDoiTac)
-            if (doiTac instanceof Donvivanchuyen) System.out.println(doiTac);
     }
 }

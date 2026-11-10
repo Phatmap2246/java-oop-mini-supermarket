@@ -1,8 +1,6 @@
 package dichvu ;
-import sanpham.SanPham;
 import utils.Validation;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public abstract class Khuyenmai {
@@ -14,18 +12,19 @@ public abstract class Khuyenmai {
     public Khuyenmai()
     {
         maKhuyenMai = loaiKhuyenMai = "" ;
-        ngayBatDau = ngayKetThuc = LocalDate.now() ;
+        ngayBatDau = ngayKetThuc = null ;
         mucChiToiThieu = 0 ;
         maKhuyenMai = (Validation.taoMa("KM%03d" , Khuyenmai.getSoThuTu())) ;
         soThuTu++ ;
     }
-    public Khuyenmai ( String maKhuyenMai , String loaiKhuyenMai , LocalDate ngayBatDau , LocalDate ngayKetThuc , long mucChiToiThieu , ArrayList<SanPham> danhSachKhuyenMai)
+    public Khuyenmai ( String maKhuyenMai , String loaiKhuyenMai , LocalDate ngayBatDau , LocalDate ngayKetThuc , long mucChiToiThieu , int soThuTu)
     {
         this.maKhuyenMai = maKhuyenMai ;
         this.loaiKhuyenMai = loaiKhuyenMai ;
         this.ngayBatDau = ngayBatDau ;
         this.ngayKetThuc= ngayKetThuc ;
         this.mucChiToiThieu = mucChiToiThieu;
+        Khuyenmai.soThuTu = soThuTu ;
     }
     public void setKM ( Scanner sc )
     {
@@ -74,6 +73,8 @@ public abstract class Khuyenmai {
     }
 
     public void setNgayBatDau(LocalDate ngayBatDau) {
+        if ( ngayKetThuc != null && ngayBatDau.isAfter(ngayKetThuc) )
+            throw new IllegalArgumentException("Ngày bắt đầu không được sau ngày kêt thúc!") ;
         this.ngayBatDau = ngayBatDau;
     }
 
@@ -82,6 +83,8 @@ public abstract class Khuyenmai {
     }
 
     public void setNgayKetThuc(LocalDate ngayKetThuc) {
+        if ( ngayBatDau != null && ngayKetThuc.isBefore(ngayBatDau))
+            throw new IllegalArgumentException("Ngày kết thúc không được bé hơn ngày bắt đầu!!") ;
         this.ngayKetThuc = ngayKetThuc;
     }
 
@@ -90,14 +93,23 @@ public abstract class Khuyenmai {
     }
     public boolean kiemTraHetHanKhuyenMai()
     {
-        return LocalDate.now().isAfter(ngayKetThuc);
+        return ngayKetThuc != null && LocalDate.now().isAfter(ngayKetThuc) ;
     }
 
     public boolean dangHoatDong(LocalDate ngay) {
-        return ngay != null && !ngay.isBefore(ngayBatDau) && !ngay.isAfter(ngayKetThuc);
+        return ngay != null
+                && ngayBatDau != null
+                && ngayKetThuc != null
+                && !ngay.isBefore(ngayBatDau)
+                && !ngay.isAfter(ngayKetThuc);
+    }
+    public boolean chuaHoatDong()
+    {
+        return ngayBatDau != null && LocalDate.now().isBefore(ngayBatDau) ;
     }
     @Override
     public String toString() {
         return "Mã khuyến mãi: " + maKhuyenMai + " | Loại khuyến mãi: " + loaiKhuyenMai + " | Ngày bắt đầu: " + ngayBatDau + " | Ngày kết thúc: " + ngayKetThuc +  " | Mức chi tiêu tối thiểu: " + mucChiToiThieu ;
     }
+
 }

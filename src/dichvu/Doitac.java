@@ -6,7 +6,6 @@ import java.util.Scanner;
 public abstract class Doitac {
     private String maDoiTac , tenDoiTac , soDienThoai , diaChi , email , maSoThue , loaiDoiTac;
     private static int SoThuTuNCC = 1 ;
-    private static int SoThuTuDVVC = 1 ;
     public Doitac()
     {
         maDoiTac = tenDoiTac = soDienThoai = diaChi = maSoThue = email = loaiDoiTac = " " ;
@@ -22,16 +21,8 @@ public abstract class Doitac {
         this.loaiDoiTac = loaiDoiTac;
     }
 
-    public static int getSoThuTuDVVC() {
-        return SoThuTuDVVC;
-    }
-
     public static int getSoThuTuNCC() {
         return SoThuTuNCC;
-    }
-
-    public static void setSoThuTuDVVC(int soThuTuDVVC) {
-        SoThuTuDVVC = soThuTuDVVC;
     }
 
     public static void setSoThuTuNCC(int soThuTuNCC) {
