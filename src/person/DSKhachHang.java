@@ -176,6 +176,8 @@ public class DSKhachHang {
 
     /**
      * Xóa khách hàng theo mã:
+     * Cập nhật trạng thái isTonTai = false (xóa mềm), không xóa khỏi mảng/database
+     * và ghi đè danh sách cập nhật vào file KhachHang.txt.
      */
     public void xoaKH(String maKH) {
         int idx = timKH(maKH);
@@ -184,17 +186,47 @@ public class DSKhachHang {
             return;
         }
 
-        KhachHang[] newList = new KhachHang[n - 1];
-        int viTriMoi = 0;
-        for (int i = 0; i < n; i++) {
-            if (i != idx) {
-                newList[viTriMoi] = list[i];
-                viTriMoi++;
+        list[idx].setTonTai(false);
+        ghiFileKhachHang();
+        System.out.println("[+] Da cap nhat trang thai da xoa (isTonTai = false) cho khach hang " + maKH);
+    }
+
+    /**
+     * Ghi đè toàn bộ danh sách khách hàng vào file KhachHang.txt
+     */
+    public void ghiFileKhachHang() {
+        try {
+            java.io.FileWriter fw = new java.io.FileWriter("src/person/KhachHang.txt", false);
+            java.io.PrintWriter pw = new java.io.PrintWriter(fw);
+
+            // Ghi dòng tiêu đề
+            pw.println("# MaKH\tHoTen\tSDT\tEmail\tNgaySinh\tDiaChi\tNgayDangKy\tTongChiTieu\tHangThanhVien\tDiemTichLuy\tisTonTai");
+
+            for (int i = 0; i < n; i++) {
+                KhachHang kh = list[i];
+                String diaChiStr = (kh.getDiachi() != null) ? kh.getDiachi() : "";
+                String ngSinhStr = (kh.getNgsinh() != null) ? utils.DateUtil.formatDate(kh.getNgsinh()) : "";
+                String ngDkStr = (kh.getNgayDangKy() != null) ? utils.DateUtil.formatDate(kh.getNgayDangKy()) : "";
+
+                String dong = kh.getMaKhachHang() + "\t"
+                        + kh.getHoten() + "\t"
+                        + kh.getSdt() + "\t"
+                        + kh.getEmail() + "\t"
+                        + ngSinhStr + "\t"
+                        + diaChiStr + "\t"
+                        + ngDkStr + "\t"
+                        + kh.getTongChiTieu() + "\t"
+                        + kh.getHangThanhVien() + "\t"
+                        + kh.getDiemTichLuy() + "\t"
+                        + kh.isTonTai();
+
+                pw.println(dong);
             }
+            pw.close();
+            System.out.println("[+] Da ghi de danh sach vao file KhachHang.txt thanh cong!");
+        } catch (Exception e) {
+            System.out.println("[!] Loi khi ghi file KhachHang.txt: " + e.getMessage());
         }
-        list = newList;
-        n--;
-        System.out.println("[+] Da xoa khach hang co ma " + maKH);
     }
 
     /** Cập nhật thông tin khách hàng */

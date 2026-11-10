@@ -239,41 +239,15 @@ public class QuanKho extends NhanVien {
             switch (loai) {
                 case 1:
                     LocalDate hsd = Validation.inputLocalDateRegex(sc, "Nhập hạn sử dụng (dd/MM/yyyy): ");
-                    ThucPham tp = new ThucPham();
-                    tp.setMaSanPham(maSP);
-                    tp.setTenSanPham(tenSP);
-                    tp.setMaNhaCungCap(maNCC);
-                    tp.setLoaiSanPham("Thực phẩm");
-                    tp.setGiaNhap(giaNhap);
-                    tp.setGiaBan(giaBan);
-                    tp.setSoLuongTonKho(soLuong);
-                    tp.setHanSuDung(hsd);
-                    spMoi = tp;
+                    spMoi = new ThucPham(maSP, tenSP, maNCC, giaNhap, giaBan, soLuong, hsd);
                     break;
                 case 2:
                     int soThangBH = Validation.inputInt(sc, "Nhập số tháng bảo hành: ");
-                    DienTu dt = new DienTu();
-                    dt.setMaSanPham(maSP);
-                    dt.setTenSanPham(tenSP);
-                    dt.setMaNhaCungCap(maNCC);
-                    dt.setLoaiSanPham("Điện tử");
-                    dt.setGiaNhap(giaNhap);
-                    dt.setGiaBan(giaBan);
-                    dt.setSoLuongTonKho(soLuong);
-                    dt.setThoiGianBaoHanh(soThangBH);
-                    spMoi = dt;
+                    spMoi = new DienTu(maSP, tenSP, maNCC, giaNhap, giaBan, soLuong, soThangBH);
                     break;
                 case 3:
                 default:
-                    TieuDung td = new TieuDung();
-                    td.setMaSanPham(maSP);
-                    td.setTenSanPham(tenSP);
-                    td.setMaNhaCungCap(maNCC);
-                    td.setLoaiSanPham("Tiêu dùng");
-                    td.setGiaNhap(giaNhap);
-                    td.setGiaBan(giaBan);
-                    td.setSoLuongTonKho(soLuong);
-                    spMoi = td;
+                    spMoi = new TieuDung(maSP, tenSP, maNCC, giaNhap, giaBan, soLuong);
                     break;
             }
 
@@ -417,8 +391,104 @@ public class QuanKho extends NhanVien {
         ghiYeuCauVaoFile(maNCC, ht, nd);
     }
 
-    // ========================= Các hàm bổ trợ cho các hàm phương thức ở trên
+    // ========================= NGHIỆP VỤ NHẬP PHIẾU NHẬP KHO
     // =========================
+
+    /**
+     * Nghiệp vụ nhập phiếu nhập kho:
+     * Khi Nhà Cung Cấp giao hàng tới, Quản kho nhập trên máy:
+     * - Hàng này của NCC nào (Mã NCC)
+     * - Số lượng bao nhiêu
+     * - Giá tiền hàng (đơn giá x số lượng)
+     * - Tiền vận chuyển
+     * - Tính thành tiền
+     * Sau đó cập nhật số lượng vào kho và lưu vào file "LichSuNhapHang.txt" bằng
+     * hàm ghiFile.
+     */
+    public void nhapPhieuNhapKho(Scanner sc) {
+        System.out.println("\n=======================================================");
+        System.out.println("                 NHẬP PHIẾU NHẬP KHO                   ");
+        System.out.println("=======================================================");
+
+        String maPhieu = Validation.taoMa("PNK%03d", (int) (System.currentTimeMillis() % 1000));
+        System.out.println("Mã phiếu nhập: " + maPhieu);
+        System.out.println("Quản kho thực hiện: " + (getHoten() != null ? getHoten() : "N/A")
+                + " (Mã NV: " + (getMaNV() != null ? getMaNV() : "N/A") + ")");
+
+        String maNCC = Validation.inputStringRegex(sc,
+                "Nhập mã nhà cung cấp giao hàng (VD: NCC01): ",
+                "^NCC\\d+$",
+                "Mã NCC phải bắt đầu bằng NCC theo sau là số!");
+
+        String maSP = Validation.inputStringRegex(sc,
+                "Nhập mã sản phẩm giao tới (VD: SP001): ",
+                "^SP\\d+$",
+                "Mã sản phẩm không đúng định dạng (VD: SP001)!");
+
+        SanPham sp = timSanPham(maSP);
+        String tenSP;
+        long donGia;
+
+        if (sp != null) {
+            tenSP = sp.getTenSanPham();
+            donGia = sp.getGiaNhap();
+            System.out.println("[+] Tìm thấy sản phẩm: " + tenSP + " | Tồn kho hiện tại: " + sp.getSoLuong());
+        } else {
+            System.out.print("Sản phẩm mới - Nhập tên sản phẩm: ");
+            tenSP = sc.nextLine().trim();
+            donGia = Validation.inputLong(sc, "Nhập đơn giá hàng (VND): ");
+        }
+
+        int soLuong = Validation.inputInt(sc, "Nhập số lượng hàng giao tới: ");
+        long tienHang = donGia * soLuong;
+        System.out.println("[i] Giá tiền hàng (SL x Đơn giá): " + String.format("%,d", tienHang) + " VND");
+
+        long tienVanChuyen = Validation.inputLong(sc, "Nhập tiền vận chuyển (VND): ");
+        long thanhTien = tienHang + tienVanChuyen;
+
+        System.out.println("-------------------------------------------------------");
+        System.out.printf("TỔNG THÀNH TIỀN PHIẾU NHẬP: %,d VND\n", thanhTien);
+        System.out.println("-------------------------------------------------------");
+
+        // Cập nhật số lượng vào kho
+        if (sp != null) {
+            sp.setSoLuong(sp.getSoLuong() + soLuong);
+        }
+
+        // Lưu vào file LichSuNhapHang.txt bằng hàm ghi file
+        ghiFileLichSuNhap(maPhieu, maNCC, maSP, tenSP, soLuong, donGia, tienHang, tienVanChuyen, thanhTien);
+    }
+
+    // ========================= Các hàm bổ trợ cho các hàm phương thức ở trên
+    // ============
+    /**
+     * Ghi phiếu nhập kho vào file LichSuNhapHang.txt
+     */
+    public void ghiFileLichSuNhap(String maPhieu, String maNCC, String maSP, String tenSP,
+            int soLuong, long donGia, long tienHang, long tienVanChuyen, long thanhTien) {
+        try {
+            java.io.FileWriter fw = new java.io.FileWriter("src/hoadon/LichSuNhapHang.txt", true);
+            java.io.PrintWriter pw = new java.io.PrintWriter(fw);
+
+            String thoiGian = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+            String dongGhi = "[" + thoiGian + "] | MaPhieu: " + maPhieu
+                    + " | MaNV: " + (getMaNV() != null ? getMaNV() : "N/A")
+                    + " | MaNCC: " + maNCC
+                    + " | MaSP: " + maSP
+                    + " | TenSP: " + tenSP
+                    + " | SL: " + soLuong
+                    + " | DonGia: " + donGia
+                    + " | TienHang: " + tienHang
+                    + " | TienVanChuyen: " + tienVanChuyen
+                    + " | ThanhTien: " + thanhTien;
+
+            pw.println(dongGhi);
+            pw.close();
+            System.out.println("[+] Đã lưu phiếu nhập vào file LichSuNhapHang.txt thành công!");
+        } catch (Exception e) {
+            System.out.println("[!] Lỗi khi ghi file lịch sử nhập hàng: " + e.getMessage());
+        }
+    }
 
     /** Ghi thông tin yêu cầu của Quản kho vào file YeuCauDuyet.text */
     public void ghiYeuCauVaoFile(String maNCC, String hinhThuc, String noiDung) {
