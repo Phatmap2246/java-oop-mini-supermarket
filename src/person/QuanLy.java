@@ -345,8 +345,8 @@ public class QuanLy extends NhanVien {
                 }
             } while (true);
 // thêm sp giảm cận date vào dsSanPhamKhuyenMais
-            dsKhuyenMai.getKhuyenmais().add(khuyenMai);
-            dsSanPhamKhuyenMai.getSanPhamKhuyenMais().add(
+            dsKhuyenMai.themKhuyenMai(khuyenMai);
+            dsSanPhamKhuyenMai.themSanPhamKhuyenMai(
                     new SanPhamKhuyenMai(thucPham.getMaSanPham(),
                             khuyenMai.getMaKhuyenMai()));
             System.out.println("Đã gắn khuyến mãi " + khuyenMai.getMaKhuyenMai()
