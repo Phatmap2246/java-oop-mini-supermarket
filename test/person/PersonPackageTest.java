@@ -1,6 +1,6 @@
 package person;
 
-import hoadon.CTHoaDon;
+import hoadon.CTHoaDonBan;
 import hoadon.HoaDon;
 import hoadon.HoaDonBanHang;
 import hoadon.HoaDonNhapHang;
@@ -117,8 +117,8 @@ public class PersonPackageTest {
         customer.tichLuyChiTieu(4_000_000);
         equal("Vàng", customer.getHangThanhVien(), "KhachHang next membership threshold");
 
-        customer.themVaoGioHang(new CTHoaDon("SP001", "Rice", 2, 100, 10));
-        customer.themVaoGioHang(new CTHoaDon("sp001", "Rice", 1, 100, 0));
+        customer.themVaoGioHang(new CTHoaDonBan("SP001", "Rice", 2, 100, 10));
+        customer.themVaoGioHang(new CTHoaDonBan("sp001", "Rice", 1, 100, 0));
         equal(1, customer.getGioHang().size(), "KhachHang combines duplicate cart items");
         equal(3, customer.getGioHang().get(0).getSoLuong(), "KhachHang adds duplicate quantity");
         equal(270L, customer.tinhTongTienGioHang(), "KhachHang cart total");
@@ -147,9 +147,9 @@ public class PersonPackageTest {
     private static void testKeToan() {
         KeToan accountant = new KeToan();
         HoaDonBanHang salesInvoice = new HoaDonBanHang("HD001", "KH001");
-        salesInvoice.themChiTiet(new CTHoaDon("SP001", "Rice", 3, 50_000, 0));
+        salesInvoice.themChiTiet(new CTHoaDonBan("SP001", "Rice", 3, 50_000, 0));
         HoaDonNhapHang purchaseInvoice = new HoaDonNhapHang("HDN001", "Supplier", "NCC001", 0, 0);
-        purchaseInvoice.themChiTiet(new CTHoaDon("SP002", "Milk", 3, 10_000, 0));
+        purchaseInvoice.themChiTiet(new CTHoaDonBan("SP002", "Milk", 3, 10_000, 0));
         ArrayList<HoaDon> invoices = new ArrayList<>();
         invoices.add(salesInvoice);
         invoices.add(purchaseInvoice);
@@ -161,9 +161,9 @@ public class PersonPackageTest {
         equal(96_000L, accountant.tinhLoiNhuanRong(invoices), "KeToan net profit after corporate income tax");
 
         HoaDonBanHang lossSalesInvoice = new HoaDonBanHang("HD002", "KH001");
-        lossSalesInvoice.themChiTiet(new CTHoaDon("SP001", "Rice", 1, 10_000, 0));
+        lossSalesInvoice.themChiTiet(new CTHoaDonBan("SP001", "Rice", 1, 10_000, 0));
         HoaDonNhapHang lossPurchaseInvoice = new HoaDonNhapHang("HDN002", "Supplier", "NCC001", 0, 0);
-        lossPurchaseInvoice.themChiTiet(new CTHoaDon("SP002", "Milk", 3, 10_000, 0));
+        lossPurchaseInvoice.themChiTiet(new CTHoaDonBan("SP002", "Milk", 3, 10_000, 0));
         ArrayList<HoaDon> lossInvoices = new ArrayList<>();
         lossInvoices.add(lossSalesInvoice);
         lossInvoices.add(lossPurchaseInvoice);
@@ -257,7 +257,7 @@ public class PersonPackageTest {
                 LocalDate.of(1991, 1, 1), "NV007", "ThuNgan", 10_000, 0, 0);
         HoaDonBanHang invoice = new HoaDonBanHang("HD001", "KH001");
         invoice.setNgayLap(LocalDate.of(2026, 11, 6));
-        invoice.themChiTiet(new CTHoaDon("SP001", "Rice", 2, 50, 0));
+        invoice.themChiTiet(new CTHoaDonBan("SP001", "Rice", 2, 50, 0));
         invoice.setDaThanhToan(true);
         Field invoicesField = ThuNgan.class.getDeclaredField("dsHoaDonBanHang");
         invoicesField.setAccessible(true);
