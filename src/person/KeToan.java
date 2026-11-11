@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import hoadon.CTHoaDon;
+import hoadon.CTHoaDonBan;
 import hoadon.HoaDon;
 import hoadon.HoaDonBanHang;
 import hoadon.HoaDonNhapHang;
@@ -75,7 +75,7 @@ public class KeToan extends NhanVien {
         }
 
         HoaDonNhapHang hdNhap = (HoaDonNhapHang) hd;
-        ArrayList<CTHoaDon> dsChiTiet = hdNhap.getDanhSachChiTiet();
+        ArrayList<CTHoaDonBan> dsChiTiet = hdNhap.getDanhSachChiTiet();
         if (dsChiTiet.isEmpty()) {
             System.out.println(">> Hóa đơn trống, không có mặt hàng để đối chiếu.");
             return;
@@ -85,7 +85,7 @@ public class KeToan extends NhanVien {
                 + " (" + hdNhap.getMaNhaCungCap() + ")");
         System.out.println("=== ĐỐI CHIẾU HÀNG NHẬN ===");
 
-        for (CTHoaDon ct : dsChiTiet) {
+        for (CTHoaDonBan ct : dsChiTiet) {
             System.out.println("* Mặt hàng mã: " + ct.getMaSanPham());
             int slThucTe = Validation.inputInt(sc, "  - Nhập số lượng thực nhận: ");
             long giaThucTe = Validation.inputLong(sc, "  - Nhập đơn giá thực nhận: ");

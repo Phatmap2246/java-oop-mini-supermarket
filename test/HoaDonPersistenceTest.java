@@ -1,4 +1,4 @@
-import hoadon.CTHoaDon;
+import hoadon.CTHoaDonBan;
 import hoadon.HoaDon;
 import hoadon.HoaDonBanHang;
 import hoadon.HoaDonNhapHang;
@@ -21,7 +21,7 @@ public class HoaDonPersistenceTest {
         hoaDonBan.setTienKhuyenMai(100);
         hoaDonBan.setDaThanhToan(true);
         hoaDonBan.setChietKhauHoaDonPhanTram(10);
-        hoaDonBan.themChiTiet(new CTHoaDon(
+        hoaDonBan.themChiTiet(new CTHoaDonBan(
                 "SP001", "Gạo | thơm", 2, 1_000, 0, false, 1_800));
         danhSach.themHoaDon(hoaDonBan);
 
@@ -30,7 +30,7 @@ public class HoaDonPersistenceTest {
         hoaDonNhap.setNgayLap(LocalDate.of(2026, 11, 6));
         hoaDonNhap.setThongTinVanChuyen(
                 "DVVC01", "XE01", "Xe tải | nhỏ", HoaDonNhapHang.TRANG_THAI_CHO_QUAN_LY_DUYET);
-        hoaDonNhap.themChiTiet(new CTHoaDon("SP002", "Sữa", 3, 5_000, 0));
+        hoaDonNhap.themChiTiet(new CTHoaDonBan("SP002", "Sữa", 3, 5_000, 0));
         danhSach.themHoaDon(hoaDonNhap);
 
         danhSach.ghiHoaDonBanText(fileBan.toString());

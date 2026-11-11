@@ -64,5 +64,4 @@ public class KhuyenMaiPhanTram extends  Khuyenmai{
                 " | Phần trăm giảm giá: %.2f%% | Mức giảm tối đa: %d",
                 phanTramGiamGia * 100, mucGiamToiDa);
     }
-
 }
