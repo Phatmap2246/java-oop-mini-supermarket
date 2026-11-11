@@ -13,6 +13,7 @@ public class NhanVien extends Person {
     String vaitro;
     long luong;
     long phuCapTrachNhiem;
+    boolean isSaThai;
     /** Khởi tạo nhân viên với giá trị mặc định. */
     public NhanVien() {
         super();
@@ -20,6 +21,7 @@ public class NhanVien extends Person {
         vaitro = null;
         luong = 0;
         phuCapTrachNhiem = 0;
+        isSaThai = false;
     }
     /** Khởi tạo nhân viên từ các thông tin được truyền vào. */
     public NhanVien(String email, String hoten, String sdt, DiaChi diachi, LocalDate ngsinh,
@@ -30,6 +32,12 @@ public class NhanVien extends Person {
         this.luong = luong;
         this.phuCapTrachNhiem = phuCapTrachNhiem;
     }
+    /** Khởi tạo nhân viên từ thông tin được truyền vào, bao gồm trạng thái sa thải. */
+    public NhanVien(String email, String hoten, String sdt, DiaChi diachi, LocalDate ngsinh,
+            String maNV, String vaitro, long luong, long phuCapTrachNhiem, boolean isSaThai) {
+        this(email, hoten, sdt, diachi, ngsinh, maNV, vaitro, luong, phuCapTrachNhiem);
+        this.isSaThai = isSaThai;
+    }
     /** Sao chép thông tin từ một nhân viên khác. */
     public NhanVien(NhanVien nv) {
         super(nv);
@@ -37,6 +45,7 @@ public class NhanVien extends Person {
         vaitro = nv.vaitro;
         luong = nv.luong;
         phuCapTrachNhiem = nv.phuCapTrachNhiem;
+        isSaThai = nv.isSaThai;
     }
     /** Trả về mã nhân viên. */
     public String getMaNV() {
@@ -113,6 +122,16 @@ public class NhanVien extends Person {
         phuCapTrachNhiem = Validation.inputLong(sc, "Nhập phụ cấp trách nhiệm: ");
     }
 
+    /** Trả về trạng thái sa thải của nhân viên. */
+    public boolean isSaThai() {
+        return isSaThai;
+    }
+
+    /** Cập nhật trạng thái sa thải của nhân viên. */
+    public void setSaThai(boolean isSaThai) {
+        this.isSaThai = isSaThai;
+    }
+
     /** Tính tổng lương gồm lương cơ bản và phụ cấp trách nhiệm. */
     public long tinhLuong() {
         return luong + phuCapTrachNhiem;
@@ -134,7 +153,8 @@ public class NhanVien extends Person {
                 + " | Mã NV: " + maNV
                 + " | Vai trò: " + vaitro
                 + " | Lương: " + luong
-                + " | Phụ cấp trách nhiệm: " + phuCapTrachNhiem;
+                + " | Phụ cấp trách nhiệm: " + phuCapTrachNhiem
+                + " | Trạng thái: " + (isSaThai ? "Đã sa thải" : "Đang làm");
     }
 
     public void taoYeuCau(Scanner sc) throws IOException {

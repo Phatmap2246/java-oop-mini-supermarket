@@ -534,7 +534,7 @@ public class QuanLyHoaDon {
         return String.join("|", "CT4",
                 maHoa(chiTiet.getMaSanPham()),
                 maHoa(chiTiet.getTenSanPham()),
-                Integer.toString(chiTiet.getSoLuong()),
+                Integer.toString(chiTiet.getSoLuongTonKho()),
                 Long.toString(chiTiet.getDonGia()),
                 Double.toString(chiTiet.getChietKhau()),
                 Boolean.toString(chiTiet.isHangKhuyenMai()),
@@ -640,7 +640,7 @@ public class QuanLyHoaDon {
                 }
                 for (CTHoaDon ct : hd.getDanhSachChiTiet()) {
                     bw.write("CT|" + ct.getMaSanPham() + "|" + ct.getTenSanPham() + "|"
-                            + ct.getSoLuong() + "|" + ct.getDonGia() + "|"
+                            + ct.getSoLuongTonKho() + "|" + ct.getDonGia() + "|"
                             + ct.getChietKhau() + "|" + ct.isHangKhuyenMai()
                             + "|" + ct.getThanhTienSauKhuyenMai());
                     bw.newLine();

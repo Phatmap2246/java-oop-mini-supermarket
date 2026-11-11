@@ -182,3 +182,17 @@ if ($testResult -ne 0) { exit $testResult }
 - `test/person/PersonPackageTest.java` được cập nhật theo API hiện tại của `KeToan`; bài kiểm tra bàn giao ca đánh dấu hóa đơn đã thanh toán để phù hợp với cách tính tiền cuối ca.
 - Bộ kiểm thử chạy thành công: **62 assertions đạt**. Lệnh biên dịch và chạy nằm trong mục “Kiểm thử và đánh giá trước commit”.
 - `git diff --check` không phát hiện lỗi khoảng trắng trong các tệp thuộc gói `person` đã chỉnh sửa ở lần kiểm tra gần nhất.
+
+## Cập nhật ngày 10/11/2026
+
+### Nhân viên và thống kê quản lý
+
+- `NhanVien.isSaThai` mặc định là `false`; getter/setter và `toString()` thể hiện trạng thái làm việc. Constructor sao chép cũng giữ trạng thái này.
+- `DSNhanVien.saThai(String)` thay cho xóa nhân viên: đánh dấu đã sa thải, giữ hồ sơ và lưu danh sách. Có thể cập nhật lại trạng thái trong `suaNV()`.
+- `QuanLy` không phân nhân viên đã sa thải vào ca.
+- `QuanLy.thongKe(Scanner, DSNhanVien, QuanLySanPham, ArrayList<YeuCau>)` báo số mặt hàng, tổng tồn, thực phẩm hết hạn/sắp hết hạn trong 30 ngày còn tồn, số nhân viên theo vai trò và số yêu cầu theo trạng thái duyệt.
+
+### Quản lý tồn kho
+
+- `QuanLyTonKho.truTonKho()` kiểm tra đủ hàng rồi mới trừ tồn; `congTonKho()` kiểm tra sản phẩm và giới hạn số lượng rồi mới cộng tồn.
+- Số lượng các dòng chi tiết trùng mã sản phẩm được gộp trước khi kiểm tra/cập nhật kho. Thống kê hạn dùng chỉ áp dụng cho `ThucPham` còn hàng trong kho.
