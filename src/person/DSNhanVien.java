@@ -1,12 +1,14 @@
 package person;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 
+import interfaces.IQuanLy;
 import utils.DataBase;
 import utils.Validation;
 
-public class DSNhanVien {
+public class DSNhanVien implements IQuanLy<NhanVien> {
     ArrayList<NhanVien> list;
 
     /** Khởi tạo danh sách nhân viên rỗng. */
@@ -46,7 +48,11 @@ public class DSNhanVien {
     }
 
     /** In thông tin từng nhân viên; thông báo nếu danh sách rỗng. */
-    public void xuatDSNV() {
+    public void taoDanhSach(Scanner sc) {
+        taoDS(sc);
+    }
+
+    public void xuat() {
         if (list.isEmpty()) {
             System.out.println("[!] Danh sách nhân viên đang trống.");
             return;
@@ -58,8 +64,14 @@ public class DSNhanVien {
         }
     }
 
+    @Override
+    public void xuatDanhSach() {
+        xuat();
+    }
+
     /** Nhập thông tin một nhân viên mới rồi thêm vào danh sách. */
-    public void themNV(Scanner sc) {
+    @Override
+    public void them(Scanner sc) {
         NhanVien nv = new NhanVien();
         do{
             nv.nhapThongTin(sc);
@@ -72,7 +84,7 @@ public class DSNhanVien {
     }
 
     /** Nhập thông tin k nhân viên mới rồi thêm vào danh sách. */
-    public void themNV(Scanner sc, int k) {
+    public void them(Scanner sc, int k) {
         for (int i = 1; i <= k; i++) {
             System.out.printf("%n--- Nhập nhân viên %d/%d ---%n", i, k);
             NhanVien nv = new NhanVien();
@@ -97,21 +109,63 @@ public class DSNhanVien {
         return -1;
     }
 
-    /** Tìm vị trí nhân viên theo tên chính xác hoặc gần đúng; trả về -1 nếu không tìm thấy. */
-    public NhanVien timNV(Scanner sc) {
-        System.out.print("Nhập mã hoặc tên nhân viên: ");
-        String khoa = sc.nextLine().trim().toLowerCase();
+    @Override
+    public int timViTri(String ma) {
+        return timNV(ma);
+    }
+
+    @Override
+    public NhanVien timMa(String ma) {
+        int viTri = timViTri(ma);
+        return viTri == -1 ? null : list.get(viTri);
+    }
+
+    @Override
+    public NhanVien timTen(String ten) {
+        if (ten == null || ten.isBlank()) {
+            return null;
+        }
+        String khoa = ten.trim().toLowerCase(Locale.ROOT);
         for (NhanVien nhanVien : list) {
-            if (nhanVien.getMaNV().equalsIgnoreCase(khoa)
-                    || nhanVien.getMaNV().contains(khoa)
-                    || nhanVien.getHoten().equalsIgnoreCase(khoa)
-                    || nhanVien.getHoten().contains(khoa)) {
-                System.out.println("[+] Đã tìm thấy nhân viên.");
+            String hoTen = nhanVien.getHoten();
+            if (hoTen != null && hoTen.toLowerCase(Locale.ROOT).contains(khoa)) {
                 return nhanVien;
             }
         }
-        System.out.println("[!] Không tìm thấy nhân viên.");
         return null;
+    }
+
+    @Override
+    public NhanVien timKhoa(String khoa) {
+        if (khoa == null || khoa.isBlank()) {
+            return null;
+        }
+        String tuKhoa = khoa.trim().toLowerCase(Locale.ROOT);
+        for (NhanVien nhanVien : list) {
+            if (containsIgnoreCase(nhanVien.getMaNV(), tuKhoa)
+                    || containsIgnoreCase(nhanVien.getHoten(), tuKhoa)
+                    || containsIgnoreCase(nhanVien.getEmail(), tuKhoa)
+                    || containsIgnoreCase(nhanVien.getSdt(), tuKhoa)) {
+                return nhanVien;
+            }
+        }
+        return null;
+    }
+
+    private static boolean containsIgnoreCase(String value, String lowerCaseQuery) {
+        return value != null && value.toLowerCase(Locale.ROOT).contains(lowerCaseQuery);
+    }
+
+    /** Tìm vị trí nhân viên theo tên chính xác hoặc gần đúng; trả về -1 nếu không tìm thấy. */
+    public NhanVien timNV(Scanner sc) {
+        System.out.print("Nhập mã hoặc tên nhân viên: ");
+        NhanVien nhanVien = timKhoa(sc.nextLine());
+        if (nhanVien == null) {
+            System.out.println("[!] Không tìm thấy nhân viên.");
+            return null;
+        }
+        System.out.println("[+] Đã tìm thấy nhân viên.");
+        return nhanVien;
     }
 
     /** Đánh dấu nhân viên đã sa thải nhưng vẫn giữ hồ sơ trong danh sách. */
@@ -133,6 +187,11 @@ public class DSNhanVien {
         System.out.println("[+] Đã cập nhật trạng thái sa thải cho nhân viên " + maNV + ".");
         DataBase.ghiVaoFile(list, "NhanVien.txt", true);
         return true;
+    }
+
+    @Override
+    public boolean xoa(String ma) {
+        return saThai(ma);
     }
 
     /** Cập nhật thông tin nhân viên theo mã; trả về false nếu không tìm thấy. */
@@ -212,5 +271,10 @@ public class DSNhanVien {
         } while (choice != 0);
         DataBase.ghiVaoFile(list, "NhanVien.txt", true);
         return true;
+    }
+
+    @Override
+    public boolean sua(String ma, Scanner sc) {
+        return suaNV(ma, sc);
     }
 }

@@ -1,10 +1,13 @@
 package dichvu ;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
+
+import interfaces.IQuanLy;
 import utils.Validation;
 
-public class Danhsachdoitac {
+public class Danhsachdoitac implements IQuanLy<Doitac> {
     private ArrayList<Doitac> danhSachDoiTac ;
     public Danhsachdoitac()
     {
@@ -27,6 +30,11 @@ public class Danhsachdoitac {
         themNhaCungCap(sc);
     }
 
+    @Override
+    public void them(Scanner sc) {
+        themDoiTac(sc);
+    }
+
     public void themNhaCungCap(Scanner sc)
     {
         Nhacungcap nhaCungCap = new Nhacungcap();
@@ -35,7 +43,7 @@ public class Danhsachdoitac {
         danhSachDoiTac.add(nhaCungCap);
         System.out.println("Thêm nhà cung cấp thành công!");
     }
-    public void taoDuLieuDoiTac(Scanner sc)
+    public void taoDS(Scanner sc)
     {
         System.out.println("Tạo danh sách đối tác!");
         do {
@@ -43,12 +51,66 @@ public class Danhsachdoitac {
         while (Validation.luaChon(sc, "Bạn có muốn tiếp tục thêm đối tác(1/0): ", 0, 1) == 1);
         System.out.println("Tạo dữ liệu đối tác thành công!");
     }
+
+    @Override
+    public void taoDanhSach(Scanner sc) {
+        taoDS(sc);
+    }
+
     public int traCuuThongTinDoiTac(String maDoiTac)
     {
         for (int i = 0; i < danhSachDoiTac.size(); i++)
             if (danhSachDoiTac.get(i).getMaDoiTac().equalsIgnoreCase(maDoiTac)) return i;
         return -1;
     }
+
+    @Override
+    public int timViTri(String ma) {
+        return traCuuThongTinDoiTac(ma);
+    }
+
+    @Override
+    public Doitac timMa(String ma) {
+        int index = timViTri(ma);
+        return index == -1 ? null : danhSachDoiTac.get(index);
+    }
+
+    @Override
+    public Doitac timTen(String ten) {
+        if (ten == null || ten.isBlank()) {
+            return null;
+        }
+        String khoa = ten.trim().toLowerCase(Locale.ROOT);
+        for (Doitac doiTac : danhSachDoiTac) {
+            if (containsIgnoreCase(doiTac.getTenDoiTac(), khoa)) {
+                return doiTac;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Doitac timKhoa(String khoa) {
+        if (khoa == null || khoa.isBlank()) {
+            return null;
+        }
+        String tuKhoa = khoa.trim().toLowerCase(Locale.ROOT);
+        for (Doitac doiTac : danhSachDoiTac) {
+            if (containsIgnoreCase(doiTac.getMaDoiTac(), tuKhoa)
+                    || containsIgnoreCase(doiTac.getTenDoiTac(), tuKhoa)
+                    || containsIgnoreCase(doiTac.getSoDienThoai(), tuKhoa)
+                    || containsIgnoreCase(doiTac.getEmail(), tuKhoa)
+                    || containsIgnoreCase(doiTac.getMaSoThue(), tuKhoa)) {
+                return doiTac;
+            }
+        }
+        return null;
+    }
+
+    private static boolean containsIgnoreCase(String value, String lowerCaseQuery) {
+        return value != null && value.toLowerCase(Locale.ROOT).contains(lowerCaseQuery);
+    }
+
     public void kiemTraTrung(Scanner sc, Doitac doiTac)
     {
         while (traCuuThongTinDoiTac(doiTac.getMaDoiTac()) != -1)
@@ -57,16 +119,6 @@ public class Danhsachdoitac {
             doiTac.setMaDoiTac(Validation.inputStringRegex(sc, "Nhập mã đối tác: ",
                     "DT\\d{3}", "Mã đối tác không đúng định dạng (VD: DT001)!"));
         }
-    }
-    public void timKiemDoiTac(String maDoiTac)
-    {
-        int index = traCuuThongTinDoiTac(maDoiTac);
-        if (index == -1)
-        {
-            System.out.println("Mã đối tác không tồn tại!");
-            return;
-        }
-        System.out.println(danhSachDoiTac.get(index));
     }
     public void xoaDoiTac(String maDoiTac)
     {
@@ -78,6 +130,18 @@ public class Danhsachdoitac {
         }
         danhSachDoiTac.remove(index);
         System.out.println("Xoá đối tác thành công!");
+    }
+
+    @Override
+    public boolean xoa(String ma) {
+        int index = timViTri(ma);
+        if (index == -1) {
+            System.out.println("Mã đối tác không tồn tại!");
+            return false;
+        }
+        danhSachDoiTac.remove(index);
+        System.out.println("Xoá đối tác thành công!");
+        return true;
     }
     public void suaThongTinDoiTac(String maDoiTac, Scanner sc)
     {
@@ -140,16 +204,27 @@ public class Danhsachdoitac {
         }
         System.out.println("Sửa thông tin đối tác thành công!");
     }
-    public void inDanhSachDoiTac()
+
+    @Override
+    public boolean sua(String ma, Scanner sc) {
+        if (timViTri(ma) == -1) {
+            System.out.println("Mã đối tác không tồn tại!");
+            return false;
+        }
+        suaThongTinDoiTac(ma, sc);
+        return true;
+    }
+
+    public void xuat()
     {
         System.out.println("Danh sách đối tác!");
         for (Doitac doiTac : danhSachDoiTac)
             System.out.println(doiTac);
     }
-    public void inDanhSachNhaCungCap()
-    {
-        System.out.println("Danh sách nhà cung cấp!");
-        for (Doitac doiTac : danhSachDoiTac)
-            if (doiTac instanceof Nhacungcap) System.out.println(doiTac);
+
+    @Override
+    public void xuatDanhSach() {
+        xuat();
     }
+
 }

@@ -1,10 +1,11 @@
 package hoadon;
 import java.util.Scanner;
 import java.util.List;
+import interfaces.IThongTin;
 import sanpham.QuanLyTonKho;
 import sanpham.SanPham;
 import utils.Validation;
-public class CTHoaDon {
+public class CTHoaDon implements IThongTin {
     private String maSanPham;
     private String tenSanPham;
     private  int soLuong;
@@ -90,6 +91,11 @@ public class CTHoaDon {
         this.hangKhuyenMai = false;
     }
 
+    @Override
+    public void nhapThongTin(Scanner sc) {
+        nhapThongTin(sc, false);
+    }
+
     public void nhapThongTinBan(Scanner sc, List<SanPham> danhSachSanPham,
             List<CTHoaDon> chiTietDaNhap) {
         while (true) {
@@ -140,6 +146,17 @@ public class CTHoaDon {
         String tenHienThi = hangKhuyenMai ? tenSanPham + " (TẶNG)" : tenSanPham;
         System.out.printf("  - Mã SP: %-10s | Tên: %-20s | SL: %-5d | Đơn giá gốc: %-10d | Thành tiền sau KM: %d\n",
                 maSanPham, tenHienThi, soLuong, donGia, tinhThanhTien());
+    }
+
+    @Override
+    public String toString() {
+        String tenHienThi = hangKhuyenMai ? tenSanPham + " (TẶNG)" : tenSanPham;
+        return "Mã SP: " + maSanPham
+                + " | Tên: " + tenHienThi
+                + " | Số lượng: " + soLuong
+                + " | Đơn giá: " + donGia
+                + " | Chiết khấu: " + chietKhau
+                + " | Thành tiền sau khuyến mãi: " + tinhThanhTien();
     }
 
     // getters - setters

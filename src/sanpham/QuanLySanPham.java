@@ -1,6 +1,7 @@
 package sanpham;
 
 import dichvu.Nhacungcap;
+import interfaces.ITimKiem;
 import utils.Validation;
 
 import java.time.LocalDate;
@@ -8,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class QuanLySanPham{
+public class QuanLySanPham implements ITimKiem<SanPham>{
     private ArrayList<SanPham> danhSachSanPham;
 
     public QuanLySanPham() {
@@ -106,12 +107,66 @@ public class QuanLySanPham{
     }
 
     public int timKiemSanPham(String maSanPham) {
+        return timViTri(maSanPham);
+    }
+
+    @Override
+    public int timViTri(String ma) {
+        if (ma == null) {
+            return -1;
+        }
         for (int i = 0; i < danhSachSanPham.size(); i++) {
-            if (danhSachSanPham.get(i).getMaSanPham().equalsIgnoreCase(maSanPham)) {
+            if (danhSachSanPham.get(i).getMaSanPham().equalsIgnoreCase(ma)) {
                 return i;
             }
         }
         return -1;
+    }
+
+    @Override
+    public SanPham timMa(String ma) {
+        int index = timViTri(ma);
+        return index == -1 ? null : danhSachSanPham.get(index);
+    }
+
+    @Override
+    public SanPham timTen(String ten) {
+        if (ten == null || ten.isBlank()) {
+            return null;
+        }
+        String khoa = ten.trim().toLowerCase();
+        for (SanPham sanPham : danhSachSanPham) {
+            if (sanPham.getTenSanPham() != null
+                    && sanPham.getTenSanPham().toLowerCase().contains(khoa)) {
+                return sanPham;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public SanPham timKhoa(String khoa) {
+        if (khoa == null || khoa.isBlank()) {
+            return null;
+        }
+        SanPham theoMa = timMa(khoa.trim());
+        if (theoMa != null) {
+            return theoMa;
+        }
+
+        String tuKhoa = khoa.trim().toLowerCase();
+        for (SanPham sanPham : danhSachSanPham) {
+            if (containsIgnoreCase(sanPham.getTenSanPham(), tuKhoa)
+                    || containsIgnoreCase(sanPham.getLoaiSanPham(), tuKhoa)
+                    || containsIgnoreCase(sanPham.getMaNhaCungCap(), tuKhoa)) {
+                return sanPham;
+            }
+        }
+        return null;
+    }
+
+    private static boolean containsIgnoreCase(String value, String lowerCaseQuery) {
+        return value != null && value.toLowerCase().contains(lowerCaseQuery);
     }
 
     public void xoaSanPham(String maSanPham) {
@@ -296,6 +351,11 @@ public class QuanLySanPham{
         for ( SanPham sanPham:danhSachSanPham )
             System.out.println(sanPham);
     }
+
+    public void xuatDanhSach() {
+        inDanhSachSanPham();
+    }
+
     public SanPham traCuuSanPham( String maSanPham)
     {
         int index = timKiemSanPham(maSanPham);

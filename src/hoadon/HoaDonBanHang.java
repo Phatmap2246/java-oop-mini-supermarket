@@ -8,6 +8,7 @@ import java.util.function.Predicate;
 import dichvu.DanhSachSPKM;
 import dichvu.Danhsachkhuyenmai;
 import dichvu.KhuyenMaiService;
+import interfaces.IThanhToan;
 import sanpham.QuanLySanPham;
 import sanpham.QuanLyTonKho;
 import sanpham.SanPham;
