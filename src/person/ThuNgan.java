@@ -28,7 +28,13 @@ public class ThuNgan extends NhanVien {
         super(tn);
         tongTienDauCa = tn.tongTienDauCa;
     }
-
+    public HoaDonBanHang[] getDanhSachHDB(){
+        return dsHoaDonBanHang ; 
+    }
+    public void setDanhSachHDB(HoaDonBanHang[] dshd)
+    {
+        dsHoaDonBanHang = dshd; 
+    }
     public long getTienDauCa() {
         return tongTienDauCa;
     }

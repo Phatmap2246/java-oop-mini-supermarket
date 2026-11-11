@@ -13,8 +13,6 @@ import utils.DateUtil;
 import utils.Validation;
 
 public class KeToan extends NhanVien {
-    ArrayList<Long> doanhThu = new ArrayList<>();
-    ArrayList<Long> chiPhi = new ArrayList<>();
     private final ArrayList<String> maHoaDonCongNo = new ArrayList<>();
     private final ArrayList<String> maPhieuNhapCongNo = new ArrayList<>();
     private final ArrayList<String> maNhaCungCapCongNo = new ArrayList<>();

@@ -123,7 +123,7 @@ public class QuanLySanPham{
             System.out.println("Xoá sản phẩm thành công!");
         }
     }
-
+    
     public void suaThongTinSanPham(Scanner sc, String maSanPham, ArrayList<Nhacungcap> danhSachNhaCungCap) {
         System.out.println("Sửa thông tin sản phẩm!");
         int index = timKiemSanPham(maSanPham);

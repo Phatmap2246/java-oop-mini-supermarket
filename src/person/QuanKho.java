@@ -241,15 +241,18 @@ public class QuanKho extends NhanVien {
             switch (loai) {
                 case 1:
                     LocalDate hsd = Validation.inputLocalDateRegex(sc, "Nhập hạn sử dụng (dd/MM/yyyy): ");
-                    spMoi = new ThucPham(maSP, tenSP, "Thực phẩm", giaNhap, giaBan, soLuong, maNCC, 0.08, LocalDate.now(), hsd, 25.0, "Thường");
+                    spMoi = new ThucPham(maSP, tenSP, "ThucPham", giaNhap, giaBan,
+                            soLuong, maNCC, 0.08, LocalDate.now(), hsd, 0.0, "");
                     break;
                 case 2:
                     int soThangBH = Validation.inputInt(sc, "Nhập số tháng bảo hành: ");
-                    spMoi = new DienTu(maSP, tenSP, "Điện tử", giaNhap, giaBan, soLuong, maNCC, 0.05, soThangBH, 0L, "Nhựa/Kim loại", LocalDate.now());
+                    spMoi = new DienTu(maSP, tenSP, "DienTu", giaNhap, giaBan,
+                            soLuong, maNCC, 0.05, soThangBH, 0, "", LocalDate.now());
                     break;
                 case 3:
                 default:
-                    spMoi = new TieuDung(maSP, tenSP, "Tiêu dùng", giaNhap, giaBan, soLuong, maNCC, 0.05, "N/A", "Việt Nam", "Tiêu dùng", "Để nơi khô ráo");
+                    spMoi = new TieuDung(maSP, tenSP, "TieuDung", giaNhap, giaBan,
+                            soLuong, maNCC, 0.05, "", "", "", "");
                     break;
             }
 
