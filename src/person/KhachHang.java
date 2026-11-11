@@ -1,10 +1,8 @@
 package person;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Scanner;
 
-import hoadon.CTHoaDon;
 import utils.DateUtil;
 import utils.Validation;
 
@@ -15,9 +13,7 @@ public class KhachHang extends Person {
     private long tongChiTieu;
     private String hangThanhVien;
     private int diemTichLuy;
-
-    // Giỏ hàng chứa danh sách các món khách hàng muốn mua
-    private ArrayList<CTHoaDon> gioHang;
+    private boolean isTonTai;
 
     // ========================= CONSTRUCTOR =========================
 
@@ -28,7 +24,7 @@ public class KhachHang extends Person {
         this.tongChiTieu = 0;
         this.hangThanhVien = "Đồng";
         this.diemTichLuy = 0;
-        this.gioHang = new ArrayList<>();
+        this.isTonTai = true;
     }
 
     public KhachHang(String email, String hoTen, String soDienThoai, DiaChi diaChi, LocalDate ngaySinh,
@@ -39,7 +35,19 @@ public class KhachHang extends Person {
         this.tongChiTieu = 0;
         this.hangThanhVien = "Đồng";
         this.diemTichLuy = 0;
-        this.gioHang = new ArrayList<>();
+        this.isTonTai = true;
+    }
+
+    public KhachHang(String email, String hoTen, String soDienThoai, DiaChi diaChi, LocalDate ngaySinh,
+            String maKhachHang, LocalDate ngayDangKy, long tongChiTieu, String hangThanhVien, int diemTichLuy,
+            boolean isTonTai) {
+        super(email, hoTen, soDienThoai, diaChi, ngaySinh);
+        this.maKhachHang = maKhachHang;
+        this.ngayDangKy = (ngayDangKy != null) ? ngayDangKy : LocalDate.now();
+        this.tongChiTieu = tongChiTieu;
+        this.hangThanhVien = hangThanhVien;
+        this.diemTichLuy = diemTichLuy;
+        this.isTonTai = isTonTai;
     }
 
     // ========================= KẾ THỪA PERSON =========================
@@ -97,12 +105,12 @@ public class KhachHang extends Person {
         this.diemTichLuy = diemTichLuy;
     }
 
-    public ArrayList<CTHoaDon> getGioHang() {
-        return gioHang;
+    public boolean isTonTai() {
+        return isTonTai;
     }
 
-    public void setGioHang(ArrayList<CTHoaDon> gioHang) {
-        this.gioHang = (gioHang != null) ? gioHang : new ArrayList<>();
+    public void setTonTai(boolean isTonTai) {
+        this.isTonTai = isTonTai;
     }
 
     // ========================= NGHIỆP VỤ THÀNH VIÊN =========================
@@ -139,143 +147,6 @@ public class KhachHang extends Person {
         capNhatThuHang();
     }
 
-    // ========================= CÁC PHƯƠNG THỨC GIỎ HÀNG =========================
-
-    /**
-     * Thêm một món vào giỏ hàng. Nếu món đã có (trùng mã sản phẩm), tự động cộng
-     * dồn số lượng.
-     */
-    public void themVaoGioHang(CTHoaDon ct) {
-        if (ct == null) {
-            return;
-        }
-        for (CTHoaDon item : gioHang) {
-            if (item.getMaSanPham().equalsIgnoreCase(ct.getMaSanPham())) {
-                item.setSoLuong(item.getSoLuongTonKho() + ct.getSoLuongTonKho());
-                System.out.printf("[+] Đã cập nhật %s: %d sản phẩm.%n",
-                        ct.getTenSanPham(), item.getSoLuongTonKho());
-                return;
-            }
-        }
-        gioHang.add(ct);
-        System.out.println("[+] Đã thêm " + ct.getTenSanPham() + " vào giỏ hàng.");
-    }
-
-    /**
-     * Nhập thêm món hàng vào giỏ từ bàn phím qua Scanner.
-     */
-    public void themVaoGioHang(Scanner sc) {
-        if (sc == null) {
-            sc = new Scanner(System.in);
-        }
-        System.out.println("\n=== THÊM SẢN PHẨM VÀO GIỎ HÀNG ===");
-        while (true) {
-            CTHoaDon ct = new CTHoaDon();
-            ct.nhapThongTin(sc, true);
-            themVaoGioHang(ct);
-
-            int tiepTuc = Validation.luaChon(
-                    sc, "Thêm sản phẩm khác? (1: Có / 0: Không): ", 0, 1);
-            if (tiepTuc == 0) {
-                break;
-            }
-        }
-    }
-
-    /**
-     * Xóa một sản phẩm khỏi giỏ hàng theo mã sản phẩm.
-     */
-    public boolean xoaKhoiGioHang(String maSP) {
-        if (maSP == null || gioHang.isEmpty()) {
-            return false;
-        }
-        for (int i = 0; i < gioHang.size(); i++) {
-            if (gioHang.get(i).getMaSanPham().equalsIgnoreCase(maSP.trim())) {
-                CTHoaDon removed = gioHang.remove(i);
-                System.out.println("[+] Đã xóa " + removed.getTenSanPham() + " khỏi giỏ hàng.");
-                return true;
-            }
-        }
-        System.out.println("[!] Không tìm thấy sản phẩm mã " + maSP + " trong giỏ hàng.");
-        return false;
-    }
-
-    /**
-     * Chỉnh sửa số lượng của một món trong giỏ hàng.
-     * Nếu số lượng mới <= 0, món hàng sẽ tự động bị xóa khỏi giỏ.
-     */
-    public boolean suaSoLuongTrongGioHang(String maSP, int soLuongMoi) {
-        if (maSP == null || gioHang.isEmpty()) {
-            return false;
-        }
-        for (int i = 0; i < gioHang.size(); i++) {
-            CTHoaDon item = gioHang.get(i);
-            if (item.getMaSanPham().equalsIgnoreCase(maSP.trim())) {
-                if (soLuongMoi <= 0) {
-                    gioHang.remove(i);
-                    System.out.println("[+] Đã xóa " + item.getTenSanPham()
-                            + " vì số lượng mới không lớn hơn 0.");
-                } else {
-                    item.setSoLuong(soLuongMoi);
-                    System.out.println("[+] Đã cập nhật số lượng " + item.getTenSanPham()
-                            + " thành " + soLuongMoi + ".");
-                }
-                return true;
-            }
-        }
-        System.out.println("[!] Không tìm thấy sản phẩm mã " + maSP + " trong giỏ hàng.");
-        return false;
-    }
-
-    /**
-     * Tính tổng tiền tạm tính của tất cả các món trong giỏ hàng.
-     */
-    public long tinhTongTienGioHang() {
-        long tongTien = 0;
-        for (CTHoaDon ct : gioHang) {
-            tongTien += ct.tinhThanhTien();
-        }
-        return tongTien;
-    }
-
-    /**
-     * Hiển thị danh sách các món hiện có trong giỏ hàng kèm tổng tiền tạm tính.
-     */
-    public void xemGioHang() {
-        System.out.println("\n=== GIỎ HÀNG: "
-                + (getHoten() != null ? getHoten().toUpperCase() : "KHÁCH HÀNG") + " ===");
-        if (gioHang.isEmpty()) {
-            System.out.println("Giỏ hàng đang trống.");
-            return;
-        }
-
-        System.out.printf("%-4s | %-10s | %-24s | %5s | %12s | %14s%n",
-                "STT", "Mã SP", "Tên sản phẩm", "SL", "Đơn giá", "Thành tiền");
-        System.out.println("--------------------------------------------------------------------------");
-
-        int stt = 1;
-        for (CTHoaDon ct : gioHang) {
-            System.out.printf("%-4d | %-10s | %-24s | %5d | %,12d | %,14d%n",
-                    stt++, ct.getMaSanPham(), ct.getTenSanPham(), ct.getSoLuongTonKho(), ct.getDonGia(), ct.tinhThanhTien());
-        }
-        System.out.println("--------------------------------------------------------------------------");
-        System.out.printf("Tổng tạm tính: %,d VND%n", tinhTongTienGioHang());
-    }
-
-    /**
-     * Làm rỗng giỏ hàng (thường dùng sau khi đã thanh toán thành công).
-     */
-    public void xoaRongGioHang() {
-        gioHang.clear();
-    }
-
-    /**
-     * Kiểm tra giỏ hàng có rỗng không.
-     */
-    public boolean isGioHangRong() {
-        return gioHang == null || gioHang.isEmpty();
-    }
-
     // ========================= NHẬP THÔNG TIN KHÁCH HÀNG =========================
 
     @Override
@@ -294,6 +165,7 @@ public class KhachHang extends Person {
         this.ngayDangKy = Validation.inputLocalDateRegex(
                 sc,
                 "Nhập ngày đăng ký thành viên (dd/MM/yyyy): ");
+        this.isTonTai = true;
     }
 
     // ========================= TOSTRING =========================
@@ -307,6 +179,6 @@ public class KhachHang extends Person {
                 + " | Hạng: " + hangThanhVien
                 + " | Điểm tích lũy: " + diemTichLuy
                 + " | Tổng chi tiêu: " + String.format("%,d", tongChiTieu) + " VNĐ"
-                + " | Món trong giỏ: " + (gioHang != null ? gioHang.size() : 0);
+                + " | Trạng thái: " + (isTonTai ? "Đang hoạt động" : "Đã xóa");
     }
 }
