@@ -1,45 +1,42 @@
 package hoadon;
 
 import java.util.ArrayList;
-import java.time.LocalDate;
+
+import utils.Validation;
+
+import java.time.LocalDateTime;
 
 public abstract class HoaDon {
     protected String maHoaDon;
-    protected LocalDate ngayLap;
-    protected String tenDoiTac;
-    private static int demHoaDon = 0; // Sửa: Thêm = 0
-    protected ArrayList<CTHoaDon> danhSachChiTiet;
+    protected LocalDateTime ngayLap;
+    protected String sdtDoiTac;
+    private static int demHoaDon = 0;
+    protected ArrayList<CTHoaDonBan> danhSachChiTiet;
     
     public HoaDon() {
         this.maHoaDon = "";
-        this.ngayLap = LocalDate.now(); 
-        this.tenDoiTac = "";
+        this.ngayLap = LocalDateTime.now(); 
+        this.sdtDoiTac = "";
         this.danhSachChiTiet = new ArrayList<>();
-        demHoaDon++;
     }
 
-    public HoaDon(String maHoaDon, String tenDoiTac) {
+    public HoaDon(String maHoaDon, String sdtDoiTac) {
         this.maHoaDon = maHoaDon;
-        this.ngayLap = LocalDate.now();
-        this.tenDoiTac = tenDoiTac;
+        this.ngayLap = LocalDateTime.now();
+        this.sdtDoiTac = sdtDoiTac;
         this.danhSachChiTiet = new ArrayList<>();
-        demHoaDon++;
     }
 
-    // SỬA: Tự động gộp số lượng nếu thêm trùng mã sản phẩm
-    public void themChiTiet(CTHoaDon ct){
-        for (CTHoaDon existing : this.danhSachChiTiet) {
-            boolean dongCuChuaGiam = existing.tinhThanhTien()
-                    == (long) existing.getSoLuongTonKho() * existing.getDonGia();
-            boolean dongMoiChuaGiam = ct.tinhThanhTien()
-                    == (long) ct.getSoLuongTonKho() * ct.getDonGia();
-            if (existing.getMaSanPham().equalsIgnoreCase(ct.getMaSanPham())
-                    && existing.getTenSanPham().equalsIgnoreCase(ct.getTenSanPham())
-                    && existing.getDonGia() == ct.getDonGia()
-                    && existing.getChietKhau() == ct.getChietKhau()
-                    && existing.isHangKhuyenMai() == ct.isHangKhuyenMai()
-                    && dongCuChuaGiam && dongMoiChuaGiam) {
-                existing.setSoLuong(existing.getSoLuongTonKho() + ct.getSoLuongTonKho());
+    //Tự động gộp số lượng nếu thêm trùng mã sản phẩm
+    public void themChiTiet(CTHoaDonBan ct){
+        for (CTHoaDonBan existing : this.danhSachChiTiet) {
+            boolean cungSanPham = existing.getMaSanPham().equalsIgnoreCase(ct.getMaSanPham()) && existing.getDonGia() == ct.getDonGia();
+            boolean cungKhongGiamGia = existing.getSoTienGiam() == 0 && ct.getSoTienGiam() == 0;
+
+            if (cungSanPham && cungKhongGiamGia){
+                int tongTangKem = existing.getSoLuongTangKem() + ct.getSoLuongTangKem();
+                existing.setSoLuongTangKem(tongTangKem);
+                existing.setSoLuong(existing.getSoLuong()+ct.getSoLuong());
                 return;
             }
         }
@@ -63,10 +60,33 @@ public abstract class HoaDon {
 
     public String getMaHoaDon() { return maHoaDon; }
     public void setMaHoaDon(String maHoaDon) { this.maHoaDon = maHoaDon; }
-    public LocalDate getNgayLap() { return ngayLap; }
-    public void setNgayLap(LocalDate ngayLap) { this.ngayLap = ngayLap; }
-    public String getTenDoiTac() { return tenDoiTac; }
-    public void setTenDoiTac(String tenDoiTac) { this.tenDoiTac = tenDoiTac; }
-    public ArrayList<CTHoaDon> getDanhSachChiTiet() { return danhSachChiTiet; }
-    public void setDanhSachChiTiet(ArrayList<CTHoaDon> danhSachChiTiet) { this.danhSachChiTiet = danhSachChiTiet; }
+    
+    public String getSDTDoiTac(){ return this.sdtDoiTac; };
+    public void setSDTDoiTac(String sdtDoiTacMoi){ this.sdtDoiTac = sdtDoiTacMoi; }
+    public ArrayList<CTHoaDonBan> getDanhSachChiTiet() { return danhSachChiTiet; }
+    public void setDanhSachChiTiet(ArrayList<CTHoaDonBan> danhSachChiTiet) { this.danhSachChiTiet = danhSachChiTiet; }
+
+    public LocalDateTime getNgayLap() {
+        return ngayLap;
+    }
+
+    public void setNgayLap(LocalDateTime ngayLap) {
+        this.ngayLap = ngayLap;
+    }
+
+    public String getSdtDoiTac() {
+        return sdtDoiTac;
+    }
+
+    public void setSdtDoiTac(String sdtDoiTac) {
+        this.sdtDoiTac = sdtDoiTac;
+    }
+
+    public static void setDemHoaDon(int demHoaDon) {
+        HoaDon.demHoaDon = demHoaDon;
+    }
+    public void taoMaHoaDonBan(){
+        demHoaDon++;
+        this.maHoaDon = Validation.taoMa(Validation.MaHDB_REGEX, demHoaDon);
+    }
 }

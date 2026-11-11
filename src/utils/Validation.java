@@ -19,6 +19,9 @@ public class Validation {
 
     public static final String MaNV_REGEX = "(?i)^NV\\d{3}$";
     public static final String MaKH_REGEX = "(?i)^KH\\d{3,5}$";
+    public static final String MaSP_REGEX = "(?i)^SP\\d{3,5}$";   
+    public static final String MaHDB_REGEX = "(?i)^HDB\\d{3,5}$";
+    public static final String MaHDN_REGEX = "(?i)^HDN\\d{3,5}$";
     private static final String DATE_REGEX =
             "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/[0-9]{4}$";
 

@@ -8,7 +8,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import hoadon.CTHoaDon;
+import hoadon.CTHoaDonBan;
 import sanpham.DienTu;
 import sanpham.QuanLySanPham;
 import sanpham.SanPham;
@@ -269,12 +269,12 @@ public class QuanKho extends NhanVien {
      * (ArrayList<CTHoaDon>)
      * để chuyển giao cho bên Đối tác (Nhà cung cấp ).
      */
-    public ArrayList<CTHoaDon> nhapHangvaokho(Scanner sc) {
+    public ArrayList<CTHoaDonBan> nhapHangvaokho(Scanner sc) {
         System.out.println("\n=======================================================");
         System.out.println("                     NHẬP HÀNG VÀO KHO                  ");
         System.out.println("=======================================================");
 
-        ArrayList<CTHoaDon> danhSachNhap = new ArrayList<>();
+        ArrayList<CTHoaDonBan> danhSachNhap = new ArrayList<>();
 
         while (true) {
             String maSP = Validation.inputStringRegex(sc,
@@ -306,7 +306,7 @@ public class QuanKho extends NhanVien {
             }
 
             // Tạo chi tiết nhập (CTHoaDon: maSP, tenSP, soLuong, donGia, chietKhau = 0)
-            CTHoaDon cthd = new CTHoaDon(maSP, tenSP, soLuongNhap, donGiaNhap, 0.0);
+            CTHoaDonBan cthd = new CTHoaDonBan(maSP, tenSP, soLuongNhap, donGiaNhap, 0.0);
             danhSachNhap.add(cthd);
 
             System.out.printf("[+] Đã thêm vào danh sách nhập: [%s - %s] x %d cái.\n", maSP, tenSP, soLuongNhap);
@@ -324,13 +324,13 @@ public class QuanKho extends NhanVien {
     /**
      * Tùy chọn nhập hàng từ danh sách sản phẩm có rồi
      */
-    public ArrayList<CTHoaDon> nhapHangTuDanhSach(ArrayList<CTHoaDon> danhSachNhap) {
+    public ArrayList<CTHoaDonBan> nhapHangTuDanhSach(ArrayList<CTHoaDonBan> danhSachNhap) {
         if (danhSachNhap == null || danhSachNhap.isEmpty()) {
             System.out.println("[!] Danh sách nhập rỗng, không thể cập nhật kho.");
             return new ArrayList<>();
         }
 
-        for (CTHoaDon ct : danhSachNhap) {
+        for (CTHoaDonBan ct : danhSachNhap) {
             SanPham sp = timSanPham(ct.getMaSanPham());
             if (sp != null) {
                 sp.setSoLuongTonKho(sp.getSoLuongTonKho() + ct.getSoLuongTonKho());

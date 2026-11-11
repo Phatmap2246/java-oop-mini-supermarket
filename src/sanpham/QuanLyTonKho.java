@@ -1,7 +1,6 @@
 package sanpham;
 
-import hoadon.CTHoaDon;
-import java.util.ArrayList;
+import hoadon.CTHoaDonBan;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,18 +21,18 @@ public final class QuanLyTonKho {
         return null;
     }
 
-    public static int soLuongDaCo(List<CTHoaDon> chiTietHoaDon, String maSanPham) {
+    public static int soLuongDaCo(List<CTHoaDonBan> chiTietHoaDon, String maSanPham) {
         long soLuong = 0;
-        for (CTHoaDon chiTiet : chiTietHoaDon) {
+        for (CTHoaDonBan chiTiet : chiTietHoaDon) {
             if (chiTiet.getMaSanPham().equalsIgnoreCase(maSanPham)) {
-                soLuong += chiTiet.getSoLuongTonKho();
+                soLuong += chiTiet.getSoLuong();
             }
         }
         return soLuong > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) soLuong;
     }
 
     public static boolean kiemTraDuTonKho(List<SanPham> danhSachSanPham,
-            List<CTHoaDon> chiTietHoaDon) {
+            List<CTHoaDonBan> chiTietHoaDon) {
         if (danhSachSanPham == null || chiTietHoaDon == null) {
             System.out.println("[!] Không có danh sách sản phẩm để kiểm tra tồn kho.");
             return false;
@@ -56,7 +55,7 @@ public final class QuanLyTonKho {
     }
 
     public static boolean truTonKho(List<SanPham> danhSachSanPham,
-            List<CTHoaDon> chiTietHoaDon) {
+            List<CTHoaDonBan> chiTietHoaDon) {
         if (!kiemTraDuTonKho(danhSachSanPham, chiTietHoaDon)) {
             return false;
         }
@@ -68,7 +67,7 @@ public final class QuanLyTonKho {
     }
 
     public static boolean congTonKho(List<SanPham> danhSachSanPham,
-            List<CTHoaDon> chiTietHoaDon) {
+            List<CTHoaDonBan> chiTietHoaDon) {
         if (danhSachSanPham == null || chiTietHoaDon == null) {
             System.out.println("[!] Không có danh sách sản phẩm để cập nhật tồn kho.");
             return false;
@@ -98,11 +97,11 @@ public final class QuanLyTonKho {
         return true;
     }
 
-    private static Map<String, Long> tongSoLuongTheoMa(List<CTHoaDon> chiTietHoaDon) {
+    private static Map<String, Long> tongSoLuongTheoMa(List<CTHoaDonBan> chiTietHoaDon) {
         Map<String, Long> soLuongTheoMa = new LinkedHashMap<>();
-        for (CTHoaDon chiTiet : chiTietHoaDon) {
+        for (CTHoaDonBan chiTiet : chiTietHoaDon) {
             String maSanPham = chiTiet.getMaSanPham().toUpperCase();
-            soLuongTheoMa.merge(maSanPham, (long) chiTiet.getSoLuongTonKho(), Long::sum);
+            soLuongTheoMa.merge(maSanPham, (long) chiTiet.getSoLuong(), Long::sum);
         }
         return soLuongTheoMa;
     }
