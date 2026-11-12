@@ -67,7 +67,7 @@ public class CTHoaDonBan {
                 }
             } while (this.soLuong == 0 || this.soLuong > soLuongConLai);
 
-            int indexSPKM = danhSachSPKM.timKiemSanPhamKM(maSanPham);
+            int indexSPKM = danhSachSPKM.timViTri(maSanPham);
             if (indexSPKM >= 0) {
                 String maKM = danhSachSPKM.getSanPhamKhuyenMais()[indexSPKM].getMaKhuyenMai();
                 int indexKM = dsKhuyenMai.traCuuThongTinKhuyenMai(maKM);
