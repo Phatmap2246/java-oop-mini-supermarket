@@ -10,7 +10,7 @@ import java.util.List;
 import sanpham.QuanLyTonKho;
 import sanpham.SanPham;
 import utils.Validation;
-public class CTHoaDonBan {
+public class CTHoaDonBan implements TrongFile {
     private String maSanPham;
     private String tenSanPham;
     private  int soLuong;

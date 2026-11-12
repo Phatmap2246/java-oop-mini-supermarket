@@ -1,5 +1,6 @@
 package utils;
 
+import interfaces.TrongFile;
 import sanpham.SanPham;
 
 import java.lang.reflect.InvocationTargetException;
@@ -77,6 +78,24 @@ public class DataBase {
         System.err.println("co loi");
         return null;
     }
+    public static String getFilePath(Class<?> clazz) {
+        if(TrongFile.class.isAssignableFrom(clazz)){
+            try {
+                TrongFile coFile = (TrongFile) clazz.getDeclaredConstructor().newInstance();
+                return coFile.getFilePath();
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        System.err.println("không lưu trữ được");
+        return null;
+    }
     //Class của object cần constuctor rỗng VD public SanPham(){};
     public static <T> T taoObject (Class<T> clazz,String CSVHeader, String CSVLine){
        String[] headers = CSVHeader.split(",", -1);
@@ -148,6 +167,13 @@ public class DataBase {
             System.err.println(e.getMessage());
         }
     }
+    public static void ghiVanBan(String filePath, String content, boolean ghiDe){
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(filePath,!ghiDe))){
+          writer.write(content);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public static <T> ArrayList<T> docfile( Class<T> clazz, String filePath){
        ArrayList<T> objs = new ArrayList<T>();
        try(BufferedReader reader = new BufferedReader(new FileReader(filePath))){
@@ -165,6 +191,26 @@ public class DataBase {
            System.err.println(e.getMessage());
            return objs;
        }
+    }
+    public static <T> ArrayList<T> docfile( Class<T> clazz){
+        ArrayList<T> objs = new ArrayList<T>();
+        String filePath = getFilePath(clazz);
+        if(filePath == null) return objs;
+        try(BufferedReader reader = new BufferedReader(new FileReader(filePath))){
+            String headers =reader.readLine();
+            if(headers.trim().isEmpty()){
+                return objs;
+            }
+            String line;
+            while ((line = reader.readLine()) != null) {
+                objs.add(DataBase.taoObject(clazz, headers, line));
+            }
+            return objs;
+        }
+        catch(Exception e){
+            System.err.println(e.getMessage());
+            return objs;
+        }
     }
     public static <T> void suaObjectTrongArrayList(ArrayList<T> objs, int index){
         T obj = objs.get(index);

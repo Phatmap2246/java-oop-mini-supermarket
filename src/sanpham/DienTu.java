@@ -7,7 +7,7 @@ import utils.Validation;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
-public class DienTu extends SanPham // đã sửa
+public class DienTu extends SanPham implements TrongFile // đã sửa
 {
     private int thoiGianBaoHanh ;
     private String chatLieu ;
@@ -59,6 +59,10 @@ public class DienTu extends SanPham // đã sửa
     @Override
     public String toString() {
         return super.toString() + " | Chất liệu: " + chatLieu + " | Thời gian bảo hành: " + thoiGianBaoHanh ;
+    }
+    @Override
+    public String getFilePath(){
+        return "src/luutru/DienTu.csv";
     }
     public LocalDate ngayHetHanBaoHanh( LocalDate ngayMua )
     {

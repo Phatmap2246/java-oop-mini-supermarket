@@ -1,7 +1,9 @@
 package sanpham;
 
+import interfaces.TrongFile;
+
 import java.util.Scanner;
-public class TieuDung extends SanPham
+public class TieuDung extends SanPham implements TrongFile
 {
     private String thuongHieu , noiSanXuat , phanLoai , luuYAnToan ;
     public TieuDung()
@@ -73,6 +75,10 @@ public class TieuDung extends SanPham
     @Override
     public String toString() {
         return super.toString() + " | Phân loại: " + phanLoai + " | Nơi sản xuất: " + noiSanXuat + " | Phân loại: " + phanLoai + " | Lưu ý an toàn: " + luuYAnToan;
+    }
+    @Override
+    public String getFilePath(){
+        return "src/luutru/TieuDung.csv";
     }
     public String toStringKhachHang()
     {

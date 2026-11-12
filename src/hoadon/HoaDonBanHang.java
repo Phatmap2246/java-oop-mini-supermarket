@@ -4,11 +4,12 @@ import java.util.List;
 import dichvu.DanhSachSPKM;
 import dichvu.Danhsachkhuyenmai;
 import interfaces.IThanhToan;
+import interfaces.TrongFile;
 import sanpham.QuanLyTonKho;
 import sanpham.SanPham;
 import utils.Validation;
 
-public class HoaDonBanHang extends HoaDon {
+public class HoaDonBanHang extends HoaDon implements TrongFile {
     private IThanhToan phuongThucThanhToan; 
     private boolean daThanhToan;
 
@@ -150,4 +151,8 @@ public class HoaDonBanHang extends HoaDon {
 
     public boolean isDaThanhToan() { return daThanhToan; }
     public void setDaThanhToan(boolean daThanhToan) { this.daThanhToan = daThanhToan; }
+    @Override
+    public String getFilePath(){
+        return "src/luutru/HoaDonBanHang.csv";
+    }
 }

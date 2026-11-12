@@ -1,4 +1,5 @@
 package dichvu;
+import interfaces.TrongFile;
 import sanpham.SanPham;
 import utils.Validation;
 
@@ -6,7 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class KhuyenMaiMuaTang extends Khuyenmai{
+public class KhuyenMaiMuaTang extends Khuyenmai implements TrongFile {
     private int soLuongMuaToiThieu  , soLuongTang;
     public KhuyenMaiMuaTang()
     {
@@ -66,5 +67,8 @@ public class KhuyenMaiMuaTang extends Khuyenmai{
             }
         }super.setLoaiKhuyenMai("Mua " + soLuongMuaToiThieu + " tặng " + soLuongTang );
     }
-
+    @Override
+    public String getFilePath(){
+       return "src/luutru/KhuyenMaiMuaTang.csv";
+    }
 }

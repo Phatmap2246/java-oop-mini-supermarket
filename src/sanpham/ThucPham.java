@@ -3,7 +3,7 @@ import utils.Validation;
 
 import java.time.LocalDate;
 import java.util.Scanner;
-public class ThucPham extends SanPham
+public class ThucPham extends SanPham implements TrongFile
 {
     private LocalDate ngaySanXuat , hanSuDung ;
     private double nhietDoBaoQuan ;
@@ -87,5 +87,9 @@ public class ThucPham extends SanPham
     @Override
     public String toString() {
         return super.toString() + " | Ngày sản xuất: " + ngaySanXuat + " | Hạn sử dụng: " + hanSuDung + " | Môi trường bảo quản: " + baoQuan + " | Nhiệt độ bảo quản : " + nhietDoBaoQuan;
+    }
+    @Override
+    public String getFilePath(){
+        return "src/luutru/ThucPham.csv";
     }
 }

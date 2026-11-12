@@ -61,13 +61,13 @@ public class ThuNgan extends NhanVien {
     }
 
     public void thayCa(ThuNgan tn) throws IOException {
-        Path filePath = Paths.get("hoadon.LichSuHoaDon");
-        if (!DataBase.tonTai(filePath)) {
-            System.out.println("[!] Không tìm thấy file lịch sử hóa đơn.");
-            return;
+        String filePath = "src/luutru/LichSuHoaDon.txt";
+        //if (!DataBase.tonTai(filePath)) {
+        //    System.out.println("[!] Không tìm thấy file lịch sử hóa đơn.");
+        //    return;
         }
         StringBuilder noiDung = new StringBuilder();
-        for (HoaDonBanHang hoaDon : dsHoaDonBanHang) {
+        for(HoaDonBanHang hoaDon : dsHoaDonBanHang) {
             noiDung.append(System.lineSeparator())
                     .append(String.join(",", maNV, hoaDon.getMaHoaDon(),
                             hoaDon.getTenDoiTac(), hoaDon.getNgayLap().toString()));
