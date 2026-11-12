@@ -4,7 +4,9 @@ import utils.Validation;
 import sanpham.SanPham ;
 import java.util.Scanner;
 
-public class DanhSachSPKM
+import interfaces.IQuanLy;
+
+public class DanhSachSPKM implements  IQuanLy<SanPhamKhuyenMai>
 {
     private SanPhamKhuyenMai[] sanPhamKhuyenMais ;
     private int soLuongSanPham ;
@@ -34,12 +36,17 @@ public class DanhSachSPKM
         System.out.println("Thêm sản phẩm khuyến mãi!");
         SanPhamKhuyenMai spkm = new SanPhamKhuyenMai() ;
         spkm.setSanPhamKhuyenMai(sc);
-        while ( timKiemSanPhamKM(spkm.getMaSanPham()) != -1 )
+        while (timViTri(spkm.getMaSanPham()) != -1)
         {
             System.out.println("Bạn không thể dùng hai mã khuyến mãi trên 1 loại sản phẩm!");
             spkm.setSanPhamKhuyenMai(sc);
         }
         themSanPhamKhuyenMai(spkm);
+    }
+
+    @Override
+    public void them(Scanner sc) {
+        themSanPhamKhuyenMai(sc);
     }
 
     public void themSanPhamKhuyenMai(SanPhamKhuyenMai spkm)
@@ -52,7 +59,7 @@ public class DanhSachSPKM
         soLuongSanPham = newSoLuongSanPham ;
         System.out.println("Thêm sản phẩm mới thành công");
     }
-    public void khoiTaoDanhSachSanPhamKhuyenMai(Scanner sc )
+    public void taoDS(Scanner sc )
     {
         System.out.println("Khởi tạo danh sách khuyến mãi!");
         do {
@@ -60,9 +67,15 @@ public class DanhSachSPKM
         } while (Validation.inputCoKhong(sc, "Bạn có muốn tiếp tục thêm sản phẩm khuyến mãi(Có/Không): "));
         System.out.println("Tạo dữ liệu sản phẩm khuyến mãi thành công!");
     }
+
+    @Override
+    public void taoDanhSach(Scanner sc) {
+        taoDS(sc);
+    }
+
     public void xoaSanPhamKM( String maSanPham )
     {
-        int index = timKiemSanPhamKM(maSanPham) ;
+        int index = timViTri(maSanPham);
         if ( index == -1 )
         {
             System.out.println("Mã sản phẩm không tồn tại");
@@ -77,9 +90,19 @@ public class DanhSachSPKM
         sanPhamKhuyenMais = tam ;
         System.out.println("Xoá sản phẩm khuyến mãi thành công!");
     }
+
+    @Override
+    public boolean xoa(String ma) {
+        if (timViTri(ma) == -1) {
+            System.out.println("Mã sản phẩm không tồn tại");
+            return false;
+        }
+        xoaSanPhamKM(ma);
+        return true;
+    }
     public void suaThongTinSanPhamKhuyenMai( Scanner sc , String maSanPham)
     {
-        int index = timKiemSanPhamKM(maSanPham) ;
+        int index = timViTri(maSanPham);
         if ( index == -1 )
         {
             System.out.println("Mã sản phẩm không tồn tại");
@@ -108,6 +131,17 @@ public class DanhSachSPKM
         }
         System.out.println("Sửa thông tin sản phẩm khuyến mãi thành công!");
     }
+
+    @Override
+    public boolean sua(String ma, Scanner sc) {
+        if (timViTri(ma) == -1) {
+            System.out.println("Mã sản phẩm không tồn tại");
+            return false;
+        }
+        suaThongTinSanPhamKhuyenMai(sc, ma);
+        return true;
+    }
+
     public boolean kiemTraSanPhamTrung (String maSanPham )
     {
         int dem = 0 ;
@@ -115,18 +149,38 @@ public class DanhSachSPKM
             if ( spkm.getMaSanPham().equalsIgnoreCase(maSanPham)) dem++ ;
         return dem > 1 ;
     }
-    public void inDanhSachSanPhamKM()
+    @Override 
+    public void xuatDanhSach()
     {
         System.out.println("Danh sách sản phẩm khuyến mãi!");
         for ( SanPhamKhuyenMai spkm: sanPhamKhuyenMais )
             System.out.println(spkm);
     }
-    public int timKiemSanPhamKM( String maSanPham )
-    {
+
+
+    @Override
+    public int timViTri(String ma) {
         for ( int i = 0 ; i < soLuongSanPham ; i++ )
         {
-            if ( sanPhamKhuyenMais[i].getMaSanPham().equalsIgnoreCase(maSanPham)) return i ;
+            if (sanPhamKhuyenMais[i].getMaSanPham().equalsIgnoreCase(ma)) return i;
         }
         return -1 ;
+    }
+
+    @Override
+    public SanPhamKhuyenMai timMa(String ma) {
+        int index = timViTri(ma);
+        return index == -1 ? null : sanPhamKhuyenMais[index];
+    }
+
+    @Override
+    public SanPhamKhuyenMai timKhoa(String ma) {
+        return timMa(ma);
+    }
+
+    @Override
+    public SanPhamKhuyenMai timTen(String ten) {
+        System.out.println("Ham nay khon sua dung");
+        return  null; 
     }
 }

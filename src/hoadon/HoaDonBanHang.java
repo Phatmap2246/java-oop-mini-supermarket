@@ -3,6 +3,7 @@ import java.util.Scanner;
 import java.util.List;
 import dichvu.DanhSachSPKM;
 import dichvu.Danhsachkhuyenmai;
+import interfaces.IThanhToan;
 import sanpham.QuanLyTonKho;
 import sanpham.SanPham;
 import utils.Validation;
