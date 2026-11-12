@@ -1,4 +1,7 @@
 # Nhập xuất từ file
+## Các class có thể nhập xuất từ file
+Địa chỉ, hóa đơn, hóa đơn bán hàng, chi tiết hóa đơn,
+thanh toán chuyển khoản, thanh toán tiền mặt
 ## Lấy các field từ class
 reflection là một cách để java tạo object, lấy, sửa 
 các biến từ class khi chạy, giúp làm gọn, tái sử dụng
