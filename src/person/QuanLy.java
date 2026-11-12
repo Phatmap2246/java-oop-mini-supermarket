@@ -83,7 +83,7 @@ public class QuanLy extends NhanVien {
         int c = Validation.inputInt(sc, "Chọn chức năng: ");
             switch (c) {
                 case 1:
-                    dsnv.themNV(sc);
+                    dsnv.them(sc);
                     break;
                 case 2:
                     String maNV = Validation.inputStringRegex(sc, "Nhập mã nhân viên cần sa thải: ",
@@ -319,7 +319,7 @@ public class QuanLy extends NhanVien {
                         + " vì số lượng tồn không còn.");
                 continue;
             }
-            if (dsSanPhamKhuyenMai.timKiemSanPhamKM(thucPham.getMaSanPham()) != -1) {
+            if (dsSanPhamKhuyenMai.timMa(thucPham.getMaSanPham()) != null) {
                 System.out.println("Bỏ qua " + thucPham.getMaSanPham()
                         + " vì sản phẩm đã có khuyến mãi.");
                 continue;

@@ -2,11 +2,12 @@ package sanpham;
 
 
 import utils.Validation;
+import interfaces.IThongTin;
 import interfaces.TrongFile;
 
 import java.util.Scanner;
 
-public abstract class SanPham {
+public abstract class SanPham implements IThongTin {
     private String maSanPham , tenSanPham , loaiSanPham , maNhaCungCap;
     private long giaNhap , giaBan ;
     private int soLuongTonKho  ;
@@ -114,6 +115,12 @@ public abstract class SanPham {
         giaNhap = Validation.inputLong(sc , "Nhập giá nhập hàng: ") ;
         soLuongTonKho = Validation.inputInt(sc , "Nhập số lượng tồn kho: ") ;
     }
+
+    @Override
+    public void nhapThongTin(Scanner sc) {
+        setSanPham(sc);
+    }
+
     public abstract long tinhThue() ;
     @Override
     public String toString() {

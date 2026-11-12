@@ -1,4 +1,4 @@
-package hoadon;
+package interfaces;
 
 import java.util.Scanner;
 public interface IThanhToan {

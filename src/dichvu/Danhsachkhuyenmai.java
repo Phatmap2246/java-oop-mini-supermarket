@@ -3,9 +3,12 @@ package dichvu ;
 import utils.Validation;
 
 import java.time.LocalDate;
+import java.util.Locale;
 import java.util.Scanner;
 
-public class Danhsachkhuyenmai {
+import interfaces.IQuanLy;
+
+public class Danhsachkhuyenmai implements IQuanLy<Khuyenmai> {
     private Khuyenmai[] khuyenmais;
     private int soLuongKhuyenMai;
     public Danhsachkhuyenmai()
@@ -65,7 +68,13 @@ public class Danhsachkhuyenmai {
                 return;
         }
     }
-    public void taoDuLieuKhuyenMai(Scanner sc )
+
+    @Override
+    public void them(Scanner sc) {
+        themKhuyenMai(sc);
+    }
+
+    public void taoDS(Scanner sc )
     {
         System.out.println("Tạo các khuyến mãi!");
         while (true)
@@ -78,6 +87,12 @@ public class Danhsachkhuyenmai {
         }
         System.out.println("Tạo dữ liệu sản phẩm thành công!");
     }
+
+    @Override
+    public void taoDanhSach(Scanner sc) {
+        taoDS(sc);
+    }
+
     public int traCuuThongTinKhuyenMai( String maKhuyenMai )
     {
         for ( int i = 0 ; i < soLuongKhuyenMai ; i++ )
@@ -86,6 +101,53 @@ public class Danhsachkhuyenmai {
                 return i ;
         }
         return -1 ;
+    }
+
+    @Override
+    public int timViTri(String ma) {
+        return traCuuThongTinKhuyenMai(ma);
+    }
+
+    @Override
+    public Khuyenmai timMa(String ma) {
+        int index = timViTri(ma);
+        return index == -1 ? null : khuyenmais[index];
+    }
+
+    @Override
+    public Khuyenmai timTen(String ten) {
+        if (ten == null || ten.isBlank()) {
+            return null;
+        }
+        String khoa = ten.trim().toLowerCase(Locale.ROOT);
+        for (int i = 0; i < soLuongKhuyenMai; i++) {
+            if (containsIgnoreCase(khuyenmais[i].getLoaiKhuyenMai(), khoa)) {
+                return khuyenmais[i];
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Khuyenmai timKhoa(String khoa) {
+        if (khoa == null || khoa.isBlank()) {
+            return null;
+        }
+        String tuKhoa = khoa.trim().toLowerCase(Locale.ROOT);
+        for (int i = 0; i < soLuongKhuyenMai; i++) {
+            Khuyenmai khuyenMai = khuyenmais[i];
+            if (containsIgnoreCase(khuyenMai.getMaKhuyenMai(), tuKhoa)
+                    || containsIgnoreCase(khuyenMai.getLoaiKhuyenMai(), tuKhoa)
+                    || String.valueOf(khuyenMai.getNgayBatDau()).contains(tuKhoa)
+                    || String.valueOf(khuyenMai.getNgayKetThuc()).contains(tuKhoa)) {
+                return khuyenMai;
+            }
+        }
+        return null;
+    }
+
+    private static boolean containsIgnoreCase(String value, String lowerCaseQuery) {
+        return value != null && value.toLowerCase(Locale.ROOT).contains(lowerCaseQuery);
     }
     public void xoaKhuyenMai(String maKhuyenmai )
     {
@@ -103,6 +165,16 @@ public class Danhsachkhuyenmai {
         khuyenmais = tam;
         soLuongKhuyenMai = newSoLuongKhuyenMai;
         System.out.println("Xoá khuyến mãi thành công!");
+    }
+
+    @Override
+    public boolean xoa(String ma) {
+        if (timViTri(ma) == -1) {
+            System.out.println("Mã khuyến mãi không tồn tại!");
+            return false;
+        }
+        xoaKhuyenMai(ma);
+        return true;
     }
     public void suaThongTinKhuyenMai( String maKhuyenMai , Scanner sc )
     {
@@ -190,6 +262,7 @@ public class Danhsachkhuyenmai {
                             System.out.println(e.getMessage());
                         }
                     }
+
                     break;
                 case 2:
                     while (true)
@@ -203,6 +276,7 @@ public class Danhsachkhuyenmai {
                             System.out.println(e.getMessage());
                         }
                     }
+
                     break;
                 case 3:
                     km.setMucChiToiThieu(Validation.inputLong(sc , "Nhập mức chi tiêu tối thiểu mới: "));
@@ -219,23 +293,29 @@ public class Danhsachkhuyenmai {
             }
         }
     }
-    public void timKiemKhuyenMai( String maKhuyenMai)
-    {
-        int index = traCuuThongTinKhuyenMai(maKhuyenMai) ;
-        if ( index == -1 )
-        {
+
+    @Override
+    public boolean sua(String ma, Scanner sc) {
+        if (timViTri(ma) == -1) {
             System.out.println("Mã khuyến mãi không tồn tại!");
-            return;
+            return false;
         }
-        System.out.println("Khuyến mãi cần tìm!");
-        System.out.println(khuyenmais[index]);
+        suaThongTinKhuyenMai(ma, sc);
+        return true;
     }
-    public void inDanhSachKhuyenMai()
+
+    public void xuat()
     {
         System.out.println("Danh sách khuyến mãi!");
         for ( Khuyenmai km: khuyenmais )
             System.out.println(km);
     }
+
+    @Override
+    public void xuatDanhSach() {
+        xuat();
+    }
+
     public void inDanhSachKhuyenMaiHetHan( Scanner sc)
     {
         System.out.println("Danh sách khuyến mãi hết hạn!");

@@ -2,7 +2,9 @@ package person;
 
 import java.util.Scanner;
 
-public class DiaChi {
+import interfaces.IThongTin;
+
+public class DiaChi implements IThongTin {
     private String soNha;
     private String duong;
     private String phuongXa;
@@ -103,6 +105,11 @@ public class DiaChi {
         this.tinhThanhPho = sc.nextLine().trim();
     }
 
+    @Override
+    public void nhapThongTin(Scanner sc) {
+        nhapDiaChi(sc);
+    }
+
     /** Ghép các thành phần địa chỉ thành chuỗi phân cách bằng dấu phẩy. */
     @Override
     public String toString() {
@@ -113,4 +120,5 @@ public class DiaChi {
     public void xuatDiaChi() {
         System.out.println("Địa chỉ: " + this);
     }
+
 }

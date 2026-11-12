@@ -1,9 +1,10 @@
 package dichvu ;
 import utils.Validation;
+import interfaces.IThongTin;
 import java.time.LocalDate;
 import java.util.Scanner;
 
-public abstract class Khuyenmai {
+public abstract class Khuyenmai implements IThongTin {
     private String maKhuyenMai ;
     private String loaiKhuyenMai ;
     private LocalDate ngayBatDau , ngayKetThuc ;
@@ -41,6 +42,12 @@ public abstract class Khuyenmai {
         }
         mucChiToiThieu = Validation.inputInt(sc, "Mức chi tiêu tối thiểu để sử dụng khuyến mãi: " );
     }
+
+    @Override
+    public void nhapThongTin(Scanner sc) {
+        setKM(sc);
+    }
+
     public static int getSoThuTu() {
         return soThuTu;
     }

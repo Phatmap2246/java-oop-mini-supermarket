@@ -3,6 +3,9 @@ package hoadon;
 import utils.QRCodeGenerator;
 import java.util.Random;
 import java.util.Scanner;
+
+import interfaces.IThanhToan;
+
 import java.io.File;
 import java.awt.Desktop;
 

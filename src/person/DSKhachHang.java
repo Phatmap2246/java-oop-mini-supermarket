@@ -1,10 +1,11 @@
 package person;
 
 import java.util.Scanner;
+import interfaces.IQuanLy;
 import utils.DataBase;
 import utils.Validation;
 
-public class DSKhachHang {
+public class DSKhachHang implements IQuanLy<KhachHang> {
     private KhachHang[] list;
     private int n; // Số lượng khách hàng hiện tại
 
@@ -96,8 +97,13 @@ public class DSKhachHang {
         }
     }
 
+    @Override
+    public void taoDanhSach(Scanner sc) {
+        taoDS(sc);
+    }
+
     /** In thông tin từng khách hàng; thông báo nếu danh sách rỗng. */
-    public void xuatDSKH() {
+    public void xuat() {
         if (n == 0 || list == null) {
             System.out.println("Danh sach khach hang rong.");
             return;
@@ -109,8 +115,14 @@ public class DSKhachHang {
         }
     }
 
+    @Override
+    public void xuatDanhSach() {
+        xuat();
+    }
+
     /** Nhập thông tin một khách hàng mới rồi thêm vào danh sách. */
-    public void themKH(Scanner sc) {
+    @Override
+    public void them(Scanner sc) {
         KhachHang kh = new KhachHang();
         kh.nhapThongTin(sc);
 
@@ -138,10 +150,16 @@ public class DSKhachHang {
         return -1;
     }
 
+    @Override
+    public int timViTri(String ma) {
+        return timKH(ma);
+    }
+
     /**
      * Tìm và trả về đối tượng khách hàng theo mã; trả về null nếu không tìm thấy.
      */
-    public KhachHang timKiemKH(String maKH) {
+    @Override
+    public KhachHang timMa(String maKH) {
         int idx = timKH(maKH);
         return (idx != -1) ? list[idx] : null;
     }
@@ -154,7 +172,6 @@ public class DSKhachHang {
         if (hoTen == null || n == 0) {
             return new KhachHang[0];
         }
-
         // Bước 1: Đếm số lượng khách hàng trùng khớp
         int dem = 0;
         for (int i = 0; i < n; i++) {
@@ -175,6 +192,41 @@ public class DSKhachHang {
         return ketQua;
     }
 
+    @Override
+    public KhachHang timTen(String ten) {
+        KhachHang[] ketQua = timKiemTheoTen(ten);
+        return ketQua.length == 0 ? null : ketQua[0];
+    }
+
+    @Override
+    public KhachHang timKhoa(String khoa) {
+        if (khoa == null || khoa.isBlank()) {
+            return null;
+        }
+        KhachHang khachHang = timMa(khoa);
+        if (khachHang != null) {
+            return khachHang;
+        }
+        String tuKhoa = khoa.trim().toLowerCase(java.util.Locale.ROOT);
+        for (int i = 0; i < n; i++) {
+            KhachHang kh = list[i];
+            if (containsIgnoreCase(kh.getHoten(), tuKhoa)
+                    || containsIgnoreCase(kh.getEmail(), tuKhoa)
+                    || containsIgnoreCase(kh.getSdt(), tuKhoa)) {
+                return kh;
+            }
+        }
+        return null;
+    }
+
+    private static boolean containsIgnoreCase(String value, String lowerCaseQuery) {
+        return value != null && value.toLowerCase(java.util.Locale.ROOT).contains(lowerCaseQuery);
+    }
+
+    public KhachHang timKiemKH(String maKH) {
+        return timMa(maKH);
+    }
+
     /**
      * Xóa khách hàng theo mã:
      * Cập nhật trạng thái isTonTai = false (xóa mềm), không xóa khỏi mảng/database
@@ -190,6 +242,16 @@ public class DSKhachHang {
         list[idx].setTonTai(false);
         ghiFileKhachHang();
         System.out.println("[+] Da cap nhat trang thai da xoa (isTonTai = false) cho khach hang " + maKH);
+    }
+
+    @Override
+    public boolean xoa(String ma) {
+        if (timViTri(ma) == -1) {
+            System.out.println("[!] Không tìm thấy khách hàng trong danh sách.");
+            return false;
+        }
+        xoaKH(ma);
+        return true;
     }
 
     /**
@@ -291,6 +353,11 @@ public class DSKhachHang {
         } while (choice != 0);
 
         return true;
+    }
+
+    @Override
+    public boolean sua(String ma, Scanner sc) {
+        return suaKH(ma, sc);
     }
 
     /** Thống kê số lượng khách hàng theo từng hạng thành viên. */
