@@ -1,10 +1,11 @@
 package dichvu;
+import interfaces.TrongFile;
 import utils.Validation;
 import interfaces.IThongTin;
 
 import java.util.Scanner;
 
-public class SanPhamKhuyenMai implements IThongTin {
+public class SanPhamKhuyenMai implements IThongTin, TrongFile {
     private String maSanPham , maKhuyenMai ;
     public SanPhamKhuyenMai()
     {
@@ -45,5 +46,9 @@ public class SanPhamKhuyenMai implements IThongTin {
     @Override
     public String toString() {
         return "Mã sản phẩm: " + maSanPham + " | Mã khuyến mãi: " + maKhuyenMai ;
+    }
+    @Override
+    public String getFilePath(){
+        return "src/luutru/SanPhamKhuyenMai.csv";
     }
 }

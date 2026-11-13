@@ -1,10 +1,11 @@
 package dichvu;
+import interfaces.TrongFile;
 import sanpham.SanPham;
 import sanpham.QuanLySanPham;
 import utils.Validation;
 
 import java.util.Scanner;
-public class Nhacungcap extends Doitac{
+public class Nhacungcap extends Doitac implements TrongFile {
     private String nganhHangCungCap;
     private long hanMucNoCong ;
     private QuanLySanPham sanPhamCungCap ;
@@ -81,5 +82,8 @@ public class Nhacungcap extends Doitac{
     {
         return super.toString() + " | Ngành hàng cung cấp: " + nganhHangCungCap + " | Hạn mức nợ công: " + hanMucNoCong ;
     }
-
+    @Override
+    public String getFilePath(){
+        return "src/luutru/Nhacungcap.csv";
+    }
 }

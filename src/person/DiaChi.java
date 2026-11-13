@@ -3,8 +3,9 @@ package person;
 import java.util.Scanner;
 
 import interfaces.IThongTin;
+import interfaces.TrongFile;
 
-public class DiaChi implements IThongTin {
+public class DiaChi implements IThongTin, TrongFile {
     private String soNha;
     private String duong;
     private String phuongXa;
@@ -115,7 +116,10 @@ public class DiaChi implements IThongTin {
     public String toString() {
         return String.join(", ", soNha, duong, phuongXa, quanHuyen, tinhThanhPho);
     }
-
+    @Override
+    public String getFilePath(){
+        return "src/luutru/DiaChi.csv";
+    }
     /** In địa chỉ ra console. */
     public void xuatDiaChi() {
         System.out.println("Địa chỉ: " + this);
