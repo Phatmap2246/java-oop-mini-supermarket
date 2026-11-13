@@ -8,6 +8,7 @@ import interfaces.TrongFile;
 import sanpham.QuanLyTonKho;
 import sanpham.SanPham;
 import utils.Validation;
+import interfaces.IThanhToan;
 
 public class HoaDonBanHang extends HoaDon implements TrongFile {
     private IThanhToan phuongThucThanhToan; 

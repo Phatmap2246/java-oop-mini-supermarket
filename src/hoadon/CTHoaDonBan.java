@@ -187,7 +187,10 @@ public class CTHoaDonBan implements TrongFile {
     }
 
     public void setSoLuongTangKem(int soLuongTangKem) {
-        this.soLuongTangKem = soLuongTangKem;
+        this.soLuongTangKem = Math.max(0, soLuongTangKem);
+        this.thanhTienSauKhuyenMai = tinhThanhTienSauKhuyenMai();
+        this.hangKhuyenMai = isHangKhuyenMai();
+        this.kemHangChoTang = isKemHangChoTang();
     }
 
     public boolean isKemHangChoTang() {
@@ -203,7 +206,10 @@ public class CTHoaDonBan implements TrongFile {
     }
 
     public void setSoTienGiam(long soTienGiam) {
-        this.soTienGiam = soTienGiam;
+        this.soTienGiam = Math.max(0, soTienGiam);
+        this.thanhTienSauKhuyenMai = tinhThanhTienSauKhuyenMai();
+        this.hangKhuyenMai = isHangKhuyenMai();
+        this.kemHangChoTang = isKemHangChoTang();
     }
 
     public int getSoLuongPhaiTra() {

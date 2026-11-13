@@ -1,21 +1,29 @@
 package person;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Scanner;
 
+import dichvu.DanhSachSPKM;
+import dichvu.Danhsachkhuyenmai;
 import hoadon.HoaDonBanHang;
+import sanpham.SanPham;
 import utils.DataBase;
 
 public class ThuNgan extends NhanVien {
     private long tongTienDauCa;
-    private HoaDonBanHang[] dsHoaDonBanHang = new HoaDonBanHang[0];
+    private HoaDonBanHang[] dsHoaDonBanHang ;
 
     public ThuNgan() {
         super();
         tongTienDauCa = 0;
+        dsHoaDonBanHang = new HoaDonBanHang[0];
     }
 
     public ThuNgan(String email, String hoten, String sdt, DiaChi diachi, LocalDate ngsinh,
@@ -49,9 +57,9 @@ public class ThuNgan extends NhanVien {
         return tongTienDauCa + tongTienCuoiCa;
     }
 
-    public void taoHoaDonThanhToan(Scanner sc) {
+    public void taoHoaDonThanhToan(Scanner sc, DanhSachSPKM danhSachSPKM, Danhsachkhuyenmai danhSachKhuyenMai, List<SanPham> danhSachSanPham) {
         HoaDonBanHang hdbh = new HoaDonBanHang();
-        hdbh.nhapHoaDon(sc);
+        hdbh.nhapHoaDon(sc,danhSachSPKM,danhSachKhuyenMai,danhSachSanPham);
         HoaDonBanHang[] dsMoi = new HoaDonBanHang[dsHoaDonBanHang.length + 1];
         for (int i = 0; i < dsHoaDonBanHang.length; i++) {
             dsMoi[i] = dsHoaDonBanHang[i];
@@ -61,18 +69,22 @@ public class ThuNgan extends NhanVien {
     }
 
     public void thayCa(ThuNgan tn) throws IOException {
-        String filePath = "src/luutru/LichSuHoaDon.txt";
-        //if (!DataBase.tonTai(filePath)) {
-        //    System.out.println("[!] Không tìm thấy file lịch sử hóa đơn.");
-        //    return;
+        File f = new File("hoadon.LichSuHoaDon");
+        if (!f.exists()) {
+            System.out.println("[!] Không tìm thấy file lịch sử hóa đơn.");
+            return;
         }
-        StringBuilder noiDung = new StringBuilder();
-        for(HoaDonBanHang hoaDon : dsHoaDonBanHang) {
-            noiDung.append(System.lineSeparator())
-                    .append(String.join(",", maNV, hoaDon.getMaHoaDon(),
-                            hoaDon.getTenDoiTac(), hoaDon.getNgayLap().toString()));
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(f))) {
+            for (int i = 0; i < dsHoaDonBanHang.length; i++) {
+                String[] data = new String[4];
+                data[0] = maNV;
+                data[1] = dsHoaDonBanHang[i].getMaHoaDon();
+                data[2] = dsHoaDonBanHang[i].getSDTDoiTac();
+                data[3] = dsHoaDonBanHang[i].getNgayLap().toString();
+                bw.newLine();
+                bw.write(String.join(",", data));
+            }
+            tn.tongTienDauCa = tinhTienCuoiCa();
         }
-        DataBase.ghiVanBan(filePath, noiDung.toString(), false);
-        tn.tongTienDauCa = tinhTienCuoiCa();
     }
 }
