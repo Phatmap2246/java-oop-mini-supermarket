@@ -383,10 +383,20 @@ public class QuanLy extends NhanVien {
         }
     }
     public void xemLichSuDuyet(String file){
-       ArrayList<YeuCau> dsDuyet =  DataBase.docfile(YeuCau.class, file);
        System.out.println("LICH SU YEU CAU DUYET");
-       for(YeuCau yc: dsDuyet)
-       yc.toString();
+       try {
+           ArrayList<YeuCau.BanGhiDataBase> dsDuyet = YeuCau.docDanhSach(Paths.get(file));
+           for (YeuCau.BanGhiDataBase yc : dsDuyet) {
+               if (yc.laDongLoi()) {
+                   System.out.println("[!] Dong sai dinh dang: " + yc.getDongLoi());
+               } else {
+                   System.out.println(yc.getMaNV() + " | " + yc.getVaitro()
+                           + " | " + yc.getNoiDung() + " | " + yc.getTrangThai());
+               }
+           }
+       } catch (IOException e) {
+           System.out.println("[!] Khong doc duoc file yeu cau: " + e.getMessage());
+       }
     }
     // Thống kê các sản phẩm: Số lượng sản phẩm hiện có, số sản phẩm quá hạn/ gần hết hạn, cái nào?
     // Số lượng nhân viên với mỗi chức vụ

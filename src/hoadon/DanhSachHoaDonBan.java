@@ -18,7 +18,10 @@ public class DanhSachHoaDonBan {
     public DanhSachHoaDonBan(ArrayList<HoaDonBanHang> danhSachHoaDonBan){
         this.dsHoaDonBanHang = danhSachHoaDonBan;
     }
-
+    public ArrayList<HoaDonBanHang> getDS()
+    {
+        return dsHoaDonBanHang; 
+    }
     public void themHoaDon(Scanner sc, DanhSachSPKM danhSachSPKM, Danhsachkhuyenmai danhSachKhuyenMai, List<SanPham> danhSachSanPham){
         HoaDonBanHang hdb = new HoaDonBanHang();
         if (hdb.nhapHoaDon(sc, danhSachSPKM, danhSachKhuyenMai, danhSachSanPham)) {

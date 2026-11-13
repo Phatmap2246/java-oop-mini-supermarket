@@ -67,7 +67,7 @@ public class CTHoaDonBan {
                 }
             } while (this.soLuong == 0 || this.soLuong > soLuongConLai);
 
-            int indexSPKM = danhSachSPKM.timKiemSanPhamKM(maSanPham);
+            int indexSPKM = danhSachSPKM.timViTri(maSanPham);
             if (indexSPKM >= 0) {
                 String maKM = danhSachSPKM.getSanPhamKhuyenMais()[indexSPKM].getMaKhuyenMai();
                 int indexKM = dsKhuyenMai.traCuuThongTinKhuyenMai(maKM);
@@ -187,7 +187,10 @@ public class CTHoaDonBan {
     }
 
     public void setSoLuongTangKem(int soLuongTangKem) {
-        this.soLuongTangKem = soLuongTangKem;
+        this.soLuongTangKem = Math.max(0, soLuongTangKem);
+        this.thanhTienSauKhuyenMai = tinhThanhTienSauKhuyenMai();
+        this.hangKhuyenMai = isHangKhuyenMai();
+        this.kemHangChoTang = isKemHangChoTang();
     }
 
     public boolean isKemHangChoTang() {
@@ -203,7 +206,10 @@ public class CTHoaDonBan {
     }
 
     public void setSoTienGiam(long soTienGiam) {
-        this.soTienGiam = soTienGiam;
+        this.soTienGiam = Math.max(0, soTienGiam);
+        this.thanhTienSauKhuyenMai = tinhThanhTienSauKhuyenMai();
+        this.hangKhuyenMai = isHangKhuyenMai();
+        this.kemHangChoTang = isKemHangChoTang();
     }
 
     public int getSoLuongPhaiTra() {
