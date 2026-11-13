@@ -1,11 +1,14 @@
 package hoadon;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import dichvu.DanhSachSPKM;
 import dichvu.Danhsachkhuyenmai;
+import sanpham.QuanLyTonKho;
 import sanpham.SanPham;
 
 public class DanhSachHoaDonBan {
@@ -22,16 +25,21 @@ public class DanhSachHoaDonBan {
     {
         return dsHoaDonBanHang; 
     }
+    //Sửa thêm việc trừ sp sau khi bán
     public void themHoaDon(Scanner sc, DanhSachSPKM danhSachSPKM, Danhsachkhuyenmai danhSachKhuyenMai, List<SanPham> danhSachSanPham){
-        HoaDonBanHang hdb = new HoaDonBanHang();
-        if (hdb.nhapHoaDon(sc, danhSachSPKM, danhSachKhuyenMai, danhSachSanPham)) {
-            hdb.taoMaHoaDonBan();
-            dsHoaDonBanHang.add(hdb);
-            System.out.println("Thêm hóa đơn "+hdb.getMaHoaDon()+" Thành công!");
-            return;
+    HoaDonBanHang hdb = new HoaDonBanHang();
+    if (hdb.nhapHoaDon(sc, danhSachSPKM, danhSachKhuyenMai, danhSachSanPham)) {
+        // Bổ sung trừ tồn kho tại đây sau khi thanh toán thành công
+        if (!QuanLyTonKho.truTonKho(danhSachSanPham, hdb.getDanhSachChiTiet())) {
+            System.out.println("[!] Cảnh báo: Thanh toán thành công nhưng cập nhật tồn kho thất bại!");
         }
-        System.out.println("Thêm hóa đơn mới thất bại!");
+        hdb.taoMaHoaDonBan();
+        dsHoaDonBanHang.add(hdb);
+        System.out.println("Thêm hóa đơn " + hdb.getMaHoaDon() + " Thành công!");
+        return;
     }
+    System.out.println("Thêm hóa đơn mới thất bại!");
+}
 
     public void hienThiDanhSach(){
         if (dsHoaDonBanHang.isEmpty()) {
@@ -136,5 +144,56 @@ public class DanhSachHoaDonBan {
             System.out.println("[!] Lỗi khi đọc file (Có thể file chưa tồn tại): " + e.getMessage());
         }
     }
-        
+    // sáng tạo 
+    public ArrayList<SanPham> topNSanPhams(int n, List<SanPham> danhSachSanPham) {
+        if (n <= 0 || dsHoaDonBanHang == null || danhSachSanPham == null) {
+            return new ArrayList<>();
+        }
+
+        Map<String, Integer> mapSoLuong = new HashMap<>();
+        Map<String, Long> mapDoanhThu = new HashMap<>();
+
+        // 1. Cộng dồn số lượng và doanh thu thực tế của các hóa đơn đã thanh toán
+        for (HoaDonBanHang hdb : dsHoaDonBanHang) {
+            if (!hdb.isDaThanhToan()) continue;
+            for (CTHoaDonBan ct : hdb.getDanhSachChiTiet()) {
+                String ma = ct.getMaSanPham().trim().toUpperCase();
+                mapSoLuong.merge(ma, ct.getSoLuong(), Integer::sum);
+                mapDoanhThu.merge(ma, ct.getThanhTienSauKhuyenMai(), Long::sum);
+            }
+        }
+
+        // 2. Chỉ giữ lại sản phẩm có doanh thu vượt qua vốn nhập hàng
+        ArrayList<SanPham> ketQua = new ArrayList<>();
+        for (String ma : mapSoLuong.keySet()) {
+            SanPham sp = QuanLyTonKho.timSanPham(danhSachSanPham, ma);
+            if (sp != null) {
+                long doanhThu = mapDoanhThu.get(ma);
+                long vonNhap = (long) mapSoLuong.get(ma) * sp.getGiaNhap();
+                if (doanhThu > vonNhap) {
+                    ketQua.add(sp);
+                }
+            }
+        }
+
+        // 3. Sắp xếp giảm dần theo số lượng bán và cắt lấy Top N
+        ketQua.sort((a, b) -> Integer.compare(
+                mapSoLuong.get(b.getMaSanPham().trim().toUpperCase()),
+                mapSoLuong.get(a.getMaSanPham().trim().toUpperCase())
+        ));
+
+        return new ArrayList<>(ketQua.subList(0, Math.min(n, ketQua.size())));
+    }
+
+    public void inTopNSanPhams(int n, List<SanPham> danhSachSanPham) {
+        ArrayList<SanPham> topList = topNSanPhams(n, danhSachSanPham);
+        System.out.println("\n=== TOP " + n + " SẢN PHẨM BÁN CHẠY (DOANH THU > VỐN) ===");
+        if (topList.isEmpty()) {
+            System.out.println("[!] Không có sản phẩm nào đạt điều kiện.");
+            return;
+        }
+        for (int i = 0; i < topList.size(); i++) {
+            System.out.println((i + 1) + ". " + topList.get(i));
+        }
+    }
 }

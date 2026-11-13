@@ -11,13 +11,13 @@ import java.util.Map;
 import java.util.Scanner;
 
 import dichvu.DanhSachSPKM;
-import dichvu.Danhsachdoitac;
 import dichvu.Danhsachkhuyenmai;
 import dichvu.KhuyenMaiPhanTram;
 import dichvu.KhuyenMaiTrucTiep;
 import dichvu.Khuyenmai;
 import dichvu.Nhacungcap;
 import dichvu.SanPhamKhuyenMai;
+import hoadon.DanhSachHoaDonBan;
 import sanpham.QuanLySanPham;
 import sanpham.SanPham;
 import sanpham.ThucPham;
@@ -26,19 +26,26 @@ import utils.DataBase;
 import utils.Validation;
 
 public class QuanLy extends NhanVien {
-    private DSNhanVien dsnv = new DSNhanVien();
-    private Danhsachkhuyenmai dsKhuyenMai = new Danhsachkhuyenmai();
-    private DanhSachSPKM dsSanPhamKhuyenMai = new DanhSachSPKM();
+    private DSNhanVien dsnv ;
+    private Danhsachkhuyenmai dsKhuyenMai ;
+    private DanhSachSPKM dsSanPhamKhuyenMai;
 
     /** Khởi tạo quản lý với thông tin mặc định. */
     public QuanLy() {
         super();
+        dsSanPhamKhuyenMai = new DanhSachSPKM();
+        dsKhuyenMai = new Danhsachkhuyenmai();
+        dsnv = new DSNhanVien();
     }
 
     /** Khởi tạo quản lý bằng thông tin được truyền vào. */
     public QuanLy(String email, String hoten, String sdt, DiaChi diachi, LocalDate ngsinh,
-            String maNV, String vaitro, long luong, long phuCapTrachNhiem) {
+            String maNV, String vaitro, long luong, long phuCapTrachNhiem, DSNhanVien dsnv ,
+                Danhsachkhuyenmai dsKhuyenMai ,DanhSachSPKM dsSanPhamKhuyenMai) {
         super(email, hoten, sdt, diachi, ngsinh, maNV, vaitro, luong, phuCapTrachNhiem);
+        this.dsKhuyenMai = dsKhuyenMai; 
+        this.dsnv = dsnv; 
+        this.dsSanPhamKhuyenMai = dsSanPhamKhuyenMai; 
     }
 
     /** Sao chép thông tin nhân viên quản lý từ đối tượng nguồn. */
@@ -402,7 +409,7 @@ public class QuanLy extends NhanVien {
     // Số lượng nhân viên với mỗi chức vụ
     //Số lượng yêu cầu duyệt được tạo, số đã và chưa duyệt
     public void thongKe(Scanner sc, DSNhanVien dsnv, QuanLySanPham dssp, ArrayList<YeuCau> dYeuCaus){
-        if (dsnv == null || dsnv.list == null || dssp == null
+        if (dsnv == null || dsnv.getDanhSach() == null || dssp == null
                 || dssp.getDanhSachSanPham() == null || dYeuCaus == null) {
             throw new IllegalArgumentException("Danh sách nhân viên, sản phẩm và yêu cầu không được null.");
         }
@@ -435,15 +442,17 @@ public class QuanLy extends NhanVien {
         inThongTinThucPham("Sắp hết hạn (30 ngày)", sanPhamCanHetHan);
 
         Map<String, Integer> nhanVienTheoVaiTro = new HashMap<>();
-        int soDaSaThai = 0;
+        ArrayList<NhanVien> nhanVienDaNghi = new ArrayList<>(); // Danh sách lưu NV đã nghỉ
+        
         for (NhanVien nhanVien : dsnv.list) {
             if (nhanVien == null) continue;
             if (nhanVien.isSaThai()) {
-                soDaSaThai++;
+                nhanVienDaNghi.add(nhanVien); // Gom nhóm nhân viên đã nghỉ việc
                 continue;
             }
-            if (nhanVien.getVaiTro() != null)
+            if (nhanVien.getVaiTro() != null) {
                 nhanVienTheoVaiTro.merge(nhanVien.getVaiTro(), 1, Integer::sum);
+            }
         }
 
         System.out.println("\n--- NHÂN VIÊN ĐANG LÀM ---");
@@ -451,8 +460,8 @@ public class QuanLy extends NhanVien {
                 nhanVienTheoVaiTro.getOrDefault("QuanLy", 0),
                 nhanVienTheoVaiTro.getOrDefault("KeToan", 0),
                 nhanVienTheoVaiTro.getOrDefault("QuanKho", 0),
-                nhanVienTheoVaiTro.getOrDefault("ThuNgan", 0), soDaSaThai);
-
+                nhanVienTheoVaiTro.getOrDefault("ThuNgan", 0));
+        inThongTinNhanVienDaNghi(nhanVienDaNghi);
         Map<String, Integer> yeuCauTheoTrangThai = new HashMap<>();
         for (YeuCau yeuCau : dYeuCaus) {
             if (yeuCau != null)
@@ -471,5 +480,18 @@ public class QuanLy extends NhanVien {
         System.out.printf("%s còn tồn: %d%n", nhan, danhSach.size());
         danhSach.forEach(sp -> System.out.printf("- %s | %s | Tồn: %d | HSD: %s%n",
                 sp.getMaSanPham(), sp.getTenSanPham(), sp.getSoLuongTonKho(), sp.getHanSuDung()));
+    }private void inThongTinNhanVienDaNghi(ArrayList<NhanVien> danhSachDaNghi) {
+        System.out.printf("Nhân viên đã nghỉ việc / sa thải: %d%n", danhSachDaNghi.size());
+        if (danhSachDaNghi.isEmpty()) {
+            System.out.println("- Không có nhân viên nào trong danh sách nghỉ việc.");
+            return;
+        }
+        danhSachDaNghi.forEach(nv -> System.out.printf(
+                "- Mã NV: %-6s | Họ tên: %-20s | Vai trò cũ: %-8s | SĐT: %-10s | Trạng thái: Đã sa thải%n",
+                nv.getMaNV(), nv.getHoten(), nv.getVaiTro(), nv.getSdt()));
     }
+public void xuatTopSanPhamBanChay(Scanner sc, DanhSachHoaDonBan dsHoaDonBan, QuanLySanPham dssp) {
+    int n = Validation.inputInt(sc, "Nhập số lượng Top N sản phẩm bán chạy: ");
+    dsHoaDonBan.inTopNSanPhams(n, dssp.getDanhSachSanPham());
+}
 }

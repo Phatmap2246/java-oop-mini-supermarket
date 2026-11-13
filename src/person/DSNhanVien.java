@@ -25,6 +25,9 @@ public class DSNhanVien implements IQuanLy<NhanVien> {
     public DSNhanVien(DSNhanVien l) {
         this.list = l.list;
     }
+    public ArrayList<NhanVien> getDanhSach(){
+        return list;
+    }
     public boolean isTrungMa(String maNV){
         for(NhanVien i: list)
             if(i.getMaNV().equalsIgnoreCase(maNV))

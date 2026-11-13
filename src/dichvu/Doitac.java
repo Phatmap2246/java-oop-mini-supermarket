@@ -1,10 +1,9 @@
 package dichvu;
 import utils.Validation;
-import interfaces.IThongTin;
 
 import java.util.Scanner;
 
-public abstract class Doitac implements IThongTin {
+public abstract class Doitac  {
     private String maDoiTac , tenDoiTac , soDienThoai , diaChi , email , maSoThue , loaiDoiTac;
     private static int SoThuTuNCC = 1 ;
     public Doitac()
@@ -98,12 +97,10 @@ public abstract class Doitac implements IThongTin {
         maSoThue = sc.nextLine() ;
     }
 
-    @Override
     public void nhapThongTin(Scanner sc) {
         setDoiTac(sc);
     }
 
-    @Override
     public String toString() {
         return "Mã đối tác: " + maDoiTac + " | Tên đối tác: " + tenDoiTac + " | Số điện thoại: " + soDienThoai + " | Địa chỉ: " + diaChi + " | Email: " + email + " | Mã số thuế: " + maSoThue ;
     }

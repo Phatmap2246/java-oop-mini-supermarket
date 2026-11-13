@@ -150,4 +150,5 @@ public class HoaDonBanHang extends HoaDon {
 
     public boolean isDaThanhToan() { return daThanhToan; }
     public void setDaThanhToan(boolean daThanhToan) { this.daThanhToan = daThanhToan; }
+    
 }
