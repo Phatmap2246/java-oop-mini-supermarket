@@ -306,7 +306,7 @@ public class QuanKho extends NhanVien {
             }
 
             // Tạo chi tiết nhập (CTHoaDon: maSP, tenSP, soLuong, donGia, chietKhau = 0)
-            CTHoaDonBan cthd = new CTHoaDonBan(maSP, tenSP, soLuongNhap, donGiaNhap, 0.0);
+            CTHoaDonBan cthd = new CTHoaDonBan(maSP, tenSP, soLuongNhap, donGiaNhap);
             danhSachNhap.add(cthd);
 
             System.out.printf("[+] Đã thêm vào danh sách nhập: [%s - %s] x %d cái.\n", maSP, tenSP, soLuongNhap);
@@ -333,7 +333,7 @@ public class QuanKho extends NhanVien {
         for (CTHoaDonBan ct : danhSachNhap) {
             SanPham sp = timSanPham(ct.getMaSanPham());
             if (sp != null) {
-                sp.setSoLuongTonKho(sp.getSoLuongTonKho() + ct.getSoLuongTonKho());
+                sp.setSoLuongTonKho(sp.getSoLuongTonKho() + ct.getSoLuong());
             }
         }
         System.out.println("[+] Đã cập nhật xong " + danhSachNhap.size() + " mặt hàng vào kho.");

@@ -3,7 +3,6 @@ package sanpham;
 
 import utils.Validation;
 import interfaces.IThongTin;
-import interfaces.TrongFile;
 
 import java.util.Scanner;
 

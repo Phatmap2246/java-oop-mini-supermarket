@@ -3,10 +3,10 @@ import java.util.Scanner;
 import java.util.List;
 import dichvu.DanhSachSPKM;
 import dichvu.Danhsachkhuyenmai;
-import interfaces.IThanhToan;
 import sanpham.QuanLyTonKho;
 import sanpham.SanPham;
 import utils.Validation;
+import interfaces.IThanhToan;
 
 public class HoaDonBanHang extends HoaDon {
     private IThanhToan phuongThucThanhToan; 
@@ -150,4 +150,5 @@ public class HoaDonBanHang extends HoaDon {
 
     public boolean isDaThanhToan() { return daThanhToan; }
     public void setDaThanhToan(boolean daThanhToan) { this.daThanhToan = daThanhToan; }
+    
 }
