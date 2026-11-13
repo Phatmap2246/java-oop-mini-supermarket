@@ -4,6 +4,12 @@ import utils.Validation;
 import java.util.Scanner;
 
 public class SanPhamKhuyenMai {
+    private boolean tonTai = true;
+
+    public boolean isTonTai() { return tonTai; }
+
+    public void setTonTai(boolean tonTai) { this.tonTai = tonTai; }
+
     private String maSanPham , maKhuyenMai ;
     public SanPhamKhuyenMai()
     {
@@ -24,10 +30,16 @@ public class SanPhamKhuyenMai {
     }
 
     public void setMaKhuyenMai(String maKhuyenMai) {
+        if (maKhuyenMai == null || !maKhuyenMai.matches("(?i)KM\\d+")) {
+            throw new IllegalArgumentException("MaKhuyenMai không đúng định dạng.");
+        }
         this.maKhuyenMai = maKhuyenMai;
     }
 
     public void setMaSanPham(String maSanPham) {
+        if (maSanPham == null || !maSanPham.matches("(?i)SP\\d+")) {
+            throw new IllegalArgumentException("MaSanPham không đúng định dạng.");
+        }
         this.maSanPham = maSanPham;
     }
     public void setSanPhamKhuyenMai(Scanner sc )

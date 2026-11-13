@@ -14,19 +14,21 @@ public class KhachHang extends Person {
     private String hangThanhVien;
     private int diemTichLuy;
     private boolean isTonTai;
+    private static int soThuTu = 1 ;
 
     // ========================= CONSTRUCTOR =========================
 
     public KhachHang() {
         super();
-        this.maKhachHang = "";
+        this.maKhachHang = Validation.taoMa("KH%d03" , soThuTu) ;
         this.ngayDangKy = LocalDate.now();
         this.tongChiTieu = 0;
         this.hangThanhVien = "Đồng";
         this.diemTichLuy = 0;
         this.isTonTai = true;
+        soThuTu++ ;
     }
-
+    // Cần lưu số thứ tự mỗi khi đọc file
     public KhachHang(String email, String hoTen, String soDienThoai, DiaChi diaChi, LocalDate ngaySinh,
             String maKhachHang, LocalDate ngayDangKy) {
         super(email, hoTen, soDienThoai, diaChi, ngaySinh);
@@ -70,6 +72,9 @@ public class KhachHang extends Person {
     }
 
     public void setMaKhachHang(String maKhachHang) {
+        if (maKhachHang == null || !maKhachHang.matches(Validation.MaKH_REGEX)) {
+            throw new IllegalArgumentException("MaKhachHang không đúng định dạng.");
+        }
         this.maKhachHang = maKhachHang;
     }
 
@@ -78,6 +83,9 @@ public class KhachHang extends Person {
     }
 
     public void setNgayDangKy(LocalDate ngayDangKy) {
+        if (ngayDangKy == null) {
+            throw new IllegalArgumentException("ngayDangKy không được null.");
+        }
         this.ngayDangKy = ngayDangKy;
     }
 
@@ -86,6 +94,9 @@ public class KhachHang extends Person {
     }
 
     public void setTongChiTieu(long tongChiTieu) {
+        if (tongChiTieu < 0) {
+            throw new IllegalArgumentException("TongChiTieu không được âm.");
+        }
         this.tongChiTieu = tongChiTieu;
     }
 
@@ -94,6 +105,9 @@ public class KhachHang extends Person {
     }
 
     public void setHangThanhVien(String hangThanhVien) {
+        if (hangThanhVien == null || hangThanhVien.isBlank()) {
+            throw new IllegalArgumentException("HangThanhVien không được để trống.");
+        }
         this.hangThanhVien = hangThanhVien;
     }
 
@@ -102,6 +116,9 @@ public class KhachHang extends Person {
     }
 
     public void setDiemTichLuy(int diemTichLuy) {
+        if (diemTichLuy < 0) {
+            throw new IllegalArgumentException("DiemTichLuy không được âm.");
+        }
         this.diemTichLuy = diemTichLuy;
     }
 
@@ -113,6 +130,10 @@ public class KhachHang extends Person {
         this.isTonTai = isTonTai;
     }
 
+
+    public static int getSoThuTu() {
+        return soThuTu;
+    }
     // ========================= NGHIỆP VỤ THÀNH VIÊN =========================
 
     public void capNhatThuHang() {
@@ -128,17 +149,12 @@ public class KhachHang extends Person {
     }
 
     public double tinhChietKhau() {
-        switch (hangThanhVien) {
-            case "Bạc":
-                return 0.03;
-            case "Vàng":
-                return 0.05;
-            case "Kim Cương":
-                return 0.10;
-            case "Đồng":
-            default:
-                return 0.01;
-        }
+        return switch (hangThanhVien == null ? "" : hangThanhVien) {
+            case "Bạc" -> 0.03;
+            case "Vàng" -> 0.05;
+            case "Kim Cương" -> 0.10;
+            default -> 0.01;
+        };
     }
 
     public void tichLuyChiTieu(long soTien) {

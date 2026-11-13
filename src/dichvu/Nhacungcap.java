@@ -1,10 +1,16 @@
 package dichvu;
+import hoadon.HoaDon;
 import sanpham.SanPham;
 import sanpham.QuanLySanPham;
 import utils.Validation;
 
 import java.util.Scanner;
 public class Nhacungcap extends Doitac{
+    private static int soThuTuNCC = 1;
+
+    public static int getSoThuTuNCC() {
+        return soThuTuNCC;
+    }
     private String nganhHangCungCap;
     private long hanMucNoCong ;
     private QuanLySanPham sanPhamCungCap ;
@@ -14,13 +20,16 @@ public class Nhacungcap extends Doitac{
         hanMucNoCong = 0 ;
         super.setLoaiDoiTac("Nhà cung cấp");
         sanPhamCungCap = new QuanLySanPham() ;
-        super.setMaDoiTac(Validation.taoMa("NCC%03d" , Doitac.getSoThuTuNCC()));
-        Doitac.setSoThuTuNCC(Doitac.getSoThuTuNCC()+1);
+        super.setMaDoiTac(Validation.taoMa("NCC%03d" , getSoThuTuNCC()));
+        soThuTuNCC++;
     }
     public Nhacungcap ( String maDoiTac , String tenDoiTac , String soDienThoai , String diaChi , String maSoThue , String email , String loaiDoiTac , String nganhHangCungCap , long hanMucNoCong , int soThuTu)
     {
         super(maDoiTac, tenDoiTac, soDienThoai, diaChi, maSoThue, email , loaiDoiTac);
-        Doitac.setSoThuTuNCC(soThuTu);
+        if (soThuTu < 1) {
+            throw new IllegalArgumentException("Số thứ tự phải lớn hơn 0.");
+        }
+        soThuTuNCC = soThuTu;
         this.nganhHangCungCap = nganhHangCungCap;
         this.hanMucNoCong = hanMucNoCong;
         sanPhamCungCap = new QuanLySanPham() ;
@@ -31,6 +40,9 @@ public class Nhacungcap extends Doitac{
     }
 
     public void setNganhHangCungCap(String nganhHangCungCap) {
+        if (nganhHangCungCap == null || nganhHangCungCap.isBlank()) {
+            throw new IllegalArgumentException("NganhHangCungCap không được để trống.");
+        }
         this.nganhHangCungCap = nganhHangCungCap;
     }
 
@@ -49,6 +61,9 @@ public class Nhacungcap extends Doitac{
     }
 
     public void setSanPhamCungCap(QuanLySanPham sanPhamCungCap) {
+        if (sanPhamCungCap == null) {
+            throw new IllegalArgumentException("sanPhamCungCap không được null.");
+        }
         this.sanPhamCungCap = sanPhamCungCap;
     }
 
@@ -56,7 +71,7 @@ public class Nhacungcap extends Doitac{
     {
         super.setDoiTac( sc );
         System.out.println("Nhập ngành hàng cung cấp: ");
-        nganhHangCungCap = sc.nextLine() ;
+        nganhHangCungCap = Validation.inputStringRegex(sc, "Nhập thông tin: ", "(?s).+", "Thông tin không được để trống!");
         hanMucNoCong = Validation.inputInt(sc , "Nhập hạn mức nợ công!") ;
     }
 
@@ -64,7 +79,7 @@ public class Nhacungcap extends Doitac{
     {
         sanPhamCungCap.getDanhSachSanPham().clear();
         for ( SanPham sp: qlsp.getDanhSachSanPham() )
-            if ( sp.getMaNhaCungCap().equalsIgnoreCase(super.getMaDoiTac()) )
+            if ( sp != null && sp.getMaNhaCungCap() != null && sp.getMaNhaCungCap().equalsIgnoreCase(super.getMaDoiTac()) )
                 sanPhamCungCap.getDanhSachSanPham().add(sp) ;
         System.out.println("Khởi tao danh sách sản phẩm thành công!");
     }
