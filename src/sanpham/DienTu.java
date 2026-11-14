@@ -9,15 +9,15 @@ public class DienTu extends SanPham // đã sửa
     private String chatLieu ;
     public DienTu()
     {
-        super();
+        super(0.05, "Điện tử");
         thoiGianBaoHanh = 0 ;
         chatLieu = "" ;
-        super.setThue(0.05) ;
     }
     public DienTu( String maSanPham , String tenSanPham , String loaiSanPham , long giaNhap , long giaBan , int soLuongTonKho , String maNhaCungCap , double thue ,
                    int thoiGianBaoHanh , long tienBaoHanh , String chatLieu , LocalDate ngayMua)
     {
         super( maSanPham, tenSanPham, loaiSanPham, giaNhap, giaBan, soLuongTonKho, maNhaCungCap , thue );
+        if (thoiGianBaoHanh < 0) throw new IllegalArgumentException("ThoiGianBaoHanh không được âm.");
         this.thoiGianBaoHanh = thoiGianBaoHanh ;
         this.chatLieu = chatLieu ;
     }
@@ -49,7 +49,7 @@ public class DienTu extends SanPham // đã sửa
 
     @Override
     public long tinhThue() {
-        return 0;
+        return (long) (super.getThue() * super.getGiaBan());
     }
 
     @Override

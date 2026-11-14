@@ -29,7 +29,10 @@ public class ThuNgan extends NhanVien {
 
     public ThuNgan(ThuNgan tn , DanhSachHoaDonBan danhSachHoaDonBan) {
         super(tn );
-        setDanhSachHoaDonBan(danhSachHoaDonBan);
+        if (danhSachHoaDonBan == null) {
+            throw new IllegalArgumentException("Danh sách hoá đơn bán không được rỗng!");
+        }
+        this.danhSachHoaDonBan = danhSachHoaDonBan;
         tongTienDauCa = tn.tongTienDauCa;
     }
 

@@ -1,9 +1,10 @@
 package dichvu;
+import interfaces.IThongTin;
 import utils.Validation;
 
 import java.util.Scanner;
 
-public abstract class Doitac {
+public abstract class Doitac implements IThongTin {
     // 11/11/2026: Xóa bằng trạng thái để giữ dữ liệu trong danh sách.
     private boolean tonTai = true;
 
@@ -118,6 +119,11 @@ public abstract class Doitac {
         System.out.println("Nhập mã số thuế: ");
         maSoThue = Validation.inputStringRegex(sc, "Nhập thông tin: ", "(?s).+", "Thông tin không được để trống!");
     }
+    @Override
+    public void nhapThongTin(Scanner sc) {
+        setDoiTac(sc);
+    }
+
     @Override
     public String toString() {
         return "Mã đối tác: " + maDoiTac + " | Tên đối tác: " + tenDoiTac + " | Số điện thoại: " + soDienThoai + " | Địa chỉ: " + diaChi + " | Email: " + email + " | Mã số thuế: " + maSoThue ;

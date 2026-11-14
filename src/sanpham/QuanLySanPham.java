@@ -485,13 +485,13 @@ public class QuanLySanPham{
         }
         if ( sp instanceof ThucPham )
         {
-            if ( ((ThucPham) sp).ktraNgayHetHan() > ((ThucPham) sp).kiemTraSoNgaySuDung()*0.5 )
-            {
-                System.out.println("Sản phẩm vẫn có thể sử dụng tốt với " + ((ThucPham) sp).ktraNgayHetHan() + " Ngày sử dụng!");
-            }
-            else if ( ((ThucPham) sp).kiemTraSanPhamHong() )
+            if ( ((ThucPham) sp).kiemTraSanPhamHong() )
             {
                 System.out.println("Sản phẩm đã bị hỏng vui lòng thay mới!");
+            }
+            else if ( ((ThucPham) sp).ktraNgayHetHan() > ((ThucPham) sp).kiemTraSoNgaySuDung()*0.5 )
+            {
+                System.out.println("Sản phẩm vẫn có thể sử dụng tốt với " + ((ThucPham) sp).ktraNgayHetHan() + " Ngày sử dụng!");
             }
             else
             {

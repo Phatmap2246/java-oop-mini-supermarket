@@ -15,8 +15,7 @@ public class KeToan extends NhanVien {
     private static final int KY_HAN_CONG_NO_NGAY = 30;
 
     public KeToan() {
-        super();
-        super.setVaiTro("KeToan");
+        super("KeToan");
     }
 
     public KeToan(String email, String hoten, String sdt, DiaChi diachi, LocalDate ngsinh,
@@ -43,7 +42,8 @@ public class KeToan extends NhanVien {
         for (HoaDon hd : dshd) {
             if (hd == null || hd.getNgayLap() == null) continue;
             LocalDate ngayLap = hd.getNgayLap().toLocalDate();
-            if (hd instanceof HoaDonBanHang
+            if (hd instanceof HoaDonBanHang hdb
+                    && hdb.isDaThanhToan()
                     && !ngayLap.isBefore(ngayBatDau)
                     && !ngayLap.isAfter(ngayKetThuc)) {
                 tongDoanhThu += hd.tinhTongTien();
@@ -104,11 +104,18 @@ public class KeToan extends NhanVien {
             ArrayList<String> dsMaDaThanhToan) {
         ArrayList<HoaDonNhapHang> dsChuaTra = new ArrayList<>();
         for (HoaDonNhapHang hdn : layDanhSachHoaDonCongNo(dshd)) {
-            if (!daThanhToan(hdn.getMaHoaDon(), dsMaDaThanhToan)) {
+            if (!kiemTraDaThanhToan(hdn, dsMaDaThanhToan)) {
                 dsChuaTra.add(hdn);
             }
         }
         return dsChuaTra;
+    }
+
+    private boolean kiemTraDaThanhToan(HoaDon hd, ArrayList<String> dsMaDaThanhToan) {
+        if (hd instanceof HoaDonNhapHang hdn && hdn.isDaThanhToan()) {
+            return true;
+        }
+        return daThanhToan(hd.getMaHoaDon(), dsMaDaThanhToan);
     }
 
     private boolean daThanhToan(String maHD, ArrayList<String> dsMaDaThanhToan) {
@@ -127,7 +134,7 @@ public class KeToan extends NhanVien {
     }
 
     private String layTrangThaiCongNo(HoaDon hd, ArrayList<String> dsMaDaThanhToan) {
-        if (daThanhToan(hd.getMaHoaDon(), dsMaDaThanhToan)) {
+        if (kiemTraDaThanhToan(hd, dsMaDaThanhToan)) {
             return "Đã thanh toán";
         }
         LocalDate han = tinhNgayDenHan(hd);
@@ -182,6 +189,7 @@ public class KeToan extends NhanVien {
                 hoaDonNo.tinhTongTien(), nganHang, stk,
                 hoaDonNo.getMaHoaDon(), hoaDonNo.getMaNhaCungCap());
 
+        hoaDonNo.setDaThanhToan(true);
         if (dsMaDaThanhToan != null && !daThanhToan(hoaDonNo.getMaHoaDon(), dsMaDaThanhToan)) {
             dsMaDaThanhToan.add(hoaDonNo.getMaHoaDon());
         }
@@ -295,6 +303,7 @@ public class KeToan extends NhanVien {
                 case 2 -> {
                     LocalDate bd = Validation.inputLocalDateRegex(sc, "Từ ngày (dd/MM/yyyy): ");
                     LocalDate kt = Validation.inputLocalDateRegex(sc, "Đến ngày (dd/MM/yyyy): ");
+                    if (kt.isBefore(bd)) { LocalDate tam = bd; bd = kt; kt = tam; }
                     thongKe(dshd, dsMaDaThanhToan, bd, kt);
                 }
                 case 3 -> {

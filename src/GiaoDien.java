@@ -78,18 +78,22 @@ public class GiaoDien {
     {
         System.out.println("=================ĐĂNG NHẬP QUẢN LÝ KHO=================");
         System.out.println("Vui lòng nhập thông tin đăng nhập!");
+        if (!sc.hasNextLine()) return;
         System.out.println("Nhâp tài khoản: ");
         String taiKhoan = sc.nextLine() ;
+        if (!sc.hasNextLine()) return;
         System.out.println("Nhập mật khẩu: ");
         String matKhau = sc.nextLine() ;
         int soLanNhapSai = 5 ;
-        while ( !taiKhoan.equalsIgnoreCase(taiKhoanQuanKho) || !matKhau.equalsIgnoreCase(matKhauQuanKho) )
+        while ( !taiKhoan.equalsIgnoreCase(taiKhoanQuanKho) || !matKhau.equals(matKhauQuanKho) )
         {
             soLanNhapSai-- ;
             if ( soLanNhapSai == 0 ) break;
             System.out.println("Bạn đã nhập sai mật khẩu hoặc tài khoản vui lòng nhập lại!(Còn " +soLanNhapSai + " lần thử)");
+            if (!sc.hasNextLine()) return;
             System.out.println("Nhâp tài khoản: ");
             taiKhoan = sc.nextLine() ;
+            if (!sc.hasNextLine()) return;
             System.out.println("Nhập mật khẩu: ");
             matKhau = sc.nextLine() ;
         }
@@ -104,18 +108,22 @@ public class GiaoDien {
     {
         System.out.println("=================ĐĂNG NHẬP KẾ TOÁN=================");
         System.out.println("Vui lòng nhập thông tin đăng nhập!");
+        if (!sc.hasNextLine()) return;
         System.out.println("Nhâp tài khoản: ");
         String taiKhoan = sc.nextLine() ;
+        if (!sc.hasNextLine()) return;
         System.out.println("Nhập mật khẩu: ");
         String matKhau = sc.nextLine() ;
         int soLanNhapSai = 5 ;
-        while ( !taiKhoan.equalsIgnoreCase(taiKhoanKeToan) || !matKhau.equalsIgnoreCase(matKhauKeToan) )
+        while ( !taiKhoan.equalsIgnoreCase(taiKhoanKeToan) || !matKhau.equals(matKhauKeToan) )
         {
             soLanNhapSai--;
             if ( soLanNhapSai == 0 ) break;
             System.out.println("Bạn đã nhập sai mật khẩu hoặc tài khoản vui lòng nhập lại!(Còn " +soLanNhapSai + " lần thử)");
+            if (!sc.hasNextLine()) return;
             System.out.println("Nhâp tài khoản: ");
             taiKhoan = sc.nextLine() ;
+            if (!sc.hasNextLine()) return;
             System.out.println("Nhập mật khẩu: ");
             matKhau = sc.nextLine() ;
         }
@@ -133,18 +141,22 @@ public class GiaoDien {
     {
         System.out.println("=================ĐĂNG NHẬP QUẢN LÝ=================");
         System.out.println("Vui lòng nhập thông tin đăng nhập!");
+        if (!sc.hasNextLine()) return;
         System.out.println("Nhâp tài khoản: ");
         String taiKhoan = sc.nextLine() ;
+        if (!sc.hasNextLine()) return;
         System.out.println("Nhập mật khẩu: ");
         String matKhau = sc.nextLine() ;
         int soLanNhapSai = 5 ;
-        while ( !taiKhoan.equalsIgnoreCase(taiKhoanQuanLy) || !matKhau.equalsIgnoreCase(matKhauQuanLy) )
+        while ( !taiKhoan.equalsIgnoreCase(taiKhoanQuanLy) || !matKhau.equals(matKhauQuanLy) )
         {
             soLanNhapSai--;
             if ( soLanNhapSai == 0 ) break;
             System.out.println("Bạn đã nhập sai mật khẩu hoặc tài khoản vui lòng nhập lại!(Còn " +soLanNhapSai + " lần thử)");
+            if (!sc.hasNextLine()) return;
             System.out.println("Nhâp tài khoản: ");
             taiKhoan = sc.nextLine() ;
+            if (!sc.hasNextLine()) return;
             System.out.println("Nhập mật khẩu: ");
             matKhau = sc.nextLine() ;
         }
@@ -159,18 +171,22 @@ public class GiaoDien {
     {
         System.out.println("=================ĐĂNG NHẬP THU NGÂN=================");
         System.out.println("Vui lòng nhập thông tin đăng nhập!");
+        if (!sc.hasNextLine()) return;
         System.out.println("Nhâp tài khoản: ");
         String taiKhoan = sc.nextLine() ;
+        if (!sc.hasNextLine()) return;
         System.out.println("Nhập mật khẩu: ");
         String matKhau = sc.nextLine() ;
         int soLanNhapSai = 5 ;
-        while ( !taiKhoan.equalsIgnoreCase(taiKhoanThuNgan) || !matKhau.equalsIgnoreCase(matKhauThuNgan) )
+        while ( !taiKhoan.equalsIgnoreCase(taiKhoanThuNgan) || !matKhau.equals(matKhauThuNgan) )
         {
             soLanNhapSai--;
             if ( soLanNhapSai == 0 ) break;
             System.out.println("Bạn đã nhập sai mật khẩu hoặc tài khoản vui lòng nhập lại!(Còn " +soLanNhapSai + " lần thử)");
+            if (!sc.hasNextLine()) return;
             System.out.println("Nhâp tài khoản: ");
             taiKhoan = sc.nextLine() ;
+            if (!sc.hasNextLine()) return;
             System.out.println("Nhập mật khẩu: ");
             matKhau = sc.nextLine() ;
         }

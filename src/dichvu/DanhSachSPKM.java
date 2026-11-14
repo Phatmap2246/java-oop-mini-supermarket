@@ -5,13 +5,14 @@ import sanpham.ThucPham;
 import java.util.ArrayList;
 
 import sanpham.QuanLySanPham;
+import interfaces.IQuanLy;
 import utils.Validation;
 import sanpham.SanPham ;
 
 import java.time.LocalDate;
 import java.util.Scanner;
 
-public class DanhSachSPKM
+public class DanhSachSPKM implements IQuanLy<SanPhamKhuyenMai>
 {
     private SanPhamKhuyenMai[] sanPhamKhuyenMais ;
     private int soLuongSanPham ;
@@ -75,6 +76,57 @@ public class DanhSachSPKM
         }
         themSanPhamKhuyenMai(spkm);
     }
+
+    public void themSanPhamKhuyenMai(Scanner sc, QuanLySanPham qlsp, Danhsachkhuyenmai dskm)
+    {
+        System.out.println("Thêm sản phẩm khuyến mãi!");
+        SanPhamKhuyenMai spkm = new SanPhamKhuyenMai() ;
+        spkm.setSanPhamKhuyenMai(sc, qlsp, dskm);
+        while ( timKiemSanPhamKM(spkm.getMaSanPham()) != -1 )
+        {
+            System.out.println("Bạn không thể dùng hai mã khuyến mãi trên 1 loại sản phẩm!");
+            spkm.setSanPhamKhuyenMai(sc, qlsp, dskm);
+        }
+        themSanPhamKhuyenMai(spkm);
+    }
+
+    @Override
+    public void taoDanhSach(Scanner sc) { khoiTaoDanhSachSanPhamKhuyenMai(sc); }
+
+    @Override
+    public void them(Scanner sc) { themSanPhamKhuyenMai(sc); }
+
+    @Override
+    public boolean sua(String ma, Scanner sc) {
+        if (timKiemSanPhamKM(ma) == -1) return false;
+        suaThongTinSanPhamKhuyenMai(sc, ma);
+        return true;
+    }
+
+    @Override
+    public boolean xoa(String ma) {
+        if (timKiemSanPhamKM(ma) == -1) return false;
+        xoaSanPhamKM(ma);
+        return true;
+    }
+
+    @Override
+    public void xuatDanhSach() { inDanhSachSanPhamKM(); }
+
+    @Override
+    public int timViTri(String ma) { return timKiemSanPhamKM(ma); }
+
+    @Override
+    public SanPhamKhuyenMai timMa(String ma) {
+        int idx = timViTri(ma);
+        return idx == -1 ? null : sanPhamKhuyenMais[idx];
+    }
+
+    @Override
+    public SanPhamKhuyenMai timTen(String ten) { return timMa(ten); }
+
+    @Override
+    public SanPhamKhuyenMai timKhoa(String khoa) { return timMa(khoa); }
 
     public void themSanPhamKhuyenMai(SanPhamKhuyenMai spkm)
     {
@@ -283,24 +335,25 @@ public class DanhSachSPKM
         Validation.danghoatdong(1);
         for ( Khuyenmai km : danhsachkhuyenmai.getKhuyenmais() )
         {
+            if (km == null || !km.isTonTai() || !km.dangHoatDong(LocalDate.now())) continue;
             boolean flag = false ;
             int tongSanPham = 0 ;
-            if ( km.isTonTai() && km.dangHoatDong(LocalDate.now()))
+            System.out.println(km);
+            System.out.println("Các sản phẩm chứa khuyến mãi: ");
+            for ( SanPhamKhuyenMai spkm: sanPhamKhuyenMais )
             {
-                System.out.println(km);
-                System.out.println("Các sản phẩm chứa khuyến mãi: ");
-                for ( SanPhamKhuyenMai spkm: sanPhamKhuyenMais )
+                if (spkm == null || !spkm.isTonTai()) continue;
+                if ( spkm.getMaKhuyenMai().equalsIgnoreCase(km.getMaKhuyenMai()))
                 {
                     SanPham sp = qlsp.traCuuSanPham(spkm.getMaSanPham()) ;
-                    if ( spkm.getMaKhuyenMai().equalsIgnoreCase(km.getMaKhuyenMai()))
-                    {
+                    if (sp != null && sp.isTonTai()) {
                         System.out.println( getString(sp , km));
                         tongSanPham++ ;
                         flag = true ;
                     }
                 }
-                System.out.println("Tổng sản phẩm áp dụng mã khuyến mãi " + km.getMaKhuyenMai() + " là: " + tongSanPham);
             }
+            System.out.println("Tổng sản phẩm áp dụng mã khuyến mãi " + km.getMaKhuyenMai() + " là: " + tongSanPham);
             if ( !flag )
             {
                 System.out.println("Chưa có sản phẩm nào áp dụng mã giảm giá này!");
@@ -358,7 +411,7 @@ public class DanhSachSPKM
                     break;
                 }
                 case 3: {
-                    themSanPhamKhuyenMai(sc);
+                    themSanPhamKhuyenMai(sc, qlsp, dskm);
                     break;
                 }
                 case 4: {

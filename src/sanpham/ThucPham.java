@@ -11,17 +11,19 @@ public class ThucPham extends SanPham
     private String baoQuan ;
     public ThucPham()
     {
-        super();
+        super(0.08, "Thực phẩm");
         ngaySanXuat = hanSuDung = null ;
         nhietDoBaoQuan = 0 ;
         baoQuan = "" ;
-        super.setThue(0.08);
-        super.setLoaiSanPham("Thực phẩm");
     }
     public ThucPham ( String maSanPham , String tenSanPham , String loaiSanPham , long giaNhap , long giaBan , int soLuongTonKho , String maNhaCungCap , double thue ,
                       LocalDate ngaySanXuat , LocalDate hanSuDung , double nhietDoBaoQuan , String baoQuan)
     {
         super( maSanPham, tenSanPham, loaiSanPham, giaNhap, giaBan, soLuongTonKho, maNhaCungCap , thue );
+        if (!Double.isFinite(nhietDoBaoQuan)) throw new IllegalArgumentException("Nhiệt độ không hợp lệ.");
+        if (ngaySanXuat != null && hanSuDung != null && hanSuDung.isBefore(ngaySanXuat)) {
+            throw new IllegalArgumentException("Hạn sử dụng không được trước ngày sản xuất.");
+        }
         this.ngaySanXuat = ngaySanXuat ;
         this.hanSuDung = hanSuDung ;
         this.nhietDoBaoQuan = nhietDoBaoQuan ;

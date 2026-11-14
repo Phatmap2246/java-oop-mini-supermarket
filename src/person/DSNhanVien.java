@@ -505,6 +505,9 @@ public class DSNhanVien {
     }
 
     public void getDSNhanVien() {
-        // đọc file danh sách nhân viên và lưu và list
+        ArrayList<NhanVien> docTuFile = DataBase.docfile(NhanVien.class, "src/person/NhanVien.txt");
+        if (!docTuFile.isEmpty()) {
+            this.list = docTuFile;
+        }
     }
 }

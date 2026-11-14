@@ -3,10 +3,11 @@ package person;
 import java.time.LocalDate;
 import java.util.Scanner;
 
+import interfaces.IThongTin;
 import utils.DateUtil;
 import utils.Validation;
 
-public abstract class Person  {
+public abstract class Person implements IThongTin {
     private String email, hoten, sdt;
     private DiaChi diachi;
     private LocalDate ngsinh;
@@ -143,6 +144,7 @@ public abstract class Person  {
     }
 
     /** Nhập lần lượt họ tên, email, số điện thoại, ngày sinh và địa chỉ. */
+    @Override
     public void nhapThongTin(Scanner sc) {
         System.out.println("\n=== THÔNG TIN CÁ NHÂN ===");
         setHoten(sc);

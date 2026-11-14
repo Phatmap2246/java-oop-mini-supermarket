@@ -7,9 +7,8 @@ public class TieuDung extends SanPham
     private String thuongHieu , noiSanXuat , phanLoai , luuYAnToan ;
     public TieuDung()
     {
-        super();
+        super(0.05, "Tiêu dùng");
         thuongHieu = noiSanXuat = phanLoai = luuYAnToan = "" ;
-        super.setThue(0.05);
     }
     public TieuDung( String maSanPham , String tenSanPham , String loaiSanPham , long giaNhap , long giaBan , int soLuongTonKho , String maNhaCungCap , double thue ,
                      String thuongHieu , String noiSanXuat , String phanLoai , String luuYAnToan)
@@ -80,11 +79,11 @@ public class TieuDung extends SanPham
 
     @Override
     public long tinhThue() {
-        return (long)super.getThue()*super.getGiaBan() ;
+        return (long) (super.getThue() * super.getGiaBan()) ;
     }//
 
     @Override
     public String toString() {
-        return "Mã sản phẩm: " + super.getMaSanPham() + " | Tên sản phẩm: " + super.getTenSanPham() + " | Giá bán: " + super.getGiaBan() + " | Phân loại: " + phanLoai + " | Nơi sản xuất: " + noiSanXuat + " | Phân loại: " + phanLoai + " | Lưu ý an toàn: " + luuYAnToan;
+        return "Mã sản phẩm: " + super.getMaSanPham() + " | Tên sản phẩm: " + super.getTenSanPham() + " | Giá bán: " + super.getGiaBan() + " | Thương hiệu: " + thuongHieu + " | Nơi sản xuất: " + noiSanXuat + " | Phân loại: " + phanLoai + " | Lưu ý an toàn: " + luuYAnToan;
     }
 }

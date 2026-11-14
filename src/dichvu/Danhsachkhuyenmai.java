@@ -444,7 +444,7 @@ public class Danhsachkhuyenmai {
         for ( Khuyenmai km: khuyenmais )
         {
             if (km == null) continue;
-            if ( km.isTonTai() && km.dangHoatDong(LocalDate.now()) && km.getLoaiKhuyenMai() != null && km.getLoaiKhuyenMai().equalsIgnoreCase(Loai))
+            if ( km.isTonTai() && km.dangHoatDong(LocalDate.now()) && km.getLoaiKhuyenMai() != null && km.getLoaiKhuyenMai().toLowerCase(Locale.ROOT).contains(Loai.toLowerCase(Locale.ROOT)))
             {
                 System.out.println(km);
                 tongKhuyenMai++ ;
@@ -476,11 +476,11 @@ public class Danhsachkhuyenmai {
                     break;
                 case 2:
                     System.out.println("Danh sách khuyến mãi giảm giá trực tiếp!");
-                    thongKeCacloaiKhuyenMai("Giảm theo trực tiếp!");
+                    thongKeCacloaiKhuyenMai("Giảm giá trực tiếp");
                     break;
                 case 3:
                     System.out.println("Danh sách khuyến mãi mua tặng!");
-                    thongKeCacloaiKhuyenMai("Khuyến mãi mua tặng");
+                    thongKeCacloaiKhuyenMai("Mua");
                     break;
                 case 0:
                     break;

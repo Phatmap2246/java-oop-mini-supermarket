@@ -635,17 +635,16 @@ public class DanhSachHoaDonNhap {
     public void ktraHoaDonDaDuyet()
     {
         System.out.println("Các hoá đơn nhập đã được quản lý duyệt!");
-        System.out.println("Đang tải danh sách...");
-        Validation.danghoatdong(1);
-        for ( HoaDonNhapHang hdn: dsHoaDonNhapHang )
-            System.out.println(hdn);
+        for ( HoaDonNhapHang hdn: dsHoaDonNhapHang ) {
+            if (hdn != null && hdn.isDuyet()) {
+                System.out.println(hdn);
+            }
+        }
     }
 
     public void kiemTraThongTinSanPham( String maSanPham)
     {
         System.out.println("===================THÔNG TIN NHẬP HÀNG CỦA SẢN PHẨM===================");
-        System.out.println("Đang tra cứu...");
-        Validation.danghoatdong(1);
         for ( HoaDonNhapHang hdn: dsHoaDonNhapHang)
         {
             if (hdn == null) continue;
@@ -654,9 +653,10 @@ public class DanhSachHoaDonNhap {
                 for ( CTHoaDonNhap ct: hdn.getCtHoaDonNhaps() )
                 {
                     if (ct == null) continue;
-                    if (ct.getMaSanpham() != null && ct.getMaSanpham().equalsIgnoreCase(maSanPham))
+                    if (ct.getMaSanpham() != null && ct.getMaSanpham().equalsIgnoreCase(maSanPham)) {
                         System.out.println(ct + " | Thời gian nhập: " + hdn.getNgayLap() + " | Nhân viên nhập: " + hdn.getMaNhanVien());
-                    break;
+                        break;
+                    }
                 }
             }
         }
@@ -764,8 +764,12 @@ public class DanhSachHoaDonNhap {
         for ( HoaDonNhapHang hdn: dsHoaDonNhapHang)
         {
             if (hdn == null) continue;
-            if ( hdn.getNgayLap() != null && hdn.getNgayLap().isAfter(ngayBD.atStartOfDay()) && hdn.getNgayLap().isBefore(ngayKT.atStartOfDay()))
-                tongTien += hdn.tinhTongTien() ;
+            if ( hdn.getNgayLap() != null ) {
+                LocalDate ngayLap = hdn.getNgayLap().toLocalDate();
+                if (!ngayLap.isBefore(ngayBD) && !ngayLap.isAfter(ngayKT)) {
+                    tongTien += hdn.tinhTongTien() ;
+                }
+            }
         }
         return tongTien ;
     }
@@ -868,6 +872,7 @@ public class DanhSachHoaDonNhap {
         ktraHoaDonDaDuyet();
         for ( HoaDonNhapHang hdn: dsHoaDonNhapHang)
         {
+            if (hdn == null || !hdn.isDuyet() || hdn.isDaNhapSP()) continue;
             int soSanPham = qlsp.getDanhSachSanPham().size();
             int[] tonDuKien = new int[soSanPham];
             for (int i = 0; i < soSanPham; i++) {

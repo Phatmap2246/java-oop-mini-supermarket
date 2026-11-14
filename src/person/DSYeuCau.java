@@ -5,12 +5,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
-import utils.YeuCau;
-import utils.DataBase;
 import utils.Validation;
+import utils.YeuCau;
 
 public class DSYeuCau {
     private ArrayList<YeuCau> list = new ArrayList<>();
@@ -27,8 +26,7 @@ public class DSYeuCau {
         return list;
     }
 
-    public void docDanhSachYeuCau(String file) throws IOException
-    {
+    public void docDanhSachYeuCau(String file) throws IOException {
         ArrayList<YeuCau.BanGhiDataBase> danhSach = YeuCau.docDanhSach(Paths.get(file));
         ArrayList<YeuCau> danhSachMoi = new ArrayList<>();
         for (YeuCau.BanGhiDataBase yeuCau : danhSach) {
@@ -39,7 +37,7 @@ public class DSYeuCau {
         list = danhSachMoi;
     }
 
-    public void duyetYeuCau(Scanner sc) throws IOException{
+    public void duyetYeuCau(Scanner sc) throws IOException {
         Path filePath = Paths.get("YeuCau.txt");
         if (!Files.exists(filePath)) {
             System.out.println("Chưa có file YeuCau.txt.");
@@ -51,8 +49,7 @@ public class DSYeuCau {
         for (int index = 0; index < dsYeuCau.size(); index++) {
             YeuCau.BanGhiDataBase yeuCau = dsYeuCau.get(index);
             if (yeuCau.laDongLoi()) {
-                System.err.println("[!] Dòng yêu cầu sai định dạng, giữ nguyên: "
-                        + yeuCau.getDongLoi());
+                System.err.println("[!] Dòng yêu cầu sai định dạng, giữ nguyên: " + yeuCau.getDongLoi());
                 continue;
             }
             if (!yeuCau.getTrangThai().equals("ChoDuyet")) {
@@ -70,23 +67,35 @@ public class DSYeuCau {
 
         if (coThayDoi) {
             YeuCau.ghiDanhSach(filePath, dsYeuCau);
+            System.out.println("[+] Đã cập nhật kết quả duyệt yêu cầu vào YeuCau.txt.");
+        } else {
+            System.out.println("[i] Không có yêu cầu nào đang ở trạng thái Chờ duyệt.");
         }
     }
 
-    public void xemLichSuDuyet(String file){
-       ArrayList<YeuCau> dsDuyet =  DataBase.docfile(YeuCau.class, file);
-       System.out.println("LICH SU YEU CAU DUYET");
-       System.out.println("Đang tải danh sách...");
-       Validation.danghoatdong(1);
-       for(YeuCau yc: dsDuyet)
-       yc.toString();
+    public void xemLichSuDuyet(String file) {
+        System.out.println("\n=== LỊCH SỬ YÊU CẦU DUYỆT ===");
+        try {
+            ArrayList<YeuCau.BanGhiDataBase> dsDuyet = YeuCau.docDanhSach(Paths.get(file));
+            if (dsDuyet.isEmpty()) {
+                System.out.println("[i] Danh sách yêu cầu trống.");
+                return;
+            }
+            for (YeuCau.BanGhiDataBase yc : dsDuyet) {
+                if (yc.laDongLoi()) {
+                    System.out.println("[!] Dòng lỗi: " + yc.getDongLoi());
+                } else {
+                    System.out.printf("Mã NV: %s | Vai trò: %s | Nội dung: %s | Trạng thái: %s%n",
+                            yc.getMaNV(), yc.getVaitro(), yc.getNoiDung(), yc.getTrangThai());
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("[!] Không đọc được file yêu cầu: " + e.getMessage());
+        }
     }
 
-    public void thongKe()
-    {
+    public void thongKe() {
         Map<String, Integer> yeuCauTheoTrangThai = new HashMap<>();
-        System.out.println("Đang thống kê...");
-        Validation.danghoatdong(1);
         for (YeuCau yeuCau : list) {
             if (yeuCau != null)
                 yeuCauTheoTrangThai.merge(yeuCau.getTrangThai(), 1, Integer::sum);

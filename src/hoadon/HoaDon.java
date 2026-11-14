@@ -7,32 +7,56 @@ import java.time.LocalDateTime;
 public abstract class HoaDon {
     private String maHoaDon;
     private LocalDateTime ngayLap;
-    private String maNhanVien ;
-    private String loaiHoaDon ;
-    private static int soThuTu ;
-    
-    public HoaDon( String maNhanVien ) {
-        this.ngayLap = LocalDateTime.now(); 
-        this.maNhanVien = maNhanVien ;
-        this.maHoaDon = Validation.taoMa("HD%03d" , soThuTu) ;
-        loaiHoaDon = "" ;
-        soThuTu++ ;
+    private String maNhanVien;
+    private String loaiHoaDon;
+    private static int soThuTu = 1;
+
+    private static void capNhatSoThuTuTuMa(String ma) {
+        if (ma != null && ma.matches("(?i)^HD(B|N)?\\d+$")) {
+            try {
+                String digits = ma.replaceFirst("(?i)^HD(B|N)?", "");
+                int num = Integer.parseInt(digits);
+                if (num >= soThuTu) {
+                    soThuTu = num + 1;
+                }
+            } catch (NumberFormatException ignored) {
+            }
+        }
     }
 
-    public HoaDon(String maHoaDon, LocalDateTime ngayLap , String maNhanVien , String loaiHoaDon) {
-        this.maHoaDon = maHoaDon;
-        this.ngayLap = ngayLap ;
-        this.loaiHoaDon = loaiHoaDon ;
-        this.maNhanVien = maNhanVien ;
+    public HoaDon(String maNhanVien) {
+        this.ngayLap = LocalDateTime.now();
+        this.maNhanVien = maNhanVien;
+        this.maHoaDon = Validation.taoMa("HD%03d", soThuTu);
+        this.loaiHoaDon = "";
+        soThuTu++;
     }
+
+    protected HoaDon(String maNhanVien, String loaiMacDinh) {
+        this(maNhanVien);
+        this.loaiHoaDon = loaiMacDinh;
+    }
+
+    public HoaDon(String maHoaDon, LocalDateTime ngayLap, String maNhanVien, String loaiHoaDon) {
+        this.maHoaDon = maHoaDon;
+        this.ngayLap = ngayLap;
+        this.loaiHoaDon = loaiHoaDon;
+        this.maNhanVien = maNhanVien;
+        capNhatSoThuTuTuMa(maHoaDon);
+    }
+
     public abstract long tinhTongTien();
     public abstract void hienThiHoaDon();
 
     public String getMaHoaDon() { return maHoaDon; }
+
     public void setMaHoaDon(String maHoaDon) {
         if (maHoaDon == null || !maHoaDon.matches("(?i)HD(B|N)?\\d+")) {
             throw new IllegalArgumentException("MaHoaDon không đúng định dạng.");
-        } this.maHoaDon = maHoaDon; }
+        }
+        this.maHoaDon = maHoaDon;
+        capNhatSoThuTuTuMa(maHoaDon);
+    }
 
     public LocalDateTime getNgayLap() {
         return ngayLap;
@@ -60,7 +84,6 @@ public abstract class HoaDon {
         return maNhanVien;
     }
 
-
     public String getLoaiHoaDon() {
         return loaiHoaDon;
     }
@@ -74,6 +97,6 @@ public abstract class HoaDon {
 
     @Override
     public String toString() {
-        return super.toString() + "Mã hoá đơn: " + maHoaDon + " | Mã nhân viên:" + maNhanVien + " | Ngày lập: " + ngayLap + " | Loại hoá đơn: " + loaiHoaDon ;
+        return "Mã hoá đơn: " + maHoaDon + " | Mã nhân viên:" + maNhanVien + " | Ngày lập: " + ngayLap + " | Loại hoá đơn: " + loaiHoaDon;
     }
 }

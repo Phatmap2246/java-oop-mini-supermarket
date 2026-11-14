@@ -26,20 +26,21 @@ public class HoaDonNhapHang extends HoaDon {
 
     // Constructors
     public HoaDonNhapHang( String maNhanVien) {
-        super(maNhanVien);
+        super(maNhanVien, "Hoá đơn nhập");
         this.maNhaCungCap = "";
         this.thueVAT = 0;
         this.chiPhiVanChuyen = 0;
         this.Duyet = false ;
         this.daNhapSP = false ;
         this.ctHoaDonNhaps = new ArrayList<>() ;
-        super.setLoaiHoaDon("Hoá đơn nhập");
         this.daThanhToan =false; 
     }
 
     public HoaDonNhapHang(String maHoaDon, LocalDateTime ngayLap, String maNhanvien, String loaiHoaDon , String maNhaCungCap, long chiPhiVanChuyen, double thueVAT , boolean Duyet , boolean daNhapSP,boolean daThanhToan) {
         super(maHoaDon, ngayLap , maNhanvien , loaiHoaDon);
-        this.maNhaCungCap = maNhaCungCap; // ĐÃ THÊM DÒNG NÀY
+        if (chiPhiVanChuyen < 0) throw new IllegalArgumentException("ChiPhiVanChuyen không được âm.");
+        if (!Double.isFinite(thueVAT) || thueVAT < 0 || thueVAT > 100) throw new IllegalArgumentException("thueVAT không hợp lệ.");
+        this.maNhaCungCap = maNhaCungCap;
         this.chiPhiVanChuyen = chiPhiVanChuyen;
         this.thueVAT = thueVAT;
         this.Duyet = Duyet ;

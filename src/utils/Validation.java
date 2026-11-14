@@ -2,126 +2,132 @@ package utils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Validation {
 
-    // --- KHO BIỂU THỨC CHÍNH QUY (REGEX) DÙNG CHUNG ---
-    // Họ tên: Chấp nhận chữ cái (kể cả tiếng Việt), khoảng trắng, dấu nháy đơn, dấu gạch ngang
     public static final String HOTEN_REGEX = "^[\\p{L}\\s'-]+$";
-
-    // Số điện thoại: Bắt đầu bằng 03, 05, 07, 08, 09 và theo sau là 8 chữ số
     public static final String PHONE_REGEX = "^(03|05|07|08|09)\\d{8}$";
-
-    // Email: Định dạng chuẩn abc@domain.com
     public static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 
     public static final String MaNV_REGEX = "(?i)^NV\\d{3}$";
     public static final String MaKH_REGEX = "(?i)^KH\\d{3,5}$";
-    public static final String MaSP_REGEX = "(?i)^SP\\d{3,5}$";   
-    public static final String MaHDB_REGEX = "(?i)^HDB\\d{3,5}$";
-    public static final String MaHDN_REGEX = "(?i)^HDN\\d{3,5}$";
+    public static final String MaSP_REGEX = "(?i)^SP\\d{3,5}$";
+    public static final String MaHDB_REGEX = "(?i)^HD(B)?\\d{3,5}$";
+    public static final String MaHDN_REGEX = "(?i)^HD(N)?\\d{3,5}$";
     public static final String MaNCC_REGEX = "(?i)^NCC\\d+$";
-    public static final String MaDT_REGEX = "(?i)^(NCC)\\d+$";
+    public static final String MaDT_REGEX = "(?i)^(NCC|DT)\\d+$";
     public static final String MaKM_REGEX = "(?i)^KM\\d+$";
     public static final String MaSoThue_REGEX = "^\\d{10}(-?\\d{3})?$";
+
     private static final String DATE_REGEX =
             "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/[0-9]{4}$";
     private static final String DATE_TIME_REGEX =
             "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/[0-9]{4} ([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$";
 
-    // ================= CÁC HÀM NHẬP SỐ =================
-
-    // 1. Hàm nhập số nguyên (chống sập bằng try-catch)
     public static int inputInt(Scanner sc, String message) {
+        if (sc == null) return 0;
         while (true) {
+            System.out.print(message);
+            if (!sc.hasNextLine()) {
+                return 0;
+            }
+            String line = sc.nextLine().trim();
             try {
-                System.out.print(message);
-                int value = sc.nextInt();
-                sc.nextLine(); // Xóa bộ đệm sau khi nhập số
-                if (value <0) {
-                    System.out.println("[!] Lỗi: Bạn phải nhập số nguyên lớn hoặc bằng 0. Vui lòng thử lại");
+                int value = Integer.parseInt(line);
+                if (value < 0) {
+                    System.out.println("[!] Lỗi: Bạn phải nhập số nguyên lớn hơn hoặc bằng 0. Vui lòng thử lại!");
                     continue;
                 }
                 return value;
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 System.out.println("[!] Lỗi: Bạn phải nhập số nguyên. Vui lòng thử lại!");
-                sc.nextLine(); // Xóa chữ "abc" vừa nhập để không bị lặp vô hạn
             }
         }
     }
 
     public static long inputLong(Scanner sc, String message) {
+        if (sc == null) return 0L;
         while (true) {
+            System.out.print(message);
+            if (!sc.hasNextLine()) {
+                return 0L;
+            }
+            String line = sc.nextLine().trim();
             try {
-                System.out.print(message);
-                long value = sc.nextLong();
-                sc.nextLine();
-                if (value <0) {
-                    System.out.println("[!] Lỗi: Bạn phải nhập số nguyên lớn hoặc bằng 0. Vui lòng thử lại");
+                long value = Long.parseLong(line);
+                if (value < 0) {
+                    System.out.println("[!] Lỗi: Bạn phải nhập số nguyên lớn hơn hoặc bằng 0. Vui lòng thử lại!");
                     continue;
                 }
                 return value;
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 System.out.println("[!] Lỗi: Bạn phải nhập số nguyên. Vui lòng thử lại!");
-                sc.nextLine();
             }
         }
     }
 
-    // 2. Hàm nhập số thực (double) - Dùng cho Đơn giá, Tổng tiền
     public static double inputDouble(Scanner sc, String message) {
+        if (sc == null) return 0.0;
         while (true) {
+            System.out.print(message);
+            if (!sc.hasNextLine()) {
+                return 0.0;
+            }
+            String line = sc.nextLine().trim();
             try {
-                System.out.print(message);
-                double value = sc.nextDouble();
-                sc.nextLine();
+                double value = Double.parseDouble(line);
                 if (!Double.isFinite(value) || value < 0) {
-                    System.out.println("[!] Lỗi: Bạn phải nhập số thực lớn hoặc bằng 0. Vui lòng thử lại");
+                    System.out.println("[!] Lỗi: Bạn phải nhập số thực lớn hơn hoặc bằng 0. Vui lòng thử lại!");
                     continue;
                 }
                 return value;
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 System.out.println("[!] Lỗi: Bạn phải nhập số thực (VD: 10.5). Vui lòng thử lại!");
-                sc.nextLine();
             }
         }
     }
 
     public static float inputFloat(Scanner sc, String message) {
+        if (sc == null) return 0.0f;
         while (true) {
+            System.out.print(message);
+            if (!sc.hasNextLine()) {
+                return 0.0f;
+            }
+            String line = sc.nextLine().trim();
             try {
-                System.out.print(message);
-                float value = sc.nextFloat();
-                sc.nextLine();
+                float value = Float.parseFloat(line);
                 if (!Float.isFinite(value)) {
                     System.out.println("[!] Số thực phải hữu hạn. Vui lòng nhập lại!");
                     continue;
                 }
                 return value;
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 System.out.println("[!] Lỗi: Bạn phải nhập số thực (VD: 10.5). Vui lòng thử lại!");
-                sc.nextLine();
             }
         }
     }
 
-    // ================= CÁC HÀM NHẬP CHUỖI VÀ TIỆN ÍCH =================
-
-    // 3. Hàm nhập chuỗi có kiểm tra Regex (Dùng cho Mã HĐ, SĐT, Tên)
     public static String inputStringRegex(Scanner sc, String message, String regex, String errorMessage) {
+        if (sc == null) throw new NoSuchElementException("Scanner is null");
         while (true) {
             System.out.print(message);
+            if (!sc.hasNextLine()) {
+                throw new NoSuchElementException("Hết dữ liệu đầu vào (EOF).");
+            }
             String value = sc.nextLine().trim();
             if (value.matches(regex)) {
-                return value; // Đúng định dạng thì trả về
+                return value;
             }
             System.out.println("[!] " + errorMessage);
         }
     }
+
     public static String inputStringRegex(Scanner sc, String message, String regex,
                                           String errorMessage, int soThuTuTiepTheo) {
         if (soThuTuTiepTheo <= 1) {
@@ -141,17 +147,18 @@ public class Validation {
         }
     }
 
-
-    // 4. Hàm tự động tạo mã (VD: NV001, KH001)
     public static String taoMa(String regex, int soTiepTheo) {
         return String.format(regex, soTiepTheo);
     }
-    
-    // 5. Hàm nhập ngày tháng (dd/MM/yyyy)
+
     public static LocalDate inputLocalDateRegex(Scanner sc, String message) {
+        if (sc == null) throw new NoSuchElementException("Scanner is null");
         DateTimeFormatter khuon = DateTimeFormatter.ofPattern("dd/MM/uuuu").withResolverStyle(ResolverStyle.STRICT);
-        while(true) {
+        while (true) {
             System.out.print(message);
+            if (!sc.hasNextLine()) {
+                throw new NoSuchElementException("Hết dữ liệu đầu vào (EOF).");
+            }
             String date = sc.nextLine().trim();
             if (!date.matches(DATE_REGEX)) {
                 System.out.println("[!] Bạn nhập sai định dạng (dd/MM/yyyy). Vui lòng nhập lại!");
@@ -165,10 +172,13 @@ public class Validation {
         }
     }
 
-    /** Nhập ngày giờ theo định dạng dd/MM/yyyy HH:mm:ss, yêu cầu nhập lại khi sai. */
     public static LocalDateTime inputLocalDateTimeRegex(Scanner sc, String message) {
+        if (sc == null) throw new NoSuchElementException("Scanner is null");
         while (true) {
             System.out.print(message);
+            if (!sc.hasNextLine()) {
+                throw new NoSuchElementException("Hết dữ liệu đầu vào (EOF).");
+            }
             String dateTime = sc.nextLine().trim();
             if (!dateTime.matches(DATE_TIME_REGEX)) {
                 System.out.println("[!] Bạn nhập sai định dạng (dd/MM/yyyy HH:mm:ss). Vui lòng nhập lại!");
@@ -182,27 +192,32 @@ public class Validation {
         }
     }
 
-    // 6. Hàm nhập Có/Không (Dùng cho các câu hỏi xác nhận)
     public static boolean inputCoKhong(Scanner sc, String message) {
+        if (sc == null) return false;
         while (true) {
             System.out.print(message + " (Có/Không): ");
+            if (!sc.hasNextLine()) {
+                return false;
+            }
             String value = sc.nextLine().trim();
-
-            if (value.equalsIgnoreCase("có") || value.equalsIgnoreCase("co")) {
+            if (value.equalsIgnoreCase("có") || value.equalsIgnoreCase("co") || value.equalsIgnoreCase("1")) {
                 return true;
             }
-            if (value.equalsIgnoreCase("không") || value.equalsIgnoreCase("khong")) {
+            if (value.equalsIgnoreCase("không") || value.equalsIgnoreCase("khong") || value.equalsIgnoreCase("0")) {
                 return false;
             }
             System.out.println("[!] Vui lòng nhập Có hoặc Không!");
         }
     }
 
-    // 7. Hàm nhập lựa chọn Menu (Giới hạn từ khoảng A đến B)
     public static int luaChon(Scanner sc, String thongBao, int khoangBatDau, int khoangKetThuc) {
+        if (sc == null) return khoangBatDau;
         while (true) {
             System.out.print(thongBao);
-            String value = sc.nextLine();
+            if (!sc.hasNextLine()) {
+                return (khoangBatDau <= 0 && 0 <= khoangKetThuc) ? 0 : khoangBatDau;
+            }
+            String value = sc.nextLine().trim();
             try {
                 int soNguyen = Integer.parseInt(value);
                 if (soNguyen < khoangBatDau || soNguyen > khoangKetThuc) {
@@ -215,12 +230,8 @@ public class Validation {
             }
         }
     }
-    public static void danghoatdong ( long giay )
-    {
-        try {
-            Thread.sleep(giay*1000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+
+    public static void danghoatdong(long giay) {
+        // Không gọi Thread.sleep để tránh đơ giao diện console
     }
 }
