@@ -2,11 +2,15 @@ package sanpham;
 
 
 import utils.Validation;
-import interfaces.IThongTin;
-
 import java.util.Scanner;
 
-public abstract class SanPham implements IThongTin {
+public abstract class SanPham {
+    private boolean tonTai = true;
+
+    public boolean isTonTai() { return tonTai; }
+
+    public void setTonTai(boolean tonTai) { this.tonTai = tonTai; }
+
     private String maSanPham , tenSanPham , loaiSanPham , maNhaCungCap;
     private long giaNhap , giaBan ;
     private int soLuongTonKho  ;
@@ -37,11 +41,11 @@ public abstract class SanPham implements IThongTin {
         return soThuTu;
     }
 
-    public static void setSoThuTu(int soThuTu) {
-        SanPham.soThuTu = soThuTu;
-    }
 
     public void setThue(double thue) {
+        if (!Double.isFinite(thue) || thue < 0 || thue > 1) {
+            throw new IllegalArgumentException("thue không hợp lệ.");
+        }
         this.thue = thue;
     }
 
@@ -50,26 +54,44 @@ public abstract class SanPham implements IThongTin {
     }
 
     public void setMaSanPham(String maSanPham) {
+        if (maSanPham == null || !maSanPham.matches("(?i)SP\\d+")) {
+            throw new IllegalArgumentException("MaSanPham không đúng định dạng.");
+        }
         this.maSanPham = maSanPham;
     }
 
     public void setTenSanPham(String tenSanPham) {
+        if (tenSanPham == null || tenSanPham.isBlank()) {
+            throw new IllegalArgumentException("TenSanPham không được để trống.");
+        }
         this.tenSanPham = tenSanPham;
     }
 
     public void setMaNhaCungCap(String maNhaCungCap) {
+        if (maNhaCungCap == null || !maNhaCungCap.matches("(?i)NCC\\d+")) {
+            throw new IllegalArgumentException("MaNhaCungCap không đúng định dạng.");
+        }
         this.maNhaCungCap = maNhaCungCap;
     }
 
     public void setSoLuongTonKho(int soLuongTonKho) {
+        if (soLuongTonKho < 0) {
+            throw new IllegalArgumentException("SoLuongTonKho không được âm.");
+        }
         this.soLuongTonKho = soLuongTonKho;
     }
 
     public void setGiaNhap(long giaNhap) {
+        if (giaNhap < 0) {
+            throw new IllegalArgumentException("GiaNhap không được âm.");
+        }
         this.giaNhap = giaNhap;
     }
 
     public void setGiaBan(long giaBan) {
+        if (giaBan < 0) {
+            throw new IllegalArgumentException("GiaBan không được âm.");
+        }
         this.giaBan = giaBan;
     }
 
@@ -86,6 +108,9 @@ public abstract class SanPham implements IThongTin {
     }
 
     public void setLoaiSanPham(String loaiSanPham) {
+        if (loaiSanPham == null || loaiSanPham.isBlank()) {
+            throw new IllegalArgumentException("LoaiSanPham không được để trống.");
+        }
         this.loaiSanPham = loaiSanPham;
     }
 
@@ -109,17 +134,11 @@ public abstract class SanPham implements IThongTin {
     public void setSanPham(Scanner sc)
     {
         System.out.println("Nhập tên sản phẩm: ");
-        tenSanPham = sc.nextLine() ;
+        tenSanPham = Validation.inputStringRegex(sc, "Nhập thông tin: ", "(?s).+", "Thông tin không được để trống!");
         giaBan = Validation.inputLong(sc , "Nhập giá bán: ") ;
         giaNhap = Validation.inputLong(sc , "Nhập giá nhập hàng: ") ;
         soLuongTonKho = Validation.inputInt(sc , "Nhập số lượng tồn kho: ") ;
     }
-
-    @Override
-    public void nhapThongTin(Scanner sc) {
-        setSanPham(sc);
-    }
-
     public abstract long tinhThue() ;
     @Override
     public String toString() {

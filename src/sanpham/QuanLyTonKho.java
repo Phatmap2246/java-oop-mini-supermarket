@@ -11,20 +11,24 @@ public final class QuanLyTonKho {
 
     public static SanPham timSanPham(List<SanPham> danhSachSanPham, String maSanPham) {
         if (danhSachSanPham == null || maSanPham == null) {
+            System.out.println("Không tìm thấy sản phẩm!");
             return null;
         }
         for (SanPham sanPham : danhSachSanPham) {
-            if (sanPham.getMaSanPham().equalsIgnoreCase(maSanPham)) {
+            if (sanPham != null && sanPham.isTonTai() && maSanPham.equalsIgnoreCase(sanPham.getMaSanPham())) {
                 return sanPham;
             }
         }
+        System.out.println("Không tìm thấy sản phẩm hoặc sản phẩm đã bị xóa!");
         return null;
     }
 
     public static int soLuongDaCo(List<CTHoaDonBan> chiTietHoaDon, String maSanPham) {
+        if (chiTietHoaDon == null || maSanPham == null) return 0;
         long soLuong = 0;
         for (CTHoaDonBan chiTiet : chiTietHoaDon) {
-            if (chiTiet.getMaSanPham().equalsIgnoreCase(maSanPham)) {
+            if (chiTiet == null || !chiTiet.isTonTai() || chiTiet.getMaSanPham() == null) continue;
+            if (maSanPham.equalsIgnoreCase(chiTiet.getMaSanPham())) {
                 soLuong += chiTiet.getSoLuong();
             }
         }
@@ -61,6 +65,7 @@ public final class QuanLyTonKho {
         }
         for (Map.Entry<String, Long> entry : tongSoLuongTheoMa(chiTietHoaDon).entrySet()) {
             SanPham sanPham = timSanPham(danhSachSanPham, entry.getKey());
+            if (sanPham == null) return false;
             sanPham.setSoLuongTonKho(sanPham.getSoLuongTonKho() - entry.getValue().intValue());
         }
         return true;
@@ -100,6 +105,7 @@ public final class QuanLyTonKho {
     private static Map<String, Long> tongSoLuongTheoMa(List<CTHoaDonBan> chiTietHoaDon) {
         Map<String, Long> soLuongTheoMa = new LinkedHashMap<>();
         for (CTHoaDonBan chiTiet : chiTietHoaDon) {
+            if (chiTiet == null || !chiTiet.isTonTai() || chiTiet.getMaSanPham() == null) continue;
             String maSanPham = chiTiet.getMaSanPham().toUpperCase();
             soLuongTheoMa.merge(maSanPham, (long) chiTiet.getSoLuong(), Long::sum);
         }

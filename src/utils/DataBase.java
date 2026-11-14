@@ -1,5 +1,8 @@
 package utils;
 
+import interfaces.TrongFile;
+import sanpham.SanPham;
+
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -26,7 +29,7 @@ public class DataBase {
            header += field.getName();
            header += ",";
         }
-        header = header.substring(0,header.length()-1);
+        if (!header.isEmpty()) header = header.substring(0,header.length()-1);
         return header;
     }
     public static String getCSVLine(Object obj) {
@@ -45,12 +48,12 @@ public class DataBase {
             line += valString;
             line += ',';
         }
-        line = line.substring(0,line.length() -1);
+        if (!line.isEmpty()) line = line.substring(0,line.length() -1);
         return line;
     }
     public static Object getDataType(String value,Class<?> targetType){
         if (targetType == String.class) return value;
-        if (value == null || value.strip() == "" || value.equalsIgnoreCase("null")){
+        if (value == null || value.strip().isEmpty() || value.equalsIgnoreCase("null")){
             return null;
         }
         value = value.strip();
@@ -74,10 +77,36 @@ public class DataBase {
         System.err.println("co loi");
         return null;
     }
+    public static String getFilePath(Class<?> clazz) {
+        if(TrongFile.class.isAssignableFrom(clazz)){
+            try {
+                TrongFile coFile = (TrongFile) clazz.getDeclaredConstructor().newInstance();
+                return coFile.getFilePath();
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        System.err.println("không lưu trữ được");
+        return null;
+    }
     //Class của object cần constuctor rỗng VD public SanPham(){};
     public static <T> T taoObject (Class<T> clazz,String CSVHeader, String CSVLine){
+       if (CSVHeader == null || CSVLine == null) {
+           System.err.println("Thiếu dữ liệu hoặc tiêu đề bản ghi.");
+           return null;
+       }
        String[] headers = CSVHeader.split(",", -1);
        String[] values = CSVLine.split("," ,-1);
+       if (headers.length != values.length) {
+           System.err.println("Số trường dữ liệu không khớp tiêu đề.");
+           return null;
+       }
        try{
            T inst = clazz.getDeclaredConstructor().newInstance();
            ArrayList<Field> fields = getALlField(clazz);
@@ -94,7 +123,7 @@ public class DataBase {
               }
            }
            return inst;
-       } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+       } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException | IllegalArgumentException | java.time.DateTimeException e) {
            System.err.println(e.getMessage());
            return null;
        }
@@ -120,6 +149,10 @@ public class DataBase {
         }
     }
     public static void ghiVaoFile(Object obj, String filePath,boolean ghiDe){
+        if (obj == null) {
+            System.err.println("Không có đối tượng để ghi file.");
+            return;
+        }
         String headers = DataBase.getCSVHeader(obj);
         String csvLine = DataBase.getCSVLine(obj);
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(filePath,!ghiDe))){
@@ -132,6 +165,10 @@ public class DataBase {
         }
     }
     public static void ghiVaoFile(ArrayList<Object> objs, String filePath, boolean ghiDe){
+        if (objs == null || objs.isEmpty() || objs.getFirst() == null) {
+            System.err.println("Danh sách rỗng, không có dữ liệu để ghi.");
+            return;
+        }
         String headers = DataBase.getCSVHeader(objs.getFirst());
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(filePath,!ghiDe))){
             if(ghiDe == true) writer.write(headers);
@@ -145,16 +182,24 @@ public class DataBase {
             System.err.println(e.getMessage());
         }
     }
+    public static void ghiVanBan(String filePath, String content, boolean ghiDe){
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(filePath,!ghiDe))){
+          writer.write(content);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public static <T> ArrayList<T> docfile( Class<T> clazz, String filePath){
        ArrayList<T> objs = new ArrayList<T>();
        try(BufferedReader reader = new BufferedReader(new FileReader(filePath))){
            String headers =reader.readLine();
-           if(headers.trim().isEmpty()){
+           if(headers == null || headers.trim().isEmpty()){
                return objs;
            }
            String line;
            while ((line = reader.readLine()) != null) {
-               objs.add(DataBase.taoObject(clazz, headers, line));
+               T obj = DataBase.taoObject(clazz, headers, line);
+               if (obj != null) objs.add(obj);
            }
            return objs;
        }
@@ -163,7 +208,31 @@ public class DataBase {
            return objs;
        }
     }
+    public static <T> ArrayList<T> docfile( Class<T> clazz){
+        ArrayList<T> objs = new ArrayList<T>();
+        String filePath = getFilePath(clazz);
+        if(filePath == null) return objs;
+        try(BufferedReader reader = new BufferedReader(new FileReader(filePath))){
+            String headers =reader.readLine();
+            if(headers.trim().isEmpty()){
+                return objs;
+            }
+            String line;
+            while ((line = reader.readLine()) != null) {
+                objs.add(DataBase.taoObject(clazz, headers, line));
+            }
+            return objs;
+        }
+        catch(Exception e){
+            System.err.println(e.getMessage());
+            return objs;
+        }
+    }
     public static <T> void suaObjectTrongArrayList(ArrayList<T> objs, int index){
+        if (objs == null || index < 0 || index >= objs.size() || objs.get(index) == null) {
+            System.out.println("Không tìm thấy đối tượng tại vị trí cần sửa!");
+            return;
+        }
         T obj = objs.get(index);
         ArrayList<Field> fields = DataBase.getALlField(obj.getClass());
         System.out.println("Cac gia tri co the sua");
@@ -174,12 +243,16 @@ public class DataBase {
         //lay input stt tu user
         int stt =1;
 
+        if (stt >= fields.size()) {
+            System.out.println("Không có thuộc tính tại vị trí cần sửa!");
+            return;
+        }
         Field toBeEdit = fields.get(stt);
         //lay input gia tri moi tu user
         try {
             toBeEdit.set(obj,null);
-        } catch (IllegalAccessException e) {
-            System.err.println(e.getStackTrace());
+        } catch (IllegalAccessException | IllegalArgumentException e) {
+            System.err.println(e.getMessage());
         }
     }
 }

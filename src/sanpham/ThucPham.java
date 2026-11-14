@@ -3,6 +3,7 @@ import utils.Validation;
 
 import java.time.LocalDate;
 import java.util.Scanner;
+import java.time.temporal.ChronoUnit;
 public class ThucPham extends SanPham
 {
     private LocalDate ngaySanXuat , hanSuDung ;
@@ -11,10 +12,11 @@ public class ThucPham extends SanPham
     public ThucPham()
     {
         super();
-        ngaySanXuat = hanSuDung = LocalDate.now() ;
+        ngaySanXuat = hanSuDung = null ;
         nhietDoBaoQuan = 0 ;
         baoQuan = "" ;
         super.setThue(0.08);
+        super.setLoaiSanPham("Thực phẩm");
     }
     public ThucPham ( String maSanPham , String tenSanPham , String loaiSanPham , long giaNhap , long giaBan , int soLuongTonKho , String maNhaCungCap , double thue ,
                       LocalDate ngaySanXuat , LocalDate hanSuDung , double nhietDoBaoQuan , String baoQuan)
@@ -39,10 +41,16 @@ public class ThucPham extends SanPham
     }
 
     public void setHanSuDung(LocalDate hanSuDung) {
+        if (hanSuDung == null) {
+            throw new IllegalArgumentException("Hạn sử dụng không được null.");
+        }
         this.hanSuDung = hanSuDung;
     }
 
     public void setNhietDoBaoQuan(double nhietDoBaoQuan) {
+        if (!Double.isFinite(nhietDoBaoQuan)) {
+            throw new IllegalArgumentException("Nhiệt độ phải là số hữu hạn.");
+        }
         this.nhietDoBaoQuan = nhietDoBaoQuan;
     }
 
@@ -51,10 +59,16 @@ public class ThucPham extends SanPham
     }
 
     public void setBaoQuan(String baoQuan) {
+        if (baoQuan == null || baoQuan.isBlank()) {
+            throw new IllegalArgumentException("Thông tin bảo quản không được rỗng.");
+        }
         this.baoQuan = baoQuan;
     }
 
     public void setNgaySanXuat(LocalDate ngaySanXuat) {
+        if (ngaySanXuat == null) {
+            throw new IllegalArgumentException("Ngày sản xuất không được null.");
+        }
         this.ngaySanXuat = ngaySanXuat;
     }
 
@@ -62,19 +76,47 @@ public class ThucPham extends SanPham
     public void setSanPham(Scanner sc)
     {
         super.setSanPham(sc);
-        ngaySanXuat = Validation.inputLocalDateRegex(sc , "Nhập ngày sản xuất(dd/MM/yyyy): ") ; // chưa có ktra ngày hợp lệ
+        ngaySanXuat = Validation.inputLocalDateRegex(sc , "Nhập ngày sản xuất(dd/MM/yyyy): ") ;
         hanSuDung = Validation.inputLocalDateRegex(sc , "Nhập hạn sử dụng(dd/MM/yyyy): ") ;
+        while ( hanSuDung.isBefore(ngaySanXuat))
+        {
+            System.out.println("Ngày hêt hạn không được trươc ngày sản xuất!");
+            hanSuDung = Validation.inputLocalDateRegex(sc , "Nhập lại hạn sử dụng(dd/MM/yyyy): ") ;
+        }
         System.out.println("Nhập môi trường bảo quản: ");
         baoQuan = sc.nextLine() ;
         System.out.println("Nhập nhiệt độ bảo quản: ");
         nhietDoBaoQuan = Validation.inputInt(sc , "Nhập nhiệt độ bảo quản: ") ;
+        while ( nhietDoBaoQuan < 0 )
+        {
+            System.out.println("Sản phẩm không nên được bảo quản ở nhiệt độ quá lạnh!");
+            nhietDoBaoQuan = Validation.inputInt(sc , "Nhập nhiệt độ bảo quản: ") ;
+        }
     }
     public int ktraNgayHetHan() {
-        return Math.max(hanSuDung.getDayOfYear() - LocalDate.now().getDayOfYear(), 0);
+        if ( ngaySanXuat == null || hanSuDung == null )
+        {
+            System.out.println("Bạn chưa nhập ngày cung cấp hoặc hạn sử dụng");
+            return 0 ;
+        }
+        return Math.toIntExact(Math.max(ChronoUnit.DAYS.between(LocalDate.now() , hanSuDung), 0));
+    }
+    public int kiemTraSoNgaySuDung ()
+    {
+        if (ngaySanXuat == null || hanSuDung == null) {
+            System.out.println("Chưa có ngày sản xuất hoặc hạn sử dụng!");
+            return 0;
+        }
+        return Math.toIntExact(ChronoUnit.DAYS.between(ngaySanXuat , hanSuDung)) ;
     }
     public boolean kiemTraSanPhamHong()
     {
-        return ktraNgayHetHan() == 0 ;
+        if ( ngaySanXuat == null || hanSuDung == null )
+        {
+            System.out.println("Bạn chưa nhập ngày cung cấp hoặc hạn sử dụng");
+            return false ;
+        }
+        return !hanSuDung.isAfter(LocalDate.now()) ;
     }
 
 

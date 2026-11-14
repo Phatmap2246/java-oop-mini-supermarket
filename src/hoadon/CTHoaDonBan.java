@@ -1,174 +1,178 @@
 package hoadon;
+import java.time.LocalDate;
 import java.util.Scanner;
 
-import dichvu.DanhSachSPKM;
-import dichvu.Danhsachkhuyenmai;
-import dichvu.KhuyenMaiMuaTang;
-import dichvu.KhuyenMaiPhanTram;
+import dichvu.*;
 
-import java.util.List;
-import sanpham.QuanLyTonKho;
+import sanpham.QuanLySanPham;
 import sanpham.SanPham;
+import sanpham.ThucPham;
 import utils.Validation;
-public class CTHoaDonBan {
-    private String maSanPham;
-    private String tenSanPham;
-    private  int soLuong;
-    private  long donGia;
+public class CTHoaDonBan extends CTHoaDon{
+    private boolean tonTai = true;
+
+    public boolean isTonTai() { return tonTai; }
+
+    public void setTonTai(boolean tonTai) { this.tonTai = tonTai; }
+
     private long thanhTienSauKhuyenMai;
     private int soLuongTangKem;
     private int soLuongPhaiTra;
-    private boolean hangKhuyenMai;
-    private boolean kemHangChoTang;
     private long soTienGiam;
+    private String loaiKhuyenMai ;
 
     // constructor
     public CTHoaDonBan() {
-        this.maSanPham = "";
-        this.soLuong = 0;
-        this.donGia = 0;
+        super();
         this.thanhTienSauKhuyenMai = 0;
         this.soTienGiam = 0;
         this.soLuongTangKem = 0;
         this.soLuongPhaiTra = 0;
-        this.hangKhuyenMai = false;
-        this.kemHangChoTang = false;
+        this.loaiKhuyenMai = "Không áp dụng" ;
     }
 
-    public CTHoaDonBan(String maSanPham, String tenSanPham, int soLuong, long donGia) {
-        this.maSanPham = maSanPham;
-        this.tenSanPham = tenSanPham;
-        this.soLuong = soLuong;
-        this.donGia = donGia;
+    public CTHoaDonBan(String maSanPham, String tenSanPham, int soLuong, long donGia , String loaiKhuyenMai ) {
+        this();
+        setMaSanPham(maSanPham);
+        setTenSanPham(tenSanPham);
+        setSoLuong(soLuong);
+        setDonGia(donGia);
         this.soTienGiam = 0;
+        this.loaiKhuyenMai = loaiKhuyenMai ;
         this.thanhTienSauKhuyenMai = tinhThanhTienSauKhuyenMai();
         this.soLuongTangKem =0;
-        this.soLuongPhaiTra=0;
-        this.kemHangChoTang = false;
-        this.hangKhuyenMai = false;
+        this.soLuongPhaiTra=soLuong;
     }
-
-    // methods
-    public void nhapThongTinBan(Scanner sc, List<SanPham> danhSachSanPham,DanhSachSPKM danhSachSPKM, Danhsachkhuyenmai dsKhuyenMai) {
+    public void nhapThongTinBan (Scanner sc , QuanLySanPham qlsp , Danhsachkhuyenmai dskm , DanhSachSPKM dsspkm )
+    {
         while (true) {
-            this.maSanPham = Validation.inputStringRegex(sc, "Nhập mã sản phẩm (VD: SP01): ", Validation.MaSP_REGEX, "Lỗi: Mã SP phải bắt đầu bằng SP và theo sau là số!");
-            SanPham sanPham = QuanLyTonKho.timSanPham(danhSachSanPham, maSanPham);
-            if (sanPham == null) {
+            setMaSanpham(Validation.inputStringRegex(sc, "Nhập mã sản phẩm (VD: SP01): ", Validation.MaSP_REGEX, "Lỗi: Mã SP phải bắt đầu bằng SP và theo sau là số!" , SanPham.getSoThuTu()));
+            SanPham sanPham = qlsp.traCuuSanPham(super.getMaSanpham()) ;
+            if (sanPham == null || sanPham.getSoLuongTonKho() == 0 || !sanPham.isTonTai() || (sanPham instanceof ThucPham && ((ThucPham) sanPham).kiemTraSanPhamHong())) {
                 System.out.println("[!] Mã sản phẩm không có trong danh mục/tồn kho.");
                 continue;
             }
-            this.tenSanPham = sanPham.getTenSanPham();
-            this.donGia = sanPham.getGiaBan();
+            setTenSanPham(sanPham.getTenSanPham());
+            setDonGia(sanPham.getGiaBan());
             int soLuongConLai = sanPham.getSoLuongTonKho();
             do {
-                this.soLuong = Validation.inputInt(sc, "Nhập số lượng (còn " + soLuongConLai + "): ");
-                if (this.soLuong == 0 || this.soLuong > soLuongConLai) {
+                setSoLuong(Validation.inputInt(sc, "Nhập số lượng (còn " + soLuongConLai + "): "));
+                if (super.getSoLuong() == 0 || super.getSoLuong() > soLuongConLai) {
                     System.out.println("[!] Số lượng phải từ 1 đến " + soLuongConLai + ".");
                 }
-            } while (this.soLuong == 0 || this.soLuong > soLuongConLai);
-
-            int indexSPKM = danhSachSPKM.timViTri(maSanPham);
-            if (indexSPKM >= 0) {
-                String maKM = danhSachSPKM.getSanPhamKhuyenMais()[indexSPKM].getMaKhuyenMai();
-                int indexKM = dsKhuyenMai.traCuuThongTinKhuyenMai(maKM);
-                if (indexKM>=0 && dsKhuyenMai.getKhuyenmais()[indexKM] instanceof KhuyenMaiPhanTram pt && (this.donGia*this.soLuong) >= pt.getMucChiToiThieu()) {
-                    this.soLuongTangKem = 0;
-                    this.soTienGiam = (long)(this.donGia*this.soLuong*(pt.getPhanTramGiamGia()/100));
-                    if (this.soTienGiam>pt.getMucGiamToiDa()) {
-                        this.soTienGiam = pt.getMucGiamToiDa();
+            } while (super.getSoLuong() == 0 || super.getSoLuong() > soLuongConLai);
+            int index_spkm = dsspkm.timKiemSanPhamKM(super.getMaSanpham()) ;
+            if ( index_spkm == -1 )
+            {
+                System.out.println("Sản phẩm không có giảm giá!");
+            }
+            else
+            {
+                SanPhamKhuyenMai spkm = dsspkm.getSanPhamKhuyenMais()[index_spkm] ;
+                int indexKm = dskm.traCuuThongTinKhuyenMai(spkm.getMaKhuyenMai());
+                Khuyenmai km = indexKm == -1 ? null : dskm.getKhuyenmais()[indexKm];
+                if ( km != null && km.dangHoatDong(LocalDate.now()) && km.isTonTai() && super.getDonGia()*super.getSoLuong() > km.getMucChiToiThieu())
+                {
+                    if ( km instanceof KhuyenMaiPhanTram )
+                    {
+                        soTienGiam = (long) (super.getDonGia()*super.getSoLuong()*((KhuyenMaiPhanTram) km).getPhanTramGiamGia());
+                        if ( soTienGiam > ((KhuyenMaiPhanTram) km).getMucGiamToiDa() ) soTienGiam = ((KhuyenMaiPhanTram) km).getMucGiamToiDa() ;
+                        loaiKhuyenMai = km.getLoaiKhuyenMai() ;
+                    }
+                    else if ( km instanceof  KhuyenMaiTrucTiep )
+                    {
+                        soTienGiam = ((KhuyenMaiTrucTiep) km).getSoTienGiam() ;
+                        loaiKhuyenMai = km.getLoaiKhuyenMai();
+                    }
+                    else if ( km instanceof KhuyenMaiMuaTang && ((KhuyenMaiMuaTang) km).getSoLuongMuaToiThieu() > 0 )
+                    {
+                        soLuongTangKem  = super.getSoLuong()/((KhuyenMaiMuaTang) km).getSoLuongMuaToiThieu() ;
+                        soTienGiam = soLuongTangKem*super.getDonGia() ;
+                        soLuongPhaiTra = super.getSoLuong() - soLuongTangKem ;
+                        loaiKhuyenMai = km.getLoaiKhuyenMai() ;
                     }
                 }
-                else if (indexKM>=0 && dsKhuyenMai.getKhuyenmais()[indexKM] instanceof KhuyenMaiMuaTang ch && this.soLuong >= ch.getSoLuongMuaToiThieu()) {
-                    this.soTienGiam = 0;
-                    this.soLuongTangKem = (this.soLuong/(ch.getSoLuongMuaToiThieu()+ch.getSoLuongTang()))*ch.getSoLuongTang();
-                }
-                // TODO: Hiện tại chưa có khuyễn mãi trực tiếp!
             }
-            else{
-                this.soTienGiam = 0;
-                this.soLuongTangKem = 0;
-            }
-            this.thanhTienSauKhuyenMai = tinhThanhTienSauKhuyenMai();
-            this.hangKhuyenMai = isHangKhuyenMai();
-            this.kemHangChoTang = isKemHangChoTang();
-            return;
+            break;
         }
+        thanhTienSauKhuyenMai = tinhThanhTien() ;
+        System.out.println("Thêm chi tiết hoá đơn thành công!");
     }
-
     private long tinhThanhTienSauKhuyenMai() {
-        if (this.soLuongTangKem >0) {
-            this.soLuongPhaiTra = this.soLuong - this.soLuongTangKem;
-            if (soLuongPhaiTra<0) {
-                this.soLuongPhaiTra = 0;
-            }
-        }
-        else{
-            this.soLuongPhaiTra = this.soLuong;
-        }
-        long tienGoc = soLuongPhaiTra * donGia;
-        return tienGoc - this.soTienGiam;
+       return super.getDonGia()*super.getSoLuong() - soTienGiam ;
     }
 
     public long tinhThanhTien() {
-        return thanhTienSauKhuyenMai;
+        return thanhTienSauKhuyenMai = tinhThanhTienSauKhuyenMai();
     }
-
-    public void hienThiChiTiet(){
-        System.out.println("Mã sản phẩm: "+this.getMaSanPham());
-        System.out.println("Tên sản phẩm: "+this.getTenSanPham());
-        System.out.println("Số lượng: "+this.getSoLuong());
-        System.out.println("Đơn giá: "+this.getDonGia());
-        System.out.println("Số lượng phải trả: "+this.getSoLuongPhaiTra());
-        System.out.println("Số tiền được giảm: "+this.getSoTienGiam());
-        System.out.println("Thành tiền: "+this.getThanhTienSauKhuyenMai());
-
+    @Override
+    public String toString() {
+        return super.toString() +
+                " | Số lượng phải trả: " + soLuongPhaiTra +
+                " | Số tiền được giảm: " + soTienGiam +
+                " | Thành tiền: " + thanhTienSauKhuyenMai +
+                " | Loại khuyến mãi: " + loaiKhuyenMai ;
     }
 
     // getters - setters
+    @Override
+    public void setMaSanpham(String maSanPham) {
+        setMaSanPham(maSanPham);
+    }
+
     public String getMaSanPham() {
-        return maSanPham;
+        return super.getMaSanpham();
     }
 
     public void setMaSanPham(String maSanPham) {
-        this.maSanPham = maSanPham;
+        if (maSanPham == null || !maSanPham.matches("(?i)SP\\d+")) {
+            throw new IllegalArgumentException("MaSanPham không đúng định dạng.");
+        }
+        super.setMaSanpham(maSanPham);
     }
 
+    @Override
     public String getTenSanPham() {
-        return tenSanPham;
+        return super.getTenSanPham();
     }
 
+    @Override
     public void setTenSanPham(String tenSanPham) {
-        this.tenSanPham = tenSanPham;
+        if (tenSanPham == null || tenSanPham.isBlank()) {
+            throw new IllegalArgumentException("TenSanPham không được để trống.");
+        }
+        super.setTenSanPham(tenSanPham);
     }
 
+    @Override
     public int getSoLuong() {
-        return soLuong;
+        return super.getSoLuong();
     }
 
+    @Override
     public void setSoLuong(int soLuong) {
-        this.soLuong = soLuong;
-        this.thanhTienSauKhuyenMai = tinhThanhTienSauKhuyenMai();
+        if (soLuong < 0) {
+            throw new IllegalArgumentException("SoLuong không được âm.");
+        }
+        super.setSoLuong(soLuong);
     }
 
+    @Override
     public long getDonGia() {
-        return donGia;
+        return super.getDonGia();
     }
 
+    @Override
     public void setDonGia(long donGia) {
-        this.donGia = donGia;
-        this.thanhTienSauKhuyenMai = tinhThanhTienSauKhuyenMai();
+        if (donGia < 0) {
+            throw new IllegalArgumentException("DonGia không được âm.");
+        }
+        super.setDonGia(donGia);
     }
 
 
-    public boolean isHangKhuyenMai() {
-        return this.soTienGiam>0;
-    }
     public boolean kemHangChoTang(){
         return this.soLuongTangKem>0;
-    }
-
-    public void setHangKhuyenMai(boolean hangKhuyenMai) {
-        this.hangKhuyenMai = hangKhuyenMai;
     }
 
     public long getThanhTienSauKhuyenMai() {
@@ -187,18 +191,22 @@ public class CTHoaDonBan {
     }
 
     public void setSoLuongTangKem(int soLuongTangKem) {
-        this.soLuongTangKem = Math.max(0, soLuongTangKem);
+        if (soLuongTangKem < 0) {
+            throw new IllegalArgumentException("SoLuongTangKem không được âm.");
+        }
+        this.soLuongTangKem = soLuongTangKem;
         this.thanhTienSauKhuyenMai = tinhThanhTienSauKhuyenMai();
-        this.hangKhuyenMai = isHangKhuyenMai();
-        this.kemHangChoTang = isKemHangChoTang();
     }
 
-    public boolean isKemHangChoTang() {
-        return kemHangChoTang;
+    public String getLoaiKhuyenMai() {
+        return loaiKhuyenMai;
     }
 
-    public void setKemHangChoTang(boolean kemHangChoTang) {
-        this.kemHangChoTang = kemHangChoTang;
+    public void setLoaiKhuyenMai(String loaiKhuyenMai) {
+        if (loaiKhuyenMai == null || loaiKhuyenMai.isBlank()) {
+            throw new IllegalArgumentException("Loại khuyến mãi không được rỗng.");
+        }
+        this.loaiKhuyenMai = loaiKhuyenMai;
     }
 
     public long getSoTienGiam() {
@@ -206,10 +214,11 @@ public class CTHoaDonBan {
     }
 
     public void setSoTienGiam(long soTienGiam) {
-        this.soTienGiam = Math.max(0, soTienGiam);
+        if (soTienGiam < 0) {
+            throw new IllegalArgumentException("SoTienGiam không được âm.");
+        }
+        this.soTienGiam = soTienGiam;
         this.thanhTienSauKhuyenMai = tinhThanhTienSauKhuyenMai();
-        this.hangKhuyenMai = isHangKhuyenMai();
-        this.kemHangChoTang = isKemHangChoTang();
     }
 
     public int getSoLuongPhaiTra() {
@@ -217,9 +226,9 @@ public class CTHoaDonBan {
     }
 
     public void setSoLuongPhaiTra(int soLuongPhaiTra) {
+        if (soLuongPhaiTra < 0) {
+            throw new IllegalArgumentException("SoLuongPhaiTra không được âm.");
+        }
         this.soLuongPhaiTra = soLuongPhaiTra;
     }
-
-    
-
 }
