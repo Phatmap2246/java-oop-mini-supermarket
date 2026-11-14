@@ -69,6 +69,6 @@ public class KhuyenMaiMuaTang extends Khuyenmai implements TrongFile {
     }
     @Override
     public String getFilePath(){
-       return "src/luutru/KhuyenMaiMuaTang.csv";
+       return utils.DuongDanLuuTru.file("KhuyenMaiMuaTang.csv");
     }
 }

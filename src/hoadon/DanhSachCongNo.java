@@ -8,7 +8,97 @@ import dichvu.Doitac;
 import utils.DateUtil;
 import utils.Validation;
 
-public class DanhSachCongNo {
+public class DanhSachCongNo implements interfaces.IQuanLy<DanhSachCongNo.KhoanCongNo> {
+    private transient DanhSachHoaDonNhap nguonHoaDonNhap;
+    private transient Danhsachdoitac nguonDoiTac;
+
+    /** Kết quả tra cứu một khoản nợ từ các danh sách song song đang có. */
+    public static class KhoanCongNo {
+        private final String maHoaDon, maPhieuNhap, maNhaCungCap, tenNhaCungCap;
+        private final long soTien;
+        private final LocalDate ngayDenHan, ngayThanhToan;
+        private final String nganHang;
+        private final boolean daThanhToan;
+
+        private KhoanCongNo(DanhSachCongNo ds, int i) {
+            maHoaDon = ds.maHoaDonCongNo.get(i); maPhieuNhap = ds.maPhieuNhapCongNo.get(i);
+            maNhaCungCap = ds.maNhaCungCapCongNo.get(i); tenNhaCungCap = ds.tenNhaCungCapCongNo.get(i);
+            soTien = ds.soTienCongNo.get(i); ngayDenHan = ds.ngayDenHanCongNo.get(i);
+            ngayThanhToan = ds.ngayThanhToanCongNo.get(i); nganHang = ds.nganHangThanhToanCongNo.get(i);
+            daThanhToan = ds.daThanhToanCongNo.get(i);
+        }
+        public String getMaHoaDon() { return maHoaDon; }
+        public String getMaPhieuNhap() { return maPhieuNhap; }
+        public String getMaNhaCungCap() { return maNhaCungCap; }
+        public String getTenNhaCungCap() { return tenNhaCungCap; }
+        public long getSoTien() { return soTien; }
+        public LocalDate getNgayDenHan() { return ngayDenHan; }
+        public LocalDate getNgayThanhToan() { return ngayThanhToan; }
+        public String getNganHang() { return nganHang; }
+        public boolean isDaThanhToan() { return daThanhToan; }
+        @Override public String toString() {
+            return maHoaDon + " | " + maPhieuNhap + " | " + maNhaCungCap + " | " + tenNhaCungCap
+                    + " | " + soTien + " | " + ngayDenHan + " | " + ngayThanhToan + " | " + nganHang
+                    + " | " + (daThanhToan ? "Đã thanh toán" : "Chưa thanh toán");
+        }
+    }
+
+    public void cauHinh(DanhSachHoaDonNhap hoaDons, Danhsachdoitac doiTacs) {
+        nguonHoaDonNhap = hoaDons; nguonDoiTac = doiTacs;
+    }
+    @Override public void taoDanhSach(Scanner sc) {
+        int n = Validation.inputInt(sc, "Nhập số khoản công nợ cần đối chiếu: ");
+        for (int i = 0; i < n; i++) them(sc);
+    }
+    @Override public void them(Scanner sc) {
+        if (nguonHoaDonNhap == null || nguonDoiTac == null) {
+            throw new IllegalStateException("Cần gọi cauHinh để nối hóa đơn nhập và nhà cung cấp.");
+        }
+        doiChieuVaGhiNhanCongNo(sc, nguonHoaDonNhap, nguonDoiTac);
+    }
+    @Override public boolean sua(String ma, Scanner sc) {
+        int i = timViTri(ma);
+        if (i == -1 || daThanhToanCongNo.get(i)) return false;
+        ngayDenHanCongNo.set(i, Validation.inputLocalDateRegex(sc, "Nhập hạn trả mới (dd/MM/yyyy): "));
+        return true;
+    }
+    @Override public boolean xoa(String ma) {
+        int i = timViTri(ma);
+        if (i == -1 || daThanhToanCongNo.get(i)) return false;
+        maHoaDonCongNo.remove(i); maPhieuNhapCongNo.remove(i); maNhaCungCapCongNo.remove(i);
+        tenNhaCungCapCongNo.remove(i); soTienCongNo.remove(i); ngayDenHanCongNo.remove(i);
+        ngayThanhToanCongNo.remove(i); nganHangThanhToanCongNo.remove(i); daThanhToanCongNo.remove(i);
+        return true;
+    }
+    @Override public int timViTri(String ma) {
+        if (ma == null || ma.isBlank()) return -1;
+        for (int i = 0; i < maHoaDonCongNo.size(); i++) {
+            if (ma.trim().equalsIgnoreCase(maHoaDonCongNo.get(i))) return i;
+        }
+        return -1;
+    }
+    @Override public KhoanCongNo timMa(String ma) {
+        int i = timViTri(ma);
+        return i == -1 ? null : new KhoanCongNo(this, i);
+    }
+    @Override public KhoanCongNo timTen(String ten) {
+        if (ten == null || ten.isBlank()) return null;
+        for (int i = 0; i < tenNhaCungCapCongNo.size(); i++) {
+            String tenNCC = tenNhaCungCapCongNo.get(i);
+            if (tenNCC != null && tenNCC.toLowerCase(java.util.Locale.ROOT)
+                    .contains(ten.trim().toLowerCase(java.util.Locale.ROOT))) return new KhoanCongNo(this, i);
+        }
+        return null;
+    }
+    @Override public KhoanCongNo timKhoa(String khoa) {
+        if (khoa == null || khoa.isBlank()) return null;
+        for (int i = 0; i < maHoaDonCongNo.size(); i++) {
+            KhoanCongNo no = new KhoanCongNo(this, i);
+            if (no.toString().toLowerCase(java.util.Locale.ROOT)
+                    .contains(khoa.trim().toLowerCase(java.util.Locale.ROOT))) return no;
+        }
+        return null;
+    }
     private final ArrayList<String> maHoaDonCongNo = new ArrayList<>();
     private final ArrayList<String> maPhieuNhapCongNo = new ArrayList<>();
     private final ArrayList<String> maNhaCungCapCongNo = new ArrayList<>();
@@ -23,7 +113,7 @@ public class DanhSachCongNo {
         String maHD = Validation.inputStringRegex(sc, "Nhập mã hóa đơn NCC: ",
                 HoaDonNhapHang.MA_HD_NHAP_REGEX, "Mã hóa đơn nhập không hợp lệ!");
 
-        HoaDon hd = danhSachHoaDonNhap.timKiemHoaDonNhapHang(maHD);
+        HoaDon hd = danhSachHoaDonNhap.timMa(maHD);
         if (!(hd instanceof HoaDonNhapHang)) {
             System.out.println(">> Không tìm thấy hóa đơn nhập hàng mã: " + maHD);
             return;
@@ -45,7 +135,7 @@ public class DanhSachCongNo {
             return;
         }
 
-        Doitac nhaCungCap = danhSachDoiTac.traCuuDoiTac(hdNhap.getMaNhaCungCap());
+        Doitac nhaCungCap = danhSachDoiTac.timMa(hdNhap.getMaNhaCungCap());
         if (nhaCungCap == null) return;
         System.out.println("\nNhà cung cấp: " + nhaCungCap.getTenDoiTac()
                 + " (" + hdNhap.getMaNhaCungCap() + ")");
@@ -163,7 +253,8 @@ public class DanhSachCongNo {
         }
     }
 
-    public void thongKeCongNo()
+    @Override
+    public void xuatDanhSach()
     {
         ArrayList<Integer> dsChuaTra = new ArrayList<>();
         System.out.println("\n=== CÔNG NỢ NHÀ CUNG CẤP ===");

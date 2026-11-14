@@ -7,16 +7,118 @@ import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.io.*;
-import java.util.Arrays;
+import java.nio.file.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class DataBase {
+    // Lưu cả đồ thị đối tượng để giữ nguyên lớp con và các tham chiếu dùng chung.
+    private static class BanLuu {
+        private Object duLieu;
+        private Map<String, Integer> boDem = new LinkedHashMap<>();
+
+        private BanLuu() { }
+
+        private BanLuu(Object duLieu) throws ReflectiveOperationException {
+            this.duLieu = duLieu;
+            for (Class<?> lop : CAC_LOP_CO_BO_DEM) {
+                Field field = layTruongBoDem(lop);
+                boDem.put(lop.getName(), field.getInt(null));
+            }
+        }
+
+        private void khoiPhucBoDem(Map<String, Integer> truocKhiDoc) throws ReflectiveOperationException, IOException {
+            for (Class<?> lop : CAC_LOP_CO_BO_DEM) {
+                Integer giaTri = boDem.get(lop.getName());
+                if (giaTri == null || giaTri < 0) {
+                    throw new IOException("Bộ đếm mã không hợp lệ: " + lop.getSimpleName());
+                }
+            }
+            for (Class<?> lop : CAC_LOP_CO_BO_DEM) {
+                Field field = layTruongBoDem(lop);
+                field.setInt(null, Math.max(truocKhiDoc.get(lop.getName()), boDem.get(lop.getName())));
+            }
+        }
+    }
+
+    private static final Class<?>[] CAC_LOP_CO_BO_DEM = {
+            sanpham.SanPham.class, person.NhanVien.class, person.KhachHang.class,
+            hoadon.HoaDon.class, dichvu.Khuyenmai.class, dichvu.Nhacungcap.class
+    };
+
+    private static Field layTruongBoDem(Class<?> lop) throws NoSuchFieldException {
+        String tenTruong = lop == dichvu.Nhacungcap.class ? "soThuTuNCC" : "soThuTu";
+        Field field = lop.getDeclaredField(tenTruong);
+        field.setAccessible(true);
+        return field;
+    }
+
+    /** Ghi file tạm trước, chỉ thay file cũ sau khi ghi thành công. */
+    public static synchronized void ghiDoiTuong(Object duLieu, String tenFile) throws IOException {
+        if (duLieu == null) throw new IllegalArgumentException("Không có dữ liệu để lưu.");
+        Path dich = Paths.get(tenFile).toAbsolutePath();
+        Files.createDirectories(dich.getParent());
+        Path tam = Files.createTempFile(dich.getParent(), "sieu-thi-", ".tmp");
+        try {
+            BanLuu banLuu = new BanLuu(duLieu);
+            try (OutputStream writer = new BufferedOutputStream(Files.newOutputStream(tam))) {
+                VanBanDoiTuong.ghi(banLuu, writer);
+            }
+            try {
+                Files.move(tam, dich, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+            } catch (AtomicMoveNotSupportedException e) {
+                Files.move(tam, dich, StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (ReflectiveOperationException e) {
+            throw new IOException("Không thể lưu bộ đếm mã.", e);
+        } finally {
+            Files.deleteIfExists(tam);
+        }
+    }
+
+    /** File chưa có thì trả null; file lỗi phải báo ra, không coi là dữ liệu rỗng. */
+    public static synchronized <T> T docDoiTuong(Class<T> lop, String tenFile) throws IOException {
+        Path file = Paths.get(tenFile);
+        if (Files.notExists(file)) return null;
+        Map<String, Integer> truocKhiDoc = new LinkedHashMap<>();
+        boolean thanhCong = false;
+        try (BufferedInputStream reader = new BufferedInputStream(Files.newInputStream(file))) {
+            for (Class<?> c : CAC_LOP_CO_BO_DEM) truocKhiDoc.put(c.getName(), layTruongBoDem(c).getInt(null));
+            Object obj = VanBanDoiTuong.doc(reader);
+            if (!(obj instanceof BanLuu)) throw new IOException("File không đúng định dạng lưu của chương trình.");
+            BanLuu banLuu = (BanLuu) obj;
+            if (!lop.isInstance(banLuu.duLieu)) throw new IOException("File chứa sai loại dữ liệu.");
+            banLuu.khoiPhucBoDem(truocKhiDoc);
+            thanhCong = true;
+            return lop.cast(banLuu.duLieu);
+        } catch (ReflectiveOperationException | ClassCastException e) {
+            throw new IOException("Không thể khôi phục dữ liệu chương trình.", e);
+        } finally {
+            // Constructor dùng để đọc TXT không được làm tăng bộ đếm mã.
+            if (!thanhCong) {
+                for (Class<?> c : CAC_LOP_CO_BO_DEM) {
+                    try {
+                        if (truocKhiDoc.containsKey(c.getName())) layTruongBoDem(c).setInt(null, truocKhiDoc.get(c.getName()));
+                    } catch (ReflectiveOperationException e) {
+                        throw new IOException("Không thể khôi phục bộ đếm mã sau lỗi đọc.", e);
+                    }
+                }
+            }
+        }
+    }
+
     public static ArrayList<Field> getALlField(Class<?> clazz){
        ArrayList<Field> fields = new ArrayList<>();
        while(clazz != null && clazz != Object.class){
            Field[] declareds = clazz.getDeclaredFields();
-           fields.addAll(Arrays.asList(declareds));
+           for (Field field : declareds) {
+               if (!Modifier.isStatic(field.getModifiers()) && !Modifier.isTransient(field.getModifiers())) {
+                   fields.add(field);
+               }
+           }
            clazz =clazz.getSuperclass();
        }
        return fields;

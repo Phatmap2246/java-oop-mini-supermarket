@@ -14,7 +14,64 @@ import dichvu.Danhsachdoitac;
 import sanpham.QuanLySanPham;
 import utils.Validation;
 
-public class DanhSachHoaDonNhap {
+public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
+    private transient String maNhanVienNhap;
+    private transient QuanLySanPham nguonSanPham;
+    private transient Danhsachdoitac nguonDoiTac;
+
+    public void cauHinh(String maNV, QuanLySanPham sanPhams, Danhsachdoitac doiTacs) {
+        maNhanVienNhap = maNV; nguonSanPham = sanPhams; nguonDoiTac = doiTacs;
+    }
+    private void kiemTraNguon() {
+        if (maNhanVienNhap == null || nguonSanPham == null || nguonDoiTac == null) {
+            throw new IllegalStateException("Cần gọi cauHinh để nối dữ liệu lập hóa đơn nhập.");
+        }
+    }
+    @Override public void taoDanhSach(Scanner sc) {
+        kiemTraNguon(); taoDanhSach(sc, maNhanVienNhap, nguonSanPham, nguonDoiTac);
+    }
+    @Override public void them(Scanner sc) {
+        kiemTraNguon(); them(sc, maNhanVienNhap, nguonSanPham, nguonDoiTac);
+    }
+    @Override public boolean sua(String ma, Scanner sc) {
+        HoaDonNhapHang hd = timMa(ma);
+        if (hd == null || hd.isDuyet() || hd.isDaNhapSP()) return false;
+        kiemTraNguon(); return sua(sc, ma, nguonSanPham);
+    }
+    @Override public boolean xoa(String ma) {
+        HoaDonNhapHang hd = timMa(ma);
+        if (hd == null || hd.isDuyet() || hd.isDaNhapSP()) return false;
+        return dsHoaDonNhapHang.remove(hd);
+    }
+    @Override public int timViTri(String ma) {
+        if (ma == null || ma.isBlank()) return -1;
+        for (int i = 0; i < dsHoaDonNhapHang.size(); i++) {
+            HoaDonNhapHang hd = dsHoaDonNhapHang.get(i);
+            if (hd != null && ma.trim().equalsIgnoreCase(hd.getMaHoaDon())) return i;
+        }
+        return -1;
+    }
+    @Override public HoaDonNhapHang timTen(String ten) {
+        if (ten == null || ten.isBlank()) return null;
+        String khoa = ten.trim().toLowerCase(java.util.Locale.ROOT);
+        for (HoaDonNhapHang hd : dsHoaDonNhapHang) {
+            if (hd == null) continue;
+            Doitac dt = nguonDoiTac == null ? null : nguonDoiTac.timMa(hd.getMaNhaCungCap());
+            if (dt != null && dt.getTenDoiTac() != null && dt.getTenDoiTac().toLowerCase(java.util.Locale.ROOT).contains(khoa)) return hd;
+            for (CTHoaDonNhap ct : hd.getCtHoaDonNhaps()) {
+                if (ct != null && ct.getTenSanPham() != null && ct.getTenSanPham().toLowerCase(java.util.Locale.ROOT).contains(khoa)) return hd;
+            }
+        }
+        return null;
+    }
+    @Override public HoaDonNhapHang timKhoa(String khoa) {
+        if (khoa == null || khoa.isBlank()) return null;
+        for (HoaDonNhapHang hd : dsHoaDonNhapHang) {
+            if (hd != null && hd.toString().toLowerCase(java.util.Locale.ROOT)
+                    .contains(khoa.trim().toLowerCase(java.util.Locale.ROOT))) return hd;
+        }
+        return timTen(khoa);
+    }
     private ArrayList<HoaDonNhapHang> dsHoaDonNhapHang;
 
     public DanhSachHoaDonNhap() {
@@ -29,16 +86,17 @@ public class DanhSachHoaDonNhap {
     public ArrayList<HoaDonNhapHang> getDsHoaDonNhapHang() {
         return dsHoaDonNhapHang;
     }
-    public void taoDulieuHoaDonNhap(Scanner sc , String maNhanVien, QuanLySanPham qlsp , Danhsachdoitac dsDoiTac)
+    public void taoDanhSach(Scanner sc , String maNhanVien, QuanLySanPham qlsp , Danhsachdoitac dsDoiTac)
     {
         System.out.println("Tạo dữ liệu hoá đơn nhập!");
         do {
-            themHoaDonNhap(sc, maNhanVien, qlsp , dsDoiTac);
+            them(sc, maNhanVien, qlsp , dsDoiTac);
         } while (Validation.inputCoKhong(sc, "Bạn có muốn tiếp tục(Có/Không): "));
         System.out.println("Tạo dữ liệu hoá đơn nhập hàng thành công!");
     }
 
-    public void hienThiDanhSachHoaDonNhap()
+    @Override
+    public void xuatDanhSach()
     {
         if ( dsHoaDonNhapHang.isEmpty() )
         {
@@ -54,7 +112,7 @@ public class DanhSachHoaDonNhap {
             hdn.hienThiHoaDon();
         }
     }
-    public void themHoaDonNhap(Scanner sc , String maNhanVien, QuanLySanPham qlsp  , Danhsachdoitac dsDoiTac)
+    public void them(Scanner sc , String maNhanVien, QuanLySanPham qlsp  , Danhsachdoitac dsDoiTac)
     {
         System.out.println("Nhập hoá đơn nhập!");
         HoaDonNhapHang hdn = new HoaDonNhapHang(maNhanVien) ;
@@ -67,7 +125,7 @@ public class DanhSachHoaDonNhap {
         System.out.println("Tạo " + k + " Hoá đơn nhập hàng!");
         for ( int i = 0 ; i < k ; i++ )
         {
-            themHoaDonNhap(sc, maNhanVien , qlsp , dsDoiTac);
+            them(sc, maNhanVien , qlsp , dsDoiTac);
         }
         System.out.println("Thêm " + k + " hoá đơn nhập thành công!");
     }
@@ -249,7 +307,7 @@ public class DanhSachHoaDonNhap {
                     }
                     do {
                         int soLuongCu = qlsp.getDanhSachSanPham().size() ;
-                        qlsp.themSanPham(sc, dsNhaCungCap);
+                        qlsp.them(sc, dsNhaCungCap);
                         SanPham spMoi = null;
                         if ( qlsp.getDanhSachSanPham().size() > soLuongCu )
                         {
@@ -306,7 +364,7 @@ public class DanhSachHoaDonNhap {
                     for ( CTHoaDonNhap ct: ctHoaDonNhaps )
                     {
                         if (ct == null) continue;
-                        SanPham sp = qlsp.traCuuSanPham(ct.getMaSanpham()) ;
+                        SanPham sp = qlsp.timMa(ct.getMaSanpham()) ;
                         boolean flag = false ;
                         if ( sp != null )
                         {
@@ -326,7 +384,7 @@ public class DanhSachHoaDonNhap {
                             ArrayList<CTHoaDonNhap> chiTietMoi = new ArrayList<>();
                             chiTietMoi.add(ct);
                             HoaDonNhapHang hdn = new HoaDonNhapHang(maNhanVien) ;
-                            int indexNCC = dsDoiTac.traCuuThongTinDoiTac(sp.getMaNhaCungCap());
+                            int indexNCC = dsDoiTac.timViTri(sp.getMaNhaCungCap());
                             if (indexNCC == -1) continue;
                             System.out.println("Nhập phiếu nhập cho từ nhà cung cấp " + dsDoiTac.getDanhSachDoiTac().get(indexNCC).getTenDoiTac());
                             hdn.nhapHoaDon(sc , chiTietMoi , sp.getMaNhaCungCap());
@@ -349,16 +407,16 @@ public class DanhSachHoaDonNhap {
         }
     }
 
-    public void suaHoaDon(Scanner sc, String maHoaDon, QuanLySanPham qlsp)
+    public boolean sua(Scanner sc, String maHoaDon, QuanLySanPham qlsp)
     {
-        HoaDonNhapHang hdn = timKiemHoaDonNhapHang(maHoaDon);
+        HoaDonNhapHang hdn = timMa(maHoaDon);
         if (hdn == null) {
             System.out.println("Mã hoá đơn không tồn tại!");
-            return;
+            return false;
         }
         if (hdn.isDuyet()) {
             System.out.println("Hoá đơn đã được duyệt nên không thể chỉnh sửa thuộc tính!");
-            return;
+            return false;
         }
         System.out.println("Nhập thuộc tính của hoá đơn cần sửa: ");
             System.out.println("1. Sửa mã nhà cung cấp!");
@@ -388,7 +446,7 @@ public class DanhSachHoaDonNhap {
                     }
                     if (chiTiet.isEmpty()) {
                         System.out.println("Chi tiết hoá đơn nhập đang trống!");
-                        break;
+                        return false;
                     }
                     for (int i = 0; i < chiTiet.size(); i++) {
                         System.out.println((i + 1) + ". " + chiTiet.get(i));
@@ -424,9 +482,13 @@ public class DanhSachHoaDonNhap {
                 default:
                     break;
             }
+        return true;
     }
-    public HoaDonNhapHang timKiemHoaDonNhapHang( String maHoaDon )
+    @Override
+    public HoaDonNhapHang timMa( String maHoaDon )
     {
+        if (maHoaDon == null || maHoaDon.isBlank()) return null;
+        maHoaDon = maHoaDon.trim();
         if ( dsHoaDonNhapHang.isEmpty() )
         {
             System.out.println("Danh sách hoá đơn đang trống!");
@@ -458,7 +520,7 @@ public class DanhSachHoaDonNhap {
         for ( HoaDonNhapHang hdn: dsHoaDonNhapHang )
         {
             if (hdn == null) continue;
-            if ( hdn.getNgayLap() != null && hdn.getNgayLap().isAfter(thoiGianBatDau) && hdn.getNgayLap().isBefore(thoiGianKetThuc))
+            if ( hdn.getNgayLap() != null && !hdn.getNgayLap().isAfter(thoiGianKetThuc) && !hdn.getNgayLap().isBefore(thoiGianBatDau))
             {
                 hdn.hienThiHoaDon();
             }
@@ -481,7 +543,8 @@ public class DanhSachHoaDonNhap {
         for ( HoaDonNhapHang hdn: dsHoaDonNhapHang )
         {
             if (hdn == null) continue;
-            if ( hdn.getNgayLap() != null && hdn.getNgayLap().isAfter(thoiGianBatDau.atStartOfDay()) && hdn.getNgayLap().isBefore(thoiGianKetThuc.atStartOfDay()))
+            LocalDate ngayLap = hdn.getNgayLap().toLocalDate() ;
+            if ( ngayLap != null && ngayLap.isAfter(thoiGianBatDau) && ngayLap.isBefore(thoiGianKetThuc))
             {
                 hdn.hienThiHoaDon();
             }
@@ -494,6 +557,11 @@ public class DanhSachHoaDonNhap {
             System.out.println("Bạn chưa nhập thời gian!");
             return;
         }
+        if (gioBatDau < 0 || gioBatDau > 23
+                || gioKetThuc < 0 || gioKetThuc > 23) {
+            System.out.println("Giờ phải từ 0 đến 23!");
+            return;
+        }
         if ( gioBatDau > gioKetThuc )
         {
             int tam = gioBatDau ;
@@ -504,14 +572,14 @@ public class DanhSachHoaDonNhap {
         for ( HoaDonNhapHang hdn: dsHoaDonNhapHang )
         {
             if (hdn == null) continue;
-            if ( hdn.getNgayLap() != null && hdn.getNgayLap().equals(ngay.atStartOfDay()) && hdn.getNgayLap().getHour() >= gioBatDau && hdn.getNgayLap().getHour() <= gioKetThuc )
+            if ( hdn.getNgayLap() != null && hdn.getNgayLap().toLocalDate().equals(ngay) && hdn.getNgayLap().getHour() >= gioBatDau && hdn.getNgayLap().getHour() <= gioKetThuc )
             {
                 hdn.hienThiHoaDon();
             }
         }
     }
 
-    public void timKiemTheoNhieuKhoa(Scanner sc) {
+    public void timKhoa(Scanner sc) {
         while (true) {
             System.out.println("================ TÌM KIẾM HÓA ĐƠN NHẬP ================");
             System.out.println("1. Mã hóa đơn");
@@ -564,12 +632,7 @@ public class DanhSachHoaDonNhap {
                             }
                             System.out.println("Đang tra cứu...");
                             Validation.danghoatdong(1);
-                            for (HoaDonNhapHang hdn : dsHoaDonNhapHang) {
-                                if (hdn != null && (hdn.getNgayLap() != null && !hdn.getNgayLap().toLocalDate().isBefore(tu) && !hdn.getNgayLap().toLocalDate().isAfter(den))) {
-                                    hdn.hienThiHoaDon();
-                                    flag = true;
-                                }
-                            }
+                            traCuuHoaDonTrenKhoangThoiGian( tu , den );
                             break;
                         }
                         case 2: {
@@ -582,12 +645,7 @@ public class DanhSachHoaDonNhap {
                             }
                             System.out.println("Đang tra cứu...");
                             Validation.danghoatdong(1);
-                            for (HoaDonNhapHang hdn : dsHoaDonNhapHang) {
-                                if (hdn != null && (hdn.getNgayLap() != null && hdn.getNgayLap().toLocalDate().equals(ngay) && hdn.getNgayLap().getHour() >= tu && hdn.getNgayLap().getHour() <= den)) {
-                                    hdn.hienThiHoaDon();
-                                    flag = true;
-                                }
-                            }
+                            traCuuHoaDonTrenKhoangThoiGian(tu , den , ngay);
                             break;
                         }
                         case 3: {
@@ -599,12 +657,7 @@ public class DanhSachHoaDonNhap {
                             }
                             System.out.println("Đang tra cứu...");
                             Validation.danghoatdong(1);
-                            for (HoaDonNhapHang hdn : dsHoaDonNhapHang) {
-                                if (hdn != null && (hdn.getNgayLap() != null && !hdn.getNgayLap().isBefore(tu) && !hdn.getNgayLap().isAfter(den))) {
-                                    hdn.hienThiHoaDon();
-                                    flag = true;
-                                }
-                            }
+                            traCuuHoaDonTrenKhoangThoiGian(tu , den );
                             break;
                         }
                         default:
@@ -826,11 +879,11 @@ public class DanhSachHoaDonNhap {
             switch (luaChon)
             {
                 case 1: {
-                    hienThiDanhSachHoaDonNhap();
+                    xuatDanhSach();
                     break;
                 }
                 case 2: {
-                    timKiemTheoNhieuKhoa(sc);
+                    timKhoa(sc);
                     break;
                 }
                 case 3: {
@@ -883,7 +936,7 @@ public class DanhSachHoaDonNhap {
                     break;
                 }
 
-                int indexSP = qlsp.timKiemSanPham(ct.getMaSanpham());
+                int indexSP = qlsp.timViTri(ct.getMaSanpham());
 
                 if (indexSP == -1) {
                     System.out.println("Không tìm thấy: " + ct.getMaSanpham());
@@ -918,6 +971,7 @@ public class DanhSachHoaDonNhap {
 
     public void quanLyDanhSach(Scanner sc, String maNhanVien, QuanLySanPham qlsp, Danhsachdoitac dsDoiTac)
     {
+        cauHinh(maNhanVien, qlsp, dsDoiTac);
         int luaChon ;
         do {
             System.out.println("===================QUẢN LÝ HÓA ĐƠN NHẬP===================");
@@ -933,15 +987,15 @@ public class DanhSachHoaDonNhap {
             switch (luaChon)
             {
                 case 1: {
-                    taoDulieuHoaDonNhap(sc, maNhanVien, qlsp, dsDoiTac);
+                    taoDanhSach(sc, maNhanVien, qlsp, dsDoiTac);
                     break;
                 }
                 case 2: {
-                    hienThiDanhSachHoaDonNhap();
+                    xuatDanhSach();
                     break;
                 }
                 case 3: {
-                    themHoaDonNhap(sc, maNhanVien, qlsp, dsDoiTac);
+                    them(sc, maNhanVien, qlsp, dsDoiTac);
                     break;
                 }
                 case 4: {
@@ -951,11 +1005,11 @@ public class DanhSachHoaDonNhap {
                 }
                 case 5: {
                     String ma = Validation.inputStringRegex(sc, "Nhập mã hóa đơn: ", "(?i)" + HoaDonNhapHang.MA_HD_NHAP_REGEX, "Mã hóa đơn không đúng định dạng!");
-                    suaHoaDon(sc, ma, qlsp);
+                    sua(sc, ma, qlsp);
                     break;
                 }
                 case 6: {
-                    timKiemTheoNhieuKhoa(sc);
+                    timKhoa(sc);
                     break;
                 }
                 case 7: {
@@ -976,7 +1030,7 @@ public class DanhSachHoaDonNhap {
         thongKeCacDonChuaDuyet();
         String maHoaDon = Validation.inputStringRegex(sc, "Nhập mã hóa đơn cần duyệt: ",
                 "(?i)" + HoaDonNhapHang.MA_HD_NHAP_REGEX, "Mã hóa đơn không đúng định dạng!");
-        HoaDonNhapHang hdn = timKiemHoaDonNhapHang(maHoaDon);
+        HoaDonNhapHang hdn = timMa(maHoaDon);
         if (hdn == null) return;
         if (hdn.isDuyet()) {
             System.out.println("Hóa đơn này đã được duyệt!");

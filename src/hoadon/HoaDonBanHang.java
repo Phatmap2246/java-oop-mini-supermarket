@@ -2,9 +2,10 @@ package hoadon;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.List;
+import interfaces.IThanhToan ;
 import dichvu.DanhSachSPKM;
 import dichvu.Danhsachkhuyenmai;
+import interfaces.IThanhToan;
 import person.DSKhachHang;
 import person.KhachHang;
 import sanpham.QuanLySanPham;
@@ -19,6 +20,9 @@ public class HoaDonBanHang extends HoaDon {
     private double chietKhau ;
     public static final String MA_HD_BAN_REGEX = "(?i)^HD\\d+$";
     private ArrayList<CTHoaDonBan> ctHoaDonBans ;
+    public HoaDonBanHang() {
+        this("");
+    }
     public HoaDonBanHang( String maNhanVien )
     {
         super(maNhanVien);
@@ -69,7 +73,7 @@ public class HoaDonBanHang extends HoaDon {
 
     public boolean nhapHoaDon(Scanner sc , QuanLySanPham qlsp , DanhSachSPKM danhSachSPKM, Danhsachkhuyenmai dsKhuyenMai , DSKhachHang dskh ) {
         maKhachHang = Validation.inputStringRegex(sc , "Nhập mã khách hàng: " , Validation.MaKH_REGEX , "Mã khách hàng không hợp lệ vui lòng nhập lại!(VD:KH001)" , KhachHang.getSoThuTu()) ;
-        while ( dskh.timKiemKH(maKhachHang) == null || !dskh.timKiemKH(maKhachHang).isTonTai())
+        while ( dskh.timMa(maKhachHang) == null || !dskh.timMa(maKhachHang).isTonTai())
         {
             System.out.println("Khách hàng không tồn tại vui lòng nhập lại mã: ");
             maKhachHang = Validation.inputStringRegex(sc , "Nhập mã khách hàng: " , Validation.MaKH_REGEX , "Mã khách hàng không hợp lệ vui lòng nhập lại!(VD:KH001)" , KhachHang.getSoThuTu()) ;
@@ -112,13 +116,13 @@ public class HoaDonBanHang extends HoaDon {
         {
             for ( CTHoaDonBan ct: ctHoaDonBans )
             {
-                SanPham sp = qlsp.traCuuSanPham(ct.getMaSanPham()) ;
+                SanPham sp = qlsp.timMa(ct.getMaSanPham()) ;
                 sp.setSoLuongTonKho(sp.getSoLuongTonKho() - ct.getSoLuong());
-                qlsp.getDanhSachSanPham().set(qlsp.timKiemSanPham(ct.getMaSanPham()) , sp ) ;
+                qlsp.getDanhSachSanPham().set(qlsp.timViTri(ct.getMaSanPham()) , sp ) ;
             }
-            chietKhau = dskh.timKiemKH(maKhachHang).tinhChietKhau() ;
-            dskh.timKiemKH(maKhachHang).capNhatThuHang();
-            dskh.timKiemKH(maKhachHang).tichLuyChiTieu(tinhTongTien());
+            chietKhau = dskh.timMa(maKhachHang).tinhChietKhau() ;
+            dskh.timMa(maKhachHang).capNhatThuHang();
+            dskh.timMa(maKhachHang).tichLuyChiTieu(tinhTongTien());
         }
         System.out.println("Thanh toán thành công!");
         return daThanhToan ;

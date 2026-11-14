@@ -1,7 +1,7 @@
 package hoadon;
 
 import java.util.Scanner;
-
+import interfaces.TrongFile ;
 import interfaces.IThanhToan;
 import utils.Validation;
 
@@ -40,7 +40,7 @@ public class ThanhToanTienMat implements IThanhToan, TrongFile {
     }
     @Override
     public String getFilePath(){
-        return "src/luutru/ThanhToanTienMat.csv";
+        return utils.DuongDanLuuTru.file("ThanhToanTienMat.csv");
     }
     public long getTienKhachDua() { return tienKhachDua; }
     public long getTienThua() { return tienThua; }

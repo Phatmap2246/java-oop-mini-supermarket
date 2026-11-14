@@ -45,7 +45,7 @@ public class MainTest_HoaDon {
                             "Nhập mã hóa đơn cần tìm: ",
                             "^[A-Za-z0-9]+$",
                             "Mã không hợp lệ (chỉ gồm chữ và số)!");
-                    HoaDonBanHang hdTim = danhSachHoaDonBan.timKiemHoaDonBanHang(maTim);
+                    HoaDonBanHang hdTim = danhSachHoaDonBan.timMa(maTim);
                     if (hdTim != null) {
                         hdTim.hienThiHoaDon();
                     } else {

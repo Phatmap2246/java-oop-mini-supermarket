@@ -38,5 +38,9 @@ Desktop.ini
 
 # 6. Dữ liệu sinh ra khi chạy chương trình (Runtime data)
 hoadon.txt
+data/
+src/luutru/ban-truoc/
+src/luutru/dang-ghi-*/
+src/luutru/QR/
 QR/            
 *.log

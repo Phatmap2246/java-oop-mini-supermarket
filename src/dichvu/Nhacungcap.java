@@ -86,7 +86,7 @@ public class Nhacungcap extends Doitac{
     public void inDanhSachSanPham ()
     {
         System.out.println("Danh sách sản phẩm do nhà cung cấp " + super.getTenDoiTac() + " cung cấp!");
-        sanPhamCungCap.inDanhSachSanPham();
+        sanPhamCungCap.xuatDanhSach();
     }
     public boolean kiemTraHanMucNoCong ()
     {

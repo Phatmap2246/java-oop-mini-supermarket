@@ -14,8 +14,12 @@ import java.util.Scanner;
 import utils.DataBase;
 import utils.Validation;
 
-public class DSNhanVien {
+public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
     ArrayList<NhanVien> list;
+
+    public ArrayList<NhanVien> getDanhSachNhanVien() {
+        return list;
+    }
 
     /** Khởi tạo danh sách nhân viên rỗng. */
     public DSNhanVien() {
@@ -32,7 +36,8 @@ public class DSNhanVien {
         this.list = l == null ? new ArrayList<>() : l.list;
     }
     /** Nhập số lượng rồi nhập thông tin và thêm từng nhân viên vào danh sách. */
-    public void taoDS(Scanner sc) {
+    @Override
+    public void taoDanhSach(Scanner sc) {
         int n = Validation.inputInt(sc, "Nhập số nhân viên cần tạo: ");
         for (int i = 0; i < n; i++) {
             System.out.printf("%n--- Nhập nhân viên %d/%d ---%n", i + 1, n);
@@ -41,11 +46,12 @@ public class DSNhanVien {
             while(!isTrungMa(nv.getMaNV())); 
             list.add(nv);
         }
-        DataBase.ghiVaoFile(new ArrayList<Object>(list), "NhanVien.txt", true);
+        DataBase.ghiVaoFile(new ArrayList<Object>(list), utils.DuongDanLuuTru.file("NhanVien.txt"), true);
     }
 
     /** In thông tin từng nhân viên; thông báo nếu danh sách rỗng. */
-    public void xuatDSNV() {
+    @Override
+    public void xuatDanhSach() {
         if (list.isEmpty()) {
             System.out.println("[!] Danh sách nhân viên đang trống.");
             return;
@@ -60,7 +66,8 @@ public class DSNhanVien {
     }
 
     /** Nhập thông tin một nhân viên mới rồi thêm vào danh sách. */
-    public void themNV(Scanner sc) {
+    @Override
+    public void them(Scanner sc) {
         NhanVien nv = new NhanVien();
         do{
             nv.nhapThongTin(sc);
@@ -68,12 +75,12 @@ public class DSNhanVien {
         while(!isTrungMa(nv.getMaNV()));         
 
         list.add(nv);
-        DataBase.ghiVaoFile(list.getLast(), "NhanVien.txt", false);
+        DataBase.ghiVaoFile(list.getLast(), utils.DuongDanLuuTru.file("NhanVien.txt"), false);
 
     }
 
     /** Nhập thông tin k nhân viên mới rồi thêm vào danh sách. */
-    public void themNV(Scanner sc, int k) {
+    public void them(Scanner sc, int k) {
         for (int i = 1; i <= k; i++) {
             System.out.printf("%n--- Nhập nhân viên %d/%d ---%n", i, k);
             NhanVien nv = new NhanVien();
@@ -83,16 +90,17 @@ public class DSNhanVien {
         while(!isTrungMa(nv.getMaNV()));         
 
             list.add(nv);
-            DataBase.ghiVaoFile(list.getLast(), "NhanVien.txt", false);
+            DataBase.ghiVaoFile(list.getLast(), utils.DuongDanLuuTru.file("NhanVien.txt"), false);
 
         }
     }
 
     /** Cập nhật thông tin nhân viên theo mã; trả về false nếu không tìm thấy. */
-    public boolean suaNV(String maNV, Scanner sc) {
+    @Override
+    public boolean sua(String maNV, Scanner sc) {
         try {
 
-            int idx = timNV(maNV);
+            int idx = timViTri(maNV);
             if (idx == -1) {
                 System.out.println("[!] Không tìm thấy nhân viên trong danh sách.");
                 return false;
@@ -154,7 +162,7 @@ public class DSNhanVien {
                         System.out.println("[!] Lựa chọn không hợp lệ, vui lòng thử lại.");
                 }
             } while (choice != 0);
-            DataBase.ghiVaoFile(new ArrayList<Object>(list), "NhanVien.txt", true);
+            DataBase.ghiVaoFile(new ArrayList<Object>(list), utils.DuongDanLuuTru.file("NhanVien.txt"), true);
             return true;
         } catch (IllegalArgumentException e) {
             System.out.println("[!] " + e.getMessage());
@@ -163,8 +171,9 @@ public class DSNhanVien {
     }
 
     /** Đánh dấu nhân viên đã sa thải nhưng vẫn giữ hồ sơ trong danh sách. */
-    public boolean saThai(String maNV) {
-        int viTri = timNV(maNV);
+    @Override
+    public boolean xoa(String maNV) {
+        int viTri = timViTri(maNV);
         if (viTri == -1) {
             System.out.println("[!] Không tìm thấy nhân viên trong danh sách.");
             return false;
@@ -177,13 +186,14 @@ public class DSNhanVien {
         }
 
         nv.setSaThai(true);
-        DataBase.ghiVaoFile(new ArrayList<Object>(list), "NhanVien.txt", true);
+        DataBase.ghiVaoFile(new ArrayList<Object>(list), utils.DuongDanLuuTru.file("NhanVien.txt"), true);
         System.out.println("[+] Đã cập nhật trạng thái sa thải cho nhân viên " + maNV + ".");
         return true;
     }
 
     /** Tìm vị trí nhân viên theo mã; trả về -1 nếu không tìm thấy. */
-    public int timNV(String maNV) {
+    @Override
+    public int timViTri(String maNV) {
         for (int i = 0; i < list.size(); i++) {
             if (maNV != null && list.get(i) != null && !list.get(i).isSaThai()
                     && maNV.trim().equalsIgnoreCase(list.get(i).getMaNV())) {
@@ -194,8 +204,34 @@ public class DSNhanVien {
         return -1;
     }
 
+    @Override
+    public NhanVien timMa(String ma) {
+        int viTri = timViTri(ma);
+        return viTri == -1 ? null : list.get(viTri);
+    }
+
+    @Override
+    public NhanVien timTen(String ten) {
+        if (ten == null || ten.isBlank()) return null;
+        for (NhanVien nv : list) {
+            if (nv != null && !nv.isSaThai() && nv.getHoten() != null
+                    && nv.getHoten().toLowerCase(Locale.ROOT).contains(ten.trim().toLowerCase(Locale.ROOT))) return nv;
+        }
+        return null;
+    }
+
+    @Override
+    public NhanVien timKhoa(String khoa) {
+        if (khoa == null || khoa.isBlank()) return null;
+        for (NhanVien nv : list) {
+            if (nv != null && !nv.isSaThai()
+                    && nv.toString().toLowerCase(Locale.ROOT).contains(khoa.trim().toLowerCase(Locale.ROOT))) return nv;
+        }
+        return null;
+    }
+
     /** Tìm vị trí nhân viên theo tên chính xác hoặc gần đúng; trả về -1 nếu không tìm thấy. */
-    public NhanVien timNV(Scanner sc) {
+    public NhanVien nhapTimKiem(Scanner sc) {
         System.out.print("Nhập mã hoặc tên nhân viên: ");
         String khoa = sc.nextLine().trim().toLowerCase();
         for (NhanVien nhanVien : list) {
@@ -211,7 +247,7 @@ public class DSNhanVien {
         return null;
     }
 
-    public void timKiemTheoNhieuKhoa(Scanner sc) {
+    public void timKhoa(Scanner sc) {
         while (true) {
             System.out.println("================ TÌM KIẾM NHÂN VIÊN ================");
             System.out.println("1. Mã nhân viên");

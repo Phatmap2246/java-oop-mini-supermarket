@@ -8,8 +8,11 @@ import sanpham.*;
 import utils.Validation;
 public class QuanKho extends NhanVien
 {
-    private QuanLySanPham qlsp ;
-    private DanhSachHoaDonNhap dsHoaDonNhap;
+    private transient QuanLySanPham qlsp ;
+    private transient DanhSachHoaDonNhap dsHoaDonNhap;
+    public QuanKho() {
+        this(new QuanLySanPham(), new DanhSachHoaDonNhap());
+    }
     public QuanKho(QuanLySanPham qlsp , DanhSachHoaDonNhap dsHoaDonNhap) {
         super();
         setQlsp(qlsp);
@@ -26,6 +29,11 @@ public class QuanKho extends NhanVien
     }
     public QuanLySanPham getQlsp() {
         return qlsp;
+    }
+
+    public void setDanhSachHoaDonNhap(DanhSachHoaDonNhap dsHoaDonNhap) {
+        if (dsHoaDonNhap == null) throw new IllegalArgumentException("Danh sách hóa đơn nhập không được null.");
+        this.dsHoaDonNhap = dsHoaDonNhap;
     }
 
     public void setQlsp(QuanLySanPham qlsp) {
@@ -84,7 +92,7 @@ public class QuanKho extends NhanVien
     }
     public void inDanhSachSanPham()
     {
-        qlsp.inDanhSachSanPham();
+        qlsp.xuatDanhSach();
     }
     public void kiemTraVaLoaiBoHangHetHan(Scanner sc )
     {
@@ -92,7 +100,7 @@ public class QuanKho extends NhanVien
     }
     public void danhSachPhieuNhap()
     {
-        dsHoaDonNhap.hienThiDanhSachHoaDonNhap();
+        dsHoaDonNhap.xuatDanhSach();
     }
     public void kiemTraThongTinSanPham( String maSanPham)
     {
@@ -130,7 +138,7 @@ public class QuanKho extends NhanVien
                     break;
                 }
                 case 2: {
-                    qlsp.timKiemTheoNhieuKhoa(sc);
+                    qlsp.timKhoa(sc);
                     break;
                 }
                 case 3: {

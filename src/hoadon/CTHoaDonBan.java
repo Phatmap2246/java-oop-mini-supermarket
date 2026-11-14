@@ -47,7 +47,7 @@ public class CTHoaDonBan extends CTHoaDon{
     {
         while (true) {
             setMaSanpham(Validation.inputStringRegex(sc, "Nhập mã sản phẩm (VD: SP01): ", Validation.MaSP_REGEX, "Lỗi: Mã SP phải bắt đầu bằng SP và theo sau là số!" , SanPham.getSoThuTu()));
-            SanPham sanPham = qlsp.traCuuSanPham(super.getMaSanpham()) ;
+            SanPham sanPham = qlsp.timMa(super.getMaSanpham()) ;
             if (sanPham == null || sanPham.getSoLuongTonKho() == 0 || !sanPham.isTonTai() || (sanPham instanceof ThucPham && ((ThucPham) sanPham).kiemTraSanPhamHong())) {
                 System.out.println("[!] Mã sản phẩm không có trong danh mục/tồn kho.");
                 continue;
@@ -61,7 +61,7 @@ public class CTHoaDonBan extends CTHoaDon{
                     System.out.println("[!] Số lượng phải từ 1 đến " + soLuongConLai + ".");
                 }
             } while (super.getSoLuong() == 0 || super.getSoLuong() > soLuongConLai);
-            int index_spkm = dsspkm.timKiemSanPhamKM(super.getMaSanpham()) ;
+            int index_spkm = dsspkm.timViTri(super.getMaSanpham()) ;
             if ( index_spkm == -1 )
             {
                 System.out.println("Sản phẩm không có giảm giá!");
@@ -69,7 +69,7 @@ public class CTHoaDonBan extends CTHoaDon{
             else
             {
                 SanPhamKhuyenMai spkm = dsspkm.getSanPhamKhuyenMais()[index_spkm] ;
-                int indexKm = dskm.traCuuThongTinKhuyenMai(spkm.getMaKhuyenMai());
+                int indexKm = dskm.timViTri(spkm.getMaKhuyenMai());
                 Khuyenmai km = indexKm == -1 ? null : dskm.getKhuyenmais()[indexKm];
                 if ( km != null && km.dangHoatDong(LocalDate.now()) && km.isTonTai() && super.getDonGia()*super.getSoLuong() > km.getMucChiToiThieu())
                 {

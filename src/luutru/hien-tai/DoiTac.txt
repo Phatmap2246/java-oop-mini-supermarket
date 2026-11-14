@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<du-lieu phien-ban="1">
+  <doi-tuong lop="utils.DataBase$BanLuu" ma="1">
+    <thuoc-tinh khai-bao="utils.DataBase$BanLuu" ten="duLieu">
+      <doi-tuong lop="dichvu.Danhsachdoitac" ma="2">
+        <thuoc-tinh khai-bao="dichvu.Danhsachdoitac" ten="danhSachDoiTac">
+          <danh-sach lop="java.util.ArrayList" ma="3">
+            <doi-tuong lop="dichvu.Nhacungcap" ma="4">
+              <thuoc-tinh khai-bao="dichvu.Nhacungcap" ten="nganhHangCungCap">
+                <gia-tri kieu="java.lang.String">Thực phẩm</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Nhacungcap" ten="hanMucNoCong">
+                <gia-tri kieu="java.lang.Long">50000000</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Nhacungcap" ten="sanPhamCungCap">
+                <doi-tuong lop="sanpham.QuanLySanPham" ma="5">
+                  <thuoc-tinh khai-bao="sanpham.QuanLySanPham" ten="danhSachSanPham">
+                    <danh-sach lop="java.util.ArrayList" ma="6">
+                      <doi-tuong lop="sanpham.ThucPham" ma="7">
+                        <thuoc-tinh khai-bao="sanpham.ThucPham" ten="ngaySanXuat">
+                          <gia-tri kieu="java.time.LocalDate">2026-10-25</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.ThucPham" ten="hanSuDung">
+                          <gia-tri kieu="java.time.LocalDate">2027-02-12</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.ThucPham" ten="nhietDoBaoQuan">
+                          <gia-tri kieu="java.lang.Double">5.0</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.ThucPham" ten="baoQuan">
+                          <gia-tri kieu="java.lang.String">Bảo quản mát, tránh ánh nắng</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="tonTai">
+                          <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="maSanPham">
+                          <gia-tri kieu="java.lang.String">SP001</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="tenSanPham">
+                          <gia-tri kieu="java.lang.String">Sữa tươi hộp 1 lít</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="loaiSanPham">
+                          <gia-tri kieu="java.lang.String">Thực phẩm</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="maNhaCungCap">
+                          <gia-tri kieu="java.lang.String">NCC001</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaNhap">
+                          <gia-tri kieu="java.lang.Long">25000</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaBan">
+                          <gia-tri kieu="java.lang.Long">32000</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="soLuongTonKho">
+                          <gia-tri kieu="java.lang.Integer">40</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="thue">
+                          <gia-tri kieu="java.lang.Double">0.08</gia-tri>
+                        </thuoc-tinh>
+                      </doi-tuong>
+                      <doi-tuong lop="sanpham.ThucPham" ma="8">
+                        <thuoc-tinh khai-bao="sanpham.ThucPham" ten="ngaySanXuat">
+                          <gia-tri kieu="java.time.LocalDate">2026-10-25</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.ThucPham" ten="hanSuDung">
+                          <gia-tri kieu="java.time.LocalDate">2026-11-19</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.ThucPham" ten="nhietDoBaoQuan">
+                          <gia-tri kieu="java.lang.Double">5.0</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.ThucPham" ten="baoQuan">
+                          <gia-tri kieu="java.lang.String">Bảo quản mát, tránh ánh nắng</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="tonTai">
+                          <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="maSanPham">
+                          <gia-tri kieu="java.lang.String">SP002</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="tenSanPham">
+                          <gia-tri kieu="java.lang.String">Sữa chua dâu</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="loaiSanPham">
+                          <gia-tri kieu="java.lang.String">Thực phẩm</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="maNhaCungCap">
+                          <gia-tri kieu="java.lang.String">NCC001</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaNhap">
+                          <gia-tri kieu="java.lang.Long">6000</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaBan">
+                          <gia-tri kieu="java.lang.Long">8000</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="soLuongTonKho">
+                          <gia-tri kieu="java.lang.Integer">15</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="thue">
+                          <gia-tri kieu="java.lang.Double">0.08</gia-tri>
+                        </thuoc-tinh>
+                      </doi-tuong>
+                      <doi-tuong lop="sanpham.ThucPham" ma="9">
+                        <thuoc-tinh khai-bao="sanpham.ThucPham" ten="ngaySanXuat">
+                          <gia-tri kieu="java.time.LocalDate">2026-10-25</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.ThucPham" ten="hanSuDung">
+                          <gia-tri kieu="java.time.LocalDate">2026-11-12</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.ThucPham" ten="nhietDoBaoQuan">
+                          <gia-tri kieu="java.lang.Double">5.0</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.ThucPham" ten="baoQuan">
+                          <gia-tri kieu="java.lang.String">Bảo quản mát, tránh ánh nắng</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="tonTai">
+                          <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="maSanPham">
+                          <gia-tri kieu="java.lang.String">SP003</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="tenSanPham">
+                          <gia-tri kieu="java.lang.String">Bánh mì sandwich</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="loaiSanPham">
+                          <gia-tri kieu="java.lang.String">Thực phẩm</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="maNhaCungCap">
+                          <gia-tri kieu="java.lang.String">NCC001</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaNhap">
+                          <gia-tri kieu="java.lang.Long">12000</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaBan">
+                          <gia-tri kieu="java.lang.Long">18000</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="soLuongTonKho">
+                          <gia-tri kieu="java.lang.Integer">6</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="thue">
+                          <gia-tri kieu="java.lang.Double">0.08</gia-tri>
+                        </thuoc-tinh>
+                      </doi-tuong>
+                    </danh-sach>
+                  </thuoc-tinh>
+                </doi-tuong>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Doitac" ten="tonTai">
+                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Doitac" ten="maDoiTac">
+                <gia-tri kieu="java.lang.String">NCC001</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Doitac" ten="tenDoiTac">
+                <gia-tri kieu="java.lang.String">Thực phẩm An Nhiên</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Doitac" ten="soDienThoai">
+                <gia-tri kieu="java.lang.String">0912000000</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Doitac" ten="diaChi">
+                <gia-tri kieu="java.lang.String">20 Nguyễn Trãi, TP Hồ Chí Minh</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Doitac" ten="email">
+                <gia-tri kieu="java.lang.String">nhacungcap1@example.com</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Doitac" ten="maSoThue">
+                <gia-tri kieu="java.lang.String">0310000000</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Doitac" ten="loaiDoiTac">
+                <gia-tri kieu="java.lang.String">Nhà cung cấp</gia-tri>
+              </thuoc-tinh>
+            </doi-tuong>
+            <doi-tuong lop="dichvu.Nhacungcap" ma="10">
+              <thuoc-tinh khai-bao="dichvu.Nhacungcap" ten="nganhHangCungCap">
+                <gia-tri kieu="java.lang.String">Tiêu dùng</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Nhacungcap" ten="hanMucNoCong">
+                <gia-tri kieu="java.lang.Long">50000000</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Nhacungcap" ten="sanPhamCungCap">
+                <doi-tuong lop="sanpham.QuanLySanPham" ma="11">
+                  <thuoc-tinh khai-bao="sanpham.QuanLySanPham" ten="danhSachSanPham">
+                    <danh-sach lop="java.util.ArrayList" ma="12">
+                      <doi-tuong lop="sanpham.TieuDung" ma="13">
+                        <thuoc-tinh khai-bao="sanpham.TieuDung" ten="thuongHieu">
+                          <gia-tri kieu="java.lang.String">Bình Minh</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.TieuDung" ten="noiSanXuat">
+                          <gia-tri kieu="java.lang.String">Việt Nam</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.TieuDung" ten="phanLoai">
+                          <gia-tri kieu="java.lang.String">Chăm sóc gia đình</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.TieuDung" ten="luuYAnToan">
+                          <gia-tri kieu="java.lang.String">Để xa tầm tay trẻ em</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="tonTai">
+                          <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="maSanPham">
+                          <gia-tri kieu="java.lang.String">SP004</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="tenSanPham">
+                          <gia-tri kieu="java.lang.String">Nước giặt 3 lít</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="loaiSanPham">
+                          <gia-tri kieu="java.lang.String">Tiêu dùng</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="maNhaCungCap">
+                          <gia-tri kieu="java.lang.String">NCC002</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaNhap">
+                          <gia-tri kieu="java.lang.Long">110000</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaBan">
+                          <gia-tri kieu="java.lang.Long">150000</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="soLuongTonKho">
+                          <gia-tri kieu="java.lang.Integer">25</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="thue">
+                          <gia-tri kieu="java.lang.Double">0.05</gia-tri>
+                        </thuoc-tinh>
+                      </doi-tuong>
+                      <doi-tuong lop="sanpham.TieuDung" ma="14">
+                        <thuoc-tinh khai-bao="sanpham.TieuDung" ten="thuongHieu">
+                          <gia-tri kieu="java.lang.String">Bình Minh</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.TieuDung" ten="noiSanXuat">
+                          <gia-tri kieu="java.lang.String">Việt Nam</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.TieuDung" ten="phanLoai">
+                          <gia-tri kieu="java.lang.String">Chăm sóc gia đình</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.TieuDung" ten="luuYAnToan">
+                          <gia-tri kieu="java.lang.String">Để xa tầm tay trẻ em</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="tonTai">
+                          <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="maSanPham">
+                          <gia-tri kieu="java.lang.String">SP005</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="tenSanPham">
+                          <gia-tri kieu="java.lang.String">Dầu gội 650 ml</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="loaiSanPham">
+                          <gia-tri kieu="java.lang.String">Tiêu dùng</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="maNhaCungCap">
+                          <gia-tri kieu="java.lang.String">NCC002</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaNhap">
+                          <gia-tri kieu="java.lang.Long">70000</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaBan">
+                          <gia-tri kieu="java.lang.Long">95000</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="soLuongTonKho">
+                          <gia-tri kieu="java.lang.Integer">12</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="thue">
+                          <gia-tri kieu="java.lang.Double">0.05</gia-tri>
+                        </thuoc-tinh>
+                      </doi-tuong>
+                      <doi-tuong lop="sanpham.TieuDung" ma="15">
+                        <thuoc-tinh khai-bao="sanpham.TieuDung" ten="thuongHieu">
+                          <gia-tri kieu="java.lang.String">Bình Minh</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.TieuDung" ten="noiSanXuat">
+                          <gia-tri kieu="java.lang.String">Việt Nam</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.TieuDung" ten="phanLoai">
+                          <gia-tri kieu="java.lang.String">Chăm sóc gia đình</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.TieuDung" ten="luuYAnToan">
+                          <gia-tri kieu="java.lang.String">Để xa tầm tay trẻ em</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="tonTai">
+                          <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="maSanPham">
+                          <gia-tri kieu="java.lang.String">SP006</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="tenSanPham">
+                          <gia-tri kieu="java.lang.String">Bàn chải đánh răng</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="loaiSanPham">
+                          <gia-tri kieu="java.lang.String">Tiêu dùng</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="maNhaCungCap">
+                          <gia-tri kieu="java.lang.String">NCC002</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaNhap">
+                          <gia-tri kieu="java.lang.Long">10000</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaBan">
+                          <gia-tri kieu="java.lang.Long">18000</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="soLuongTonKho">
+                          <gia-tri kieu="java.lang.Integer">0</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="thue">
+                          <gia-tri kieu="java.lang.Double">0.05</gia-tri>
+                        </thuoc-tinh>
+                      </doi-tuong>
+                    </danh-sach>
+                  </thuoc-tinh>
+                </doi-tuong>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Doitac" ten="tonTai">
+                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Doitac" ten="maDoiTac">
+                <gia-tri kieu="java.lang.String">NCC002</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Doitac" ten="tenDoiTac">
+                <gia-tri kieu="java.lang.String">Gia dụng Bình Minh</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Doitac" ten="soDienThoai">
+                <gia-tri kieu="java.lang.String">0912000001</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Doitac" ten="diaChi">
+                <gia-tri kieu="java.lang.String">21 Nguyễn Trãi, TP Hồ Chí Minh</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Doitac" ten="email">
+                <gia-tri kieu="java.lang.String">nhacungcap2@example.com</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Doitac" ten="maSoThue">
+                <gia-tri kieu="java.lang.String">0310000001</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Doitac" ten="loaiDoiTac">
+                <gia-tri kieu="java.lang.String">Nhà cung cấp</gia-tri>
+              </thuoc-tinh>
+            </doi-tuong>
+            <doi-tuong lop="dichvu.Nhacungcap" ma="16">
+              <thuoc-tinh khai-bao="dichvu.Nhacungcap" ten="nganhHangCungCap">
+                <gia-tri kieu="java.lang.String">Điện tử</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Nhacungcap" ten="hanMucNoCong">
+                <gia-tri kieu="java.lang.Long">50000000</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Nhacungcap" ten="sanPhamCungCap">
+                <doi-tuong lop="sanpham.QuanLySanPham" ma="17">
+                  <thuoc-tinh khai-bao="sanpham.QuanLySanPham" ten="danhSachSanPham">
+                    <danh-sach lop="java.util.ArrayList" ma="18">
+                      <doi-tuong lop="sanpham.DienTu" ma="19">
+                        <thuoc-tinh khai-bao="sanpham.DienTu" ten="thoiGianBaoHanh">
+                          <gia-tri kieu="java.lang.Integer">12</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.DienTu" ten="chatLieu">
+                          <gia-tri kieu="java.lang.String">Nhựa và inox</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="tonTai">
+                          <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="maSanPham">
+                          <gia-tri kieu="java.lang.String">SP007</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="tenSanPham">
+                          <gia-tri kieu="java.lang.String">Nồi cơm điện 1.8 lít</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="loaiSanPham">
+                          <gia-tri kieu="java.lang.String">Điện tử</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="maNhaCungCap">
+                          <gia-tri kieu="java.lang.String">NCC003</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaNhap">
+                          <gia-tri kieu="java.lang.Long">450000</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaBan">
+                          <gia-tri kieu="java.lang.Long">650000</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="soLuongTonKho">
+                          <gia-tri kieu="java.lang.Integer">5</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="thue">
+                          <gia-tri kieu="java.lang.Double">0.05</gia-tri>
+                        </thuoc-tinh>
+                      </doi-tuong>
+                      <doi-tuong lop="sanpham.DienTu" ma="20">
+                        <thuoc-tinh khai-bao="sanpham.DienTu" ten="thoiGianBaoHanh">
+                          <gia-tri kieu="java.lang.Integer">12</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.DienTu" ten="chatLieu">
+                          <gia-tri kieu="java.lang.String">Nhựa và inox</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="tonTai">
+                          <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="maSanPham">
+                          <gia-tri kieu="java.lang.String">SP008</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="tenSanPham">
+                          <gia-tri kieu="java.lang.String">Ấm đun siêu tốc</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="loaiSanPham">
+                          <gia-tri kieu="java.lang.String">Điện tử</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="maNhaCungCap">
+                          <gia-tri kieu="java.lang.String">NCC003</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaNhap">
+                          <gia-tri kieu="java.lang.Long">220000</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaBan">
+                          <gia-tri kieu="java.lang.Long">350000</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="soLuongTonKho">
+                          <gia-tri kieu="java.lang.Integer">3</gia-tri>
+                        </thuoc-tinh>
+                        <thuoc-tinh khai-bao="sanpham.SanPham" ten="thue">
+                          <gia-tri kieu="java.lang.Double">0.05</gia-tri>
+                        </thuoc-tinh>
+                      </doi-tuong>
+                    </danh-sach>
+                  </thuoc-tinh>
+                </doi-tuong>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Doitac" ten="tonTai">
+                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Doitac" ten="maDoiTac">
+                <gia-tri kieu="java.lang.String">NCC003</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Doitac" ten="tenDoiTac">
+                <gia-tri kieu="java.lang.String">Điện máy Hòa Phát</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Doitac" ten="soDienThoai">
+                <gia-tri kieu="java.lang.String">0912000002</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Doitac" ten="diaChi">
+                <gia-tri kieu="java.lang.String">22 Nguyễn Trãi, TP Hồ Chí Minh</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Doitac" ten="email">
+                <gia-tri kieu="java.lang.String">nhacungcap3@example.com</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Doitac" ten="maSoThue">
+                <gia-tri kieu="java.lang.String">0310000002</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Doitac" ten="loaiDoiTac">
+                <gia-tri kieu="java.lang.String">Nhà cung cấp</gia-tri>
+              </thuoc-tinh>
+            </doi-tuong>
+          </danh-sach>
+        </thuoc-tinh>
+      </doi-tuong>
+    </thuoc-tinh>
+    <thuoc-tinh khai-bao="utils.DataBase$BanLuu" ten="boDem">
+      <anh-xa lop="java.util.LinkedHashMap" ma="21">
+        <cap>
+          <gia-tri kieu="java.lang.String">sanpham.SanPham</gia-tri>
+          <gia-tri kieu="java.lang.Integer">9</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">person.NhanVien</gia-tri>
+          <gia-tri kieu="java.lang.Integer">5</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">person.KhachHang</gia-tri>
+          <gia-tri kieu="java.lang.Integer">4</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">hoadon.HoaDon</gia-tri>
+          <gia-tri kieu="java.lang.Integer">7</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">dichvu.Khuyenmai</gia-tri>
+          <gia-tri kieu="java.lang.Integer">5</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">dichvu.Nhacungcap</gia-tri>
+          <gia-tri kieu="java.lang.Integer">4</gia-tri>
+        </cap>
+      </anh-xa>
+    </thuoc-tinh>
+  </doi-tuong>
+</du-lieu>

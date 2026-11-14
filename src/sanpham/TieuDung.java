@@ -69,13 +69,13 @@ public class TieuDung extends SanPham
     {
         super.setSanPham(sc);
         System.out.println("Nhập thương hiệu của sản phẩm: ");
-        thuongHieu = Validation.inputStringRegex(sc, "Nhập thông tin: ", "(?s).+", "Thông tin không được để trống!");
+        thuongHieu = sc.nextLine() ;
         System.out.println("Nhập nơi sản xuất: ");
-        noiSanXuat = Validation.inputStringRegex(sc, "Nhập thông tin: ", "(?s).+", "Thông tin không được để trống!");
+        noiSanXuat = sc.nextLine() ;
         System.out.println("Phân loại: ");
-        phanLoai = Validation.inputStringRegex(sc, "Nhập thông tin: ", "(?s).+", "Thông tin không được để trống!");
+        phanLoai = sc.nextLine() ;
         System.out.println("Lưu ý an toàn: ");
-        luuYAnToan = Validation.inputStringRegex(sc, "Nhập thông tin: ", "(?s).+", "Thông tin không được để trống!");
+        luuYAnToan = sc.nextLine() ;
     }
 
     @Override

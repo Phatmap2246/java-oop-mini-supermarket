@@ -93,14 +93,14 @@ public class PersonPackageTest {
         ArrayList<NhanVien> employees = new ArrayList<>();
         employees.add(employee);
         DSNhanVien list = new DSNhanVien(employees);
-        equal(0, list.timNV(" NV002 "), "DSNhanVien finds trimmed code");
-        check(list.suaNV("NV002", new Scanner("2\nTran Thi B\n0\n")), "DSNhanVien edits existing employee");
+        equal(0, list.timViTri(" NV002 "), "DSNhanVien finds trimmed code");
+        check(list.sua("NV002", new Scanner("2\nTran Thi B\n0\n")), "DSNhanVien edits existing employee");
         equal("Tran Thi B", employee.getHoten(), "DSNhanVien edit persists");
-        check(!list.suaNV("NV999", new Scanner("0\n")), "DSNhanVien reports missing employee");
-        check(list.saThai("NV002"), "DSNhanVien dismisses existing employee");
-        equal(0, list.timNV("NV002"), "DSNhanVien retains dismissed employee");
+        check(!list.sua("NV999", new Scanner("0\n")), "DSNhanVien reports missing employee");
+        check(list.xoa("NV002"), "DSNhanVien dismisses existing employee");
+        equal(-1, list.timViTri("NV002"), "DSNhanVien hides dismissed employee from active search");
         check(employee.isSaThai(), "DSNhanVien marks employee as dismissed");
-        check(!list.saThai("NV002"), "DSNhanVien does not dismiss an employee twice");
+        check(!list.xoa("NV002"), "DSNhanVien does not dismiss an employee twice");
         check(new DSNhanVien(list).list == list.list, "DSNhanVien copy shares backing list");
     }
 
@@ -127,12 +127,12 @@ public class PersonPackageTest {
         customer.setHoten("Le Van C");
         DSKhachHang list = new DSKhachHang();
         list.add(customer);
-        equal(0, list.timKH(" kh123 "), "DSKhachHang finds case-insensitively");
-        check(list.timKiemKH("KH123") == customer, "DSKhachHang returns matching object");
-        equal(1, list.timKiemTheoTen("van").length, "DSKhachHang searches partial name");
-        check(!list.suaKH("KH999", new Scanner("0\n")), "DSKhachHang reports missing customer");
-        list.xoaKH("KH123");
-        KhachHang removed = list.timKiemKH("KH123");
+        equal(0, list.timViTri(" kh123 "), "DSKhachHang finds case-insensitively");
+        check(list.timMa("KH123") == customer, "DSKhachHang returns matching object");
+        equal(1, list.timDanhSachTheoTen("van").length, "DSKhachHang searches partial name");
+        check(!list.sua("KH999", new Scanner("0\n")), "DSKhachHang reports missing customer");
+        list.xoa("KH123");
+        KhachHang removed = list.timMa("KH123");
         check(removed == null || !removed.isTonTai(),
                 "DSKhachHang soft-deletes customer (isTonTai = false)");
     }

@@ -120,15 +120,24 @@ public class YeuCau {
         return danhSach;
     }
 
+    public static void ghiDanhSachYeuCau(Path filePath, ArrayList<YeuCau> danhSach) throws IOException {
+        ArrayList<BanGhiDataBase> moi = new ArrayList<>();
+        for (YeuCau yc : danhSach) moi.add(new BanGhiDataBase(yc));
+        // Giữ lại các dòng lịch sử sai định dạng như luồng duyệt yêu cầu hiện tại.
+        for (BanGhiDataBase ghi : docDanhSach(filePath)) if (ghi.laDongLoi()) moi.add(ghi);
+        ghiDanhSach(filePath, moi);
+    }
+
     public static void ghiDanhSach(Path filePath, ArrayList<BanGhiDataBase> danhSach)
             throws IOException {
-        if (danhSach.isEmpty()) {
-            throw new IllegalArgumentException("Danh sách yêu cầu cần có ít nhất một bản ghi.");
-        }
-
         Path thuMuc = filePath.toAbsolutePath().getParent();
         if (thuMuc != null) {
             Files.createDirectories(thuMuc);
+        }
+
+        if (danhSach.isEmpty()) {
+            Files.writeString(filePath, DataBase.getCSVHeader(new BanGhiDataBase()) + System.lineSeparator(), StandardCharsets.UTF_8);
+            return;
         }
 
         ArrayList<Object> cacBanGhi = new ArrayList<>(danhSach);
