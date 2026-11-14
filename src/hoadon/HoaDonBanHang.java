@@ -59,13 +59,10 @@ public class HoaDonBanHang extends HoaDon {
                 System.out.printf("%-5d | %-25s | %-5d | %15d | %15d| %15d\n",
                     stt, tenHienThi, ct.getSoLuong(), ct.getDonGia(), ct.getSoLuongTangKem(),ct.getThanhTienSauKhuyenMai());
             }
-            else{
-                System.out.printf("%-5s | %-25s | %-5s | %15s | %15s\n", 
-                "STT", "Tên Sản Phẩm", "SL", "Đơn Giá","T.Tiền");
-                System.out.println("------------------------------------------------------------------------------------------");
-                System.out.printf("%-5d | %-25s | %-5d | %15d | %15d| %15d\n",
-                    stt, tenHienThi, ct.getSoLuong(), ct.getDonGia(),ct.getThanhTienSauKhuyenMai());
-            }
+            else {
+              System.out.printf("%-5d | %-25s | %-5d | %15d | %15d| %15d\n",
+                  stt, tenHienThi, ct.getSoLuong(), ct.getDonGia(), 0L, ct.getThanhTienSauKhuyenMai());
+          }
             stt++;
         }
         System.out.println("------------------------------------------------------------------------------------------");        
