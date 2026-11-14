@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 import interfaces.IThanhToan;
 import utils.Validation;
-
+import interfaces.TrongFile;
 public class ThanhToanTienMat implements IThanhToan, TrongFile {
     private long tienKhachDua;
     private long tienThua;
