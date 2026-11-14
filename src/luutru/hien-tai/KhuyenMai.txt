@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<du-lieu phien-ban="1">
+  <doi-tuong lop="utils.DataBase$BanLuu" ma="1">
+    <thuoc-tinh khai-bao="utils.DataBase$BanLuu" ten="duLieu">
+      <doi-tuong lop="dichvu.Danhsachkhuyenmai" ma="2">
+        <thuoc-tinh khai-bao="dichvu.Danhsachkhuyenmai" ten="khuyenmais">
+          <mang lop="dichvu.Khuyenmai" ma="3">
+            <doi-tuong lop="dichvu.KhuyenMaiPhanTram" ma="4">
+              <thuoc-tinh khai-bao="dichvu.KhuyenMaiPhanTram" ten="phanTramGiamGia">
+                <gia-tri kieu="java.lang.Double">0.1</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.KhuyenMaiPhanTram" ten="mucGiamToiDa">
+                <gia-tri kieu="java.lang.Long">50000</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Khuyenmai" ten="tonTai">
+                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Khuyenmai" ten="maKhuyenMai">
+                <gia-tri kieu="java.lang.String">KM001</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Khuyenmai" ten="loaiKhuyenMai">
+                <gia-tri kieu="java.lang.String">Giảm theo phần trăm</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Khuyenmai" ten="ngayBatDau">
+                <gia-tri kieu="java.time.LocalDate">2026-10-15</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Khuyenmai" ten="ngayKetThuc">
+                <gia-tri kieu="java.time.LocalDate">2027-01-13</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Khuyenmai" ten="mucChiToiThieu">
+                <gia-tri kieu="java.lang.Long">0</gia-tri>
+              </thuoc-tinh>
+            </doi-tuong>
+            <doi-tuong lop="dichvu.KhuyenMaiMuaTang" ma="5">
+              <thuoc-tinh khai-bao="dichvu.KhuyenMaiMuaTang" ten="soLuongMuaToiThieu">
+                <gia-tri kieu="java.lang.Integer">2</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.KhuyenMaiMuaTang" ten="soLuongTang">
+                <gia-tri kieu="java.lang.Integer">1</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Khuyenmai" ten="tonTai">
+                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Khuyenmai" ten="maKhuyenMai">
+                <gia-tri kieu="java.lang.String">KM002</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Khuyenmai" ten="loaiKhuyenMai">
+                <gia-tri kieu="java.lang.String">Khuyến mãi mua tặng</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Khuyenmai" ten="ngayBatDau">
+                <gia-tri kieu="java.time.LocalDate">2026-10-15</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Khuyenmai" ten="ngayKetThuc">
+                <gia-tri kieu="java.time.LocalDate">2027-01-13</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Khuyenmai" ten="mucChiToiThieu">
+                <gia-tri kieu="java.lang.Long">0</gia-tri>
+              </thuoc-tinh>
+            </doi-tuong>
+            <doi-tuong lop="dichvu.KhuyenMaiTrucTiep" ma="6">
+              <thuoc-tinh khai-bao="dichvu.KhuyenMaiTrucTiep" ten="soTienGiam">
+                <gia-tri kieu="java.lang.Long">50000</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Khuyenmai" ten="tonTai">
+                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Khuyenmai" ten="maKhuyenMai">
+                <gia-tri kieu="java.lang.String">KM003</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Khuyenmai" ten="loaiKhuyenMai">
+                <gia-tri kieu="java.lang.String">Giảm giá trực tiếp</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Khuyenmai" ten="ngayBatDau">
+                <gia-tri kieu="java.time.LocalDate">2026-10-15</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Khuyenmai" ten="ngayKetThuc">
+                <gia-tri kieu="java.time.LocalDate">2027-01-13</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Khuyenmai" ten="mucChiToiThieu">
+                <gia-tri kieu="java.lang.Long">0</gia-tri>
+              </thuoc-tinh>
+            </doi-tuong>
+            <doi-tuong lop="dichvu.KhuyenMaiTrucTiep" ma="7">
+              <thuoc-tinh khai-bao="dichvu.KhuyenMaiTrucTiep" ten="soTienGiam">
+                <gia-tri kieu="java.lang.Long">10000</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Khuyenmai" ten="tonTai">
+                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Khuyenmai" ten="maKhuyenMai">
+                <gia-tri kieu="java.lang.String">KM004</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Khuyenmai" ten="loaiKhuyenMai">
+                <gia-tri kieu="java.lang.String">Giảm giá trực tiếp</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Khuyenmai" ten="ngayBatDau">
+                <gia-tri kieu="java.time.LocalDate">2026-10-15</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Khuyenmai" ten="ngayKetThuc">
+                <gia-tri kieu="java.time.LocalDate">2026-11-13</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.Khuyenmai" ten="mucChiToiThieu">
+                <gia-tri kieu="java.lang.Long">0</gia-tri>
+              </thuoc-tinh>
+            </doi-tuong>
+          </mang>
+        </thuoc-tinh>
+        <thuoc-tinh khai-bao="dichvu.Danhsachkhuyenmai" ten="soLuongKhuyenMai">
+          <gia-tri kieu="java.lang.Integer">4</gia-tri>
+        </thuoc-tinh>
+      </doi-tuong>
+    </thuoc-tinh>
+    <thuoc-tinh khai-bao="utils.DataBase$BanLuu" ten="boDem">
+      <anh-xa lop="java.util.LinkedHashMap" ma="8">
+        <cap>
+          <gia-tri kieu="java.lang.String">sanpham.SanPham</gia-tri>
+          <gia-tri kieu="java.lang.Integer">9</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">person.NhanVien</gia-tri>
+          <gia-tri kieu="java.lang.Integer">5</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">person.KhachHang</gia-tri>
+          <gia-tri kieu="java.lang.Integer">4</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">hoadon.HoaDon</gia-tri>
+          <gia-tri kieu="java.lang.Integer">7</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">dichvu.Khuyenmai</gia-tri>
+          <gia-tri kieu="java.lang.Integer">5</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">dichvu.Nhacungcap</gia-tri>
+          <gia-tri kieu="java.lang.Integer">4</gia-tri>
+        </cap>
+      </anh-xa>
+    </thuoc-tinh>
+  </doi-tuong>
+</du-lieu>

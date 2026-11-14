@@ -9,7 +9,7 @@ import java.util.Scanner;
 import utils.DataBase;
 import utils.Validation;
 
-public class DSKhachHang {
+public class DSKhachHang implements interfaces.IQuanLy<KhachHang> {
     private KhachHang[] list;
     private int n; // Số lượng khách hàng hiện tại
 
@@ -79,7 +79,8 @@ public class DSKhachHang {
     }
 
     /** Nhập số lượng rồi nhập thông tin và thêm từng khách hàng vào danh sách. */
-    public void taoDS(Scanner sc) {
+    @Override
+    public void taoDanhSach(Scanner sc) {
         int soLuong = Validation.inputInt(sc, "Nhap so khach hang tao danh sach: ");
         for (int i = 0; i < soLuong; i++) {
             System.out.println("\n--- Nhap khach hang thu " + (i + 1) + " ---");
@@ -90,7 +91,8 @@ public class DSKhachHang {
     }
 
     /** In thông tin từng khách hàng; thông báo nếu danh sách rỗng. */
-    public void xuatDSKH() {
+    @Override
+    public void xuatDanhSach() {
         if (n == 0 || list == null) {
             System.out.println("Danh sach khach hang rong.");
             return;
@@ -127,12 +129,13 @@ public class DSKhachHang {
     }
 
     /** Nhập thông tin một khách hàng mới rồi thêm vào danh sách. */
-    public void themKH(Scanner sc) {
+    @Override
+    public void them(Scanner sc) {
         KhachHang kh = new KhachHang();
         kh.nhapThongTin(sc);
 
         // Kiểm tra xem mã khách hàng đã tồn tại trong danh sách chưa
-        if (timKH(kh.getMaKhachHang()) != -1) {
+        if (timViTri(kh.getMaKhachHang()) != -1) {
             System.out.println("[!] Mã khách hàng đã tồn tại, không thể thêm.");
             return;
         }
@@ -142,10 +145,11 @@ public class DSKhachHang {
     }
 
     /** Cập nhật thông tin khách hàng */
-    public boolean suaKH(String maKH, Scanner sc) {
+    @Override
+    public boolean sua(String maKH, Scanner sc) {
         try {
 
-            int idx = timKH(maKH);
+            int idx = timViTri(maKH);
             if (idx == -1) {
                 System.out.println("[!] Không tìm thấy khách hàng trong danh sách.");
                 return false;
@@ -237,20 +241,23 @@ public class DSKhachHang {
      * Cập nhật trạng thái isTonTai = false (xóa mềm), không xóa khỏi mảng/database
      * và ghi đè danh sách cập nhật vào file KhachHang.txt.
      */
-    public void xoaKH(String maKH) {
-        int idx = timKH(maKH);
+    @Override
+    public boolean xoa(String maKH) {
+        int idx = timViTri(maKH);
         if (idx == -1) {
             System.out.println("[!] Không tìm thấy khách hàng trong danh sách.");
-            return;
+            return false;
         }
 
         list[idx].setTonTai(false);
         ghiFileKhachHang();
         System.out.println("[+] Da cap nhat trang thai da xoa (isTonTai = false) cho khach hang " + maKH);
+        return true;
     }
 
     /** Tìm vị trí khách hàng theo mã; trả về -1 nếu không tìm thấy. */
-    public int timKH(String maKH) {
+    @Override
+    public int timViTri(String maKH) {
         if (maKH == null || n == 0) {
             System.out.println("Không tìm thấy khách hàng hoặc khách hàng đã bị xóa!");
         return -1;
@@ -269,8 +276,9 @@ public class DSKhachHang {
     /**
      * Tìm và trả về đối tượng khách hàng theo mã; trả về null nếu không tìm thấy.
      */
-    public KhachHang timKiemKH(String maKH) {
-        int idx = timKH(maKH);
+    @Override
+    public KhachHang timMa(String maKH) {
+        int idx = timViTri(maKH);
         return (idx != -1) ? list[idx] : null;
     }
 
@@ -278,7 +286,7 @@ public class DSKhachHang {
      * Tìm danh sách khách hàng theo họ tên (tìm kiếm gần đúng), trả về mảng thủ
      * công.
      */
-    public KhachHang[] timKiemTheoTen(String hoTen) {
+    public KhachHang[] timDanhSachTheoTen(String hoTen) {
         if (hoTen == null || n == 0) {
             return new KhachHang[0];
         }
@@ -303,7 +311,25 @@ public class DSKhachHang {
         return ketQua;
     }
 
-    public void timKiemTheoNhieuKhoa(Scanner sc) {
+    @Override
+    public KhachHang timTen(String ten) {
+        if (ten == null || ten.isBlank()) return null;
+        KhachHang[] ketQua = timDanhSachTheoTen(ten);
+        return ketQua.length == 0 ? null : ketQua[0];
+    }
+
+    @Override
+    public KhachHang timKhoa(String khoa) {
+        if (khoa == null || khoa.isBlank()) return null;
+        for (int i = 0; i < n; i++) {
+            KhachHang kh = list[i];
+            if (kh != null && kh.isTonTai()
+                    && kh.toString().toLowerCase(Locale.ROOT).contains(khoa.trim().toLowerCase(Locale.ROOT))) return kh;
+        }
+        return null;
+    }
+
+    public void timKhoa(Scanner sc) {
         while (true) {
             System.out.println("================ TÌM KIẾM KHÁCH HÀNG ================");
             System.out.println("1. Họ tên");
@@ -636,7 +662,7 @@ public class DSKhachHang {
             objs.add(list[i]);
         }
 
-        DataBase.ghiVaoFile(objs, "src/person/KhachHang.txt", true);
+        DataBase.ghiVaoFile(objs, utils.DuongDanLuuTru.file("KhachHang.txt"), true);
         System.out.println("[+] Da ghi de danh sach vao file KhachHang.txt bang DataBase thanh cong!");
     }
 
@@ -658,29 +684,29 @@ public class DSKhachHang {
             switch (luaChon)
             {
                 case 1: {
-                    taoDS(sc);
+                    taoDanhSach(sc);
                     break;
                 }
                 case 2: {
-                    xuatDSKH();
+                    xuatDanhSach();
                     break;
                 }
                 case 3: {
-                    themKH(sc);
+                    them(sc);
                     break;
                 }
                 case 4: {
                     String ma = Validation.inputStringRegex(sc, "Nhập mã khách hàng: ", Validation.MaKH_REGEX, "Mã khách hàng không đúng định dạng!");
-                    suaKH(ma, sc);
+                    sua(ma, sc);
                     break;
                 }
                 case 5: {
                     String ma = Validation.inputStringRegex(sc, "Nhập mã khách hàng: ", Validation.MaKH_REGEX, "Mã khách hàng không đúng định dạng!");
-                    xoaKH(ma);
+                    xoa(ma);
                     break;
                 }
                 case 6: {
-                    timKiemTheoNhieuKhoa(sc);
+                    timKhoa(sc);
                     break;
                 }
                 case 7: {

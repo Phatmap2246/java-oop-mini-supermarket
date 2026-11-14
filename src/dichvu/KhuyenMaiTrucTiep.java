@@ -49,10 +49,6 @@ public class KhuyenMaiTrucTiep extends Khuyenmai implements TrongFile {
         soTienGiam = Validation.inputLong(sc, "Nhập số tiền giảm giá trực tiếp: ");
     }
 
-    @Override
-    public String toString() {
-        return super.toString() + " | Số tiền giảm giá trực tiếp: " + soTienGiam;
-    }
 
     @Override
     public String getFilePath() {

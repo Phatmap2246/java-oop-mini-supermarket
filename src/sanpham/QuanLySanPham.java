@@ -10,7 +10,43 @@ import utils.Validation;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class QuanLySanPham{
+public class QuanLySanPham implements interfaces.IQuanLy<SanPham> {
+    private transient dichvu.Danhsachdoitac nguonDoiTac;
+
+    public void cauHinh(dichvu.Danhsachdoitac doiTacs) { nguonDoiTac = doiTacs; }
+
+    private ArrayList<Nhacungcap> nhaCungCaps() {
+        return nguonDoiTac == null ? new ArrayList<>() : nguonDoiTac.layDanhSachNhaCungCap();
+    }
+
+    @Override
+    public void taoDanhSach(Scanner sc) { taoDanhSach(sc, nhaCungCaps()); }
+
+    @Override
+    public void them(Scanner sc) { them(sc, nhaCungCaps()); }
+
+    @Override
+    public boolean sua(String ma, Scanner sc) { return sua(sc, ma, nhaCungCaps()); }
+
+    @Override
+    public SanPham timTen(String ten) {
+        if (ten == null || ten.isBlank()) return null;
+        for (SanPham sp : danhSachSanPham) {
+            if (sp != null && sp.isTonTai() && sp.getTenSanPham() != null
+                    && sp.getTenSanPham().toLowerCase(Locale.ROOT).contains(ten.trim().toLowerCase(Locale.ROOT))) return sp;
+        }
+        return null;
+    }
+
+    @Override
+    public SanPham timKhoa(String khoa) {
+        if (khoa == null || khoa.isBlank()) return null;
+        for (SanPham sp : danhSachSanPham) {
+            if (sp != null && sp.isTonTai()
+                    && sp.toString().toLowerCase(Locale.ROOT).contains(khoa.trim().toLowerCase(Locale.ROOT))) return sp;
+        }
+        return null;
+    }
     private ArrayList<SanPham> danhSachSanPham;
 
     public QuanLySanPham() {
@@ -32,11 +68,11 @@ public class QuanLySanPham{
         this.danhSachSanPham = danhSachSanPham;
     }
 
-    public void taoDuLieuSanPham(Scanner sc, ArrayList<Nhacungcap> danhSachNhaCungCap) {
+    public void taoDanhSach(Scanner sc, ArrayList<Nhacungcap> danhSachNhaCungCap) {
         System.out.println("Tạo dữ liệu cho danh sách sản phẩm!");
         boolean tiepTuc = true;
         while (tiepTuc) {
-            themSanPham(sc, danhSachNhaCungCap);
+            them(sc, danhSachNhaCungCap);
             System.out.println("Bạn có muốn tiếp tục(1/0): ");
             int luaChon = Validation.luaChon(sc, "Nhập lựa chọn: ", 0, 1);
             if (luaChon == 0) {
@@ -45,14 +81,15 @@ public class QuanLySanPham{
         }
         System.out.println("Tạo dữ liệu thành công!");
     }
-    public void inDanhSachSanPham()
+    @Override
+    public void xuatDanhSach()
     {
         System.out.println("Đang tải danh sách...");
         Validation.danghoatdong(1);
         for ( SanPham sanPham:danhSachSanPham )
             if (sanPham != null && sanPham.isTonTai()) System.out.println(sanPham);
     }
-    public void themSanPham(Scanner sc, ArrayList<Nhacungcap> danhSachNhaCungCap) {
+    public void them(Scanner sc, ArrayList<Nhacungcap> danhSachNhaCungCap) {
         if (danhSachNhaCungCap != null) {
             danhSachNhaCungCap = new ArrayList<>(danhSachNhaCungCap);
             danhSachNhaCungCap.removeIf(ncc -> ncc == null || !ncc.isTonTai());
@@ -129,12 +166,12 @@ public class QuanLySanPham{
         System.out.println("Khởi tạo k sản phẩm cho danh sách sản phẩm!");
         for ( int i = 0 ; i < k ; i++ )
         {
-            themSanPham(sc , danhsachNhaCungCap);
+            them(sc , danhsachNhaCungCap);
         }
         System.out.println("Thêm " + k + " Sản phẩm thành công!");
     }
     
-    public void suaThongTinSanPham(Scanner sc, String maSanPham, ArrayList<Nhacungcap> danhSachNhaCungCap) {
+    public boolean sua(Scanner sc, String maSanPham, ArrayList<Nhacungcap> danhSachNhaCungCap) {
         try {
 
             if (danhSachNhaCungCap != null) {
@@ -143,8 +180,8 @@ public class QuanLySanPham{
             }
 
             System.out.println("Sửa thông tin sản phẩm!");
-            int index = timKiemSanPham(maSanPham);
-            if (index == -1) return;
+            int index = timViTri(maSanPham);
+            if (index == -1) return false;
             SanPham sanPham = danhSachSanPham.get(index);
             if (sanPham instanceof ThucPham) {
                 System.out.println("Chọn thuộc tính cần sửa: ");
@@ -190,7 +227,7 @@ public class QuanLySanPham{
                     case 9:
                         if (danhSachNhaCungCap == null || danhSachNhaCungCap.isEmpty()) {
                             System.out.println("Chưa có nhà cung cấp!");
-                            return;
+                            return false;
                         }
                         System.out.println("Chọn nhà cung cấp: ");
                         for (int i = 0; i < danhSachNhaCungCap.size(); i++) {
@@ -201,7 +238,7 @@ public class QuanLySanPham{
                         break;
                     default:
                         System.out.println("Lựa chọn không hợp lệ!");
-                        break;
+                        return false;
                 }
             } else if (sanPham instanceof TieuDung) {
                 System.out.println("Chọn thuộc tính cần sửa: ");
@@ -248,7 +285,7 @@ public class QuanLySanPham{
                     case 9:
                         if (danhSachNhaCungCap == null || danhSachNhaCungCap.isEmpty()) {
                             System.out.println("Chưa có nhà cung cấp!");
-                            return;
+                            return false;
                         }
                         System.out.println("Chọn nhà cung cấp: ");
                         for (int i = 0; i < danhSachNhaCungCap.size(); i++) {
@@ -259,7 +296,7 @@ public class QuanLySanPham{
                         break;
                     default:
                         System.out.println("Lựa chọn không hợp lệ!");
-                        return;
+                        return false;
                 }
             } else if (sanPham instanceof DienTu) {
                 System.out.println("Chọn thuộc tính cần sửa: ");
@@ -295,7 +332,7 @@ public class QuanLySanPham{
                     case 7:
                         if (danhSachNhaCungCap == null || danhSachNhaCungCap.isEmpty()) {
                             System.out.println("Chưa có nhà cung cấp!");
-                            return;
+                            return false;
                         }
                         System.out.println("Chọn nhà cung cấp: ");
                         for (int i = 0; i < danhSachNhaCungCap.size(); i++) {
@@ -306,19 +343,21 @@ public class QuanLySanPham{
                         break;
                     default:
                         System.out.println("Lựa chọn không hợp lệ!");
-                        return;
+                        return false;
                 }
             }
             System.out.println("Đã thay đổi thông tin sản phẩm!");
+            return true;
         } catch (IllegalArgumentException e) {
             System.out.println("[!] " + e.getMessage());
+            return false;
         }
     }
 
     public void dieuChinhGiaBan(Scanner sc){
         String maSP = Validation.inputStringRegex(sc, "Nhập mã sản phẩm cần sửa giá: ",
                 Validation.MaSP_REGEX, "Mã sản phẩm không hợp lệ!");
-        SanPham sanPham = traCuuSanPham(maSP);
+        SanPham sanPham = timMa(maSP);
         if(sanPham == null){
             return;
         }
@@ -327,13 +366,16 @@ public class QuanLySanPham{
         System.out.println("Đã cập nhật giá bán sản phẩm " + sanPham.getTenSanPham() + ".");
     }
 
-    public void xoaSanPham(String maSanPham) {
-        int viTri = timKiemSanPham(maSanPham);
+    @Override
+    public boolean xoa(String maSanPham) {
+        int viTri = timViTri(maSanPham);
         if (viTri == -1) {
             System.out.println("Mã sản phẩm không hợp lệ, sản phẩm không tồn tại!");
+            return false;
         } else {
             danhSachSanPham.get(viTri).setTonTai(false);
             System.out.println("Xoá sản phẩm thành công!");
+            return true;
         }
     }
 
@@ -352,7 +394,10 @@ public class QuanLySanPham{
          inDanhSachQuaHan();
     }
 
-    public int timKiemSanPham(String maSanPham) {
+    @Override
+    public int timViTri(String maSanPham) {
+        if (maSanPham == null || maSanPham.isBlank()) return -1;
+        maSanPham = maSanPham.trim();
         for (int i = 0; i < danhSachSanPham.size(); i++) {
             if (danhSachSanPham.get(i) != null && danhSachSanPham.get(i).isTonTai() && (maSanPham != null && maSanPham.equalsIgnoreCase(danhSachSanPham.get(i).getMaSanPham()))) {
                 return i;
@@ -361,9 +406,10 @@ public class QuanLySanPham{
         System.out.println("Không tìm thấy sản phẩm hoặc sản phẩm đã bị xóa!");
         return -1;
     }
-    public SanPham traCuuSanPham( String maSanPham)
+    @Override
+    public SanPham timMa( String maSanPham)
     {
-        int index = timKiemSanPham(maSanPham);
+        int index = timViTri(maSanPham);
         if ( index == -1 )
         {
             return null ;
@@ -371,7 +417,7 @@ public class QuanLySanPham{
         return danhSachSanPham.get(index) ;
     }
 
-    public void timKiemTheoNhieuKhoa(Scanner sc) {
+    public void timKhoa(Scanner sc) {
         while (true) {
             System.out.println("================ TÌM KIẾM SẢN PHẨM ================");
             System.out.println("1. Mã sản phẩm");
@@ -477,7 +523,7 @@ public class QuanLySanPham{
 
     public void checkHSD( String maSanPham )
     {
-        SanPham sp = traCuuSanPham(maSanPham) ;
+        SanPham sp = timMa(maSanPham) ;
         if ( sp == null || !sp.isTonTai() )
         {
             System.out.println("Mã sản phẩm không tồn tại!");

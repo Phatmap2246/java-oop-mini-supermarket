@@ -1,12 +1,11 @@
 package dichvu;
 
-import interfaces.IThongTin;
 import sanpham.QuanLySanPham;
 import utils.Validation;
 
 import java.util.Scanner;
 
-public class SanPhamKhuyenMai implements IThongTin {
+public class SanPhamKhuyenMai  {
     private boolean tonTai = true;
 
     public boolean isTonTai() { return tonTai; }
@@ -57,7 +56,7 @@ public class SanPhamKhuyenMai implements IThongTin {
         while (true) {
             String maSP = Validation.inputStringRegex(sc, "Nhập mã sản phẩm: ", Validation.MaSP_REGEX,
                     "Mã sản phẩm không đúng định dạng (VD: SP001)!");
-            if (qlsp != null && qlsp.traCuuSanPham(maSP) == null) {
+            if (qlsp != null && qlsp.timMa(maSP) == null) {
                 System.out.println("[!] Mã sản phẩm không tồn tại trong danh mục!");
                 continue;
             }
@@ -67,7 +66,7 @@ public class SanPhamKhuyenMai implements IThongTin {
         while (true) {
             String maKM = Validation.inputStringRegex(sc, "Nhập mã khuyến mãi: ", Validation.MaKM_REGEX,
                     "Mã khuyến mãi không đúng định dạng (VD: KM001)!");
-            if (dskm != null && dskm.traCuuKhuyenMai(maKM) == null) {
+            if (dskm != null && dskm.timMa(maKM) == null) {
                 System.out.println("[!] Mã khuyến mãi không tồn tại trong danh sách!");
                 continue;
             }
@@ -76,7 +75,6 @@ public class SanPhamKhuyenMai implements IThongTin {
         }
     }
 
-    @Override
     public void nhapThongTin(Scanner sc) {
         setSanPhamKhuyenMai(sc);
     }

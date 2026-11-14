@@ -6,16 +6,19 @@ import java.util.Scanner;
 
 import hoadon.HoaDon;
 import hoadon.HoaDonBanHang;
-import hoadon.HoaDonNhapHang;
+import hoadon.DanhSachHoaDonBan;
+import hoadon.DanhSachHoaDonNhap;
+import dichvu.Danhsachdoitac;
 import utils.DateUtil;
 import utils.Validation;
-
+import hoadon.HoaDonNhapHang;
 public class KeToan extends NhanVien {
     // Mặc định kỳ hạn thanh toán công nợ với NCC là 30 ngày kể từ ngày lập hóa đơn
     private static final int KY_HAN_CONG_NO_NGAY = 30;
 
     public KeToan() {
-        super("KeToan");
+        super();
+        super.setVaiTro("KeToan");
     }
 
     public KeToan(String email, String hoten, String sdt, DiaChi diachi, LocalDate ngsinh,
@@ -30,6 +33,55 @@ public class KeToan extends NhanVien {
     @Override
     public String getVaiTro() {
         return "KeToan";
+    }
+
+    public void thucHienNghiepVu(Scanner sc, ArrayList<HoaDon> HDs,ArrayList<String> dsMaDaThanhToan) {
+                LocalDate batDau ;
+                LocalDate ketThuc; 
+                 int quy; 
+                 int nam;
+        while (true) {
+            System.out.println("\n=== NGHIỆP VỤ KẾ TOÁN ===");
+            System.out.println("1. Thống kê tài chính theo tháng");
+            System.out.println("2. Thống kê tài chính theo quý");
+            System.out.println("3. Thống kê tài chính theo năm");
+            System.out.println("4. Thanh toán nợ công");
+            System.out.println("0. Trở về trang chủ");
+            int chon = Validation.luaChon(sc, "Chọn chức năng: ", 0, 4);
+            switch (chon) {
+                case 0:
+                    return;
+                case 1:
+                     batDau = Validation.inputLocalDateRegex(sc, "Ngày bắt đầu (dd/MM/yyyy): ");
+                     ketThuc = Validation.inputLocalDateRegex(sc, "Ngày kết thúc (dd/MM/yyyy): ");
+                    if (ketThuc.isBefore(batDau)) {
+                        System.out.println("Ngày kết thúc phải từ ngày bắt đầu trở đi.");
+                        break; 
+                    }
+                    thongKe(HDs, dsMaDaThanhToan, batDau, ketThuc);
+                    break;
+                case 2:
+                     quy = Validation.luaChon(sc, "Nhập vào quý trong năm: ",1,4);
+                     nam = Validation.inputInt(sc, "Nhập vào năm:  ");
+                     if(nam > LocalDate.now().getYear()) {
+                        System.out.println("Số năm nhập vào không được quá năm hiện tại, hệ thống lấy mặt định là năm hiện tại");
+                        nam = LocalDate.now().getYear(); 
+                     }  
+                     thongKe(quy, nam, HDs, dsMaDaThanhToan);
+                        break; 
+                case 3:
+                    nam = Validation.inputInt(sc, "Nhập vào năm:  ");
+                     if(nam > LocalDate.now().getYear()) {
+                        System.out.println("Số năm nhập vào không được quá năm hiện tại, hệ thống lấy mặt định là năm hiện tại");
+                        nam = LocalDate.now().getYear(); 
+                     }  
+                     thongKeTheoNam(nam, HDs, dsMaDaThanhToan);;
+                        break; 
+                case 4:
+                    thanhToanCongNo(sc, HDs, dsMaDaThanhToan);
+                    break;
+            }
+        }
     }
 
     // ==================== 1. NHÓM HÀM TÍNH TOÁN TÀI CHÍNH ====================
@@ -158,7 +210,6 @@ public class KeToan extends NhanVien {
             System.out.printf("%d. HĐ: %s | Mã NCC: %s | Tiền: %,d VND | Hạn: %s | [%s]%n",
                     i + 1,
                     hdn.getMaHoaDon(),
-                    hdn.getMaNhaCungCap(),
                     hdn.tinhTongTien(),
                     DateUtil.formatDate(han),
                     trangThai);
@@ -172,7 +223,6 @@ public class KeToan extends NhanVien {
             System.out.printf("%d. HĐ: %s - NCC: %s (%,d VND - Hạn: %s)%n",
                     i + 1,
                     hdn.getMaHoaDon(),
-                    hdn.getMaNhaCungCap(),
                     hdn.tinhTongTien(),
                     DateUtil.formatDate(tinhNgayDenHan(hdn)));
         }
@@ -283,39 +333,5 @@ public class KeToan extends NhanVien {
         LocalDate dauNam = LocalDate.of(nam, 1, 1);
         LocalDate cuoiNam = LocalDate.of(nam, 12, 31);
         thongKe(dshd, dsMaDaThanhToan, dauNam, cuoiNam);
-    }
-
-    // ==================== 4. HÀM GỌI TỪ GIAODIEN ====================
-
-    public void thucHienNghiepVu(Scanner sc, ArrayList<HoaDon> dshd, ArrayList<String> dsMaDaThanhToan) {
-        while (true) {
-            System.out.println("\n=== NGHIỆP VỤ KẾ TOÁN ===");
-            System.out.println("1. Quản lý & Thanh toán công nợ");
-            System.out.println("2. Thống kê theo khoảng ngày");
-            System.out.println("3. Thống kê theo Quý");
-            System.out.println("4. Thống kê theo Năm");
-            System.out.println("0. Thoát");
-
-            int chon = Validation.luaChon(sc, "Chọn chức năng: ", 0, 4);
-            if (chon == 0) return;
-            switch (chon) {
-                case 1 -> thanhToanCongNo(sc, dshd, dsMaDaThanhToan);
-                case 2 -> {
-                    LocalDate bd = Validation.inputLocalDateRegex(sc, "Từ ngày (dd/MM/yyyy): ");
-                    LocalDate kt = Validation.inputLocalDateRegex(sc, "Đến ngày (dd/MM/yyyy): ");
-                    if (kt.isBefore(bd)) { LocalDate tam = bd; bd = kt; kt = tam; }
-                    thongKe(dshd, dsMaDaThanhToan, bd, kt);
-                }
-                case 3 -> {
-                    int quy = Validation.luaChon(sc, "Nhập quý (1-4): ", 1, 4);
-                    int nam = Validation.inputInt(sc, "Nhập năm: ");
-                    thongKe(quy, nam, dshd, dsMaDaThanhToan);
-                }
-                case 4 -> {
-                    int nam = Validation.inputInt(sc, "Nhập năm: ");
-                    thongKeTheoNam(nam, dshd, dsMaDaThanhToan);
-                }
-            }
-        }
     }
 }

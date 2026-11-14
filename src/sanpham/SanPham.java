@@ -1,10 +1,9 @@
 package sanpham;
 
-import interfaces.IThongTin;
 import utils.Validation;
 import java.util.Scanner;
 
-public abstract class SanPham implements IThongTin {
+public abstract class SanPham {
     private boolean tonTai = true;
 
     public boolean isTonTai() { return tonTai; }
@@ -176,7 +175,6 @@ public abstract class SanPham implements IThongTin {
         soLuongTonKho = Validation.inputInt(sc , "Nhập số lượng tồn kho: ") ;
     }
 
-    @Override
     public void nhapThongTin(Scanner sc) {
         setSanPham(sc);
     }

@@ -8,11 +8,106 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import utils.YeuCau;
 import utils.Validation;
 import utils.YeuCau;
 
-public class DSYeuCau {
+public class DSYeuCau implements interfaces.IQuanLy<YeuCau> {
     private ArrayList<YeuCau> list = new ArrayList<>();
+    private transient String tenFileNguon;
+
+    public void cauHinhFile(String tenFile) { tenFileNguon = tenFile; }
+    private String tenFile() {
+        return tenFileNguon == null ? utils.DuongDanLuuTru.file("YeuCau.txt") : tenFileNguon;
+    }
+    private void napTruocKhiSua() throws IOException {
+        if (Files.exists(Paths.get(tenFile()))) docDanhSachYeuCau(tenFile());
+    }
+    private boolean luuMoi(ArrayList<YeuCau> moi) {
+        try {
+            YeuCau.ghiDanhSachYeuCau(Paths.get(tenFile()), moi);
+            list = moi;
+            return true;
+        } catch (IOException e) {
+            System.out.println("Không thể lưu yêu cầu: " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override public void taoDanhSach(Scanner sc) {
+        int n = Validation.inputInt(sc, "Nhập số yêu cầu cần thêm: ");
+        for (int i = 0; i < n; i++) them(sc);
+    }
+    @Override public void them(Scanner sc) {
+        try {
+            napTruocKhiSua();
+            YeuCau yc = YeuCau.taoYeuCau(sc);
+            if (yc.getMaNV().isBlank() || yc.getVaitro().isBlank() || yc.getNoiDung().isBlank()) {
+                System.out.println("Mã nhân viên, vai trò và nội dung không được trống.");
+                return;
+            }
+            ArrayList<YeuCau> moi = new ArrayList<>(list);
+            moi.add(yc);
+            luuMoi(moi);
+        } catch (IOException e) {
+            System.out.println("Không thể đọc yêu cầu: " + e.getMessage());
+        }
+    }
+    @Override public boolean sua(String ma, Scanner sc) {
+        try {
+            napTruocKhiSua();
+            int i = timViTri(ma);
+            if (i == -1) return false;
+            YeuCau cu = list.get(i);
+            String noiDung = Validation.inputStringRegex(sc, "Nội dung mới: ", ".+", "Không được trống.");
+            int chon = Validation.luaChon(sc, "Trạng thái: 1. Chờ duyệt | 2. Đã duyệt | 3. Không duyệt: ", 1, 3);
+            YeuCau moi = new YeuCau(cu.getMaNV(), cu.getVaitro(), noiDung,
+                    chon == 1 ? "ChoDuyet" : chon == 2 ? "DaDuyet" : "KhongDuyet");
+            ArrayList<YeuCau> dsMoi = new ArrayList<>(list);
+            dsMoi.set(i, moi);
+            return luuMoi(dsMoi);
+        } catch (IOException e) { System.out.println(e.getMessage()); return false; }
+    }
+    @Override public boolean xoa(String ma) {
+        try {
+            napTruocKhiSua();
+            int i = timViTri(ma);
+            if (i == -1) return false;
+            ArrayList<YeuCau> moi = new ArrayList<>(list);
+            moi.remove(i);
+            return luuMoi(moi);
+        } catch (IOException e) { System.out.println(e.getMessage()); return false; }
+    }
+    @Override public void xuatDanhSach() {
+        for (YeuCau yc : list) if (yc != null) System.out.println(yc);
+    }
+    @Override public int timViTri(String ma) {
+        if (ma == null || ma.isBlank()) return -1;
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i) != null && ma.trim().equalsIgnoreCase(list.get(i).getMaNV())) return i;
+        }
+        return -1;
+    }
+    @Override public YeuCau timMa(String ma) {
+        int i = timViTri(ma);
+        return i == -1 ? null : list.get(i);
+    }
+    @Override public YeuCau timTen(String ten) {
+        if (ten == null || ten.isBlank()) return null;
+        for (YeuCau yc : list) {
+            if (yc != null && yc.getNoiDung() != null && yc.getNoiDung().toLowerCase(java.util.Locale.ROOT)
+                    .contains(ten.trim().toLowerCase(java.util.Locale.ROOT))) return yc;
+        }
+        return null;
+    }
+    @Override public YeuCau timKhoa(String khoa) {
+        if (khoa == null || khoa.isBlank()) return null;
+        for (YeuCau yc : list) {
+            if (yc != null && yc.toString().toLowerCase(java.util.Locale.ROOT)
+                    .contains(khoa.trim().toLowerCase(java.util.Locale.ROOT))) return yc;
+        }
+        return null;
+    }
 
     public DSYeuCau() {
     }
@@ -26,7 +121,9 @@ public class DSYeuCau {
         return list;
     }
 
-    public void docDanhSachYeuCau(String file) throws IOException {
+    public void docDanhSachYeuCau(String file) throws IOException
+    {
+        tenFileNguon = file;
         ArrayList<YeuCau.BanGhiDataBase> danhSach = YeuCau.docDanhSach(Paths.get(file));
         ArrayList<YeuCau> danhSachMoi = new ArrayList<>();
         for (YeuCau.BanGhiDataBase yeuCau : danhSach) {
@@ -37,8 +134,8 @@ public class DSYeuCau {
         list = danhSachMoi;
     }
 
-    public void duyetYeuCau(Scanner sc) throws IOException {
-        Path filePath = Paths.get("YeuCau.txt");
+    public void duyetYeuCau(Scanner sc) throws IOException{
+        Path filePath = Paths.get(tenFile());
         if (!Files.exists(filePath)) {
             System.out.println("Chưa có file YeuCau.txt.");
             return;
@@ -67,30 +164,17 @@ public class DSYeuCau {
 
         if (coThayDoi) {
             YeuCau.ghiDanhSach(filePath, dsYeuCau);
-            System.out.println("[+] Đã cập nhật kết quả duyệt yêu cầu vào YeuCau.txt.");
-        } else {
-            System.out.println("[i] Không có yêu cầu nào đang ở trạng thái Chờ duyệt.");
+            docDanhSachYeuCau(filePath.toString());
         }
     }
 
-    public void xemLichSuDuyet(String file) {
-        System.out.println("\n=== LỊCH SỬ YÊU CẦU DUYỆT ===");
+    public void xemLichSuDuyet(String file){
         try {
-            ArrayList<YeuCau.BanGhiDataBase> dsDuyet = YeuCau.docDanhSach(Paths.get(file));
-            if (dsDuyet.isEmpty()) {
-                System.out.println("[i] Danh sách yêu cầu trống.");
-                return;
-            }
-            for (YeuCau.BanGhiDataBase yc : dsDuyet) {
-                if (yc.laDongLoi()) {
-                    System.out.println("[!] Dòng lỗi: " + yc.getDongLoi());
-                } else {
-                    System.out.printf("Mã NV: %s | Vai trò: %s | Nội dung: %s | Trạng thái: %s%n",
-                            yc.getMaNV(), yc.getVaitro(), yc.getNoiDung(), yc.getTrangThai());
-                }
-            }
+            docDanhSachYeuCau(file);
+            System.out.println("LỊCH SỬ YÊU CẦU DUYỆT");
+            for (YeuCau yc : list) System.out.println(yc);
         } catch (IOException e) {
-            System.out.println("[!] Không đọc được file yêu cầu: " + e.getMessage());
+            System.err.println("Không thể đọc lịch sử yêu cầu: " + e.getMessage());
         }
     }
 

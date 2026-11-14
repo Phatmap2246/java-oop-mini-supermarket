@@ -7,7 +7,26 @@ import utils.Validation;
 import java.time.LocalDate;
 import java.util.Scanner;
 
-public class Danhsachkhuyenmai {
+public class Danhsachkhuyenmai implements interfaces.IQuanLy<Khuyenmai> {
+    @Override
+    public Khuyenmai timTen(String ten) {
+        if (ten == null || ten.isBlank()) return null;
+        for (Khuyenmai km : khuyenmais) {
+            if (km != null && km.isTonTai() && km.getLoaiKhuyenMai() != null
+                    && km.getLoaiKhuyenMai().toLowerCase(Locale.ROOT).contains(ten.trim().toLowerCase(Locale.ROOT))) return km;
+        }
+        return null;
+    }
+
+    @Override
+    public Khuyenmai timKhoa(String khoa) {
+        if (khoa == null || khoa.isBlank()) return null;
+        for (Khuyenmai km : khuyenmais) {
+            if (km != null && km.isTonTai()
+                    && km.toString().toLowerCase(Locale.ROOT).contains(khoa.trim().toLowerCase(Locale.ROOT))) return km;
+        }
+        return null;
+    }
     private Khuyenmai[] khuyenmais;
     private int soLuongKhuyenMai;
     public Danhsachkhuyenmai()
@@ -34,19 +53,21 @@ public class Danhsachkhuyenmai {
     public int getSoLuongKhuyenMai() {
         return soLuongKhuyenMai;
     }
-    public void taoDuLieuKhuyenMai(Scanner sc )
+    @Override
+    public void taoDanhSach(Scanner sc )
     {
         System.out.println("Tạo các khuyến mãi!");
         while (true)
         {
-            themKhuyenMai(sc);
+            them(sc);
             System.out.println("Bạn có muốn tiếp tục thêm khuyến mãi(1/0): ");
             int luaChon = Validation.luaChon(sc, "Nhập lựa chọn: ", 0, 1);
             if ( luaChon == 0 ) break;
         }
         System.out.println("Tạo dữ liệu sản phẩm thành công!");
     }
-    public void inDanhSachKhuyenMai()
+    @Override
+    public void xuatDanhSach()
     {
         System.out.println("Danh sách khuyến mãi!");
         System.out.println("Đang tải danh sách...");
@@ -55,7 +76,7 @@ public class Danhsachkhuyenmai {
             if (km != null && km.isTonTai()) System.out.println(km);
     }
 
-    public void themKhuyenMai(Khuyenmai khuyenMai) {
+    public void them(Khuyenmai khuyenMai) {
         if (khuyenMai == null) {
             System.out.println("Không thể thêm đối tượng null!");
             return;
@@ -68,7 +89,8 @@ public class Danhsachkhuyenmai {
         soLuongKhuyenMai = newSoLuongKhuyenMai;
     }
 
-    public void themKhuyenMai(Scanner sc )
+    @Override
+    public void them(Scanner sc )
     {
         Khuyenmai new_km ;
         System.out.println("Chọn loại khuyến mãi cần thêm: ");
@@ -81,17 +103,17 @@ public class Danhsachkhuyenmai {
             case 1:
                 new_km = new KhuyenMaiPhanTram() ;
                 new_km.setKM(sc);
-                themKhuyenMai(new_km);
+                them(new_km);
                 break;
             case 2:
                 new_km = new KhuyenMaiTrucTiep() ;
                 new_km.setKM(sc);
-                themKhuyenMai(new_km);
+                them(new_km);
                 break;
             case 3:
                 new_km = new KhuyenMaiMuaTang() ;
                 new_km.setKM(sc);
-                themKhuyenMai(new_km);
+                them(new_km);
                 break;
             default:
                 System.out.println("Lựa chọn không hợp lệ!");
@@ -103,19 +125,20 @@ public class Danhsachkhuyenmai {
         System.out.println("Nhập sản phẩm khuyến mãi muốn thêm!");
         for ( int i = 0 ; i < kSanPham ; i++ )
         {
-            themKhuyenMai(sc);
+            them(sc);
         }
         System.out.println("Thêm k sản phẩm khuyến mãi thành công!");
     }
-    public void suaThongTinKhuyenMai( String maKhuyenMai , Scanner sc )
+    @Override
+    public boolean sua( String maKhuyenMai , Scanner sc )
     {
         try {
 
-            int index = traCuuThongTinKhuyenMai(maKhuyenMai) ;
+            int index = timViTri(maKhuyenMai) ;
             if ( index == -1 )
             {
                 System.out.println("Mã khuyến mãi không tồn tại!");
-                return;
+                return false;
             }
             Khuyenmai km = khuyenmais[index];
             int luaChon ;
@@ -154,7 +177,7 @@ public class Danhsachkhuyenmai {
                         break;
                     default:
                         System.out.println("Lựa chọn không hợp lệ!");
-                        return;
+                        return false;
                 }
             } else if ( km instanceof  KhuyenMaiTrucTiep) {
                 System.out.println("4. Số tiền giảm!");
@@ -175,7 +198,7 @@ public class Danhsachkhuyenmai {
                         break;
                     default:
                         System.out.println("Lựa chọn không hợp lệ!");
-                        return;
+                        return false;
                 }
             } else if ( km instanceof  KhuyenMaiMuaTang) {
                 System.out.println("4. Số lượng mua tối thiểu!");
@@ -220,19 +243,23 @@ public class Danhsachkhuyenmai {
                         break;
                     default:
                         System.out.println("Lựa chọn không hợp lệ!");
-                        return;
+                        return false;
                 }
-            }
+            } else return false;
+            return true;
         } catch (IllegalArgumentException e) {
             System.out.println("[!] " + e.getMessage());
+            return false;
         }
     }
-    public void xoaKhuyenMai(String maKhuyenmai )
+    @Override
+    public boolean xoa(String maKhuyenmai )
     {
-        int index = traCuuThongTinKhuyenMai(maKhuyenmai);
-        if (index == -1) return;
+        int index = timViTri(maKhuyenmai);
+        if (index == -1) return false;
         khuyenmais[index].setTonTai(false);
         System.out.println("Xóa khuyến mãi thành công!");
+        return true;
     }
     public void inDanhSachKhuyenMaiHetHan( Scanner sc)
     {
@@ -250,7 +277,7 @@ public class Danhsachkhuyenmai {
                 case 1:
                     for (int i = soLuongKhuyenMai - 1; i >= 0; i--) {
                         if (khuyenmais[i] != null && khuyenmais[i].isTonTai() && khuyenmais[i].kiemTraHetHanKhuyenMai()) {
-                            xoaKhuyenMai(khuyenmais[i].getMaKhuyenMai());
+                            xoa(khuyenmais[i].getMaKhuyenMai());
                         }
                     }
                     System.out.println("Xoá tất cả khuyến mãi hết hạn thành công!");
@@ -260,7 +287,7 @@ public class Danhsachkhuyenmai {
                     {
 
                         String maKhuyenMai = Validation.inputStringRegex( sc , "Nhập mã khuyến mãi bạn muốn xoá: ", "KM\\d{3}" , "Mã khuyến mãi không đúng định dạng vui lòng nhập lại(ví dụ hợp lệ: KM001): ", Khuyenmai.getSoThuTu());
-                        int index = traCuuThongTinKhuyenMai(maKhuyenMai) ;
+                        int index = timViTri(maKhuyenMai) ;
                         if ( index == -1 )
                         {
                             System.out.println("Mã khuyến mãi không tồn tại!");
@@ -269,9 +296,9 @@ public class Danhsachkhuyenmai {
                         else if ( !khuyenmais[index].kiemTraHetHanKhuyenMai() )
                         {
                             if ( Validation.inputCoKhong(sc , "Khuyến mãi vẫn còn thời hạn bạn vẫn muốn xoá?(Có/Không): " ))
-                                xoaKhuyenMai(maKhuyenMai);
+                                xoa(maKhuyenMai);
                         }
-                        else xoaKhuyenMai(maKhuyenMai);
+                        else xoa(maKhuyenMai);
                         System.out.println("Xoá khuyến mãi thành công!");
                         if ( !Validation.inputCoKhong(sc ,"Bạn có muốn tiếp tục(Có/Không): " )) break;
                     }
@@ -282,8 +309,11 @@ public class Danhsachkhuyenmai {
             }
         }
     }
-    public int traCuuThongTinKhuyenMai( String maKhuyenMai )
+    @Override
+    public int timViTri( String maKhuyenMai )
     {
+        if (maKhuyenMai == null || maKhuyenMai.isBlank()) return -1;
+        maKhuyenMai = maKhuyenMai.trim();
         for ( int i = 0 ; i < soLuongKhuyenMai ; i++ )
         {
             if (khuyenmais[i] != null && khuyenmais[i].isTonTai() && (maKhuyenMai != null && maKhuyenMai.equalsIgnoreCase(khuyenmais[i].getMaKhuyenMai())))
@@ -294,7 +324,7 @@ public class Danhsachkhuyenmai {
     }
     public void timKiemKhuyenMai( String maKhuyenMai)
     {
-        int index = traCuuThongTinKhuyenMai(maKhuyenMai) ;
+        int index = timViTri(maKhuyenMai) ;
         if ( index == -1 )
         {
             System.out.println("Mã khuyến mãi không tồn tại!");
@@ -347,18 +377,19 @@ public class Danhsachkhuyenmai {
         }
         if (!flag ) System.out.println("Không tìm thấy khuyến mãi phù hợp!");
     }
-    public Khuyenmai traCuuKhuyenMai ( String maKhuyenMai )
+    @Override
+    public Khuyenmai timMa ( String maKhuyenMai )
     {
-        int index = traCuuThongTinKhuyenMai(maKhuyenMai) ;
+        int index = timViTri(maKhuyenMai) ;
         if ( index == -1 )
         {
             System.out.println("Mã khuyến mãi không tồn tại!");
             return null ;
         }
-        return khuyenmais[traCuuThongTinKhuyenMai(maKhuyenMai)] ;
+        return khuyenmais[index] ;
     }
 
-    public void timKiemTheoNhieuKhoa(Scanner sc) {
+    public void timKhoa(Scanner sc) {
         while (true) {
             System.out.println("================ TÌM KIẾM KHUYẾN MÃI ================");
             System.out.println("1. Mã khuyến mãi");
@@ -597,15 +628,15 @@ public class Danhsachkhuyenmai {
             switch (luaChon)
             {
                 case 1: {
-                    taoDuLieuKhuyenMai(sc);
+                    taoDanhSach(sc);
                     break;
                 }
                 case 2: {
-                    inDanhSachKhuyenMai();
+                    xuatDanhSach();
                     break;
                 }
                 case 3: {
-                    themKhuyenMai(sc);
+                    them(sc);
                     break;
                 }
                 case 4: {
@@ -615,16 +646,16 @@ public class Danhsachkhuyenmai {
                 }
                 case 5: {
                     String ma = Validation.inputStringRegex(sc, "Nhập mã khuyến mãi: ", Validation.MaKM_REGEX, "Mã khuyến mãi không đúng định dạng!");
-                    suaThongTinKhuyenMai(ma, sc);
+                    sua(ma, sc);
                     break;
                 }
                 case 6: {
                     String ma = Validation.inputStringRegex(sc, "Nhập mã khuyến mãi: ", Validation.MaKM_REGEX, "Mã khuyến mãi không đúng định dạng!");
-                    xoaKhuyenMai(ma);
+                    xoa(ma);
                     break;
                 }
                 case 7: {
-                    timKiemTheoNhieuKhoa(sc);
+                    timKhoa(sc);
                     break;
                 }
                 case 8: {

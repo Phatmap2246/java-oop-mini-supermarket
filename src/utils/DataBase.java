@@ -1,349 +1,360 @@
 package utils;
 
 import interfaces.TrongFile;
-import person.DiaChi;
+import sanpham.SanPham;
 
-import java.io.*;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.io.*;
+import java.nio.file.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class DataBase {
+    // Lưu cả đồ thị đối tượng để giữ nguyên lớp con và các tham chiếu dùng chung.
+    private static class BanLuu {
+        private Object duLieu;
+        private Map<String, Integer> boDem = new LinkedHashMap<>();
 
-    private static boolean isSerializableField(Field field) {
-        int mod = field.getModifiers();
-        if (Modifier.isStatic(mod) || Modifier.isTransient(mod)) {
-            return false;
-        }
-        Class<?> type = field.getType();
-        if (Collection.class.isAssignableFrom(type) || type.isArray()) {
-            return false;
-        }
-        return type.isPrimitive()
-                || type == String.class
-                || type == Integer.class
-                || type == Long.class
-                || type == Double.class
-                || type == Boolean.class
-                || type == LocalDate.class
-                || type == LocalDateTime.class
-                || type == DiaChi.class;
-    }
+        private BanLuu() { }
 
-    public static ArrayList<Field> getALlField(Class<?> clazz) {
-        ArrayList<Field> fields = new ArrayList<>();
-        while (clazz != null && clazz != Object.class) {
-            Field[] declareds = clazz.getDeclaredFields();
-            for (Field f : declareds) {
-                if (isSerializableField(f)) {
-                    fields.add(f);
+        private BanLuu(Object duLieu) throws ReflectiveOperationException {
+            this.duLieu = duLieu;
+            for (Class<?> lop : CAC_LOP_CO_BO_DEM) {
+                Field field = layTruongBoDem(lop);
+                boDem.put(lop.getName(), field.getInt(null));
+            }
+        }
+
+        private void khoiPhucBoDem(Map<String, Integer> truocKhiDoc) throws ReflectiveOperationException, IOException {
+            for (Class<?> lop : CAC_LOP_CO_BO_DEM) {
+                Integer giaTri = boDem.get(lop.getName());
+                if (giaTri == null || giaTri < 0) {
+                    throw new IOException("Bộ đếm mã không hợp lệ: " + lop.getSimpleName());
                 }
             }
-            clazz = clazz.getSuperclass();
+            for (Class<?> lop : CAC_LOP_CO_BO_DEM) {
+                Field field = layTruongBoDem(lop);
+                field.setInt(null, Math.max(truocKhiDoc.get(lop.getName()), boDem.get(lop.getName())));
+            }
         }
-        return fields;
     }
 
-private static String escapeCSV(String val) {
-        if (val == null) return "";
-        if (val.contains(",") || val.contains("\"") || val.contains("\n") || val.contains("\r")) {
-            return "\"" + val.replace("\"", "\"\"") + "\"";
-        }
-        return val;
+    private static final Class<?>[] CAC_LOP_CO_BO_DEM = {
+            sanpham.SanPham.class, person.NhanVien.class, person.KhachHang.class,
+            hoadon.HoaDon.class, dichvu.Khuyenmai.class, dichvu.Nhacungcap.class
+    };
+
+    private static Field layTruongBoDem(Class<?> lop) throws NoSuchFieldException {
+        String tenTruong = lop == dichvu.Nhacungcap.class ? "soThuTuNCC" : "soThuTu";
+        Field field = lop.getDeclaredField(tenTruong);
+        field.setAccessible(true);
+        return field;
     }
 
-    private static String[] parseCSVLine(String line) {
-        ArrayList<String> tokens = new ArrayList<>();
-        StringBuilder current = new StringBuilder();
-        boolean inQuotes = false;
-        for (int i = 0; i < line.length(); i++) {
-            char c = line.charAt(i);
-            if (inQuotes) {
-                if (c == '"') {
-                    if (i + 1 < line.length() && line.charAt(i + 1) == '"') {
-                        current.append('"');
-                        i++;
-                    } else {
-                        inQuotes = false;
+    /** Ghi file tạm trước, chỉ thay file cũ sau khi ghi thành công. */
+    public static synchronized void ghiDoiTuong(Object duLieu, String tenFile) throws IOException {
+        if (duLieu == null) throw new IllegalArgumentException("Không có dữ liệu để lưu.");
+        Path dich = Paths.get(tenFile).toAbsolutePath();
+        Files.createDirectories(dich.getParent());
+        Path tam = Files.createTempFile(dich.getParent(), "sieu-thi-", ".tmp");
+        try {
+            BanLuu banLuu = new BanLuu(duLieu);
+            try (OutputStream writer = new BufferedOutputStream(Files.newOutputStream(tam))) {
+                VanBanDoiTuong.ghi(banLuu, writer);
+            }
+            try {
+                Files.move(tam, dich, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+            } catch (AtomicMoveNotSupportedException e) {
+                Files.move(tam, dich, StandardCopyOption.REPLACE_EXISTING);
+            }
+        } catch (ReflectiveOperationException e) {
+            throw new IOException("Không thể lưu bộ đếm mã.", e);
+        } finally {
+            Files.deleteIfExists(tam);
+        }
+    }
+
+    /** File chưa có thì trả null; file lỗi phải báo ra, không coi là dữ liệu rỗng. */
+    public static synchronized <T> T docDoiTuong(Class<T> lop, String tenFile) throws IOException {
+        Path file = Paths.get(tenFile);
+        if (Files.notExists(file)) return null;
+        Map<String, Integer> truocKhiDoc = new LinkedHashMap<>();
+        boolean thanhCong = false;
+        try (BufferedInputStream reader = new BufferedInputStream(Files.newInputStream(file))) {
+            for (Class<?> c : CAC_LOP_CO_BO_DEM) truocKhiDoc.put(c.getName(), layTruongBoDem(c).getInt(null));
+            Object obj = VanBanDoiTuong.doc(reader);
+            if (!(obj instanceof BanLuu)) throw new IOException("File không đúng định dạng lưu của chương trình.");
+            BanLuu banLuu = (BanLuu) obj;
+            if (!lop.isInstance(banLuu.duLieu)) throw new IOException("File chứa sai loại dữ liệu.");
+            banLuu.khoiPhucBoDem(truocKhiDoc);
+            thanhCong = true;
+            return lop.cast(banLuu.duLieu);
+        } catch (ReflectiveOperationException | ClassCastException e) {
+            throw new IOException("Không thể khôi phục dữ liệu chương trình.", e);
+        } finally {
+            // Constructor dùng để đọc TXT không được làm tăng bộ đếm mã.
+            if (!thanhCong) {
+                for (Class<?> c : CAC_LOP_CO_BO_DEM) {
+                    try {
+                        if (truocKhiDoc.containsKey(c.getName())) layTruongBoDem(c).setInt(null, truocKhiDoc.get(c.getName()));
+                    } catch (ReflectiveOperationException e) {
+                        throw new IOException("Không thể khôi phục bộ đếm mã sau lỗi đọc.", e);
                     }
-                } else {
-                    current.append(c);
-                }
-            } else {
-                if (c == '"') {
-                    inQuotes = true;
-                } else if (c == ',') {
-                    tokens.add(current.toString());
-                    current.setLength(0);
-                } else {
-                    current.append(c);
                 }
             }
         }
-        tokens.add(current.toString());
-        return tokens.toArray(new String[0]);
     }
 
-    public static String getCSVHeader(Object obj) {
+    public static ArrayList<Field> getALlField(Class<?> clazz){
+       ArrayList<Field> fields = new ArrayList<>();
+       while(clazz != null && clazz != Object.class){
+           Field[] declareds = clazz.getDeclaredFields();
+           for (Field field : declareds) {
+               if (!Modifier.isStatic(field.getModifiers()) && !Modifier.isTransient(field.getModifiers())) {
+                   fields.add(field);
+               }
+           }
+           clazz =clazz.getSuperclass();
+       }
+       return fields;
+    }
+    public static String getCSVHeader(Object obj){
         Class<?> clazz = obj.getClass();
         ArrayList<Field> fields = getALlField(clazz);
-        StringBuilder header = new StringBuilder();
-        for (int i = 0; i < fields.size(); i++) {
-            if (i > 0) header.append(",");
-            header.append(fields.get(i).getName());
+        String header = "";
+        for(Field field :fields){
+           header += field.getName();
+           header += ",";
         }
-        return header.toString();
+        if (!header.isEmpty()) header = header.substring(0,header.length()-1);
+        return header;
     }
-
     public static String getCSVLine(Object obj) {
         Class<?> clazz = obj.getClass();
         ArrayList<Field> fields = getALlField(clazz);
-        StringBuilder line = new StringBuilder();
-        for (int i = 0; i < fields.size(); i++) {
-            if (i > 0) line.append(",");
-            Field field = fields.get(i);
+        String line = "";
+        for (Field field : fields) {
             field.setAccessible(true);
             Object val = null;
             try {
                 val = field.get(obj);
             } catch (IllegalAccessException e) {
-                System.err.println(e.getMessage());
+                System.err.println(e.getStackTrace());
             }
-            String valString = "";
-            if (val instanceof DiaChi dc) {
-                valString = String.join(";",
-                        dc.getSoNha(), dc.getDuong(), dc.getPhuongXa(),
-                        dc.getQuanHuyen(), dc.getTinhThanhPho());
-            } else if (val != null) {
-                valString = val.toString();
-            }
-            line.append(escapeCSV(valString));
+            String valString = (val != null) ? val.toString() : "";
+            line += valString;
+            line += ',';
         }
-        return line.toString();
+        if (!line.isEmpty()) line = line.substring(0,line.length() -1);
+        return line;
     }
-
-    public static Object getDataType(String value, Class<?> targetType) {
-        if (targetType == String.class) return value == null ? "" : value;
-        if (value == null || value.strip().isEmpty() || value.equalsIgnoreCase("null")) {
-            if (targetType == DiaChi.class) return new DiaChi();
+    public static Object getDataType(String value,Class<?> targetType){
+        if (targetType == String.class) return value;
+        if (value == null || value.strip().isEmpty() || value.equalsIgnoreCase("null")){
             return null;
         }
         value = value.strip();
-        if (targetType == int.class || targetType == Integer.class) {
+        if(targetType == int.class){
             return Integer.parseInt(value);
-        } else if (targetType == boolean.class || targetType == Boolean.class) {
+        }
+        else if(targetType == boolean.class){
             if (value.equalsIgnoreCase("true")) return true;
             if (value.equalsIgnoreCase("false")) return false;
             throw new IllegalArgumentException("Giá trị boolean không hợp lệ: " + value);
-        } else if (targetType == double.class || targetType == Double.class) {
-            return Double.parseDouble(value);
-        } else if (targetType == long.class || targetType == Long.class) {
-            return Long.parseLong(value);
-        } else if (targetType == LocalDate.class) {
-            LocalDate parsed = DateUtil.parseDate(value);
-            return parsed != null ? parsed : LocalDate.parse(value);
-        } else if (targetType == LocalDateTime.class) {
-            return LocalDateTime.parse(value);
-        } else if (targetType == DiaChi.class) {
-            String[] parts = value.split(";", -1);
-            if (parts.length >= 5) {
-                return new DiaChi(parts[0].trim(), parts[1].trim(), parts[2].trim(), parts[3].trim(), parts[4].trim());
-            }
-            return new DiaChi(value, "", "", "", "");
         }
+        else if(targetType == double.class){
+            return Double.parseDouble(value);
+        }
+        else if(targetType == long.class){
+            return Long.parseLong(value);
+        }
+        else if(targetType == LocalDate.class){
+            return LocalDate.parse(value);
+        }
+        System.err.println("co loi");
         return null;
     }
-
     public static String getFilePath(Class<?> clazz) {
-        if (TrongFile.class.isAssignableFrom(clazz)) {
+        if(TrongFile.class.isAssignableFrom(clazz)){
             try {
                 TrongFile coFile = (TrongFile) clazz.getDeclaredConstructor().newInstance();
                 return coFile.getFilePath();
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            } catch (InvocationTargetException e) {
+                throw new RuntimeException(e);
+            } catch (NoSuchMethodException e) {
                 throw new RuntimeException(e);
             }
         }
-        System.err.println("Không lưu trữ được");
+        System.err.println("không lưu trữ được");
         return null;
     }
-
-    private static Method findSetter(Class<?> clazz, String fieldName, Class<?> paramType) {
-        String setterName = "set" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
-        Class<?> curr = clazz;
-        while (curr != null && curr != Object.class) {
-            try {
-                return curr.getDeclaredMethod(setterName, paramType);
-            } catch (NoSuchMethodException ignored) {
-            }
-            curr = curr.getSuperclass();
-        }
-        return null;
-    }
-
-    public static <T> T taoObject(Class<T> clazz, String CSVHeader, String CSVLine) {
-        if (CSVHeader == null || CSVLine == null || CSVLine.isBlank()) {
-            return null;
-        }
-        String[] headers = parseCSVLine(CSVHeader);
-        String[] values = parseCSVLine(CSVLine);
-        if (headers.length != values.length) {
-            System.err.println("Số trường dữ liệu không khớp tiêu đề.");
-            return null;
-        }
-        try {
-            T inst = clazz.getDeclaredConstructor().newInstance();
-            ArrayList<Field> fields = getALlField(clazz);
-            for (int i = 0; i < headers.length; i++) {
-                String header = headers[i].trim();
-                String val = values[i].trim();
-                for (Field field : fields) {
-                    if (field.getName().equals(header)) {
-                        field.setAccessible(true);
-                        Object value = getDataType(val, field.getType());
-                        if (value == null && field.getType().isPrimitive()) {
-                            throw new IllegalArgumentException("Không thể gán null cho trường nguyên thủy: " + field.getName());
-                        }
-                        Method setter = findSetter(clazz, field.getName(), field.getType());
-                        boolean shouldInvokeSetter = setter != null && value != null
-                                && (!(value instanceof String s) || !s.isEmpty());
-                        if (shouldInvokeSetter) {
-                            setter.setAccessible(true);
-                            setter.invoke(inst, value);
-                        } else if (value != null || !field.getType().isPrimitive()) {
-                            field.set(inst, value);
-                        }
-                        break;
-                    }
+    //Class của object cần constuctor rỗng VD public SanPham(){};
+    public static <T> T taoObject (Class<T> clazz,String CSVHeader, String CSVLine){
+       if (CSVHeader == null || CSVLine == null) {
+           System.err.println("Thiếu dữ liệu hoặc tiêu đề bản ghi.");
+           return null;
+       }
+       String[] headers = CSVHeader.split(",", -1);
+       String[] values = CSVLine.split("," ,-1);
+       if (headers.length != values.length) {
+           System.err.println("Số trường dữ liệu không khớp tiêu đề.");
+           return null;
+       }
+       try{
+           T inst = clazz.getDeclaredConstructor().newInstance();
+           ArrayList<Field> fields = getALlField(clazz);
+           for(int i = 0; i < headers.length; i++){
+               String header = headers[i].trim();
+               String val = values[i].trim();
+              for (Field field : fields){
+                if(field.getName().equals(header)){
+                    field.setAccessible(true);
+                    Object value = getDataType(val, field.getType());
+                    field.set(inst,value);
+                    break;
                 }
-            }
-            return inst;
-        } catch (InvocationTargetException e) {
-            Throwable cause = e.getCause() != null ? e.getCause() : e;
-            System.err.println("Dữ liệu CSV không hợp lệ: " + cause.getMessage());
-            return null;
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-            return null;
-        }
+              }
+           }
+           return inst;
+       } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException | IllegalArgumentException | java.time.DateTimeException e) {
+           System.err.println(e.getMessage());
+           return null;
+       }
     }
-
-    public static <T> T taoObjectTuTerminal(Class<T> clazz, Scanner sc) {
+    public static <T> T taoObjectTuTerminal(Class<T> clazz, Scanner sc){
+        System.out.println("nhap cac gia tri cho" + clazz);
         ArrayList<Field> fields = DataBase.getALlField(clazz);
-        try {
+        try{
             T inst = clazz.getDeclaredConstructor().newInstance();
-            for (Field field : fields) {
+            for(Field field : fields){
                 field.setAccessible(true);
-                System.out.println("Nhập giá trị: " + field.getName());
+                System.out.println("nhap gia tri: " + field.getName());
                 String inputString = sc.nextLine().trim();
-                Object value = DataBase.getDataType(inputString, field.getType());
-                if (value != null || !field.getType().isPrimitive()) {
-                    field.set(inst, value);
-                }
+                Object value = DataBase.getDataType(inputString,field.getType());
+                field.set(inst,value);
             }
+            System.out.println("Tao "+ clazz + "thanh cong");
             return inst;
-        } catch (Exception e) {
+        }
+        catch (Exception e){
             System.out.println(e.getMessage());
             return null;
         }
     }
-
-    private static void ensureParentDir(String filePath) {
-        File f = new File(filePath);
-        File parent = f.getParentFile();
-        if (parent != null && !parent.exists()) {
-            parent.mkdirs();
+    public static void ghiVaoFile(Object obj, String filePath,boolean ghiDe){
+        if (obj == null) {
+            System.err.println("Không có đối tượng để ghi file.");
+            return;
         }
-    }
-
-    public static void ghiVaoFile(Object obj, String filePath, boolean ghiDe) {
-        if (obj == null || filePath == null) return;
-        ensureParentDir(filePath);
-        File file = new File(filePath);
-        boolean canHeader = ghiDe || !file.exists() || file.length() == 0;
         String headers = DataBase.getCSVHeader(obj);
         String csvLine = DataBase.getCSVLine(obj);
-        try (BufferedWriter writer = new BufferedWriter(
-                new OutputStreamWriter(new FileOutputStream(file, !ghiDe), StandardCharsets.UTF_8))) {
-            if (canHeader) {
-                writer.write(headers);
-                writer.newLine();
-            }
-            writer.write(csvLine);
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(filePath,!ghiDe))){
+            if(ghiDe == true) writer.write(headers);
             writer.newLine();
-        } catch (Exception e) {
+            writer.write(csvLine);
+        }
+        catch(Exception e){
             System.err.println(e.getMessage());
         }
     }
-
-    public static void ghiVaoFile(ArrayList<Object> objs, String filePath, boolean ghiDe) {
-        if (objs == null || objs.isEmpty() || objs.getFirst() == null || filePath == null) return;
-        ensureParentDir(filePath);
-        File file = new File(filePath);
-        boolean canHeader = ghiDe || !file.exists() || file.length() == 0;
+    public static void ghiVaoFile(ArrayList<Object> objs, String filePath, boolean ghiDe){
+        if (objs == null || objs.isEmpty() || objs.getFirst() == null) {
+            System.err.println("Danh sách rỗng, không có dữ liệu để ghi.");
+            return;
+        }
         String headers = DataBase.getCSVHeader(objs.getFirst());
-        try (BufferedWriter writer = new BufferedWriter(
-                new OutputStreamWriter(new FileOutputStream(file, !ghiDe), StandardCharsets.UTF_8))) {
-            if (canHeader) {
-                writer.write(headers);
-                writer.newLine();
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(filePath,!ghiDe))){
+            if(ghiDe == true) writer.write(headers);
+            for(Object obj : objs){
+            String csvLine = DataBase.getCSVLine(obj);
+            writer.newLine();
+            writer.write(csvLine);
             }
-            for (Object obj : objs) {
-                if (obj == null) continue;
-                writer.write(DataBase.getCSVLine(obj));
-                writer.newLine();
-            }
-        } catch (Exception e) {
+        }
+        catch(Exception e){
             System.err.println(e.getMessage());
         }
     }
-
-    public static void ghiVanBan(String filePath, String content, boolean ghiDe) {
-        ensureParentDir(filePath);
-        try (BufferedWriter writer = new BufferedWriter(
-                new OutputStreamWriter(new FileOutputStream(filePath, !ghiDe), StandardCharsets.UTF_8))) {
-            writer.write(content);
+    public static void ghiVanBan(String filePath, String content, boolean ghiDe){
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(filePath,!ghiDe))){
+          writer.write(content);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-
-    public static <T> ArrayList<T> docfile(Class<T> clazz, String filePath) {
-        ArrayList<T> objs = new ArrayList<>();
-        if (filePath == null) return objs;
-        File f = new File(filePath);
-        if (!f.exists() || f.length() == 0) return objs;
-        try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(new FileInputStream(f), StandardCharsets.UTF_8))) {
-            String headers = reader.readLine();
-            while (headers != null && headers.trim().startsWith("#")) {
-                headers = reader.readLine();
-            }
-            if (headers == null || headers.trim().isEmpty()) {
+    public static <T> ArrayList<T> docfile( Class<T> clazz, String filePath){
+       ArrayList<T> objs = new ArrayList<T>();
+       try(BufferedReader reader = new BufferedReader(new FileReader(filePath))){
+           String headers =reader.readLine();
+           if(headers == null || headers.trim().isEmpty()){
+               return objs;
+           }
+           String line;
+           while ((line = reader.readLine()) != null) {
+               T obj = DataBase.taoObject(clazz, headers, line);
+               if (obj != null) objs.add(obj);
+           }
+           return objs;
+       }
+       catch(Exception e){
+           System.err.println(e.getMessage());
+           return objs;
+       }
+    }
+    public static <T> ArrayList<T> docfile( Class<T> clazz){
+        ArrayList<T> objs = new ArrayList<T>();
+        String filePath = getFilePath(clazz);
+        if(filePath == null) return objs;
+        try(BufferedReader reader = new BufferedReader(new FileReader(filePath))){
+            String headers =reader.readLine();
+            if(headers.trim().isEmpty()){
                 return objs;
             }
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.trim().isEmpty() || line.trim().startsWith("#")) continue;
-                T obj = DataBase.taoObject(clazz, headers, line);
-                if (obj != null) objs.add(obj);
+                objs.add(DataBase.taoObject(clazz, headers, line));
             }
             return objs;
-        } catch (Exception e) {
+        }
+        catch(Exception e){
             System.err.println(e.getMessage());
             return objs;
         }
     }
+    public static <T> void suaObjectTrongArrayList(ArrayList<T> objs, int index){
+        if (objs == null || index < 0 || index >= objs.size() || objs.get(index) == null) {
+            System.out.println("Không tìm thấy đối tượng tại vị trí cần sửa!");
+            return;
+        }
+        T obj = objs.get(index);
+        ArrayList<Field> fields = DataBase.getALlField(obj.getClass());
+        System.out.println("Cac gia tri co the sua");
+        for(Field field : fields){
+            field.setAccessible(true);
+            System.out.println("STT:" +fields.indexOf(field) + " , " +field.getName());
+        }
+        //lay input stt tu user
+        int stt =1;
 
-    public static <T> ArrayList<T> docfile(Class<T> clazz) {
-        String filePath = getFilePath(clazz);
-        if (filePath == null) return new ArrayList<>();
-        return docfile(clazz, filePath);
+        if (stt >= fields.size()) {
+            System.out.println("Không có thuộc tính tại vị trí cần sửa!");
+            return;
+        }
+        Field toBeEdit = fields.get(stt);
+        //lay input gia tri moi tu user
+        try {
+            toBeEdit.set(obj,null);
+        } catch (IllegalAccessException | IllegalArgumentException e) {
+            System.err.println(e.getMessage());
+        }
     }
 }

@@ -1,11 +1,10 @@
 package dichvu;
 
-import interfaces.IThongTin;
 import utils.Validation;
 import java.time.LocalDate;
 import java.util.Scanner;
 
-public abstract class Khuyenmai implements IThongTin {
+public abstract class Khuyenmai  {
     private boolean tonTai = true;
 
     public boolean isTonTai() { return tonTai; }
@@ -73,7 +72,6 @@ public abstract class Khuyenmai implements IThongTin {
         mucChiToiThieu = Validation.inputLong(sc, "Mức chi tiêu tối thiểu để sử dụng khuyến mãi: ");
     }
 
-    @Override
     public void nhapThongTin(Scanner sc) {
         setKM(sc);
     }

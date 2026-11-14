@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<du-lieu phien-ban="1">
+  <doi-tuong lop="utils.DataBase$BanLuu" ma="1">
+    <thuoc-tinh khai-bao="utils.DataBase$BanLuu" ten="duLieu">
+      <doi-tuong lop="hoadon.DanhSachCongNo" ma="2">
+        <thuoc-tinh khai-bao="hoadon.DanhSachCongNo" ten="maHoaDonCongNo">
+          <danh-sach lop="java.util.ArrayList" ma="3">
+            <gia-tri kieu="java.lang.String">HD004</gia-tri>
+            <gia-tri kieu="java.lang.String">HD005</gia-tri>
+          </danh-sach>
+        </thuoc-tinh>
+        <thuoc-tinh khai-bao="hoadon.DanhSachCongNo" ten="maPhieuNhapCongNo">
+          <danh-sach lop="java.util.ArrayList" ma="4">
+            <gia-tri kieu="java.lang.String">PNK001</gia-tri>
+            <gia-tri kieu="java.lang.String">PNK002</gia-tri>
+          </danh-sach>
+        </thuoc-tinh>
+        <thuoc-tinh khai-bao="hoadon.DanhSachCongNo" ten="maNhaCungCapCongNo">
+          <danh-sach lop="java.util.ArrayList" ma="5">
+            <gia-tri kieu="java.lang.String">NCC002</gia-tri>
+            <gia-tri kieu="java.lang.String">NCC003</gia-tri>
+          </danh-sach>
+        </thuoc-tinh>
+        <thuoc-tinh khai-bao="hoadon.DanhSachCongNo" ten="tenNhaCungCapCongNo">
+          <danh-sach lop="java.util.ArrayList" ma="6">
+            <gia-tri kieu="java.lang.String">Gia dụng Bình Minh</gia-tri>
+            <gia-tri kieu="java.lang.String">Điện máy Hòa Phát</gia-tri>
+          </danh-sach>
+        </thuoc-tinh>
+        <thuoc-tinh khai-bao="hoadon.DanhSachCongNo" ten="soTienCongNo">
+          <danh-sach lop="java.util.ArrayList" ma="7">
+            <gia-tri kieu="java.lang.Long">5500000</gia-tri>
+            <gia-tri kieu="java.lang.Long">4500000</gia-tri>
+          </danh-sach>
+        </thuoc-tinh>
+        <thuoc-tinh khai-bao="hoadon.DanhSachCongNo" ten="ngayDenHanCongNo">
+          <danh-sach lop="java.util.ArrayList" ma="8">
+            <gia-tri kieu="java.time.LocalDate">2026-11-04</gia-tri>
+            <gia-tri kieu="java.time.LocalDate">2026-12-04</gia-tri>
+          </danh-sach>
+        </thuoc-tinh>
+        <thuoc-tinh khai-bao="hoadon.DanhSachCongNo" ten="ngayThanhToanCongNo">
+          <danh-sach lop="java.util.ArrayList" ma="9">
+            <rong/>
+            <gia-tri kieu="java.time.LocalDate">2026-11-13</gia-tri>
+          </danh-sach>
+        </thuoc-tinh>
+        <thuoc-tinh khai-bao="hoadon.DanhSachCongNo" ten="nganHangThanhToanCongNo">
+          <danh-sach lop="java.util.ArrayList" ma="10">
+            <rong/>
+            <gia-tri kieu="java.lang.String">Ngân hàng mẫu</gia-tri>
+          </danh-sach>
+        </thuoc-tinh>
+        <thuoc-tinh khai-bao="hoadon.DanhSachCongNo" ten="daThanhToanCongNo">
+          <danh-sach lop="java.util.ArrayList" ma="11">
+            <gia-tri kieu="java.lang.Boolean">false</gia-tri>
+            <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+          </danh-sach>
+        </thuoc-tinh>
+      </doi-tuong>
+    </thuoc-tinh>
+    <thuoc-tinh khai-bao="utils.DataBase$BanLuu" ten="boDem">
+      <anh-xa lop="java.util.LinkedHashMap" ma="12">
+        <cap>
+          <gia-tri kieu="java.lang.String">sanpham.SanPham</gia-tri>
+          <gia-tri kieu="java.lang.Integer">9</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">person.NhanVien</gia-tri>
+          <gia-tri kieu="java.lang.Integer">5</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">person.KhachHang</gia-tri>
+          <gia-tri kieu="java.lang.Integer">4</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">hoadon.HoaDon</gia-tri>
+          <gia-tri kieu="java.lang.Integer">7</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">dichvu.Khuyenmai</gia-tri>
+          <gia-tri kieu="java.lang.Integer">5</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">dichvu.Nhacungcap</gia-tri>
+          <gia-tri kieu="java.lang.Integer">4</gia-tri>
+        </cap>
+      </anh-xa>
+    </thuoc-tinh>
+  </doi-tuong>
+</du-lieu>

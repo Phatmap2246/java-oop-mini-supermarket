@@ -1,5 +1,4 @@
 package dichvu;
-import hoadon.HoaDon;
 import sanpham.SanPham;
 import sanpham.QuanLySanPham;
 import utils.Validation;
@@ -86,7 +85,7 @@ public class Nhacungcap extends Doitac{
     public void inDanhSachSanPham ()
     {
         System.out.println("Danh sách sản phẩm do nhà cung cấp " + super.getTenDoiTac() + " cung cấp!");
-        sanPhamCungCap.inDanhSachSanPham();
+        sanPhamCungCap.xuatDanhSach();
     }
     public boolean kiemTraHanMucNoCong ()
     {

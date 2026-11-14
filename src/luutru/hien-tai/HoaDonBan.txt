@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<du-lieu phien-ban="1">
+  <doi-tuong lop="utils.DataBase$BanLuu" ma="1">
+    <thuoc-tinh khai-bao="utils.DataBase$BanLuu" ten="duLieu">
+      <doi-tuong lop="hoadon.DanhSachHoaDonBan" ma="2">
+        <thuoc-tinh khai-bao="hoadon.DanhSachHoaDonBan" ten="dsHoaDonBanHang">
+          <danh-sach lop="java.util.ArrayList" ma="3">
+            <doi-tuong lop="hoadon.HoaDonBanHang" ma="4">
+              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="maKhachHang">
+                <gia-tri kieu="java.lang.String">KH001</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="phuongThucThanhToan">
+                <doi-tuong lop="hoadon.ThanhToanTienMat" ma="5">
+                  <thuoc-tinh khai-bao="hoadon.ThanhToanTienMat" ten="tienKhachDua">
+                    <gia-tri kieu="java.lang.Long">0</gia-tri>
+                  </thuoc-tinh>
+                  <thuoc-tinh khai-bao="hoadon.ThanhToanTienMat" ten="tienThua">
+                    <gia-tri kieu="java.lang.Long">0</gia-tri>
+                  </thuoc-tinh>
+                </doi-tuong>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="daThanhToan">
+                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="chietKhau">
+                <gia-tri kieu="java.lang.Double">0.0</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="ctHoaDonBans">
+                <danh-sach lop="java.util.ArrayList" ma="6">
+                  <doi-tuong lop="hoadon.CTHoaDonBan" ma="7">
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="tonTai">
+                      <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="thanhTienSauKhuyenMai">
+                      <gia-tri kieu="java.lang.Long">57600</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="soLuongTangKem">
+                      <gia-tri kieu="java.lang.Integer">0</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="soLuongPhaiTra">
+                      <gia-tri kieu="java.lang.Integer">2</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="soTienGiam">
+                      <gia-tri kieu="java.lang.Long">6400</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="loaiKhuyenMai">
+                      <gia-tri kieu="java.lang.String">Giảm theo phần trăm</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="maSanpham">
+                      <gia-tri kieu="java.lang.String">SP001</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="tenSanPham">
+                      <gia-tri kieu="java.lang.String">Sữa tươi hộp 1 lít</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="soLuong">
+                      <gia-tri kieu="java.lang.Integer">2</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="donGia">
+                      <gia-tri kieu="java.lang.Long">32000</gia-tri>
+                    </thuoc-tinh>
+                  </doi-tuong>
+                  <doi-tuong lop="hoadon.CTHoaDonBan" ma="8">
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="tonTai">
+                      <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="thanhTienSauKhuyenMai">
+                      <gia-tri kieu="java.lang.Long">32000</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="soLuongTangKem">
+                      <gia-tri kieu="java.lang.Integer">0</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="soLuongPhaiTra">
+                      <gia-tri kieu="java.lang.Integer">4</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="soTienGiam">
+                      <gia-tri kieu="java.lang.Long">0</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="loaiKhuyenMai">
+                      <gia-tri kieu="java.lang.String">Không áp dụng</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="maSanpham">
+                      <gia-tri kieu="java.lang.String">SP002</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="tenSanPham">
+                      <gia-tri kieu="java.lang.String">Sữa chua dâu</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="soLuong">
+                      <gia-tri kieu="java.lang.Integer">4</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="donGia">
+                      <gia-tri kieu="java.lang.Long">8000</gia-tri>
+                    </thuoc-tinh>
+                  </doi-tuong>
+                </danh-sach>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="maHoaDon">
+                <gia-tri kieu="java.lang.String">HD001</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="ngayLap">
+                <gia-tri kieu="java.time.LocalDateTime">2026-11-12T10:30</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="maNhanVien">
+                <gia-tri kieu="java.lang.String">NV003</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="loaiHoaDon">
+                <gia-tri kieu="java.lang.String">Hoá đơn bán</gia-tri>
+              </thuoc-tinh>
+            </doi-tuong>
+            <doi-tuong lop="hoadon.HoaDonBanHang" ma="9">
+              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="maKhachHang">
+                <gia-tri kieu="java.lang.String">KH002</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="phuongThucThanhToan">
+                <doi-tuong lop="hoadon.ThanhToanChuyenKhoan" ma="10">
+                  <thuoc-tinh khai-bao="hoadon.ThanhToanChuyenKhoan" ten="tenNganHang">
+                    <gia-tri kieu="java.lang.String">Ngân hàng mẫu</gia-tri>
+                  </thuoc-tinh>
+                  <thuoc-tinh khai-bao="hoadon.ThanhToanChuyenKhoan" ten="soTaiKhoan">
+                    <gia-tri kieu="java.lang.String">0123456789</gia-tri>
+                  </thuoc-tinh>
+                  <thuoc-tinh khai-bao="hoadon.ThanhToanChuyenKhoan" ten="maGiaoDich">
+                    <gia-tri kieu="java.lang.String"/>
+                  </thuoc-tinh>
+                  <thuoc-tinh khai-bao="hoadon.ThanhToanChuyenKhoan" ten="noiDungQR">
+                    <gia-tri kieu="java.lang.String"/>
+                  </thuoc-tinh>
+                </doi-tuong>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="daThanhToan">
+                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="chietKhau">
+                <gia-tri kieu="java.lang.Double">0.0</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="ctHoaDonBans">
+                <danh-sach lop="java.util.ArrayList" ma="11">
+                  <doi-tuong lop="hoadon.CTHoaDonBan" ma="12">
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="tonTai">
+                      <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="thanhTienSauKhuyenMai">
+                      <gia-tri kieu="java.lang.Long">600000</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="soLuongTangKem">
+                      <gia-tri kieu="java.lang.Integer">0</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="soLuongPhaiTra">
+                      <gia-tri kieu="java.lang.Integer">1</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="soTienGiam">
+                      <gia-tri kieu="java.lang.Long">50000</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="loaiKhuyenMai">
+                      <gia-tri kieu="java.lang.String">Giảm giá trực tiếp</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="maSanpham">
+                      <gia-tri kieu="java.lang.String">SP007</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="tenSanPham">
+                      <gia-tri kieu="java.lang.String">Nồi cơm điện 1.8 lít</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="soLuong">
+                      <gia-tri kieu="java.lang.Integer">1</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="donGia">
+                      <gia-tri kieu="java.lang.Long">650000</gia-tri>
+                    </thuoc-tinh>
+                  </doi-tuong>
+                </danh-sach>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="maHoaDon">
+                <gia-tri kieu="java.lang.String">HD002</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="ngayLap">
+                <gia-tri kieu="java.time.LocalDateTime">2026-11-13T10:30</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="maNhanVien">
+                <gia-tri kieu="java.lang.String">NV003</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="loaiHoaDon">
+                <gia-tri kieu="java.lang.String">Hoá đơn bán</gia-tri>
+              </thuoc-tinh>
+            </doi-tuong>
+            <doi-tuong lop="hoadon.HoaDonBanHang" ma="13">
+              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="maKhachHang">
+                <gia-tri kieu="java.lang.String">KH003</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="phuongThucThanhToan">
+                <rong/>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="daThanhToan">
+                <gia-tri kieu="java.lang.Boolean">false</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="chietKhau">
+                <gia-tri kieu="java.lang.Double">0.0</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="ctHoaDonBans">
+                <danh-sach lop="java.util.ArrayList" ma="14">
+                  <doi-tuong lop="hoadon.CTHoaDonBan" ma="15">
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="tonTai">
+                      <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="thanhTienSauKhuyenMai">
+                      <gia-tri kieu="java.lang.Long">300000</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="soLuongTangKem">
+                      <gia-tri kieu="java.lang.Integer">1</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="soLuongPhaiTra">
+                      <gia-tri kieu="java.lang.Integer">2</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="soTienGiam">
+                      <gia-tri kieu="java.lang.Long">0</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="loaiKhuyenMai">
+                      <gia-tri kieu="java.lang.String">Khuyến mãi mua tặng</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="maSanpham">
+                      <gia-tri kieu="java.lang.String">SP004</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="tenSanPham">
+                      <gia-tri kieu="java.lang.String">Nước giặt 3 lít</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="soLuong">
+                      <gia-tri kieu="java.lang.Integer">2</gia-tri>
+                    </thuoc-tinh>
+                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="donGia">
+                      <gia-tri kieu="java.lang.Long">150000</gia-tri>
+                    </thuoc-tinh>
+                  </doi-tuong>
+                </danh-sach>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="maHoaDon">
+                <gia-tri kieu="java.lang.String">HD003</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="ngayLap">
+                <gia-tri kieu="java.time.LocalDateTime">2026-11-14T10:30</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="maNhanVien">
+                <gia-tri kieu="java.lang.String">NV003</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="loaiHoaDon">
+                <gia-tri kieu="java.lang.String">Hoá đơn bán</gia-tri>
+              </thuoc-tinh>
+            </doi-tuong>
+          </danh-sach>
+        </thuoc-tinh>
+      </doi-tuong>
+    </thuoc-tinh>
+    <thuoc-tinh khai-bao="utils.DataBase$BanLuu" ten="boDem">
+      <anh-xa lop="java.util.LinkedHashMap" ma="16">
+        <cap>
+          <gia-tri kieu="java.lang.String">sanpham.SanPham</gia-tri>
+          <gia-tri kieu="java.lang.Integer">9</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">person.NhanVien</gia-tri>
+          <gia-tri kieu="java.lang.Integer">5</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">person.KhachHang</gia-tri>
+          <gia-tri kieu="java.lang.Integer">4</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">hoadon.HoaDon</gia-tri>
+          <gia-tri kieu="java.lang.Integer">7</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">dichvu.Khuyenmai</gia-tri>
+          <gia-tri kieu="java.lang.Integer">5</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">dichvu.Nhacungcap</gia-tri>
+          <gia-tri kieu="java.lang.Integer">4</gia-tri>
+        </cap>
+      </anh-xa>
+    </thuoc-tinh>
+  </doi-tuong>
+</du-lieu>

@@ -1,10 +1,9 @@
 package person;
 
-import interfaces.IThongTin;
 import java.util.Scanner;
 
 
-public class DiaChi implements IThongTin {
+public class DiaChi  {
     private String soNha;
     private String duong;
     private String phuongXa;
@@ -105,7 +104,6 @@ public class DiaChi implements IThongTin {
         this.tinhThanhPho = sc.nextLine().trim();
     }
 
-    @Override
     public void nhapThongTin(Scanner sc) {
         nhapDiaChi(sc);
     }

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<du-lieu phien-ban="1">
+  <doi-tuong lop="utils.DataBase$BanLuu" ma="1">
+    <thuoc-tinh khai-bao="utils.DataBase$BanLuu" ten="duLieu">
+      <doi-tuong lop="person.DSKhachHang" ma="2">
+        <thuoc-tinh khai-bao="person.DSKhachHang" ten="list">
+          <mang lop="person.KhachHang" ma="3">
+            <doi-tuong lop="person.KhachHang" ma="4">
+              <thuoc-tinh khai-bao="person.KhachHang" ten="maKhachHang">
+                <gia-tri kieu="java.lang.String">KH001</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.KhachHang" ten="ngayDangKy">
+                <gia-tri kieu="java.time.LocalDate">2026-05-14</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.KhachHang" ten="tongChiTieu">
+                <gia-tri kieu="java.lang.Long">250000</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.KhachHang" ten="hangThanhVien">
+                <gia-tri kieu="java.lang.String">Đồng</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.KhachHang" ten="diemTichLuy">
+                <gia-tri kieu="java.lang.Integer">250</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.KhachHang" ten="isTonTai">
+                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.Person" ten="email">
+                <gia-tri kieu="java.lang.String">khachhang1@example.com</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.Person" ten="hoten">
+                <gia-tri kieu="java.lang.String">Nguyễn Thảo Linh</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.Person" ten="sdt">
+                <gia-tri kieu="java.lang.String">0933000000</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.Person" ten="diachi">
+                <doi-tuong lop="person.DiaChi" ma="5">
+                  <thuoc-tinh khai-bao="person.DiaChi" ten="soNha">
+                    <gia-tri kieu="java.lang.String">14</gia-tri>
+                  </thuoc-tinh>
+                  <thuoc-tinh khai-bao="person.DiaChi" ten="duong">
+                    <gia-tri kieu="java.lang.String">Nguyễn Trãi</gia-tri>
+                  </thuoc-tinh>
+                  <thuoc-tinh khai-bao="person.DiaChi" ten="phuongXa">
+                    <gia-tri kieu="java.lang.String">Bến Thành</gia-tri>
+                  </thuoc-tinh>
+                  <thuoc-tinh khai-bao="person.DiaChi" ten="quanHuyen">
+                    <gia-tri kieu="java.lang.String">Quận 1</gia-tri>
+                  </thuoc-tinh>
+                  <thuoc-tinh khai-bao="person.DiaChi" ten="tinhThanhPho">
+                    <gia-tri kieu="java.lang.String">TP Hồ Chí Minh</gia-tri>
+                  </thuoc-tinh>
+                </doi-tuong>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.Person" ten="ngsinh">
+                <gia-tri kieu="java.time.LocalDate">1995-06-10</gia-tri>
+              </thuoc-tinh>
+            </doi-tuong>
+            <doi-tuong lop="person.KhachHang" ma="6">
+              <thuoc-tinh khai-bao="person.KhachHang" ten="maKhachHang">
+                <gia-tri kieu="java.lang.String">KH002</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.KhachHang" ten="ngayDangKy">
+                <gia-tri kieu="java.time.LocalDate">2026-05-14</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.KhachHang" ten="tongChiTieu">
+                <gia-tri kieu="java.lang.Long">1500000</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.KhachHang" ten="hangThanhVien">
+                <gia-tri kieu="java.lang.String">Bạc</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.KhachHang" ten="diemTichLuy">
+                <gia-tri kieu="java.lang.Integer">1500</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.KhachHang" ten="isTonTai">
+                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.Person" ten="email">
+                <gia-tri kieu="java.lang.String">khachhang2@example.com</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.Person" ten="hoten">
+                <gia-tri kieu="java.lang.String">Trần Hoàng Nam</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.Person" ten="sdt">
+                <gia-tri kieu="java.lang.String">0933000001</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.Person" ten="diachi">
+                <doi-tuong lop="person.DiaChi" ma="7">
+                  <thuoc-tinh khai-bao="person.DiaChi" ten="soNha">
+                    <gia-tri kieu="java.lang.String">15</gia-tri>
+                  </thuoc-tinh>
+                  <thuoc-tinh khai-bao="person.DiaChi" ten="duong">
+                    <gia-tri kieu="java.lang.String">Nguyễn Trãi</gia-tri>
+                  </thuoc-tinh>
+                  <thuoc-tinh khai-bao="person.DiaChi" ten="phuongXa">
+                    <gia-tri kieu="java.lang.String">Bến Thành</gia-tri>
+                  </thuoc-tinh>
+                  <thuoc-tinh khai-bao="person.DiaChi" ten="quanHuyen">
+                    <gia-tri kieu="java.lang.String">Quận 1</gia-tri>
+                  </thuoc-tinh>
+                  <thuoc-tinh khai-bao="person.DiaChi" ten="tinhThanhPho">
+                    <gia-tri kieu="java.lang.String">TP Hồ Chí Minh</gia-tri>
+                  </thuoc-tinh>
+                </doi-tuong>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.Person" ten="ngsinh">
+                <gia-tri kieu="java.time.LocalDate">1996-06-10</gia-tri>
+              </thuoc-tinh>
+            </doi-tuong>
+            <doi-tuong lop="person.KhachHang" ma="8">
+              <thuoc-tinh khai-bao="person.KhachHang" ten="maKhachHang">
+                <gia-tri kieu="java.lang.String">KH003</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.KhachHang" ten="ngayDangKy">
+                <gia-tri kieu="java.time.LocalDate">2026-05-14</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.KhachHang" ten="tongChiTieu">
+                <gia-tri kieu="java.lang.Long">5500000</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.KhachHang" ten="hangThanhVien">
+                <gia-tri kieu="java.lang.String">Vàng</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.KhachHang" ten="diemTichLuy">
+                <gia-tri kieu="java.lang.Integer">5500</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.KhachHang" ten="isTonTai">
+                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.Person" ten="email">
+                <gia-tri kieu="java.lang.String">khachhang3@example.com</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.Person" ten="hoten">
+                <gia-tri kieu="java.lang.String">Lê Hà My</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.Person" ten="sdt">
+                <gia-tri kieu="java.lang.String">0933000002</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.Person" ten="diachi">
+                <doi-tuong lop="person.DiaChi" ma="9">
+                  <thuoc-tinh khai-bao="person.DiaChi" ten="soNha">
+                    <gia-tri kieu="java.lang.String">16</gia-tri>
+                  </thuoc-tinh>
+                  <thuoc-tinh khai-bao="person.DiaChi" ten="duong">
+                    <gia-tri kieu="java.lang.String">Nguyễn Trãi</gia-tri>
+                  </thuoc-tinh>
+                  <thuoc-tinh khai-bao="person.DiaChi" ten="phuongXa">
+                    <gia-tri kieu="java.lang.String">Bến Thành</gia-tri>
+                  </thuoc-tinh>
+                  <thuoc-tinh khai-bao="person.DiaChi" ten="quanHuyen">
+                    <gia-tri kieu="java.lang.String">Quận 1</gia-tri>
+                  </thuoc-tinh>
+                  <thuoc-tinh khai-bao="person.DiaChi" ten="tinhThanhPho">
+                    <gia-tri kieu="java.lang.String">TP Hồ Chí Minh</gia-tri>
+                  </thuoc-tinh>
+                </doi-tuong>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="person.Person" ten="ngsinh">
+                <gia-tri kieu="java.time.LocalDate">1997-06-10</gia-tri>
+              </thuoc-tinh>
+            </doi-tuong>
+          </mang>
+        </thuoc-tinh>
+        <thuoc-tinh khai-bao="person.DSKhachHang" ten="n">
+          <gia-tri kieu="java.lang.Integer">3</gia-tri>
+        </thuoc-tinh>
+      </doi-tuong>
+    </thuoc-tinh>
+    <thuoc-tinh khai-bao="utils.DataBase$BanLuu" ten="boDem">
+      <anh-xa lop="java.util.LinkedHashMap" ma="10">
+        <cap>
+          <gia-tri kieu="java.lang.String">sanpham.SanPham</gia-tri>
+          <gia-tri kieu="java.lang.Integer">9</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">person.NhanVien</gia-tri>
+          <gia-tri kieu="java.lang.Integer">5</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">person.KhachHang</gia-tri>
+          <gia-tri kieu="java.lang.Integer">4</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">hoadon.HoaDon</gia-tri>
+          <gia-tri kieu="java.lang.Integer">7</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">dichvu.Khuyenmai</gia-tri>
+          <gia-tri kieu="java.lang.Integer">5</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">dichvu.Nhacungcap</gia-tri>
+          <gia-tri kieu="java.lang.Integer">4</gia-tri>
+        </cap>
+      </anh-xa>
+    </thuoc-tinh>
+  </doi-tuong>
+</du-lieu>
