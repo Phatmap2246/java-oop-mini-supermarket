@@ -1,12 +1,16 @@
 package hoadon;
 
+import interfaces.TrongFile;
 import utils.QRCodeGenerator;
 import java.util.Random;
 import java.util.Scanner;
+
+import interfaces.IThanhToan;
+
 import java.io.File;
 import java.awt.Desktop;
 
-public class ThanhToanChuyenKhoan implements IThanhToan {
+public class ThanhToanChuyenKhoan implements IThanhToan, TrongFile {
     private String tenNganHang;
     private String soTaiKhoan;
     private String maGiaoDich;
@@ -83,6 +87,10 @@ public class ThanhToanChuyenKhoan implements IThanhToan {
         System.out.println(" - Ngan hang: " + tenNganHang);
         System.out.println(" - So TK: " + soTaiKhoan);
         System.out.println(" - Ma giao dich: " + maGiaoDich);
+    }
+    @Override
+    public String getFilePath(){
+        return "src/luutru/ThanhToanChuyenKhoan.csv";
     }
 
     // Hàm vẽ QR bằng ký tự vuông (Không dùng màu, hiển thị tốt trên VS Code)

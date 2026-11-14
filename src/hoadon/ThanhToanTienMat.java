@@ -1,9 +1,11 @@
 package hoadon;
 
 import java.util.Scanner;
+
+import interfaces.IThanhToan;
 import utils.Validation;
 
-public class ThanhToanTienMat implements IThanhToan {
+public class ThanhToanTienMat implements IThanhToan, TrongFile {
     private long tienKhachDua;
     private long tienThua;
 
@@ -36,7 +38,10 @@ public class ThanhToanTienMat implements IThanhToan {
         System.out.printf(" - Tien thua: %d VND\n", tienThua);
         System.out.println(" - Ghi chu: Da kiem tra du tien va da thoi lai cho khach.");
     }
-
+    @Override
+    public String getFilePath(){
+        return "src/luutru/ThanhToanTienMat.csv";
+    }
     public long getTienKhachDua() { return tienKhachDua; }
     public long getTienThua() { return tienThua; }
 }

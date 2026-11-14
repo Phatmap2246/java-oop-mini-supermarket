@@ -1,72 +1,30 @@
 package person;
 
-import dichvu.Danhsachdoitac;
-
-import hoadon.DanhSachCongNo;
-
-import hoadon.DanhSachHoaDonNhap;
-
-import hoadon.DanhSachHoaDonBan;
-
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import hoadon.HoaDon;
+import hoadon.HoaDonBanHang;
+import utils.DateUtil;
 import utils.Validation;
 
 public class KeToan extends NhanVien {
-    private DanhSachHoaDonBan danhSachHoaDonBan = new DanhSachHoaDonBan();
-    private DanhSachHoaDonNhap danhSachHoaDonNhap = new DanhSachHoaDonNhap();
-    private Danhsachdoitac danhSachDoiTac = new Danhsachdoitac();
-    private DanhSachCongNo danhSachCongNo = new DanhSachCongNo();
+    // Mặc định kỳ hạn thanh toán công nợ với NCC là 30 ngày kể từ ngày lập hóa đơn
+    private static final int KY_HAN_CONG_NO_NGAY = 30;
 
-    public long tinhTongDoanhThu(ArrayList<HoaDon> dshd,long songay)
-    {
-        return danhSachHoaDonBan.tinhTongDoanhThu(dshd, songay);
+    public KeToan() {
+        super();
+        this.vaitro = "KeToan";
     }
 
-    public long tinhTongChiPhi(ArrayList<HoaDon> dshd,long songay)
-    {
-        return danhSachHoaDonNhap.tinhTongChiPhi(dshd, songay);
+    public KeToan(String email, String hoten, String sdt, DiaChi diachi, LocalDate ngsinh,
+            String maNV, long luong, long phuCapTrachNhiem) {
+        super(email, hoten, sdt, diachi, ngsinh, maNV, "KeToan", luong, phuCapTrachNhiem);
     }
 
-    public long tinhLoiNhuan(ArrayList<HoaDon> dshd,long songay) {
-        return tinhTongDoanhThu(dshd,songay) - tinhTongChiPhi(dshd,songay);
-    }
-
-    public long tinhLoiNhuanRong(ArrayList<HoaDon> dshd,long songay) {
-        long loiNhuanTruocThue = tinhLoiNhuan(dshd,songay);
-        if (loiNhuanTruocThue <= 0) {
-            return loiNhuanTruocThue;
-        }
-
-        long thueTNDN = (long) (loiNhuanTruocThue * 0.2);
-        return loiNhuanTruocThue - thueTNDN;
-    }
-
-    public void thanhToanCongNo(Scanner sc, DanhSachHoaDonNhap danhSachHoaDonNhap, Danhsachdoitac danhSachDoiTac) {
-        while (true) {
-            System.out.println("\n=== KẾ TOÁN: CÔNG NỢ NHÀ CUNG CẤP ===");
-            System.out.println("1. Đối chiếu phiếu nhập kho & Ghi nhận nợ");
-            System.out.println("2. Xem danh sách & Thanh toán công nợ");
-            System.out.println("0. Thoát");
-
-            int luaChon = Validation.luaChon(sc, "Chọn chức năng: ", 0, 2);
-            if (luaChon == 0) {
-                return;
-            }
-            if (luaChon == 1) {
-                danhSachCongNo.doiChieuVaGhiNhanCongNo(sc, danhSachHoaDonNhap, danhSachDoiTac);
-            } else {
-                danhSachCongNo.hienThiVaThanhToanCongNo(sc);
-            }
-        }
-    }
-    public void thongKe(int songay,ArrayList<HoaDon> dshd){
-        System.out.println("BANG THONG KE: ");
-        System.out.println("1. Doanh thu tu " + songay +"truoc: "+ tinhTongDoanhThu(dshd, songay));
-        System.out.println("2. Loi nhuan tu " + songay +"truoc: "+ tinhLoiNhuanRong(dshd, songay));
-        danhSachCongNo.thongKeCongNo();
+    public KeToan(KeToan kt) {
+        super(kt);
     }
 
     @Override
@@ -74,93 +32,246 @@ public class KeToan extends NhanVien {
         return "KeToan";
     }
 
-    public void setDanhSachHoaDonBan(DanhSachHoaDonBan danhSachHoaDonBan) {
-        if (danhSachHoaDonBan == null) throw new IllegalArgumentException("Danh sách hóa đơn bán không được null.");
-        this.danhSachHoaDonBan = danhSachHoaDonBan;
+    // ==================== 1. NHÓM HÀM TÍNH TOÁN TÀI CHÍNH ====================
+
+    public long tinhTongDoanhThu(ArrayList<HoaDon> dshd, LocalDate ngayBatDau, LocalDate ngayKetThuc) {
+        if (dshd == null || dshd.isEmpty()) {
+            return 0;
+        }
+        long tongDoanhThu = 0;
+        for (HoaDon hd : dshd) {
+            if (hd == null || hd.getNgayLap() == null) continue;
+            LocalDate ngayLap = hd.getNgayLap().toLocalDate();
+            if (hd instanceof HoaDonBanHang
+                    && !ngayLap.isBefore(ngayBatDau)
+                    && !ngayLap.isAfter(ngayKetThuc)) {
+                tongDoanhThu += hd.tinhTongTien();
+            }
+        }
+        return tongDoanhThu;
     }
 
-    public void setDanhSachHoaDonNhap(DanhSachHoaDonNhap danhSachHoaDonNhap) {
-        if (danhSachHoaDonNhap == null) throw new IllegalArgumentException("Danh sách hóa đơn nhập không được null.");
-        this.danhSachHoaDonNhap = danhSachHoaDonNhap;
+    public long tinhTongChiPhi(ArrayList<HoaDon> dshd, LocalDate ngayBatDau, LocalDate ngayKetThuc) {
+        if (dshd == null || dshd.isEmpty()) {
+            return 0;
+        }
+        long tongChiPhi = 0;
+        for (HoaDon hd : dshd) {
+            if (hd == null || hd.getNgayLap() == null) continue;
+            LocalDate ngayLap = hd.getNgayLap().toLocalDate();
+            // Đã sửa: lấy các hóa đơn KHÔNG phải HoaDonBanHang làm chi phí
+            if (!(hd instanceof HoaDonBanHang)
+                    && !ngayLap.isBefore(ngayBatDau)
+                    && !ngayLap.isAfter(ngayKetThuc)) {
+                tongChiPhi += hd.tinhTongTien();
+            }
+        }
+        return tongChiPhi;
     }
 
-    public void setDanhSachDoiTac(Danhsachdoitac danhSachDoiTac) {
-        if (danhSachDoiTac == null) throw new IllegalArgumentException("Danh sách đối tác không được null.");
-        this.danhSachDoiTac = danhSachDoiTac;
+    public long tinhLoiNhuan(ArrayList<HoaDon> dshd, LocalDate ngayBatDau, LocalDate ngayKetThuc) {
+        return tinhTongDoanhThu(dshd, ngayBatDau, ngayKetThuc)
+                - tinhTongChiPhi(dshd, ngayBatDau, ngayKetThuc);
     }
 
-    public void setDanhSachCongNo(DanhSachCongNo danhSachCongNo) {
-        if (danhSachCongNo == null) throw new IllegalArgumentException("Danh sách công nợ không được null.");
-        this.danhSachCongNo = danhSachCongNo;
-    }
-
-    public long tinhTongDoanhThu(long songay) {
-        return danhSachHoaDonBan.tinhTongDoanhThu(songay);
-    }
-
-    public long tinhTongChiPhi(long songay) {
-        return danhSachHoaDonNhap.tinhTongChiPhi(songay);
-    }
-
-    public long tinhLoiNhuan(long songay) {
-        return tinhTongDoanhThu(songay) - tinhTongChiPhi(songay);
-    }
-
-    public long tinhLoiNhuanRong(long songay) {
-        long loiNhuanTruocThue = tinhLoiNhuan(songay);
-        if (loiNhuanTruocThue <= 0) return loiNhuanTruocThue;
+    public long tinhLoiNhuanRong(ArrayList<HoaDon> dshd, LocalDate ngayBatDau, LocalDate ngayKetThuc) {
+        long loiNhuanTruocThue = tinhLoiNhuan(dshd, ngayBatDau, ngayKetThuc);
+        if (loiNhuanTruocThue <= 0) {
+            return loiNhuanTruocThue;
+        }
         long thueTNDN = (long) (loiNhuanTruocThue * 0.2);
         return loiNhuanTruocThue - thueTNDN;
     }
 
-    public void thongKe(int songay) {
-        System.out.println("BANG THONG KE: ");
-        System.out.println("1. Doanh thu tu " + songay + " truoc: " + tinhTongDoanhThu(songay));
-        System.out.println("2. Loi nhuan tu " + songay + " truoc: " + tinhLoiNhuanRong(songay));
-        danhSachCongNo.thongKeCongNo();
+    // ==================== 2. NHÓM HÀM XỬ LÝ CÔNG NỢ (DÙNG LIST THAM SỐ) ====================
+
+    // Lọc các hóa đơn nhập/chi phí từ danh sách hóa đơn chung
+    public ArrayList<HoaDon> layDanhSachHoaDonCongNo(ArrayList<HoaDon> dshd) {
+        ArrayList<HoaDon> dsCongNo = new ArrayList<>();
+        if (dshd == null) return dsCongNo;
+
+        for (HoaDon hd : dshd) {
+            if (hd != null && !(hd instanceof HoaDonBanHang)) {
+                dsCongNo.add(hd);
+            }
+        }
+        return dsCongNo;
     }
 
-    public void thucHienNghiepVu(Scanner sc)
-    {
-        int luaChon ;
-        do {
-            System.out.println("===================NGHIỆP VỤ KẾ TOÁN===================");
-            System.out.println("1. Xem báo cáo hóa đơn bán!");
-            System.out.println("2. Xem báo cáo hóa đơn nhập!");
-            System.out.println("3. Thống kê doanh thu và lợi nhuận!");
-            System.out.println("4. Đối chiếu và thanh toán công nợ!");
-            System.out.println("5. Xem danh sách công nợ!");
-            System.out.println("0. Trở về.");
-            luaChon = Validation.luaChon(sc, "Nhập lựa chọn: ", 0, 5);
-            switch (luaChon)
-            {
-                case 1: {
-                    danhSachHoaDonBan.xemBaoCao(sc);
-                    break;
-                }
-                case 2: {
-                    danhSachHoaDonNhap.xemBaoCao(sc);
-                    break;
-                }
-                case 3: {
-                    int soNgay = Validation.inputInt(sc, "Nhập số ngày cần thống kê: ");
-                    thongKe(soNgay);
-                    break;
-                }
-                case 4: {
-                    thanhToanCongNo(sc, danhSachHoaDonNhap, danhSachDoiTac);
-                    break;
-                }
-                case 5: {
-                    danhSachCongNo.thongKeCongNo();
-                    break;
-                }
-                case 0:
-                    break;
-                default:
-                    System.out.println("Lựa chọn không hợp lệ!");
-                    break;
+    // Lọc các hóa đơn công nợ chưa thanh toán
+    public ArrayList<HoaDon> layDanhSachCongNoChuaTra(ArrayList<HoaDon> dshd,
+            ArrayList<String> dsMaDaThanhToan) {
+        ArrayList<HoaDon> dsChuaTra = new ArrayList<>();
+        for (HoaDon hd : layDanhSachHoaDonCongNo(dshd)) {
+            if (!daThanhToan(hd.getMaHoaDon(), dsMaDaThanhToan)) {
+                dsChuaTra.add(hd);
             }
-        } while (luaChon != 0);
+        }
+        return dsChuaTra;
+    }
+
+    private boolean daThanhToan(String maHD, ArrayList<String> dsMaDaThanhToan) {
+        if (maHD == null || dsMaDaThanhToan == null) return false;
+        for (String ma : dsMaDaThanhToan) {
+            if (maHD.equalsIgnoreCase(ma)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private LocalDate tinhNgayDenHan(HoaDon hd) {
+        if (hd.getNgayLap() == null) return LocalDate.now();
+        return hd.getNgayLap().toLocalDate().plusDays(KY_HAN_CONG_NO_NGAY);
+    }
+
+    private String layTrangThaiCongNo(HoaDon hd, ArrayList<String> dsMaDaThanhToan) {
+        if (daThanhToan(hd.getMaHoaDon(), dsMaDaThanhToan)) {
+            return "Đã thanh toán";
+        }
+        LocalDate han = tinhNgayDenHan(hd);
+        return han.isBefore(LocalDate.now()) ? "QUÁ HẠN" : "Chưa thanh toán";
+    }
+
+    // Chỉ hiển thị danh sách công nợ (gọi được độc lập ở mọi nơi)
+    public void hienThiDanhSachCongNo(ArrayList<HoaDon> dshd, ArrayList<String> dsMaDaThanhToan) {
+        System.out.println("\n=== CÔNG NỢ NHÀ CUNG CẤP ===");
+        ArrayList<HoaDon> dsCongNo = layDanhSachHoaDonCongNo(dshd);
+        if (dsCongNo.isEmpty()) {
+            System.out.println(">> Danh mục công nợ trống.");
+            return;
+        }
+
+        for (int i = 0; i < dsCongNo.size(); i++) {
+            HoaDon hd = dsCongNo.get(i);
+            LocalDate han = tinhNgayDenHan(hd);
+            String trangThai = layTrangThaiCongNo(hd, dsMaDaThanhToan);
+
+            System.out.printf("%d. HĐ: %s | Đối tác: %s | Tiền: %,d VND | Hạn: %s | [%s]%n",
+                    i + 1,
+                    hd.getMaHoaDon(),
+                    hd.getTenDoiTac(),
+                    hd.tinhTongTien(),
+                    DateUtil.formatDate(han),
+                    trangThai);
+        }
+    }
+
+    private void hienThiMenuChonNoChuaTra(ArrayList<HoaDon> dsChuaTra) {
+        System.out.println("\n=== THANH TOÁN CÔNG NỢ ===");
+        for (int i = 0; i < dsChuaTra.size(); i++) {
+            HoaDon hd = dsChuaTra.get(i);
+            System.out.printf("%d. HĐ: %s - %s (%,d VND - Hạn: %s)%n",
+                    i + 1,
+                    hd.getMaHoaDon(),
+                    hd.getTenDoiTac(),
+                    hd.tinhTongTien(),
+                    DateUtil.formatDate(tinhNgayDenHan(hd)));
+        }
+        System.out.println("0. Quay lại");
+    }
+
+    private void thucHienChuyenKhoan(Scanner sc, HoaDon hoaDonNo, ArrayList<String> dsMaDaThanhToan) {
+        String nganHang = Validation.inputStringRegex(
+                sc, "Nhập ngân hàng thụ hưởng: ", ".+", "Không được để trống!");
+        String stk = Validation.inputStringRegex(
+                sc, "Nhập số tài khoản: ", "\\S+", "Không được để trống!");
+
+        System.out.printf("[+] Đã lập ủy nhiệm chi %,d VND tới %s (STK: %s) cho HĐ %s.%n",
+                hoaDonNo.tinhTongTien(), nganHang, stk, hoaDonNo.getMaHoaDon());
+
+        if (dsMaDaThanhToan != null && !daThanhToan(hoaDonNo.getMaHoaDon(), dsMaDaThanhToan)) {
+            dsMaDaThanhToan.add(hoaDonNo.getMaHoaDon());
+        }
+        System.out.println(">> Cập nhật trạng thái: Đã thanh toán thành công!");
+    }
+
+    public void hienThiVaThanhToanCongNo(Scanner sc, ArrayList<HoaDon> dshd,
+            ArrayList<String> dsMaDaThanhToan) {
+        hienThiDanhSachCongNo(dshd, dsMaDaThanhToan);
+        ArrayList<HoaDon> dsChuaTra = layDanhSachCongNoChuaTra(dshd, dsMaDaThanhToan);
+        if (dsChuaTra.isEmpty()) {
+            System.out.println(">> Không còn khoản công nợ nào chưa thanh toán.");
+            return;
+        }
+
+        hienThiMenuChonNoChuaTra(dsChuaTra);
+        int chon = Validation.luaChon(sc, "Chọn khoản nợ cần trả: ", 0, dsChuaTra.size());
+        if (chon == 0) {
+            return;
+        }
+
+        thucHienChuyenKhoan(sc, dsChuaTra.get(chon - 1), dsMaDaThanhToan);
+    }
+
+    public void thanhToanCongNo(Scanner sc, ArrayList<HoaDon> dshd,
+            ArrayList<String> dsMaDaThanhToan) {
+        while (true) {
+            System.out.println("\n=== KẾ TOÁN: CÔNG NỢ NHÀ CUNG CẤP ===");
+            System.out.println("1. Xem danh sách & Thanh toán công nợ");
+            System.out.println("2. Chỉ xem danh sách công nợ");
+            System.out.println("0. Thoát");
+
+            int luaChon = Validation.luaChon(sc, "Chọn chức năng: ", 0, 2);
+            if (luaChon == 0) {
+                return;
+            } else if (luaChon == 1) {
+                hienThiVaThanhToanCongNo(sc, dshd, dsMaDaThanhToan);
+            } else {
+                hienThiDanhSachCongNo(dshd, dsMaDaThanhToan);
+            }
+        }
+    }
+
+    // ==================== 3. NHÓM HÀM THỐNG KÊ ====================
+
+    public void thongKe(ArrayList<HoaDon> dshd, ArrayList<String> dsMaDaThanhToan,
+            LocalDate ngayBatDau, LocalDate ngayKetThuc) {
+        System.out.println("\n=== BẢNG THỐNG KÊ TÀI CHÍNH ===");
+        System.out.printf("1. Doanh thu từ %s đến %s: %,d VND%n",
+                DateUtil.formatDate(ngayBatDau), DateUtil.formatDate(ngayKetThuc),
+                tinhTongDoanhThu(dshd, ngayBatDau, ngayKetThuc));
+        System.out.printf("2. Lợi nhuận ròng từ %s đến %s: %,d VND%n",
+                DateUtil.formatDate(ngayBatDau), DateUtil.formatDate(ngayKetThuc),
+                tinhLoiNhuanRong(dshd, ngayBatDau, ngayKetThuc));
+
+        hienThiDanhSachCongNo(dshd, dsMaDaThanhToan);
+    }
+
+    public void thongKe(int quy, int nam, ArrayList<HoaDon> dshd,
+            ArrayList<String> dsMaDaThanhToan) {
+        LocalDate ngayBatDau;
+        LocalDate ngayKetThuc;
+
+        switch (quy) {
+            case 1:
+                ngayBatDau = LocalDate.of(nam, 1, 1);
+                ngayKetThuc = LocalDate.of(nam, 3, 31);
+                break;
+            case 2:
+                ngayBatDau = LocalDate.of(nam, 4, 1);
+                ngayKetThuc = LocalDate.of(nam, 6, 30);
+                break;
+            case 3:
+                ngayBatDau = LocalDate.of(nam, 7, 1);
+                ngayKetThuc = LocalDate.of(nam, 9, 30);
+                break;
+            case 4:
+                ngayBatDau = LocalDate.of(nam, 10, 1);
+                ngayKetThuc = LocalDate.of(nam, 12, 31);
+                break;
+            default:
+                System.out.println("[!] Số quý đưa vào không hợp lệ (chỉ từ 1 đến 4)!");
+                return;
+        }
+
+        thongKe(dshd, dsMaDaThanhToan, ngayBatDau, ngayKetThuc);
+    }
+
+    public void thongKeTheoNam(int nam, ArrayList<HoaDon> dshd,
+            ArrayList<String> dsMaDaThanhToan) {
+        LocalDate dauNam = LocalDate.of(nam, 1, 1);
+        LocalDate cuoiNam = LocalDate.of(nam, 12, 31);
+        thongKe(dshd, dsMaDaThanhToan, dauNam, cuoiNam);
     }
 }

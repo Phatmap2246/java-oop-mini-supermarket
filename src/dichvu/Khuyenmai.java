@@ -47,6 +47,11 @@ public abstract class Khuyenmai {
         }
         mucChiToiThieu = Validation.inputInt(sc, "Mức chi tiêu tối thiểu để sử dụng khuyến mãi: " );
     }
+
+    public void nhapThongTin(Scanner sc) {
+        setKM(sc);
+    }
+
     public static int getSoThuTu() {
         return soThuTu;
     }

@@ -1,4 +1,5 @@
 package dichvu ;
+import interfaces.TrongFile;
 import sanpham.SanPham;
 import utils.Validation;
 
@@ -6,7 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class KhuyenMaiPhanTram extends  Khuyenmai{
+public class KhuyenMaiPhanTram extends Khuyenmai implements TrongFile {
     private double phanTramGiamGia ;
     private long mucGiamToiDa ;
     public KhuyenMaiPhanTram()
@@ -66,5 +67,9 @@ public class KhuyenMaiPhanTram extends  Khuyenmai{
         return super.toString() + String.format(
                 " | Phần trăm giảm giá: %.2f%% | Mức giảm tối đa: %d",
                 phanTramGiamGia * 100, mucGiamToiDa);
+    }
+    @Override
+    public String getFilePath(){
+        return "src/luutru/KhuyenMaiPhanTram.csv";
     }
 }
