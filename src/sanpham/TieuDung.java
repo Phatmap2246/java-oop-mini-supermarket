@@ -1,9 +1,8 @@
 package sanpham;
 
-import interfaces.TrongFile;
-
 import java.util.Scanner;
-public class TieuDung extends SanPham implements TrongFile
+import utils.Validation;
+public class TieuDung extends SanPham
 {
     private String thuongHieu , noiSanXuat , phanLoai , luuYAnToan ;
     public TieuDung()
@@ -27,6 +26,9 @@ public class TieuDung extends SanPham implements TrongFile
     }
 
     public void setNoiSanXuat(String noiSanXuat) {
+        if (noiSanXuat == null || noiSanXuat.isBlank()) {
+            throw new IllegalArgumentException("NoiSanXuat không được để trống.");
+        }
         this.noiSanXuat = noiSanXuat;
     }
 
@@ -39,6 +41,9 @@ public class TieuDung extends SanPham implements TrongFile
     }
 
     public void setLuuYAnToan(String luuYAnToan) {
+        if (luuYAnToan == null || luuYAnToan.isBlank()) {
+            throw new IllegalArgumentException("LuuYAnToan không được để trống.");
+        }
         this.luuYAnToan = luuYAnToan;
     }
 
@@ -47,10 +52,16 @@ public class TieuDung extends SanPham implements TrongFile
     }
 
     public void setThuongHieu(String thuongHieu) {
+        if (thuongHieu == null || thuongHieu.isBlank()) {
+            throw new IllegalArgumentException("ThuongHieu không được để trống.");
+        }
         this.thuongHieu = thuongHieu;
     }
 
     public void setPhanLoai(String phanLoai) {
+        if (phanLoai == null || phanLoai.isBlank()) {
+            throw new IllegalArgumentException("PhanLoai không được để trống.");
+        }
         this.phanLoai = phanLoai;
     }
 
@@ -58,13 +69,13 @@ public class TieuDung extends SanPham implements TrongFile
     {
         super.setSanPham(sc);
         System.out.println("Nhập thương hiệu của sản phẩm: ");
-        thuongHieu = sc.nextLine() ;
+        thuongHieu = Validation.inputStringRegex(sc, "Nhập thông tin: ", "(?s).+", "Thông tin không được để trống!");
         System.out.println("Nhập nơi sản xuất: ");
-        noiSanXuat = sc.nextLine() ;
+        noiSanXuat = Validation.inputStringRegex(sc, "Nhập thông tin: ", "(?s).+", "Thông tin không được để trống!");
         System.out.println("Phân loại: ");
-        phanLoai = sc.nextLine() ;
+        phanLoai = Validation.inputStringRegex(sc, "Nhập thông tin: ", "(?s).+", "Thông tin không được để trống!");
         System.out.println("Lưu ý an toàn: ");
-        luuYAnToan = sc.nextLine() ;
+        luuYAnToan = Validation.inputStringRegex(sc, "Nhập thông tin: ", "(?s).+", "Thông tin không được để trống!");
     }
 
     @Override
@@ -74,14 +85,6 @@ public class TieuDung extends SanPham implements TrongFile
 
     @Override
     public String toString() {
-        return super.toString() + " | Phân loại: " + phanLoai + " | Nơi sản xuất: " + noiSanXuat + " | Phân loại: " + phanLoai + " | Lưu ý an toàn: " + luuYAnToan;
-    }
-    @Override
-    public String getFilePath(){
-        return "src/luutru/TieuDung.csv";
-    }
-    public String toStringKhachHang()
-    {
         return "Mã sản phẩm: " + super.getMaSanPham() + " | Tên sản phẩm: " + super.getTenSanPham() + " | Giá bán: " + super.getGiaBan() + " | Phân loại: " + phanLoai + " | Nơi sản xuất: " + noiSanXuat + " | Phân loại: " + phanLoai + " | Lưu ý an toàn: " + luuYAnToan;
     }
 }

@@ -1,0 +1,30 @@
+ for ( CTHoaDonNhap ct: ctHoaDonNhaps )
+                    {
+                        SanPham sp = qlsp.traCuuSanPham(ct.getMaSanpham()) ;
+                        boolean flag = false ;
+                        for ( HoaDonNhapHang hdn: hoaDonNhapHangs)
+                        {
+                            if ( hdn.getMaNhaCungCap().equalsIgnoreCase(sp.getMaNhaCungCap()))
+                            {
+                                hdn.getCtHoaDonNhaps().add(ct) ;
+                                flag = true ;
+                                break;
+                            }
+                        }
+                        if ( !flag || hoaDonNhapHangs.isEmpty() )
+                        {
+                            ArrayList<CTHoaDonNhap> chiTietMoi = new ArrayList<>();
+                            chiTietMoi.add(ct);
+                            HoaDonNhapHang hdn = new HoaDonNhapHang(super.getMaNV()) ;
+                            System.out.println("Nhập phiếu nhập cho từ nhà cung cấp " + dsDoiTac.getDanhSachDoiTac().get(dsDoiTac.traCuuThongTinDoiTac(sp.getMaNhaCungCap())).getTenDoiTac());
+                            hdn.nhapHoaDon(sc , chiTietMoi , sp.getMaNhaCungCap());
+                            hoaDonNhapHangs.add(hdn) ;
+                        }
+                    }
+                    for ( HoaDonNhapHang hdn : hoaDonNhapHangs)
+                    {
+                        dsHoaDonNhap.getDsHoaDonNhapHang().add(hdn) ;
+                        System.out.println(hdn);
+                    }
+                    String ma = Validation.inputStringRegex(sc , "Nhập mã để tiến hành chỉnh sửa: " , HoaDonNhapHang.MA_HD_NHAP_REGEX , "Mã hoá đơn nhập không đúng định dạng vui lòng nhập lại!(VD: HD001): " , HoaDon.getSoThuTu()) ;
+                    dsHoaDonNhap.suaHoaDon(sc , ma , qlsp);

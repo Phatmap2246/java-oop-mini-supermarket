@@ -9,19 +9,21 @@ import utils.Validation;
 import utils.YeuCau;
 
 public class NhanVien extends Person {
-    String maNV;
-    String vaitro;
-    long luong;
-    long phuCapTrachNhiem;
-    boolean isSaThai;
+    private String maNV;
+    private String vaitro;
+    private long luong;
+    private long phuCapTrachNhiem;
+    private boolean isSaThai;
+    private static int soThuTu = 1 ;
     /** Khởi tạo nhân viên với giá trị mặc định. */
     public NhanVien() {
         super();
-        maNV = null;
+        maNV = Validation.taoMa("NV%03d" , soThuTu) ;
         vaitro = null;
         luong = 0;
         phuCapTrachNhiem = 0;
         isSaThai = false;
+        soThuTu++ ;
     }
     /** Khởi tạo nhân viên từ các thông tin được truyền vào. */
     public NhanVien(String email, String hoten, String sdt, DiaChi diachi, LocalDate ngsinh,
@@ -47,6 +49,11 @@ public class NhanVien extends Person {
         phuCapTrachNhiem = nv.phuCapTrachNhiem;
         isSaThai = nv.isSaThai;
     }
+
+    public static int getSoThuTu() {
+        return soThuTu;
+    }
+
     /** Trả về mã nhân viên. */
     public String getMaNV() {
         return maNV;
@@ -54,6 +61,9 @@ public class NhanVien extends Person {
 
     /** Cập nhật mã nhân viên. */
     public void setMaNV(String maNV) {
+        if (maNV == null || !maNV.matches(Validation.MaNV_REGEX)) {
+            throw new IllegalArgumentException("MaNV không đúng định dạng.");
+        }
         this.maNV = maNV;
     }
 
@@ -74,6 +84,9 @@ public class NhanVien extends Person {
 
     /** Cập nhật vai trò của nhân viên. */
     public void setVaiTro(String vt) {
+        if (vt == null || !vt.matches("(QuanLy|KeToan|QuanKho|ThuNgan)")) {
+            throw new IllegalArgumentException("VaiTro không đúng định dạng.");
+        }
         vaitro = vt;
     }
 
@@ -94,11 +107,17 @@ public class NhanVien extends Person {
 
     /** Cập nhật lương cơ bản. */
     public void setLuong(long luong) {
+        if (luong < 0) {
+            throw new IllegalArgumentException("Luong không được âm.");
+        }
         this.luong = luong;
     }
 
     /** Nhập lương cơ bản từ bàn phím. */
     public void setLuong() {
+        if (luong < 0) {
+            throw new IllegalArgumentException("Luong không được âm.");
+        }
         setLuong(new Scanner(System.in));
     }
 
@@ -114,6 +133,9 @@ public class NhanVien extends Person {
 
     /** Cập nhật phụ cấp trách nhiệm. */
     public void setPhuCapTrachNhiem(long phuCapTrachNhiem) {
+        if (phuCapTrachNhiem < 0) {
+            throw new IllegalArgumentException("PhuCapTrachNhiem không được âm.");
+        }
         this.phuCapTrachNhiem = phuCapTrachNhiem;
     }
 
@@ -140,7 +162,6 @@ public class NhanVien extends Person {
     /** Nhập thông tin chung và các thông tin riêng của nhân viên. */
     public void nhapThongTin(Scanner sc) {
         super.nhapThongTin(sc);
-        setManv(sc);
         setLuong(sc);
         setVaiTro(sc);
         setPhuCapTrachNhiem(sc);

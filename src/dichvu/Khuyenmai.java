@@ -4,6 +4,12 @@ import java.time.LocalDate;
 import java.util.Scanner;
 
 public abstract class Khuyenmai {
+    private boolean tonTai = true;
+
+    public boolean isTonTai() { return tonTai; }
+
+    public void setTonTai(boolean tonTai) { this.tonTai = tonTai; }
+
     private String maKhuyenMai ;
     private String loaiKhuyenMai ;
     private LocalDate ngayBatDau , ngayKetThuc ;
@@ -50,9 +56,6 @@ public abstract class Khuyenmai {
         return soThuTu;
     }
 
-    public static void setSoThuTu(int soThuTu) {
-        Khuyenmai.soThuTu = soThuTu;
-    }
     public LocalDate getNgayBatDau() {
         return ngayBatDau;
     }
@@ -74,35 +77,50 @@ public abstract class Khuyenmai {
     }
 
     public void setLoaiKhuyenMai(String loaiKhuyenMai) {
+        if (loaiKhuyenMai == null || loaiKhuyenMai.isBlank()) {
+            throw new IllegalArgumentException("LoaiKhuyenMai không được để trống.");
+        }
         this.loaiKhuyenMai = loaiKhuyenMai;
     }
 
     public void setNgayBatDau(LocalDate ngayBatDau) {
+        if (ngayBatDau == null) {
+            throw new IllegalArgumentException("ngayBatDau không được null.");
+        }
         if ( ngayKetThuc != null && ngayBatDau.isAfter(ngayKetThuc) )
             throw new IllegalArgumentException("Ngày bắt đầu không được sau ngày kêt thúc!") ;
         this.ngayBatDau = ngayBatDau;
     }
 
     public void setMucChiToiThieu(long mucChiToiThieu) {
+        if (mucChiToiThieu < 0) {
+            throw new IllegalArgumentException("MucChiToiThieu không được âm.");
+        }
         this.mucChiToiThieu = mucChiToiThieu;
     }
 
     public void setNgayKetThuc(LocalDate ngayKetThuc) {
+        if (ngayKetThuc == null) {
+            throw new IllegalArgumentException("ngayKetThuc không được null.");
+        }
         if ( ngayBatDau != null && ngayKetThuc.isBefore(ngayBatDau))
             throw new IllegalArgumentException("Ngày kết thúc không được bé hơn ngày bắt đầu!!") ;
         this.ngayKetThuc = ngayKetThuc;
     }
 
     public void setMaKhuyenMai(String maKhuyenMai) {
+        if (maKhuyenMai == null || !maKhuyenMai.matches("(?i)KM\\d+")) {
+            throw new IllegalArgumentException("MaKhuyenMai không đúng định dạng.");
+        }
         this.maKhuyenMai = maKhuyenMai;
     }
     public boolean kiemTraHetHanKhuyenMai()
     {
-        return ngayKetThuc != null && LocalDate.now().isAfter(ngayKetThuc) ;
+        return tonTai && ngayKetThuc != null && LocalDate.now().isAfter(ngayKetThuc) ;
     }
 
     public boolean dangHoatDong(LocalDate ngay) {
-        return ngay != null
+        return tonTai && ngay != null
                 && ngayBatDau != null
                 && ngayKetThuc != null
                 && !ngay.isBefore(ngayBatDau)
@@ -110,7 +128,7 @@ public abstract class Khuyenmai {
     }
     public boolean chuaHoatDong()
     {
-        return ngayBatDau != null && LocalDate.now().isBefore(ngayBatDau) ;
+        return tonTai && ngayBatDau != null && LocalDate.now().isBefore(ngayBatDau) ;
     }
     @Override
     public String toString() {

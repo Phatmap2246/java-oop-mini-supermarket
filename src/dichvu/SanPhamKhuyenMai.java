@@ -1,11 +1,15 @@
 package dichvu;
-import interfaces.TrongFile;
 import utils.Validation;
-import interfaces.IThongTin;
 
 import java.util.Scanner;
 
-public class SanPhamKhuyenMai implements IThongTin, TrongFile {
+public class SanPhamKhuyenMai {
+    private boolean tonTai = true;
+
+    public boolean isTonTai() { return tonTai; }
+
+    public void setTonTai(boolean tonTai) { this.tonTai = tonTai; }
+
     private String maSanPham , maKhuyenMai ;
     public SanPhamKhuyenMai()
     {
@@ -26,10 +30,16 @@ public class SanPhamKhuyenMai implements IThongTin, TrongFile {
     }
 
     public void setMaKhuyenMai(String maKhuyenMai) {
+        if (maKhuyenMai == null || !maKhuyenMai.matches("(?i)KM\\d+")) {
+            throw new IllegalArgumentException("MaKhuyenMai không đúng định dạng.");
+        }
         this.maKhuyenMai = maKhuyenMai;
     }
 
     public void setMaSanPham(String maSanPham) {
+        if (maSanPham == null || !maSanPham.matches("(?i)SP\\d+")) {
+            throw new IllegalArgumentException("MaSanPham không đúng định dạng.");
+        }
         this.maSanPham = maSanPham;
     }
     public void setSanPhamKhuyenMai(Scanner sc )
@@ -37,18 +47,8 @@ public class SanPhamKhuyenMai implements IThongTin, TrongFile {
         maSanPham = Validation.inputStringRegex(sc , "Nhập mã sản phẩm: " , "SP\\d{3}" , "Mã sản phẩm không đúng đi dạng vui lòng nhập lại!(ví dụ hợp lệ: SP001)", sanpham.SanPham.getSoThuTu());
         maKhuyenMai = Validation.inputStringRegex( sc , "Nhập mã khuyến mãi: " , "KM\\d{3}" , "Mã khuyến mãi không đúng định dạng vui lòng nhập lại!(ví dụ hợp lệ: KM001", dichvu.Khuyenmai.getSoThuTu());
     }
-
-    @Override
-    public void nhapThongTin(Scanner sc) {
-        setSanPhamKhuyenMai(sc);
-    }
-
     @Override
     public String toString() {
         return "Mã sản phẩm: " + maSanPham + " | Mã khuyến mãi: " + maKhuyenMai ;
-    }
-    @Override
-    public String getFilePath(){
-        return "src/luutru/SanPhamKhuyenMai.csv";
     }
 }

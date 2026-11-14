@@ -26,7 +26,10 @@ public class KhuyenMaiPhanTram extends Khuyenmai implements TrongFile {
     }
 
     public void setPhanTramGiamGia(double phanTramGiamGia) {
-        this.phanTramGiamGia = Math.clamp(phanTramGiamGia, 0, 1);
+        if (!Double.isFinite(phanTramGiamGia) || phanTramGiamGia < 0 || phanTramGiamGia > 1) {
+            throw new IllegalArgumentException("Tỷ lệ giảm giá phải từ 0 đến 1.");
+        }
+        this.phanTramGiamGia = phanTramGiamGia;
     }
 
     public double getPhanTramGiamGia() {

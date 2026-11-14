@@ -1,6 +1,8 @@
 package utils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
 import java.util.Scanner;
@@ -22,8 +24,14 @@ public class Validation {
     public static final String MaSP_REGEX = "(?i)^SP\\d{3,5}$";   
     public static final String MaHDB_REGEX = "(?i)^HDB\\d{3,5}$";
     public static final String MaHDN_REGEX = "(?i)^HDN\\d{3,5}$";
+    public static final String MaNCC_REGEX = "(?i)^NCC\\d+$";
+    public static final String MaDT_REGEX = "(?i)^(NCC)\\d+$";
+    public static final String MaKM_REGEX = "(?i)^KM\\d+$";
+    public static final String MaSoThue_REGEX = "^\\d{10}(-?\\d{3})?$";
     private static final String DATE_REGEX =
             "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/[0-9]{4}$";
+    private static final String DATE_TIME_REGEX =
+            "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/[0-9]{4} ([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$";
 
     // ================= CÁC HÀM NHẬP SỐ =================
 
@@ -71,7 +79,7 @@ public class Validation {
                 System.out.print(message);
                 double value = sc.nextDouble();
                 sc.nextLine();
-                if (value <0) {
+                if (!Double.isFinite(value) || value < 0) {
                     System.out.println("[!] Lỗi: Bạn phải nhập số thực lớn hoặc bằng 0. Vui lòng thử lại");
                     continue;
                 }
@@ -89,6 +97,10 @@ public class Validation {
                 System.out.print(message);
                 float value = sc.nextFloat();
                 sc.nextLine();
+                if (!Float.isFinite(value)) {
+                    System.out.println("[!] Số thực phải hữu hạn. Vui lòng nhập lại!");
+                    continue;
+                }
                 return value;
             } catch (Exception e) {
                 System.out.println("[!] Lỗi: Bạn phải nhập số thực (VD: 10.5). Vui lòng thử lại!");
@@ -153,6 +165,23 @@ public class Validation {
         }
     }
 
+    /** Nhập ngày giờ theo định dạng dd/MM/yyyy HH:mm:ss, yêu cầu nhập lại khi sai. */
+    public static LocalDateTime inputLocalDateTimeRegex(Scanner sc, String message) {
+        while (true) {
+            System.out.print(message);
+            String dateTime = sc.nextLine().trim();
+            if (!dateTime.matches(DATE_TIME_REGEX)) {
+                System.out.println("[!] Bạn nhập sai định dạng (dd/MM/yyyy HH:mm:ss). Vui lòng nhập lại!");
+                continue;
+            }
+            try {
+                return LocalDateTime.parse(dateTime, DateUtil.DATE_TIME_FORMATTER);
+            } catch (DateTimeParseException e) {
+                System.out.println("[!] Ngày giờ nhập không tồn tại (VD: 30/02). Vui lòng nhập lại!");
+            }
+        }
+    }
+
     // 6. Hàm nhập Có/Không (Dùng cho các câu hỏi xác nhận)
     public static boolean inputCoKhong(Scanner sc, String message) {
         while (true) {
@@ -184,6 +213,14 @@ public class Validation {
             } catch (NumberFormatException e) {
                 System.out.println("[!] Giá trị nhập phải là số nguyên!");
             }
+        }
+    }
+    public static void danghoatdong ( long giay )
+    {
+        try {
+            Thread.sleep(giay*1000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 }

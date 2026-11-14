@@ -1,92 +1,79 @@
 package hoadon;
 
-import java.util.ArrayList;
-
 import utils.Validation;
 
 import java.time.LocalDateTime;
 
 public abstract class HoaDon {
-    protected String maHoaDon;
-    protected LocalDateTime ngayLap;
-    protected String sdtDoiTac;
-    private static int demHoaDon = 0;
-    protected ArrayList<CTHoaDonBan> danhSachChiTiet;
+    private String maHoaDon;
+    private LocalDateTime ngayLap;
+    private String maNhanVien ;
+    private String loaiHoaDon ;
+    private static int soThuTu ;
     
-    public HoaDon() {
-        this.maHoaDon = "";
+    public HoaDon( String maNhanVien ) {
         this.ngayLap = LocalDateTime.now(); 
-        this.sdtDoiTac = "";
-        this.danhSachChiTiet = new ArrayList<>();
+        this.maNhanVien = maNhanVien ;
+        this.maHoaDon = Validation.taoMa("HD%03d" , soThuTu) ;
+        loaiHoaDon = "" ;
+        soThuTu++ ;
     }
 
-    public HoaDon(String maHoaDon, String sdtDoiTac) {
+    public HoaDon(String maHoaDon, LocalDateTime ngayLap , String maNhanVien , String loaiHoaDon) {
         this.maHoaDon = maHoaDon;
-        this.ngayLap = LocalDateTime.now();
-        this.sdtDoiTac = sdtDoiTac;
-        this.danhSachChiTiet = new ArrayList<>();
+        this.ngayLap = ngayLap ;
+        this.loaiHoaDon = loaiHoaDon ;
+        this.maNhanVien = maNhanVien ;
     }
-
-    //Tự động gộp số lượng nếu thêm trùng mã sản phẩm
-    public void themChiTiet(CTHoaDonBan ct){
-        for (CTHoaDonBan existing : this.danhSachChiTiet) {
-            boolean cungSanPham = existing.getMaSanPham().equalsIgnoreCase(ct.getMaSanPham()) && existing.getDonGia() == ct.getDonGia();
-            boolean cungKhongGiamGia = existing.getSoTienGiam() == 0 && ct.getSoTienGiam() == 0;
-
-            if (cungSanPham && cungKhongGiamGia){
-                int tongTangKem = existing.getSoLuongTangKem() + ct.getSoLuongTangKem();
-                existing.setSoLuongTangKem(tongTangKem);
-                existing.setSoLuong(existing.getSoLuong()+ct.getSoLuong());
-                return;
-            }
-        }
-        this.danhSachChiTiet.add(ct);
-    }
-
-    public boolean xoaChiTietMSP(String maSanPham){
-        for( int i = 0 ; i<this.danhSachChiTiet.size();i++){
-            if (danhSachChiTiet.get(i).getMaSanPham().equals(maSanPham)) {
-                danhSachChiTiet.remove(i);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static int getDemHoaDon(){ return demHoaDon; }
-    
     public abstract long tinhTongTien();
     public abstract void hienThiHoaDon();
 
     public String getMaHoaDon() { return maHoaDon; }
-    public void setMaHoaDon(String maHoaDon) { this.maHoaDon = maHoaDon; }
-    
-    public String getSDTDoiTac(){ return this.sdtDoiTac; };
-    public void setSDTDoiTac(String sdtDoiTacMoi){ this.sdtDoiTac = sdtDoiTacMoi; }
-    public ArrayList<CTHoaDonBan> getDanhSachChiTiet() { return danhSachChiTiet; }
-    public void setDanhSachChiTiet(ArrayList<CTHoaDonBan> danhSachChiTiet) { this.danhSachChiTiet = danhSachChiTiet; }
+    public void setMaHoaDon(String maHoaDon) {
+        if (maHoaDon == null || !maHoaDon.matches("(?i)HD(B|N)?\\d+")) {
+            throw new IllegalArgumentException("MaHoaDon không đúng định dạng.");
+        } this.maHoaDon = maHoaDon; }
 
     public LocalDateTime getNgayLap() {
         return ngayLap;
     }
 
     public void setNgayLap(LocalDateTime ngayLap) {
+        if (ngayLap == null) {
+            throw new IllegalArgumentException("ngayLap không được null.");
+        }
         this.ngayLap = ngayLap;
     }
 
-    public String getSdtDoiTac() {
-        return sdtDoiTac;
+    public static int getSoThuTu() {
+        return soThuTu;
     }
 
-    public void setSdtDoiTac(String sdtDoiTac) {
-        this.sdtDoiTac = sdtDoiTac;
+    public void setMaNhanVien(String maNhanVien) {
+        if (maNhanVien == null || !maNhanVien.matches(Validation.MaNV_REGEX)) {
+            throw new IllegalArgumentException("Mã nhân viên không hợp lệ.");
+        }
+        this.maNhanVien = maNhanVien;
     }
 
-    public static void setDemHoaDon(int demHoaDon) {
-        HoaDon.demHoaDon = demHoaDon;
+    public String getMaNhanVien() {
+        return maNhanVien;
     }
-    public void taoMaHoaDonBan(){
-        demHoaDon++;
-        this.maHoaDon = Validation.taoMa(Validation.MaHDB_REGEX, demHoaDon);
+
+
+    public String getLoaiHoaDon() {
+        return loaiHoaDon;
+    }
+
+    public void setLoaiHoaDon(String loaiHoaDon) {
+        if (loaiHoaDon == null || loaiHoaDon.isBlank()) {
+            throw new IllegalArgumentException("Loại hóa đơn không được rỗng.");
+        }
+        this.loaiHoaDon = loaiHoaDon;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "Mã hoá đơn: " + maHoaDon + " | Mã nhân viên:" + maNhanVien + " | Ngày lập: " + ngayLap + " | Loại hoá đơn: " + loaiHoaDon ;
     }
 }

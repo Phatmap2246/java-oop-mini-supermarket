@@ -31,6 +31,9 @@ public class YeuCau {
     }
 
     public void setMaNV(String maNV) {
+        if (maNV == null || maNV.isBlank()) {
+            throw new IllegalArgumentException("MaNV không được để trống.");
+        }
         this.maNV = maNV;
     }
 
@@ -39,6 +42,9 @@ public class YeuCau {
     }
 
     public void setVaitro(String vaitro) {
+        if (vaitro == null || vaitro.isBlank()) {
+            throw new IllegalArgumentException("Vaitro không được để trống.");
+        }
         this.vaitro = vaitro;
     }
 
@@ -47,6 +53,9 @@ public class YeuCau {
     }
 
     public void setNoiDung(String noiDung) {
+        if (noiDung == null || noiDung.isBlank()) {
+            throw new IllegalArgumentException("NoiDung không được để trống.");
+        }
         this.noiDung = noiDung;
     }
 
@@ -55,6 +64,9 @@ public class YeuCau {
     }
 
     public void setTrangThai(String trangThai) {
+        if (trangThai == null || trangThai.isBlank()) {
+            throw new IllegalArgumentException("TrangThai không được để trống.");
+        }
         this.trangThai = trangThai;
     }
 
@@ -180,6 +192,9 @@ public class YeuCau {
         }
 
         public void setTrangThai(String trangThai) {
+        if (trangThai == null || trangThai.isBlank()) {
+            throw new IllegalArgumentException("TrangThai không được để trống.");
+        }
             this.trangThai = trangThai;
         }
 

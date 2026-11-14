@@ -1,13 +1,10 @@
 package sanpham;
 
-import interfaces.TrongFile;
-import utils.DataBase;
 import utils.Validation;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
-public class DienTu extends SanPham implements TrongFile // đã sửa
+public class DienTu extends SanPham
 {
     private int thoiGianBaoHanh ;
     private String chatLieu ;
@@ -27,6 +24,9 @@ public class DienTu extends SanPham implements TrongFile // đã sửa
     }
 
     public void setThoiGianBaoHanh(int thoiGianBaoHanh) {
+        if (thoiGianBaoHanh < 0) {
+            throw new IllegalArgumentException("ThoiGianBaoHanh không được âm.");
+        }
         this.thoiGianBaoHanh = thoiGianBaoHanh;
     }
 
@@ -39,6 +39,9 @@ public class DienTu extends SanPham implements TrongFile // đã sửa
     }
 
     public void setChatLieu(String chatLieu) {
+        if (chatLieu == null || chatLieu.isBlank()) {
+            throw new IllegalArgumentException("ChatLieu không được để trống.");
+        }
         this.chatLieu = chatLieu;
     }
 
@@ -46,7 +49,7 @@ public class DienTu extends SanPham implements TrongFile // đã sửa
     {
         super.setSanPham(sc);
         System.out.println("Nhập chất liệu: ");
-        chatLieu = sc.nextLine() ;
+        chatLieu = Validation.inputStringRegex(sc, "Nhập thông tin: ", "(?s).+", "Thông tin không được để trống!");
         thoiGianBaoHanh = Validation.inputInt(sc , "Thời gian bảo hành(theo tháng): ") ;
     }
 
@@ -60,12 +63,9 @@ public class DienTu extends SanPham implements TrongFile // đã sửa
     public String toString() {
         return super.toString() + " | Chất liệu: " + chatLieu + " | Thời gian bảo hành: " + thoiGianBaoHanh ;
     }
-    @Override
-    public String getFilePath(){
-        return "src/luutru/DienTu.csv";
-    }
     public LocalDate ngayHetHanBaoHanh( LocalDate ngayMua )
     {
+        if (ngayMua == null) throw new IllegalArgumentException("Ngày mua không được null.");
         return ngayMua.plusMonths(thoiGianBaoHanh) ;
     }
     public boolean kiemTraBaoHanh ( LocalDate ngayMua)

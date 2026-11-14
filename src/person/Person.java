@@ -31,6 +31,7 @@ public abstract class Person implements IThongTin {
 
     /** Sao chép thông tin từ một đối tượng Person khác. */
     public Person(Person p) {
+        if (p == null) throw new IllegalArgumentException("Người cần sao chép không được null.");
         email = p.email;
         hoten = p.hoten;
         sdt = p.sdt;
@@ -45,9 +46,10 @@ public abstract class Person implements IThongTin {
 
     /** Cập nhật email nếu địa chỉ mới khớp định dạng quy định. */
     public void setEmail(String newEmail) {
-        if (newEmail != null && newEmail.matches(Validation.EMAIL_REGEX)) {
-            email = newEmail;
+        if (newEmail == null || newEmail.isBlank() || !newEmail.matches(Validation.EMAIL_REGEX)) {
+            throw new IllegalArgumentException("Email không hợp lệ.");
         }
+        email = newEmail;
     }
 
     /** Nhập và kiểm tra email từ Scanner. */
@@ -67,9 +69,24 @@ public abstract class Person implements IThongTin {
 
     /** Cập nhật họ tên nếu tên mới khớp định dạng quy định. */
     public void setHoten(String newhoten) {
-        if (newhoten != null && newhoten.matches(Validation.HOTEN_REGEX)) {
-            hoten = newhoten;
+        if (newhoten == null || newhoten.isBlank() || !newhoten.matches(Validation.HOTEN_REGEX)) {
+            throw new IllegalArgumentException("Hoten không hợp lệ.");
         }
+        hoten = newhoten;
+    }
+
+    public void setDiachi(DiaChi diachi) {
+        if (diachi == null) {
+            throw new IllegalArgumentException("Địa chỉ không được null.");
+        }
+        this.diachi = diachi;
+    }
+
+    public void setNgsinh(LocalDate ngsinh) {
+        if (ngsinh == null) {
+            throw new IllegalArgumentException("Ngày sinh không được null.");
+        }
+        this.ngsinh = ngsinh;
     }
 
     /** Nhập và kiểm tra họ tên từ Scanner. */
@@ -89,9 +106,10 @@ public abstract class Person implements IThongTin {
 
     /** Cập nhật số điện thoại nếu số mới khớp định dạng quy định. */
     public void setSdt(String newSdt) {
-        if (newSdt != null && newSdt.matches(Validation.PHONE_REGEX)) {
-            sdt = newSdt;
+        if (newSdt == null || newSdt.isBlank() || !newSdt.matches(Validation.PHONE_REGEX)) {
+            throw new IllegalArgumentException("Sdt không hợp lệ.");
         }
+        sdt = newSdt;
     }
 
     /** Nhập và kiểm tra số điện thoại từ Scanner. */
@@ -105,7 +123,7 @@ public abstract class Person implements IThongTin {
     }
     /** Trả về địa chỉ dưới dạng chuỗi. */
     public String getDiachi() {
-        return diachi.toString();
+        return diachi == null ? "" : diachi.toString();
     }
 
     /** Trả về đối tượng địa chỉ để lưu hoặc xử lý từng thành phần. */
@@ -115,6 +133,7 @@ public abstract class Person implements IThongTin {
 
     /** Nhập các thành phần địa chỉ từ Scanner. */
     public void setDiachi(Scanner sc) {
+        if (diachi == null) diachi = new DiaChi();
         diachi.nhapDiaChi(sc);
     }
 
@@ -125,6 +144,9 @@ public abstract class Person implements IThongTin {
 
     /** Cập nhật ngày sinh nếu chuỗi có định dạng ngày hợp lệ. */
     public void setNgsinh(String newNgsinh) {
+        if (!DateUtil.isValidDate(newNgsinh)) {
+            throw new IllegalArgumentException("Ngày sinh không hợp lệ.");
+        }
         if (DateUtil.isValidDate(newNgsinh)) {
             ngsinh = DateUtil.parseDate(newNgsinh);
         }

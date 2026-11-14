@@ -48,6 +48,9 @@ public class DiaChi implements IThongTin, TrongFile {
 
     /** Cập nhật số nhà. */
     public void setSoNha(String soNha) {
+        if (soNha == null || soNha.isBlank()) {
+            throw new IllegalArgumentException("SoNha không được để trống.");
+        }
         this.soNha = soNha;
     }
 
@@ -58,6 +61,9 @@ public class DiaChi implements IThongTin, TrongFile {
 
     /** Cập nhật tên đường. */
     public void setDuong(String duong) {
+        if (duong == null || duong.isBlank()) {
+            throw new IllegalArgumentException("Duong không được để trống.");
+        }
         this.duong = duong;
     }
 
@@ -68,6 +74,9 @@ public class DiaChi implements IThongTin, TrongFile {
 
     /** Cập nhật phường hoặc xã. */
     public void setPhuongXa(String phuongXa) {
+        if (phuongXa == null || phuongXa.isBlank()) {
+            throw new IllegalArgumentException("PhuongXa không được để trống.");
+        }
         this.phuongXa = phuongXa;
     }
 
@@ -78,6 +87,9 @@ public class DiaChi implements IThongTin, TrongFile {
 
     /** Cập nhật quận hoặc huyện. */
     public void setQuanHuyen(String quanHuyen) {
+        if (quanHuyen == null || quanHuyen.isBlank()) {
+            throw new IllegalArgumentException("QuanHuyen không được để trống.");
+        }
         this.quanHuyen = quanHuyen;
     }
 
@@ -88,6 +100,9 @@ public class DiaChi implements IThongTin, TrongFile {
 
     /** Cập nhật tỉnh hoặc thành phố. */
     public void setTinhThanhPho(String tinhThanhPho) {
+        if (tinhThanhPho == null || tinhThanhPho.isBlank()) {
+            throw new IllegalArgumentException("TinhThanhPho không được để trống.");
+        }
         this.tinhThanhPho = tinhThanhPho;
     }
 
