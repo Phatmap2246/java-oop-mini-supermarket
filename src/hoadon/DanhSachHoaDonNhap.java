@@ -520,7 +520,7 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
         for ( HoaDonNhapHang hdn: dsHoaDonNhapHang )
         {
             if (hdn == null) continue;
-            if ( hdn.getNgayLap() != null && !hdn.getNgayLap().isAfter(thoiGianBatDau) && !hdn.getNgayLap().isBefore(thoiGianKetThuc))
+            if ( hdn.getNgayLap() != null && !hdn.getNgayLap().isAfter(thoiGianKetThuc) && !hdn.getNgayLap().isBefore(thoiGianBatDau))
             {
                 hdn.hienThiHoaDon();
             }
@@ -632,12 +632,7 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
                             }
                             System.out.println("Đang tra cứu...");
                             Validation.danghoatdong(1);
-                            for (HoaDonNhapHang hdn : dsHoaDonNhapHang) {
-                                if (hdn != null && (hdn.getNgayLap() != null && !hdn.getNgayLap().toLocalDate().isBefore(tu) && !hdn.getNgayLap().toLocalDate().isAfter(den))) {
-                                    hdn.hienThiHoaDon();
-                                    flag = true;
-                                }
-                            }
+                            traCuuHoaDonTrenKhoangThoiGian( tu , den );
                             break;
                         }
                         case 2: {
@@ -650,12 +645,7 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
                             }
                             System.out.println("Đang tra cứu...");
                             Validation.danghoatdong(1);
-                            for (HoaDonNhapHang hdn : dsHoaDonNhapHang) {
-                                if (hdn != null && (hdn.getNgayLap() != null && hdn.getNgayLap().toLocalDate().equals(ngay) && hdn.getNgayLap().getHour() >= tu && hdn.getNgayLap().getHour() <= den)) {
-                                    hdn.hienThiHoaDon();
-                                    flag = true;
-                                }
-                            }
+                            traCuuHoaDonTrenKhoangThoiGian(tu , den , ngay);
                             break;
                         }
                         case 3: {
@@ -667,12 +657,7 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
                             }
                             System.out.println("Đang tra cứu...");
                             Validation.danghoatdong(1);
-                            for (HoaDonNhapHang hdn : dsHoaDonNhapHang) {
-                                if (hdn != null && (hdn.getNgayLap() != null && !hdn.getNgayLap().isBefore(tu) && !hdn.getNgayLap().isAfter(den))) {
-                                    hdn.hienThiHoaDon();
-                                    flag = true;
-                                }
-                            }
+                            traCuuHoaDonTrenKhoangThoiGian(tu , den );
                             break;
                         }
                         default:
