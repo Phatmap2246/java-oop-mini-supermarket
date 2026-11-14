@@ -6,6 +6,10 @@ import java.util.Scanner;
 
 import hoadon.HoaDon;
 import hoadon.HoaDonBanHang;
+import hoadon.DanhSachHoaDonBan;
+import hoadon.DanhSachHoaDonNhap;
+import hoadon.DanhSachCongNo;
+import dichvu.Danhsachdoitac;
 import utils.DateUtil;
 import utils.Validation;
 
@@ -15,7 +19,7 @@ public class KeToan extends NhanVien {
 
     public KeToan() {
         super();
-        this.vaitro = "KeToan";
+        super.setVaiTro("KeToan");
     }
 
     public KeToan(String email, String hoten, String sdt, DiaChi diachi, LocalDate ngsinh,
@@ -30,6 +34,50 @@ public class KeToan extends NhanVien {
     @Override
     public String getVaiTro() {
         return "KeToan";
+    }
+
+    public void thucHienNghiepVu(Scanner sc, DanhSachHoaDonBan dsHoaDonBan,
+            DanhSachHoaDonNhap dsHoaDonNhap, Danhsachdoitac dsDoiTac, DanhSachCongNo dsCongNo) {
+        dsCongNo.cauHinh(dsHoaDonNhap, dsDoiTac);
+        while (true) {
+            System.out.println("\n=== NGHIỆP VỤ KẾ TOÁN ===");
+            System.out.println("1. Thống kê tài chính theo khoảng ngày");
+            System.out.println("2. Đối chiếu và ghi nhận công nợ");
+            System.out.println("3. Xem và thanh toán công nợ");
+            System.out.println("4. Thống kê công nợ");
+            System.out.println("0. Trở về trang chủ");
+            int chon = Validation.luaChon(sc, "Chọn chức năng: ", 0, 4);
+            switch (chon) {
+                case 0:
+                    return;
+                case 1:
+                    LocalDate batDau = Validation.inputLocalDateRegex(sc, "Ngày bắt đầu (dd/MM/yyyy): ");
+                    LocalDate ketThuc = Validation.inputLocalDateRegex(sc, "Ngày kết thúc (dd/MM/yyyy): ");
+                    if (ketThuc.isBefore(batDau)) {
+                        System.out.println("Ngày kết thúc phải từ ngày bắt đầu trở đi.");
+                        break;
+                    }
+                    ArrayList<HoaDon> hoaDons = new ArrayList<>();
+                    hoaDons.addAll(dsHoaDonBan.getDsHoaDonBanHang());
+                    hoaDons.addAll(dsHoaDonNhap.getDsHoaDonNhapHang());
+                    System.out.printf("Doanh thu: %,d VND%nChi phí nhập hàng: %,d VND%n"
+                                    + "Lợi nhuận: %,d VND%nLợi nhuận ròng: %,d VND%n",
+                            tinhTongDoanhThu(hoaDons, batDau, ketThuc),
+                            tinhTongChiPhi(hoaDons, batDau, ketThuc),
+                            tinhLoiNhuan(hoaDons, batDau, ketThuc),
+                            tinhLoiNhuanRong(hoaDons, batDau, ketThuc));
+                    break;
+                case 2:
+                    dsCongNo.them(sc);
+                    break;
+                case 3:
+                    dsCongNo.hienThiVaThanhToanCongNo(sc);
+                    break;
+                case 4:
+                    dsCongNo.xuatDanhSach();
+                    break;
+            }
+        }
     }
 
     // ==================== 1. NHÓM HÀM TÍNH TOÁN TÀI CHÍNH ====================
@@ -150,7 +198,6 @@ public class KeToan extends NhanVien {
             System.out.printf("%d. HĐ: %s | Đối tác: %s | Tiền: %,d VND | Hạn: %s | [%s]%n",
                     i + 1,
                     hd.getMaHoaDon(),
-                    hd.getTenDoiTac(),
                     hd.tinhTongTien(),
                     DateUtil.formatDate(han),
                     trangThai);
@@ -164,7 +211,6 @@ public class KeToan extends NhanVien {
             System.out.printf("%d. HĐ: %s - %s (%,d VND - Hạn: %s)%n",
                     i + 1,
                     hd.getMaHoaDon(),
-                    hd.getTenDoiTac(),
                     hd.tinhTongTien(),
                     DateUtil.formatDate(tinhNgayDenHan(hd)));
         }

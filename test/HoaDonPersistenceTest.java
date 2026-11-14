@@ -31,7 +31,7 @@ public class HoaDonPersistenceTest {
 
         DanhSachHoaDonBan loaded = new DanhSachHoaDonBan();
         loaded.docFileText(fileBan.toString());
-        HoaDonBanHang loadedHd = loaded.timKiemHoaDonBanHang("HD001");
+        HoaDonBanHang loadedHd = loaded.timMa("HD001");
         check(loadedHd != null, "đọc lại được hóa đơn HD001");
         equal("0901234567", loadedHd.getSdtDoiTac(), "số điện thoại khách round-trip");
         equal(1, loadedHd.getDanhSachChiTiet().size(), "số dòng chi tiết round-trip");

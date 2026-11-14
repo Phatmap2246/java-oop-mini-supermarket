@@ -22,7 +22,61 @@ import person.KhachHang;
 import sanpham.QuanLySanPham;
 import utils.Validation;
 
-public class DanhSachHoaDonBan {
+public class DanhSachHoaDonBan implements interfaces.IQuanLy<HoaDonBanHang> {
+    private transient DanhSachSPKM nguonSPKM;
+    private transient Danhsachkhuyenmai nguonKhuyenMai;
+    private transient QuanLySanPham nguonSanPham;
+    private transient DSKhachHang nguonKhachHang;
+    private transient String maNhanVienNhap;
+
+    public void cauHinh(DanhSachSPKM spkm, Danhsachkhuyenmai km, QuanLySanPham sp, DSKhachHang kh, String maNV) {
+        nguonSPKM = spkm; nguonKhuyenMai = km; nguonSanPham = sp; nguonKhachHang = kh; maNhanVienNhap = maNV;
+    }
+
+    private void kiemTraNguon() {
+        if (nguonSPKM == null || nguonKhuyenMai == null || nguonSanPham == null
+                || nguonKhachHang == null || maNhanVienNhap == null) {
+            throw new IllegalStateException("Cần gọi cauHinh để nối dữ liệu lập hóa đơn bán.");
+        }
+    }
+
+    @Override public void taoDanhSach(Scanner sc) {
+        kiemTraNguon(); taoDanhSach(sc, nguonSPKM, nguonKhuyenMai, nguonSanPham, nguonKhachHang, maNhanVienNhap);
+    }
+    @Override public void them(Scanner sc) {
+        kiemTraNguon(); them(sc, nguonSPKM, nguonKhuyenMai, nguonSanPham, nguonKhachHang, maNhanVienNhap);
+    }
+    @Override public boolean sua(String ma, Scanner sc) {
+        HoaDonBanHang hd = timMa(ma);
+        if (hd == null || hd.isDaThanhToan()) return false;
+        kiemTraNguon(); return sua(sc, ma, nguonSPKM, nguonKhuyenMai, nguonSanPham, nguonKhachHang, maNhanVienNhap);
+    }
+    @Override public boolean xoa(String ma) {
+        HoaDonBanHang hd = timMa(ma);
+        if (hd == null || hd.isDaThanhToan()) return false;
+        return dsHoaDonBanHang.remove(hd);
+    }
+    @Override public HoaDonBanHang timTen(String ten) {
+        if (ten == null || ten.isBlank()) return null;
+        String khoa = ten.trim().toLowerCase(java.util.Locale.ROOT);
+        for (HoaDonBanHang hd : dsHoaDonBanHang) {
+            if (hd == null) continue;
+            KhachHang kh = nguonKhachHang == null ? null : nguonKhachHang.timMa(hd.getMaKhachHang());
+            if (kh != null && kh.getHoten() != null && kh.getHoten().toLowerCase(java.util.Locale.ROOT).contains(khoa)) return hd;
+            for (CTHoaDonBan ct : hd.getCtHoaDonBans()) {
+                if (ct != null && ct.getTenSanPham() != null && ct.getTenSanPham().toLowerCase(java.util.Locale.ROOT).contains(khoa)) return hd;
+            }
+        }
+        return null;
+    }
+    @Override public HoaDonBanHang timKhoa(String khoa) {
+        if (khoa == null || khoa.isBlank()) return null;
+        for (HoaDonBanHang hd : dsHoaDonBanHang) {
+            if (hd != null && hd.toString().toLowerCase(java.util.Locale.ROOT)
+                    .contains(khoa.trim().toLowerCase(java.util.Locale.ROOT))) return hd;
+        }
+        return timTen(khoa);
+    }
     private ArrayList<HoaDonBanHang> dsHoaDonBanHang;
 
     public DanhSachHoaDonBan() {
@@ -37,16 +91,17 @@ public class DanhSachHoaDonBan {
     public ArrayList<HoaDonBanHang> getDsHoaDonBanHang() {
         return dsHoaDonBanHang;
     }
-    public void taoDuLieuHoaDonBan( Scanner sc, DanhSachSPKM danhSachSPKM, Danhsachkhuyenmai danhSachKhuyenMai, QuanLySanPham qlsp , DSKhachHang dskh, String maNhanVien )
+    public void taoDanhSach( Scanner sc, DanhSachSPKM danhSachSPKM, Danhsachkhuyenmai danhSachKhuyenMai, QuanLySanPham qlsp , DSKhachHang dskh, String maNhanVien )
     {
         System.out.println("Tạo dữ liệu hoá đơn nhập!");
         do {
-            themHoaDonBan(sc,danhSachSPKM , danhSachKhuyenMai , qlsp , dskh , maNhanVien);
+            them(sc,danhSachSPKM , danhSachKhuyenMai , qlsp , dskh , maNhanVien);
         } while (Validation.inputCoKhong(sc, "Bạn có muốn tiếp tục(Có/Không): "));
         System.out.println("Tạo dữ liệu hoá đơn bán hàng thành công!");
     }
 
-    public void hienThiDanhSachHoaDonBan(){
+    @Override
+    public void xuatDanhSach(){
         if (dsHoaDonBanHang.isEmpty()) {
             System.out.println("Danh sách hóa đơn đang trống !");
             return;
@@ -58,11 +113,11 @@ public class DanhSachHoaDonBan {
             hdb.hienThiHoaDon();
         }
     }
-    public void themHoaDonBan(Scanner sc, DanhSachSPKM danhSachSPKM, Danhsachkhuyenmai danhSachKhuyenMai, QuanLySanPham qlsp , DSKhachHang dskh, String maNhanVien)
+    public void them(Scanner sc, DanhSachSPKM danhSachSPKM, Danhsachkhuyenmai danhSachKhuyenMai, QuanLySanPham qlsp , DSKhachHang dskh, String maNhanVien)
     {
         System.out.println("Nhập hoá đơn bán!");
         HoaDonBanHang hdb = new HoaDonBanHang(maNhanVien);
-        hdb.nhapHoaDon(sc, qlsp , danhSachSPKM, danhSachKhuyenMai ,  dskh ) ;
+        if (!hdb.nhapHoaDon(sc, qlsp , danhSachSPKM, danhSachKhuyenMai , dskh)) return;
         dsHoaDonBanHang.add(hdb);
         System.out.println("Thêm hóa đơn "+hdb.getMaHoaDon()+" Thành công!");
     }
@@ -71,7 +126,7 @@ public class DanhSachHoaDonBan {
         System.out.println("Tạo " + k + " Hoá đơn bán hàng!");
         for ( int i = 0 ; i < k ; i++ )
         {
-            themHoaDonBan(sc,danhSachSPKM , danhSachKhuyenMai , qlsp , dskh , maNhanVien);
+            them(sc,danhSachSPKM , danhSachKhuyenMai , qlsp , dskh , maNhanVien);
         }
         System.out.println("Thêm " + k + " hoá đơn bán thành công!");
     }
@@ -83,17 +138,17 @@ public class DanhSachHoaDonBan {
         dsHoaDonBanHang.add(hdbh) ;
         System.out.println("Thêm hoá đơn bán hàng thành công!");
     }
-    public void suaHoaDon(Scanner sc, String maHoaDon, DanhSachSPKM danhSachSPKM,
+    public boolean sua(Scanner sc, String maHoaDon, DanhSachSPKM danhSachSPKM,
             Danhsachkhuyenmai danhSachKhuyenMai, QuanLySanPham qlsp, DSKhachHang dskh, String maNhanVien)
     {
-        HoaDonBanHang hd = timKiemHoaDonBanHang(maHoaDon);
+        HoaDonBanHang hd = timMa(maHoaDon);
         if (hd == null) {
             System.out.println("Mã hoá đơn không tồn tại!");
-            return;
+            return false;
         }
         if (hd.isDaThanhToan()) {
             System.out.println("Hoá đơn đã thanh toán nên không thể chỉnh sửa thuộc tính!");
-            return;
+            return false;
         }
         System.out.println("Nhập thuộc tính của hoá đơn cần sửa: ");
             System.out.println("1. Sửa mã khách hàng!");
@@ -103,7 +158,7 @@ public class DanhSachHoaDonBan {
             {
                 case 1:
                     hd.setMaKhachHang(Validation.inputStringRegex(sc , "Nhập mã khách hàng mới: " , Validation.MaKH_REGEX, "Mã khách hàng đang nhập sai định dạng vui lòng nhập lại!(VD:KH001)" , KhachHang.getSoThuTu()));
-                    while (dskh.timKiemKH(hd.getMaKhachHang()) == null || !dskh.timKiemKH(hd.getMaKhachHang()).isTonTai())
+                    while (dskh.timMa(hd.getMaKhachHang()) == null || !dskh.timMa(hd.getMaKhachHang()).isTonTai())
                     {
                         System.out.println("Khách hàng không tồn tại vui lòng nhập lại mã khách hàng!");
                         hd.setMaKhachHang(Validation.inputStringRegex(sc , "Nhập mã khách hàng mới: " , Validation.MaKH_REGEX, "Mã khách hàng đang nhập sai định dạng vui lòng nhập lại!(VD:KH001)" , KhachHang.getSoThuTu()));
@@ -117,7 +172,7 @@ public class DanhSachHoaDonBan {
                     int luachon = Validation.luaChon(sc, "Nhập lựa chọn: ", 1, 3);
                     if (luachon != 1 && hd.getCtHoaDonBans().isEmpty()) {
                         System.out.println("Chi tiết hoá đơn bán đang trống!");
-                        break;
+                        return false;
                     }
                     switch (luachon) {
                         case 1:
@@ -149,8 +204,9 @@ public class DanhSachHoaDonBan {
                     break;
                 default:
                     System.out.println("Lựa chọn không hợp lệ!");
-                    break;
+                    return false;
             }
+        return true;
     }
 
     public void chinhSuaHoaDonChuaThanhToan(Scanner sc, DanhSachSPKM danhSachSPKM,
@@ -174,9 +230,12 @@ public class DanhSachHoaDonBan {
             return;
         }
         String ma = Validation.inputStringRegex(sc , "Nhập mã hoá đơn cần chỉnh sửa: " , HoaDonBanHang.MA_HD_BAN_REGEX , "Mã hoá đơn không đung định dạng vui lòng nhập lại!(VD:HD001)" , HoaDonBanHang.getSoThuTu() ) ;
-        suaHoaDon(sc , ma , danhSachSPKM , danhSachKhuyenMai , qlsp , dskh , maNhanVien);
+        sua(sc , ma , danhSachSPKM , danhSachKhuyenMai , qlsp , dskh , maNhanVien);
     }
-    public HoaDonBanHang timKiemHoaDonBanHang(String maHD){
+    @Override
+    public HoaDonBanHang timMa(String maHD){
+        if (maHD == null || maHD.isBlank()) return null;
+        maHD = maHD.trim();
         if (dsHoaDonBanHang.isEmpty()) {
             System.out.println("Danh sách hóa đơn đang trống !");
             return null;
@@ -190,7 +249,10 @@ public class DanhSachHoaDonBan {
         System.out.println("Không tìm thấy hóa đơn phù hợp!");
         return null;
     }
-    public int timKiemHoaDonBanHangViTri(String maHD){
+    @Override
+    public int timViTri(String maHD){
+        if (maHD == null || maHD.isBlank()) return -1;
+        maHD = maHD.trim();
         if (dsHoaDonBanHang.isEmpty()) {
             System.out.println("Danh sách hóa đơn đang trống !");
             return -1;
@@ -251,7 +313,7 @@ public class DanhSachHoaDonBan {
         }
     }
 
-    public void timKiemTheoNhieuKhoa(Scanner sc) {
+    public void timKhoa(Scanner sc) {
         while (true) {
             System.out.println("================ TÌM KIẾM HÓA ĐƠN BÁN ================");
             System.out.println("1. Mã hóa đơn");
@@ -387,7 +449,7 @@ public class DanhSachHoaDonBan {
 
     public void timKiemHoaDon( String maHoaDon )
     {
-        HoaDonBanHang hdb = timKiemHoaDonBanHang(maHoaDon) ;
+        HoaDonBanHang hdb = timMa(maHoaDon) ;
         if ( hdb == null )
         {
             System.out.println("Hoá đơn không tồn tại!");
@@ -502,11 +564,11 @@ public class DanhSachHoaDonBan {
             switch (luaChon)
             {
                 case 1: {
-                    hienThiDanhSachHoaDonBan();
+                    xuatDanhSach();
                     break;
                 }
                 case 2: {
-                    timKiemTheoNhieuKhoa(sc);
+                    timKhoa(sc);
                     break;
                 }
                 case 3: {
@@ -565,7 +627,7 @@ public class DanhSachHoaDonBan {
                     String loai = parts[0];
 
                     if (loai.equals("BAN") && parts.length == 4) {
-                        if (timKiemHoaDonBanHang(parts[1]) == null) {
+                        if (timMa(parts[1]) == null) {
                             hdbHienTai = new HoaDonBanHang(parts[1], LocalDateTime.now(), "", "Hoá đơn bán", null, Boolean.parseBoolean(parts[3]), 0);
                             hdbHienTai.setMaKhachHang(parts[2]);
                             hdbHienTai.setCtHoaDonBans(new ArrayList<>());
@@ -591,12 +653,12 @@ public class DanhSachHoaDonBan {
 
     public boolean ghiLichSuCa(String maNhanVien) throws IOException
     {
-        File f = new File("hoadon.LichSuHoaDon");
-        if (!f.exists()) {
-            System.out.println("[!] Không tìm thấy file lịch sử hóa đơn.");
-            return false;
-        }
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(f))) {
+        File f = new File(utils.DuongDanLuuTru.file("LichSuCa.txt"));
+        java.nio.file.Files.createDirectories(f.toPath().getParent());
+        // Tự tạo file và ghi nối tiếp để không mất lịch sử các ca trước.
+        try (BufferedWriter bw = java.nio.file.Files.newBufferedWriter(f.toPath(),
+                java.nio.charset.StandardCharsets.UTF_8,
+                java.nio.file.StandardOpenOption.CREATE, java.nio.file.StandardOpenOption.APPEND)) {
             for (int i = 0; i < dsHoaDonBanHang.size(); i++) {
                 HoaDonBanHang hdb = dsHoaDonBanHang.get(i);
                 if (hdb == null) continue;

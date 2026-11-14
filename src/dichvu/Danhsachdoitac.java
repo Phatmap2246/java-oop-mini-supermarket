@@ -6,7 +6,26 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import utils.Validation;
 
-public class Danhsachdoitac {
+public class Danhsachdoitac implements interfaces.IQuanLy<Doitac> {
+    @Override
+    public Doitac timTen(String ten) {
+        if (ten == null || ten.isBlank()) return null;
+        for (Doitac dt : danhSachDoiTac) {
+            if (dt != null && dt.isTonTai() && dt.getTenDoiTac() != null
+                    && dt.getTenDoiTac().toLowerCase(Locale.ROOT).contains(ten.trim().toLowerCase(Locale.ROOT))) return dt;
+        }
+        return null;
+    }
+
+    @Override
+    public Doitac timKhoa(String khoa) {
+        if (khoa == null || khoa.isBlank()) return null;
+        for (Doitac dt : danhSachDoiTac) {
+            if (dt != null && dt.isTonTai()
+                    && dt.toString().toLowerCase(Locale.ROOT).contains(khoa.trim().toLowerCase(Locale.ROOT))) return dt;
+        }
+        return null;
+    }
     private ArrayList<Doitac> danhSachDoiTac ;
     public Danhsachdoitac()
     {
@@ -31,15 +50,17 @@ public class Danhsachdoitac {
 
         this.danhSachDoiTac = danhSachDoiTac;
     }
-    public void taoDuLieuDoiTac(Scanner sc)
+    @Override
+    public void taoDanhSach(Scanner sc)
     {
         System.out.println("Tạo danh sách đối tác!");
         do {
-            themDoiTac(sc);}
+            them(sc);}
         while (Validation.luaChon(sc, "Bạn có muốn tiếp tục thêm đối tác(1/0): ", 0, 1) == 1);
         System.out.println("Tạo dữ liệu đối tác thành công!");
     }
-    public void inDanhSachDoiTac()
+    @Override
+    public void xuatDanhSach()
     {
         System.out.println("Danh sách đối tác!");
         System.out.println("Đang tải danh sách...");
@@ -56,11 +77,8 @@ public class Danhsachdoitac {
             if (doiTac instanceof Nhacungcap && doiTac.isTonTai()) System.out.println(doiTac);
     }
 
-    public void themDoiTac(Scanner sc) {
-        themNhaCungCap(sc);
-    }
-
-    public void themNhaCungCap(Scanner sc)
+    @Override
+    public void them(Scanner sc)
     {
         Nhacungcap nhaCungCap = new Nhacungcap();
         nhaCungCap.setDoiTac(sc);
@@ -73,19 +91,20 @@ public class Danhsachdoitac {
         System.out.println("Thêm hợp tác với " + k + " đối tác!");
         for ( int i = 0 ; i < k ; i++ )
         {
-            themDoiTac(sc);
+            them(sc);
         }
         System.out.println("Thêm " + k + " đối tác thành công!");
     }
-    public void suaThongTinDoiTac(String maDoiTac, Scanner sc)
+    @Override
+    public boolean sua(String maDoiTac, Scanner sc)
     {
         try {
 
-            int index = traCuuThongTinDoiTac(maDoiTac);
+            int index = timViTri(maDoiTac);
             if (index == -1)
             {
                 System.out.println("Mã đối tác không tồn tại!");
-                return;
+                return false;
             }
             Doitac doiTac = danhSachDoiTac.get(index);
             System.out.println("Chọn thông tin cần sửa:");
@@ -139,23 +158,30 @@ public class Danhsachdoitac {
 
             }
             System.out.println("Sửa thông tin đối tác thành công!");
+            return true;
         } catch (IllegalArgumentException e) {
             System.out.println("[!] " + e.getMessage());
+            return false;
         }
     }
-    public void xoaDoiTac(String maDoiTac)
+    @Override
+    public boolean xoa(String maDoiTac)
     {
-        int index = traCuuThongTinDoiTac(maDoiTac);
+        int index = timViTri(maDoiTac);
         if (index == -1)
         {
             System.out.println("Mã đối tác không tồn tại!");
-            return;
+            return false;
         }
         danhSachDoiTac.get(index).setTonTai(false);
         System.out.println("Xoá đối tác thành công!");
+        return true;
     }
-    public int traCuuThongTinDoiTac(String maDoiTac)
+    @Override
+    public int timViTri(String maDoiTac)
     {
+        if (maDoiTac == null || maDoiTac.isBlank()) return -1;
+        maDoiTac = maDoiTac.trim();
         for (int i = 0; i < danhSachDoiTac.size(); i++)
             if (danhSachDoiTac.get(i) != null && danhSachDoiTac.get(i).isTonTai() && (maDoiTac != null && maDoiTac.equalsIgnoreCase(danhSachDoiTac.get(i).getMaDoiTac()))) return i;
         System.out.println("Không tìm thấy đối tác hoặc đối tác đã bị xóa!");
@@ -163,7 +189,7 @@ public class Danhsachdoitac {
     }
     public void timKiemDoiTac(String maDoiTac)
     {
-        int index = traCuuThongTinDoiTac(maDoiTac);
+        int index = timViTri(maDoiTac);
         if (index == -1)
         {
             System.out.println("Mã đối tác không tồn tại!");
@@ -174,7 +200,7 @@ public class Danhsachdoitac {
         System.out.println(danhSachDoiTac.get(index));
     }
 
-    public void timKiemTheoNhieuKhoa(Scanner sc) {
+    public void timKhoa(Scanner sc) {
         while (true) {
             System.out.println("================ TÌM KIẾM ĐỐI TÁC ================");
             System.out.println("1. Mã đối tác");
@@ -280,9 +306,10 @@ public class Danhsachdoitac {
         }
     }
 
-    public Doitac traCuuDoiTac(String maDoiTac)
+    @Override
+    public Doitac timMa(String maDoiTac)
     {
-        int index = traCuuThongTinDoiTac(maDoiTac);
+        int index = timViTri(maDoiTac);
         if (index == -1) return null;
         return danhSachDoiTac.get(index);
     }
@@ -297,7 +324,7 @@ public class Danhsachdoitac {
     }
     public void kiemTraTrung(Scanner sc, Doitac doiTac)
     {
-        while (traCuuThongTinDoiTac(doiTac.getMaDoiTac()) != -1)
+        while (timViTri(doiTac.getMaDoiTac()) != -1)
         {
             System.out.println("Mã đối tác đã tồn tại vui lòng nhập mã mới!");
             doiTac.setMaDoiTac(Validation.inputStringRegex(sc, "Nhập mã đối tác: ",
@@ -322,15 +349,15 @@ public class Danhsachdoitac {
             switch (luaChon)
             {
                 case 1: {
-                    taoDuLieuDoiTac(sc);
+                    taoDanhSach(sc);
                     break;
                 }
                 case 2: {
-                    inDanhSachDoiTac();
+                    xuatDanhSach();
                     break;
                 }
                 case 3: {
-                    themDoiTac(sc);
+                    them(sc);
                     break;
                 }
                 case 4: {
@@ -340,16 +367,16 @@ public class Danhsachdoitac {
                 }
                 case 5: {
                     String ma = Validation.inputStringRegex(sc, "Nhập mã đối tác: ", Validation.MaDT_REGEX, "Mã đối tác không đúng định dạng!");
-                    suaThongTinDoiTac(ma, sc);
+                    sua(ma, sc);
                     break;
                 }
                 case 6: {
                     String ma = Validation.inputStringRegex(sc, "Nhập mã đối tác: ", Validation.MaDT_REGEX, "Mã đối tác không đúng định dạng!");
-                    xoaDoiTac(ma);
+                    xoa(ma);
                     break;
                 }
                 case 7: {
-                    timKiemTheoNhieuKhoa(sc);
+                    timKhoa(sc);
                     break;
                 }
                 case 0:

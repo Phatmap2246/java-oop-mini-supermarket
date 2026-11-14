@@ -15,6 +15,9 @@ public class ThanhToanChuyenKhoan implements IThanhToan, TrongFile {
     private String soTaiKhoan;
     private String maGiaoDich;
     private String noiDungQR;
+    public ThanhToanChuyenKhoan() {
+        this("", "");
+    }
 
     public ThanhToanChuyenKhoan(String tenNganHang, String soTaiKhoan) {
         this.tenNganHang = tenNganHang;
@@ -34,11 +37,11 @@ public class ThanhToanChuyenKhoan implements IThanhToan, TrongFile {
         System.out.println("\n[Hệ thống] Đang tạo mã QR thanh toán...");
         
         // Tự động tạo thư mục QR
-        File dir = new File("QR");
+        File dir = new File(utils.DuongDanLuuTru.file("QR"));
         if (!dir.exists()) dir.mkdirs();
         
         try {
-            String duongDanAnh = "QR/QR_" + this.maGiaoDich + ".png";
+            String duongDanAnh = utils.DuongDanLuuTru.file("QR/QR_" + this.maGiaoDich + ".png");
             boolean thanhCong = QRCodeGenerator.taoAnhQR(this.noiDungQR, duongDanAnh);
             if (thanhCong) {
                 System.out.println("[Hệ thống] Đã tạo file ảnh QR tại: " + duongDanAnh);
@@ -61,7 +64,7 @@ public class ThanhToanChuyenKhoan implements IThanhToan, TrongFile {
         
         // 2. Tự động bật file ảnh lên màn hình cho ngầu
         try {
-            File qrFile = new File("QR/QR_" + this.maGiaoDich + ".png");
+            File qrFile = new File(utils.DuongDanLuuTru.file("QR/QR_" + this.maGiaoDich + ".png"));
             if (qrFile.exists() && Desktop.isDesktopSupported()) {
                 Desktop.getDesktop().open(qrFile);
                 System.out.println("[Hệ thống] Đã tự động mở file ảnh QR trên màn hình.");
@@ -90,7 +93,7 @@ public class ThanhToanChuyenKhoan implements IThanhToan, TrongFile {
     }
     @Override
     public String getFilePath(){
-        return "src/luutru/ThanhToanChuyenKhoan.csv";
+        return utils.DuongDanLuuTru.file("ThanhToanChuyenKhoan.csv");
     }
 
     // Hàm vẽ QR bằng ký tự vuông (Không dùng màu, hiển thị tốt trên VS Code)

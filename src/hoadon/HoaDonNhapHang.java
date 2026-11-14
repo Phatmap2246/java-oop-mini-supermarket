@@ -24,6 +24,9 @@ public class HoaDonNhapHang extends HoaDon {
     public static final String MA_NCC_REGEX = "^NCC\\d+$";    
 
     // Constructors
+    public HoaDonNhapHang() {
+        this("");
+    }
     public HoaDonNhapHang( String maNhanVien) {
         super(maNhanVien);
         this.maNhaCungCap = "";
@@ -70,7 +73,7 @@ public class HoaDonNhapHang extends HoaDon {
     // Nhập hóa đơn nhập hàng
     public void nhapHoaDon(Scanner sc , QuanLySanPham qlsp , Danhsachdoitac dsdt ){
         this.maNhaCungCap = Validation.inputStringRegex(sc , "Nhập mã nhà cung cấp: " , "NCC\\%d03" , "Mã nhà cung cấp đang nhập sai định dạng vui lòng nhập lại!(VD:NCC001): " , Nhacungcap.getSoThuTuNCC()) ;
-        while (dsdt.traCuuThongTinDoiTac(maNhaCungCap) == -1)
+        while (dsdt.timViTri(maNhaCungCap) == -1)
         {
             this.maNhaCungCap = Validation.inputStringRegex(sc , "Nhập mã nhà cung cấp: " , "NCC\\%d03" , "Mã nhà cung cấp đang nhập sai định dạng vui lòng nhập lại!(VD:NCC001): " , Nhacungcap.getSoThuTuNCC()) ;
             System.out.println("Mã nhà cung cấp không tồn tại vui lòng nhập lại!");

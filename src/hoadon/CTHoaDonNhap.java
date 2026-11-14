@@ -11,12 +11,12 @@ public class CTHoaDonNhap extends CTHoaDon {
    public void nhapThongTin (Scanner sc , QuanLySanPham qlsp )
    {
        super.setMaSanpham(Validation.inputStringRegex(sc , "Nhập mã sản phẩm: " , Validation.MaSP_REGEX , "Mã sản phẩm không đúng định dạng vui lòng nhập lại!(VD: SP001)", SanPham.getSoThuTu()));
-       SanPham sp = qlsp.traCuuSanPham(super.getMaSanpham()) ;
+       SanPham sp = qlsp.timMa(super.getMaSanpham()) ;
        while ( sp == null || !sp.isTonTai())
        {
            System.out.println("Sản phẩm đang tra cứu không tồn tại vui lòng nhập lại!");
            setMaSanpham(Validation.inputStringRegex(sc , "Nhập mã sản phẩm: " , Validation.MaSP_REGEX , "Mã sản phẩm không đúng định dạng vui lòng nhập lại!(VD: SP001)", SanPham.getSoThuTu()));
-           sp = qlsp.traCuuSanPham(super.getMaSanpham());
+           sp = qlsp.timMa(super.getMaSanpham());
        }
        super.setSoLuong(Validation.inputInt(sc , "Nhập số lương cần nhập: "));
        super.setTenSanPham(sp.getTenSanPham());

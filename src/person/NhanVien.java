@@ -84,7 +84,7 @@ public class NhanVien extends Person {
 
     /** Cập nhật vai trò của nhân viên. */
     public void setVaiTro(String vt) {
-        if (vt == null || !vt.matches("(QuanLy|KeToan|QuanKho|ThuNgan)")) {
+        if (vt == null ) {
             throw new IllegalArgumentException("VaiTro không đúng định dạng.");
         }
         vaitro = vt;
@@ -189,7 +189,7 @@ public class NhanVien extends Person {
         } while (noiDung.isEmpty());
 
         YeuCau yeuCau = new YeuCau(getMaNV(), getVaiTro(), noiDung, "ChoDuyet");
-        YeuCau.themVaoFile(yeuCau, Paths.get("YeuCau.txt"));
+        YeuCau.themVaoFile(yeuCau, Paths.get(utils.DuongDanLuuTru.file("YeuCau.txt")));
         System.out.println("Đã ghi yêu cầu vào YeuCau.txt.");
     }
 }

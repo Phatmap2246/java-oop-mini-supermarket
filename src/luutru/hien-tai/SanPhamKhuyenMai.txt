@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<du-lieu phien-ban="1">
+  <doi-tuong lop="utils.DataBase$BanLuu" ma="1">
+    <thuoc-tinh khai-bao="utils.DataBase$BanLuu" ten="duLieu">
+      <doi-tuong lop="dichvu.DanhSachSPKM" ma="2">
+        <thuoc-tinh khai-bao="dichvu.DanhSachSPKM" ten="sanPhamKhuyenMais">
+          <mang lop="dichvu.SanPhamKhuyenMai" ma="3">
+            <doi-tuong lop="dichvu.SanPhamKhuyenMai" ma="4">
+              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="tonTai">
+                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="maSanPham">
+                <gia-tri kieu="java.lang.String">SP001</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="maKhuyenMai">
+                <gia-tri kieu="java.lang.String">KM001</gia-tri>
+              </thuoc-tinh>
+            </doi-tuong>
+            <doi-tuong lop="dichvu.SanPhamKhuyenMai" ma="5">
+              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="tonTai">
+                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="maSanPham">
+                <gia-tri kieu="java.lang.String">SP004</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="maKhuyenMai">
+                <gia-tri kieu="java.lang.String">KM002</gia-tri>
+              </thuoc-tinh>
+            </doi-tuong>
+            <doi-tuong lop="dichvu.SanPhamKhuyenMai" ma="6">
+              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="tonTai">
+                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="maSanPham">
+                <gia-tri kieu="java.lang.String">SP007</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="maKhuyenMai">
+                <gia-tri kieu="java.lang.String">KM003</gia-tri>
+              </thuoc-tinh>
+            </doi-tuong>
+            <doi-tuong lop="dichvu.SanPhamKhuyenMai" ma="7">
+              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="tonTai">
+                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="maSanPham">
+                <gia-tri kieu="java.lang.String">SP005</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="maKhuyenMai">
+                <gia-tri kieu="java.lang.String">KM004</gia-tri>
+              </thuoc-tinh>
+            </doi-tuong>
+          </mang>
+        </thuoc-tinh>
+        <thuoc-tinh khai-bao="dichvu.DanhSachSPKM" ten="soLuongSanPham">
+          <gia-tri kieu="java.lang.Integer">4</gia-tri>
+        </thuoc-tinh>
+      </doi-tuong>
+    </thuoc-tinh>
+    <thuoc-tinh khai-bao="utils.DataBase$BanLuu" ten="boDem">
+      <anh-xa lop="java.util.LinkedHashMap" ma="8">
+        <cap>
+          <gia-tri kieu="java.lang.String">sanpham.SanPham</gia-tri>
+          <gia-tri kieu="java.lang.Integer">9</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">person.NhanVien</gia-tri>
+          <gia-tri kieu="java.lang.Integer">5</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">person.KhachHang</gia-tri>
+          <gia-tri kieu="java.lang.Integer">4</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">hoadon.HoaDon</gia-tri>
+          <gia-tri kieu="java.lang.Integer">7</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">dichvu.Khuyenmai</gia-tri>
+          <gia-tri kieu="java.lang.Integer">5</gia-tri>
+        </cap>
+        <cap>
+          <gia-tri kieu="java.lang.String">dichvu.Nhacungcap</gia-tri>
+          <gia-tri kieu="java.lang.Integer">4</gia-tri>
+        </cap>
+      </anh-xa>
+    </thuoc-tinh>
+  </doi-tuong>
+</du-lieu>

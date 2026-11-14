@@ -12,7 +12,7 @@ import utils.Validation;
 
 public class ThuNgan extends NhanVien {
     private long tongTienDauCa;
-    private DanhSachHoaDonBan danhSachHoaDonBan ;
+    private transient DanhSachHoaDonBan danhSachHoaDonBan ;
 
     public ThuNgan() {
         super();
@@ -51,7 +51,7 @@ public class ThuNgan extends NhanVien {
     }
     public void inDanhSachHoaDonBan()
     {
-        danhSachHoaDonBan.hienThiDanhSachHoaDonBan();
+        danhSachHoaDonBan.xuatDanhSach();
     }
     public void locCacHoaDonTheoTongGia ( long nguongGia )
     {
@@ -121,7 +121,7 @@ public class ThuNgan extends NhanVien {
                     break;
                 }
                 case 4: {
-                    danhSachHoaDonBan.timKiemTheoNhieuKhoa(sc);
+                    danhSachHoaDonBan.timKhoa(sc);
                     break;
                 }
                 case 5: {

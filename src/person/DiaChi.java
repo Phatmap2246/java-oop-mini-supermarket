@@ -2,10 +2,9 @@ package person;
 
 import java.util.Scanner;
 
-import interfaces.IThongTin;
 import interfaces.TrongFile;
 
-public class DiaChi implements IThongTin, TrongFile {
+public class DiaChi implements TrongFile {
     private String soNha;
     private String duong;
     private String phuongXa;
@@ -121,11 +120,6 @@ public class DiaChi implements IThongTin, TrongFile {
         this.tinhThanhPho = sc.nextLine().trim();
     }
 
-    @Override
-    public void nhapThongTin(Scanner sc) {
-        nhapDiaChi(sc);
-    }
-
     /** Ghép các thành phần địa chỉ thành chuỗi phân cách bằng dấu phẩy. */
     @Override
     public String toString() {
@@ -133,7 +127,7 @@ public class DiaChi implements IThongTin, TrongFile {
     }
     @Override
     public String getFilePath(){
-        return "src/luutru/DiaChi.csv";
+        return utils.DuongDanLuuTru.file("DiaChi.csv");
     }
     /** In địa chỉ ra console. */
     public void xuatDiaChi() {

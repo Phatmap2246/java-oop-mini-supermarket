@@ -20,9 +20,9 @@ import utils.Validation;
 
 public class QuanLy extends NhanVien {
     private DSYeuCau dsYeuCau = new DSYeuCau();
-    private DSNhanVien dsnv = new DSNhanVien();
-    private Danhsachkhuyenmai dsKhuyenMai = new Danhsachkhuyenmai();
-    private DanhSachSPKM dsSanPhamKhuyenMai = new DanhSachSPKM();
+    private transient DSNhanVien dsnv = new DSNhanVien();
+    private transient Danhsachkhuyenmai dsKhuyenMai = new Danhsachkhuyenmai();
+    private transient DanhSachSPKM dsSanPhamKhuyenMai = new DanhSachSPKM();
 
     /** Khởi tạo quản lý với thông tin mặc định. */
     public QuanLy() {
@@ -86,33 +86,33 @@ public class QuanLy extends NhanVien {
         int c = Validation.inputInt(sc, "Chọn chức năng: ");
             switch (c) {
                 case 1:
-                    dsnv.themNV(sc);
+                    dsnv.them(sc);
                     break;
                 case 2:
                     String maNV = Validation.inputStringRegex(sc, "Nhập mã nhân viên cần sa thải: ",
                             Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng (NVxxx).");
-                    dsnv.saThai(maNV);
+                    dsnv.xoa(maNV);
                     break;
                 case 3:
                     String maNVSua = Validation.inputStringRegex(sc, "Nhập mã nhân viên cần sửa: ",
                             Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng (NVxxx).");
-                    dsnv.suaNV(maNVSua, sc);
+                    dsnv.sua(maNVSua, sc);
                     break;
                 case 4:
                     System.out.println("Đã hoàn tất.");
                     break;
                 case 5:
-                    dsnv.xuatDSNV();
+                    dsnv.xuatDanhSach();
                     break;
                 case 6:
-                    dsnv.timKiemTheoNhieuKhoa(sc);
+                    dsnv.timKhoa(sc);
                     break;
                 case 7:
-                    dsnv.taoDS(sc);
+                    dsnv.taoDanhSach(sc);
                     break;
                 case 8:
                     int k = Validation.inputInt(sc, "Nhập số nhân viên cần thêm: ");
-                    dsnv.themNV(sc, k);
+                    dsnv.them(sc, k);
                     break;
                 case 9:
                     dsnv.thongKeTheoVaiTro();
@@ -158,18 +158,18 @@ public class QuanLy extends NhanVien {
 
             switch (luaChon) {
                 case 1:
-                    dsSanPham.inDanhSachSanPham();
+                    dsSanPham.xuatDanhSach();
                     break;
                 case 2:
-                    dsSanPham.themSanPham(sc,dsNCC);
+                    dsSanPham.them(sc,dsNCC);
                     break;
                 case 3:
                     String c =Validation.inputStringRegex(sc, "Nhap ma san pham can sua (vi du: SP001)","^SP\\d+$", "Sai dinh dang ma san pham, nhap lai ");
-                    dsSanPham.xoaSanPham(c);
+                    dsSanPham.xoa(c);
                     break;
                 case 4:
                     String d =Validation.inputStringRegex(sc, "Nhap ma san pham can sua (vi du: SP001)","^SP\\d+$", "Sai dinh dang ma san pham, nhap lai ");
-                    dsSanPham.suaThongTinSanPham(sc,d,dsNCC);
+                    dsSanPham.sua(sc,d,dsNCC);
                     break;
                 case 5:
                     dieuChinhGiaBan(sc,dsSanPham);
@@ -177,14 +177,14 @@ public class QuanLy extends NhanVien {
                 case 6:
                     return;
                 case 7:
-                    dsSanPham.taoDuLieuSanPham(sc, dsNCC);
+                    dsSanPham.taoDanhSach(sc, dsNCC);
                     break;
                 case 8:
                     int k = Validation.inputInt(sc, "Nhập số sản phẩm cần thêm: ");
                     dsSanPham.themKSanpham(sc, dsNCC, k);
                     break;
                 case 9:
-                    dsSanPham.timKiemTheoNhieuKhoa(sc);
+                    dsSanPham.timKhoa(sc);
                     break;
                 case 10:
                     dsSanPham.thongKeTheoLoai(sc);
@@ -227,15 +227,15 @@ public class QuanLy extends NhanVien {
             switch (luaChon) {
                 case 1:
                     System.out.println("Đã chọn nhóm Thực phẩm.");
-                    dspkm.themSanPhamKhuyenMai(sc);
+                    dspkm.them(sc);
                     break;
                 case 2:
                     System.out.println("Đã chọn nhóm Gia dụng.");
-                    dspkm.themSanPhamKhuyenMai(sc);
+                    dspkm.them(sc);
                     break;
                 case 3:
                     System.out.println("Đã chọn nhóm Điện tử.");
-                    dspkm.themSanPhamKhuyenMai(sc);
+                    dspkm.them(sc);
                     break;
                 case 4:
                     return;
@@ -317,7 +317,7 @@ public class QuanLy extends NhanVien {
                 }
                 case 8: {
                     try {
-                        dsYeuCau.docDanhSachYeuCau("YeuCau.txt");
+                        dsYeuCau.docDanhSachYeuCau(utils.DuongDanLuuTru.file("YeuCau.txt"));
                         thongKe(sc, dsnv, qlsp, dsYeuCau.getList());
                     } catch (IOException e) {
                         System.out.println("Không thể đọc danh sách yêu cầu: " + e.getMessage());
