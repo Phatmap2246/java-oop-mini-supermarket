@@ -16,6 +16,7 @@ public class HoaDonNhapHang extends HoaDon {
     private ArrayList<CTHoaDonNhap> ctHoaDonNhaps ;
     private boolean Duyet ;
     private boolean daNhapSP ;
+    private boolean daThanhToan ;
 
     // Mã hóa đơn nhập: Bắt đầu bằng chữ "HDN" (in hoa) và theo sau là các chữ số. VD: HDN001
     public static final String MA_HD_NHAP_REGEX = "^HD\\d+$";
@@ -33,9 +34,10 @@ public class HoaDonNhapHang extends HoaDon {
         this.daNhapSP = false ;
         this.ctHoaDonNhaps = new ArrayList<>() ;
         super.setLoaiHoaDon("Hoá đơn nhập");
+        this.daThanhToan =false; 
     }
 
-    public HoaDonNhapHang(String maHoaDon, LocalDateTime ngayLap, String maNhanvien, String loaiHoaDon , String maNhaCungCap, long chiPhiVanChuyen, double thueVAT , boolean Duyet , boolean daNhapSP) {
+    public HoaDonNhapHang(String maHoaDon, LocalDateTime ngayLap, String maNhanvien, String loaiHoaDon , String maNhaCungCap, long chiPhiVanChuyen, double thueVAT , boolean Duyet , boolean daNhapSP,boolean daThanhToan) {
         super(maHoaDon, ngayLap , maNhanvien , loaiHoaDon);
         this.maNhaCungCap = maNhaCungCap; // ĐÃ THÊM DÒNG NÀY
         this.chiPhiVanChuyen = chiPhiVanChuyen;
@@ -43,6 +45,7 @@ public class HoaDonNhapHang extends HoaDon {
         this.Duyet = Duyet ;
         this.daNhapSP = daNhapSP ;
         this.ctHoaDonNhaps = new ArrayList<>();
+        this.daThanhToan = daThanhToan;
     }
 
     // Override
@@ -154,7 +157,13 @@ public class HoaDonNhapHang extends HoaDon {
     public void setDaNhapSP(boolean daNhapSP) {
         this.daNhapSP = daNhapSP;
     }
+    public boolean isDaThanhToan() {
+    return daThanhToan;
+    }
 
+    public void setDaThanhToan(boolean daThanhToan) {
+    this.daThanhToan = daThanhToan;
+    }
     @Override
     public String toString() {
         return super.toString() + " | Mã nhà cung cấp: " + maNhaCungCap + " | Chi phí vận chuyển: " + chiPhiVanChuyen + " | Thuế VAT: " + thueVAT + " | Trạng thái duyệt: " + ((Duyet)?"Đã duyệt":"Chưa duyệt");

@@ -2,12 +2,12 @@ import person.*;
 import sanpham.QuanLySanPham;
 import hoadon.DanhSachHoaDonBan;
 import hoadon.DanhSachHoaDonNhap;
-import hoadon.DanhSachCongNo;
 import dichvu.Danhsachdoitac;
 import dichvu.Danhsachkhuyenmai;
 import dichvu.DanhSachSPKM;
 import utils.Validation;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GiaoDien {
@@ -19,12 +19,11 @@ public class GiaoDien {
     private DanhSachSPKM dsSanPhamKhuyenMai = new DanhSachSPKM();
     private DanhSachHoaDonBan dsHoaDonBan = new DanhSachHoaDonBan();
     private DanhSachHoaDonNhap dsHoaDonNhap = new DanhSachHoaDonNhap();
-    private DanhSachCongNo dsCongNo = new DanhSachCongNo();
     private QuanLy quanLy = new QuanLy();
     private QuanKho quanKho = new QuanKho(dsSanPham, dsHoaDonNhap);
     private ThuNgan thuNgan = new ThuNgan();
     private KeToan keToan = new KeToan();
-
+    private ArrayList<String> dsMaDaThanhToan = new ArrayList<>();
     private String taiKhoanQuanKho , matKhauQuanKho , taiKhoanThuNgan , matKhauThuNgan , taiKhoanKeToan , matKhauKeToan , taiKhoanQuanLy, matKhauQuanLy  ;
     public GiaoDien()
     {
@@ -40,10 +39,6 @@ public class GiaoDien {
         quanLy.setDSKhuyenMai(dsKhuyenMai);
         quanLy.setDanhSachSPKM(dsSanPhamKhuyenMai);
         thuNgan.setDanhSachHoaDonBan(dsHoaDonBan);
-        keToan.setDanhSachHoaDonBan(dsHoaDonBan);
-        keToan.setDanhSachHoaDonNhap(dsHoaDonNhap);
-        keToan.setDanhSachDoiTac(dsDoiTac);
-        keToan.setDanhSachCongNo(dsCongNo);
     }
     public void TrangChu(Scanner sc )
     {
@@ -129,7 +124,10 @@ public class GiaoDien {
             System.out.println("Bạn đã nhập sai quá 5 lần do đó bạn phải chờ thời gian nhập lại!");
             return;
         }
-        keToan.thucHienNghiepVu(sc);
+        ArrayList<hoadon.HoaDon> dshdChung = new ArrayList<>();
+        dshdChung.addAll(dsHoaDonBan.getDsHoaDonBanHang());
+        dshdChung.addAll(dsHoaDonNhap.getDsHoaDonNhapHang());
+        keToan.thucHienNghiepVu(sc, dshdChung, dsMaDaThanhToan);
     }
     public void MenuQuanLy( Scanner sc )
     {
