@@ -1,4 +1,12 @@
 package hoadon;
+import utils.BoDemMa;
+import utils.DongDuLieu;
+import utils.TepVanBan;
+import java.util.Locale;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import hoadon.HoaDon;
 
@@ -290,7 +298,8 @@ public class DanhSachHoaDonBan implements interfaces.IQuanLy<HoaDonBanHang> {
         for ( HoaDonBanHang hdb: dsHoaDonBanHang )
         {
             if (hdb == null) continue;
-            if ( hdb.getNgayLap() != null && hdb.getNgayLap().isAfter(thoiGianBatDau) && hdb.getNgayLap().isBefore(thoiGianKetThuc))
+            if (hdb.getNgayLap() != null && !hdb.getNgayLap().isBefore(thoiGianBatDau)
+                    && !hdb.getNgayLap().isAfter(thoiGianKetThuc))
             {
                 hdb.hienThiHoaDon();
             }
@@ -306,7 +315,8 @@ public class DanhSachHoaDonBan implements interfaces.IQuanLy<HoaDonBanHang> {
         for ( HoaDonBanHang hdb: dsHoaDonBanHang )
         {
             if (hdb == null) continue;
-            if ( hdb.getNgayLap() != null && hdb.getNgayLap().isAfter(thoiGianBatDau.atStartOfDay()) && hdb.getNgayLap().isBefore(thoiGianKetThuc.atStartOfDay()))
+            if (hdb.getNgayLap() != null && !hdb.getNgayLap().toLocalDate().isBefore(thoiGianBatDau)
+                    && !hdb.getNgayLap().toLocalDate().isAfter(thoiGianKetThuc))
             {
                 hdb.hienThiHoaDon();
             }
@@ -327,7 +337,7 @@ public class DanhSachHoaDonBan implements interfaces.IQuanLy<HoaDonBanHang> {
             System.out.println("Kết quả tra cứu:");
             switch (luaChon) {
                 case 1: {
-                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã hóa đơn cần tìm: ", HoaDonBanHang.MA_HD_BAN_REGEX, "Mã hóa đơn không đúng định dạng. Vui lòng nhập lại!");
+                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã hóa đơn cần tìm: ", HoaDonBanHang.MA_HD_BAN_REGEX, "Mã hóa đơn không đúng định dạng. Vui lòng nhập lại!", HoaDon.getSoThuTu());
                     System.out.println("Đang tra cứu...");
                     Validation.danghoatdong(1);
                     for (HoaDonBanHang hdb : dsHoaDonBanHang) {
@@ -339,7 +349,7 @@ public class DanhSachHoaDonBan implements interfaces.IQuanLy<HoaDonBanHang> {
                     break;
                 }
                 case 2: {
-                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã khách hàng cần tìm: ", Validation.MaKH_REGEX, "Mã khách hàng không đúng định dạng. Vui lòng nhập lại!");
+                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã khách hàng cần tìm: ", Validation.MaKH_REGEX, "Mã khách hàng không đúng định dạng. Vui lòng nhập lại!", KhachHang.getSoThuTu());
                     System.out.println("Đang tra cứu...");
                     Validation.danghoatdong(1);
                     for (HoaDonBanHang hdb : dsHoaDonBanHang) {
@@ -415,7 +425,7 @@ public class DanhSachHoaDonBan implements interfaces.IQuanLy<HoaDonBanHang> {
                     break;
                 }
                 case 4: {
-                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã nhân viên cần tìm: ", Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng. Vui lòng nhập lại!");
+                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã nhân viên cần tìm: ", Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng. Vui lòng nhập lại!", person.NhanVien.getSoThuTu());
                     System.out.println("Đang tra cứu...");
                     Validation.danghoatdong(1);
                     for (HoaDonBanHang hdb : dsHoaDonBanHang) {
@@ -554,8 +564,12 @@ public class DanhSachHoaDonBan implements interfaces.IQuanLy<HoaDonBanHang> {
         for ( HoaDonBanHang hdb: dsHoaDonBanHang )
         {
             if (hdb == null) continue;
-            if ( hdb.isDaThanhToan() && hdb.getNgayLap() != null && hdb.getNgayLap().isAfter(ngayBD.atStartOfDay()) && hdb.getNgayLap().isBefore(ngayKT.atStartOfDay()))
-                tongTien += hdb.tinhTongTien();
+            if ( hdb.isDaThanhToan() && hdb.getNgayLap() != null ) {
+                LocalDate ngayLap = hdb.getNgayLap().toLocalDate();
+                if (!ngayLap.isBefore(ngayBD) && !ngayLap.isAfter(ngayKT)) {
+                    tongTien += hdb.tinhTongTien();
+                }
+            }
         }
         return tongTien ;
     }
@@ -659,61 +673,13 @@ public class DanhSachHoaDonBan implements interfaces.IQuanLy<HoaDonBanHang> {
     }
 
     public void ghiFileText(String tenFile) {
-        try (java.io.BufferedWriter bw = new java.io.BufferedWriter(new java.io.OutputStreamWriter(new java.io.FileOutputStream(tenFile), java.nio.charset.StandardCharsets.UTF_8))) {
-            for (HoaDonBanHang hdb : dsHoaDonBanHang) {
-                if (hdb == null) continue;
-                // Lưu thông tin chung: BAN|MaHD|MaKH|DaThanhToan
-                bw.write("BAN|" + hdb.getMaHoaDon() + "|" + hdb.getMaKhachHang() + "|" + hdb.isDaThanhToan());
-                bw.newLine();
-
-                // Lưu chi tiết: CT|MaSP|TenSP|SoLuong|DonGia|SoTienGiam|SoLuongTangKem
-                for (CTHoaDonBan ct : hdb.getCtHoaDonBans()) {
-                    bw.write("CT|" + ct.getMaSanPham() + "|" + ct.getTenSanPham() + "|" +
-                            ct.getSoLuong() + "|" + ct.getDonGia() + "|" +
-                            ct.getSoTienGiam() + "|" + ct.getSoLuongTangKem());
-                    bw.newLine();
-                }
-            }
-            System.out.println("[+] Đã ghi dữ liệu hóa đơn bán hàng vào file: " + tenFile);
-        } catch (Exception e) {
-            System.out.println("[!] Lỗi khi ghi file: " + e.getMessage());
-        }
+        try { ghiFile(tenFile); }
+        catch (java.io.IOException e) { throw new java.io.UncheckedIOException(e); }
     }
 
     public void docFileText(String tenFile) {
-        this.dsHoaDonBanHang.clear();
-        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(tenFile), java.nio.charset.StandardCharsets.UTF_8))) {
-            String line;
-            HoaDonBanHang hdbHienTai = null;
-
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split("\\|", -1);
-                if (parts.length > 0) {
-                    String loai = parts[0];
-
-                    if (loai.equals("BAN") && parts.length == 4) {
-                        if (timMa(parts[1]) == null) {
-                            hdbHienTai = new HoaDonBanHang(parts[1], LocalDateTime.now(), "", "Hoá đơn bán", null, Boolean.parseBoolean(parts[3]), 0);
-                            hdbHienTai.setMaKhachHang(parts[2]);
-                            hdbHienTai.setCtHoaDonBans(new ArrayList<>());
-                            hdbHienTai.setDaThanhToan(Boolean.parseBoolean(parts[3]));
-                            this.dsHoaDonBanHang.add(hdbHienTai);
-                        } else {
-                            hdbHienTai = null;
-                        }
-                    }
-                    else if (loai.equals("CT") && hdbHienTai != null && parts.length == 7) {
-                        CTHoaDonBan ct = new CTHoaDonBan(parts[1], parts[2], Integer.parseInt(parts[3]), Long.parseLong(parts[4]), "Không áp dụng");
-                        ct.setSoTienGiam(Long.parseLong(parts[5]));
-                        ct.setSoLuongTangKem(Integer.parseInt(parts[6]));
-                        hdbHienTai.getCtHoaDonBans().add(ct);
-                    }
-                }
-            }
-            System.out.println("[+] Đã đọc dữ liệu hóa đơn bán hàng từ file: " + tenFile);
-        } catch (Exception e) {
-            System.out.println("[!] Lỗi khi đọc file (Có thể file chưa tồn tại): " + e.getMessage());
-        }
+        try { docFile(tenFile); }
+        catch (java.io.IOException e) { throw new java.io.UncheckedIOException(e); }
     }
 
     public boolean ghiLichSuCa(String maNhanVien) throws IOException
@@ -738,4 +704,79 @@ public class DanhSachHoaDonBan implements interfaces.IQuanLy<HoaDonBanHang> {
         }
         return true;
     }
+<<<<<<< HEAD
+
+    /** Mỗi đối tượng tạo một dòng; thông tin con được ghi thành dòng riêng. */
+
+
+    /** Có lỗi thì giữ danh sách đang dùng, không bỏ dòng lỗi. */
+
+    // ================= ĐỌC / GHI FILE TXT =================
+
+    public void ghiFile(String tenFile) throws IOException {
+        ArrayList<String> cacDong = new ArrayList<>();
+        Set<String> maDaGhi = new HashSet<>();
+        for (HoaDonBanHang obj : dsHoaDonBanHang) {
+            if (obj == null) throw new IOException("Danh sách chứa null.");
+            TepVanBan.khongTrung(maDaGhi, obj.getMaHoaDon());
+            cacDong.add(obj.toDongFile());
+            Set<String> maChiTiet = new HashSet<>();
+            for (CTHoaDonBan ct : obj.getCtHoaDonBans()) {
+                TepVanBan.khongTrung(maChiTiet, ct.getMaSanpham());
+                String[] p = ct.toDongFile().split(";", 2);
+                cacDong.add(p[0] + ";" + obj.getMaHoaDon() + ";" + p[1]);
+            }
+            if (obj.getPhuongThucThanhToan() instanceof ThanhToanTienMat) {
+                cacDong.add("THANHTOAN;" + obj.getMaHoaDon() + ";" + ((ThanhToanTienMat) obj.getPhuongThucThanhToan()).toDongFile());
+            } else if (obj.getPhuongThucThanhToan() instanceof ThanhToanChuyenKhoan) {
+                cacDong.add("THANHTOAN;" + obj.getMaHoaDon() + ";" + ((ThanhToanChuyenKhoan) obj.getPhuongThucThanhToan()).toDongFile());
+            } else if (obj.getPhuongThucThanhToan() != null) {
+                throw new IOException("Phương thức thanh toán chưa được hỗ trợ.");
+            }
+        }
+        TepVanBan.ghi(tenFile, "DanhSachHoaDonBan", cacDong);
+    }
+
+    public void docFile(String tenFile) throws IOException {
+        int[] demTruoc = BoDemMa.chup();
+        ArrayList<HoaDonBanHang> moi = new ArrayList<>();
+        Set<String> maDaDoc = new HashSet<>();
+        Map<String, HoaDonBanHang> theoMa = new LinkedHashMap<>();
+        Set<String> maChiTiet = new HashSet<>();
+        Set<String> daCoThanhToan = new HashSet<>();
+        try {
+            for (String dong : TepVanBan.doc(tenFile)) {
+                if (dong.startsWith("CTBAN;")) {
+                    String[] p = dong.split(";", 3);
+                    HoaDonBanHang chu = p.length == 3 ? theoMa.get(p[1].toUpperCase(Locale.ROOT)) : null;
+                    DongDuLieu.yeuCau(chu != null, "Chi tiết phải đứng sau hóa đơn tương ứng.");
+                    CTHoaDonBan ct = CTHoaDonBan.tuDongFile(p[0] + ";" + p[2]);
+                    TepVanBan.khongTrung(maChiTiet, p[1] + ":" + ct.getMaSanpham());
+                    chu.getCtHoaDonBans().add(ct);
+                    continue;
+                }
+                if (dong.startsWith("THANHTOAN;")) {
+                    String[] p = dong.split(";", 3);
+                    HoaDonBanHang chu = p.length == 3 ? theoMa.get(p[1].toUpperCase(Locale.ROOT)) : null;
+                    DongDuLieu.yeuCau(chu != null, "Thanh toán không có hóa đơn.");
+                    TepVanBan.khongTrung(daCoThanhToan, p[1]);
+                    if (p[2].startsWith("TIENMAT;")) chu.setPhuongThucThanhToan(ThanhToanTienMat.tuDongFile(p[2]));
+                    else if (p[2].startsWith("CHUYENKHOAN;")) chu.setPhuongThucThanhToan(ThanhToanChuyenKhoan.tuDongFile(p[2]));
+                    else throw new IllegalArgumentException("Loại thanh toán không hợp lệ.");
+                    continue;
+                }
+                HoaDonBanHang obj = HoaDonBanHang.tuDongFile(dong);
+                TepVanBan.khongTrung(maDaDoc, obj.getMaHoaDon());
+                moi.add(obj);
+                theoMa.put(obj.getMaHoaDon().toUpperCase(Locale.ROOT), obj);
+            }
+        } catch (RuntimeException | IOException e) {
+            BoDemMa.khoiPhuc(demTruoc);
+            throw new IOException("Không đọc được " + tenFile + ": " + e.getMessage(), e);
+        }
+        this.dsHoaDonBanHang = moi;
+    }
 }
+=======
+}
+>>>>>>> origin/main

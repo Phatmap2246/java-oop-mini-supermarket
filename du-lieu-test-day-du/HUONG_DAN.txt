@@ -1,0 +1,119 @@
+BỘ DỮ LIỆU CHẠY THỬ ĐẦY ĐỦ
+
+1. CHẠY CHƯƠNG TRÌNH
+Từ thư mục gốc đồ án, mở PowerShell và chạy:
+  .\du-lieu-test-day-du\CHAY_THU.ps1
+Script biên dịch mã nguồn hiện tại rồi chạy Main với bộ dữ liệu này.
+Mọi thay đổi được lưu trong du-lieu-test-day-du/src/luutru.
+Chạy Main trực tiếp từ IntelliJ vẫn dùng dữ liệu gốc của đồ án.
+
+Tài khoản / mật khẩu:
+  ThuNganSieuThi / thungan@123
+  QuanKhoSieuThi / quankho@123
+  QuanLySieuThi / quanly@123
+  KeToanSieuThi / ketoan@123
+
+2. SỐ LƯỢNG
+100 sản phẩm: 40 thực phẩm, 35 tiêu dùng, 25 điện tử.
+100 hóa đơn bán HD001-HD100: 75 đã trả, 25 chưa trả.
+20 hóa đơn nhập HD101-HD120:
+  HD101-HD110: đã duyệt, đã nhập kho.
+  HD111-HD115: đã duyệt, chưa nhập kho.
+  HD116-HD120: chưa duyệt, chưa nhập kho.
+10 nhà cung cấp NCC001-NCC010; mỗi NCC liên kết 10 sản phẩm.
+12 khuyến mãi KM001-KM012; 80 liên kết sản phẩm-khuyến mãi.
+40 khách hàng, đủ bốn hạng; KH040 đã xóa mềm.
+12 nhân viên, đủ bốn vai trò; NV012 đã sa thải.
+10 công nợ: 3 đã trả, 7 chưa trả; có quá hạn và chưa đến hạn.
+18 yêu cầu: 6 chờ duyệt, 6 đã duyệt, 6 không duyệt.
+
+3. SẢN PHẨM VÀ KHUYẾN MÃI
+SP001-SP040: thực phẩm; SP041-SP075: tiêu dùng; SP076-SP100: điện tử.
+SP010, SP020,..., SP100: tồn kho bằng 0.
+SP011, SP021,..., SP091: tồn 2; SP012, SP022,..., SP092: tồn 5.
+SP008, SP016, SP024, SP032, SP040: thực phẩm đã hết hạn.
+SP001, SP009, SP017, SP025, SP033: hết hạn đúng hôm tạo bộ mẫu.
+SP002, SP010, SP018, SP026, SP034: còn ba ngày sử dụng.
+SP003, SP004: thực phẩm còn hạn, còn hàng.
+SP097-SP099: đã xóa mềm.
+Một số thực phẩm bảo quản -18 độ, số khác 5 độ.
+
+KM001/KM002/KM003: đang hiệu lực, lần lượt phần trăm / mua tặng / trực tiếp.
+KM004-KM006: hết hạn; KM007-KM009: chưa đến ngày bắt đầu.
+KM010-KM012: mức chi tối thiểu 50.000; KM012 đã xóa mềm.
+SP013 áp dụng KM001; SP002 áp dụng KM002; SP003 áp dụng KM003.
+SP004 áp dụng khuyến mãi hết hạn KM004.
+SP006 không liên kết khuyến mãi.
+Mua tặng: số lượng nhập là TỔNG hàng lấy khỏi kho, gồm quà.
+Ví dụ mua 2 tặng 1: nhập 3, trả tiền 2 và kho giảm 3.
+
+4. KHÁCH HÀNG
+KH001 Đồng: 1%; KH002 Bạc: 3%; KH003 Vàng: 5%; KH004 Kim Cương: 10%.
+Các nhóm bốn khách hàng tiếp theo lặp lại đủ bốn hạng.
+Thử KH040 để kiểm tra chặn khách đã xóa; KH041 là mã chưa cấp.
+
+5. CÁC LƯỢT THỬ THEO VAI TRÒ
+
+A. Thu ngân
+- Xuất, tìm mã/tên khách/sản phẩm, lọc giá, thống kê hóa đơn chưa trả.
+- Lập hóa đơn cho KH001 rồi KH004 cùng sản phẩm để so chiết khấu.
+- Dùng SP013, SP002, SP003 để thử ba loại ưu đãi.
+- Dùng SP004 để xác nhận không áp dụng khuyến mãi hết hạn.
+- Dùng SP010 để thử hết hàng; SP008 hết hạn; SP097 đã xóa.
+- Nhập số lượng 0, lớn hơn tồn; nhập trùng cùng sản phẩm.
+- Tiền mặt: đưa thiếu, vừa đủ, dư; kiểm tra kết quả, tồn kho và tích lũy.
+- Chuyển khoản: thử tạo QR và xác nhận giả lập; không phải thanh toán ngân hàng thật.
+- Sửa HD076-HD100; thử sửa/xóa HD001 đã trả để kiểm tra bảo vệ.
+- Thử thêm, xóa, đổi chi tiết hóa đơn nháp và đổi khách hàng.
+- Nếu có chức năng bàn giao ca, so tiền trước/sau; lỗi cộng doanh thu cũ
+  đã được phát hiện trong lần rà code, dữ liệu mẫu không tự sửa lỗi đó.
+
+B. Quản kho
+- Xuất, tìm kiếm, thống kê nhập theo sản phẩm/NCC/ngày.
+- Cập nhật kho: HD111-HD115 được nhập, HD101-HD110 không cộng lại.
+- Cập nhật lần hai: tồn kho không tiếp tục tăng với phiếu vừa nhập.
+- Thử duyệt HD116 rồi nhập kho; HD117-HD120 giữ làm phiếu chưa duyệt.
+- Sửa/xóa HD118 khi còn nháp; thử sửa phiếu đã nhập để kiểm tra chặn.
+- Tạo phiếu mới, nhập cùng SP hai lần; đối chiếu số lượng và kiểm tra lưu.
+- Kiểm tra hết hạn/cận hạn, loại bỏ hàng hỏng, thống kê hàng hết/tồn thấp.
+
+C. Quản lý
+- Tìm, thêm, sửa, xóa mềm nhân viên, khách hàng, đối tác, sản phẩm.
+- Kiểm tra các mã đã xóa và chức năng không cho dùng lại đối tượng đã xóa.
+- Thêm/sửa ba loại khuyến mãi, liên kết với sản phẩm còn tồn tại.
+- Thử ngày bắt đầu/kết thúc bằng nhau và đảo ngược.
+- Xuất thống kê từng loại, hiệu lực, hết hạn, chưa hoạt động.
+- Duyệt yêu cầu: có đủ 6 yêu cầu chờ duyệt để thử nhận/từ chối.
+- Thử sản phẩm nhà cung cấp: tra NCC001-NCC010, mỗi bên có 10 mặt hàng.
+
+D. Kế toán
+- Báo cáo theo ngày, quý, năm: hóa đơn bán trải nhiều quý và hai năm.
+- HD001 lập ngày tạo mẫu; HD002 ngày đầu tháng; HD003 ngày cuối tháng
+  (có thể là ngày tương lai), dùng để thử các mốc biên.
+- Khoảng ngày trùng nhau, đảo ngược, không có dữ liệu.
+- Doanh thu chỉ tính hóa đơn đã trả; phiếu nhập chỉ cộng theo quy tắc hiện tại.
+- Công nợ HD101-HD110: HD103/HD106/HD109 đã trả; còn lại chưa trả.
+- Hạn công nợ số lẻ quá hạn, số chẵn chưa đến hạn.
+- Chọn khoản chưa trả để thanh toán, quay lại, mở lại kiểm tra trạng thái.
+- Đối chiếu HD111 sau khi nhập kho: thử sai SL, sai giá rồi thử đúng.
+- Thử lặp mã hóa đơn/phiếu nhập để kiểm tra chống ghi nợ trùng.
+
+6. NHẬP LIỆU BIÊN VÀ LƯU/MỞ LẠI
+- Mã không tồn tại, mã sai tiền tố, chữ hoa/thường.
+- Giá/số lượng âm, nhập chữ ở ô số, số quá lớn, NaN, Infinity.
+- 31/02/2026; 29/02/2025; 29/02/2028 hợp lệ.
+- Nhiệt độ âm; chuỗi tiếng Việt; tên chứa dấu ; để thử báo lỗi khi lưu.
+- EOF giữa menu/nhập liệu để kiểm tra thoát an toàn.
+- Thoát bằng menu 0, chạy lại script, đối chiếu thay đổi đã lưu.
+
+7. LƯU Ý
+Đây là bộ trạng thái thử, không phải sổ kế toán cân đối toàn bộ lịch sử kho.
+Tồn kho là ảnh chụp hiện tại, không suy lại bằng tổng các hóa đơn mẫu.
+Dữ liệu hợp lệ giúp khởi động; đầu vào sai thử riêng qua bàn phím.
+Các lỗi code còn tồn tại có thể khiến một số lượt thử thất bại: ghi lại mã,
+thao tác và thông báo. Không thể bảo đảm test hết mọi nhánh chỉ bằng dữ liệu.
+Không sửa trực tiếp dữ liệu gốc nếu muốn thử xóa hoặc thay đổi hàng loạt.
+
+Muốn tạo bộ mới theo ngày hiện tại, từ gốc đồ án chạy:
+  python test/tao_du_lieu_lon.py du-lieu-test-lan-2
+Công cụ không ghi đè thư mục đã tồn tại.

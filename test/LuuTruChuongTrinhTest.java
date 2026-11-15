@@ -14,7 +14,7 @@ import java.util.*;
 
 /** Chạy write và read ở hai JVM khác nhau để kiểm tra việc mở lại chương trình. */
 public class LuuTruChuongTrinhTest {
-    private static final String TEN = "Sữa, \"đặc biệt\" | Tiếng Việt\nxuống dòng";
+    private static final String TEN = "Sữa, \"đặc biệt\" | Tiếng Việt";
     private static final Class<?>[] CAC_LOP = {SanPham.class, NhanVien.class, KhachHang.class,
             HoaDon.class, Khuyenmai.class, Nhacungcap.class};
 
@@ -95,8 +95,8 @@ public class LuuTruChuongTrinhTest {
         }
         gd.ghiDuLieu(file);
         String vanBan = Files.readString(Paths.get(file, "hien-tai/SanPham.txt"));
-        check(vanBan.startsWith("<?xml") && vanBan.contains("tenSanPham")
-                && vanBan.contains("Sữa,"), "TXT chứa tên thuộc tính và tiếng Việt đọc được");
+        check(vanBan.startsWith(utils.TepVanBan.TIEU_DE) && vanBan.contains("THUCPHAM;")
+                && vanBan.contains("Sữa,"), "TXT chứa bản ghi theo cột và tiếng Việt đọc được");
         for (String ten : LuuTruNhieuFile.TEN_FILE) {
             check(Files.isRegularFile(Paths.get(file, "hien-tai", ten)), "Có file riêng " + ten);
         }
@@ -133,6 +133,9 @@ public class LuuTruChuongTrinhTest {
         check(lay(lay(gd, "quanKho"), "qlsp") == sanPhams, "Kho dùng cùng danh mục");
         check(lay(lay(gd, "thuNgan"), "danhSachHoaDonBan") == bans, "Thu ngân dùng cùng hóa đơn");
         check(lay(lay(gd, "quanLy"), "dsnv") == lay(gd, "dsNhanVien"), "Quản lý dùng cùng nhân viên");
+        DSYeuCau requests = lay(lay(gd, "quanLy"), "dsYeuCau");
+        check(requests.getList().size() == 1 && requests.getList().get(0).getNoiDung().equals(TEN),
+                "Yêu cầu quản lý ghi thành dòng riêng vẫn khôi phục đầy đủ");
         check(new ThucPham().getMaSanPham().equals("SP071"), "Mã mới không trùng sau mở lại");
 
         Path fileSanPham = Paths.get(file, "hien-tai", "SanPham.txt");

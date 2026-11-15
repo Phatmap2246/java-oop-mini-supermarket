@@ -1,11 +1,13 @@
 package hoadon;
 
+import utils.DongDuLieu;
+
 import java.util.Scanner;
 import interfaces.TrongFile ;
 import interfaces.IThanhToan;
 import utils.Validation;
 
-public class ThanhToanTienMat implements IThanhToan, TrongFile {
+public class ThanhToanTienMat implements IThanhToan, TrongFile, interfaces.BanGhiFile {
     private long tienKhachDua;
     private long tienThua;
 
@@ -38,10 +40,34 @@ public class ThanhToanTienMat implements IThanhToan, TrongFile {
         System.out.printf(" - Tien thua: %d VND\n", tienThua);
         System.out.println(" - Ghi chu: Da kiem tra du tien va da thoi lai cho khach.");
     }
-    @Override
-    public String getFilePath(){
-        return utils.DuongDanLuuTru.file("ThanhToanTienMat.csv");
-    }
+
     public long getTienKhachDua() { return tienKhachDua; }
     public long getTienThua() { return tienThua; }
+
+    // ================= ĐỌC / GHI FILE TXT =================
+
+    @Override
+    public String getFilePath(){
+        return utils.DuongDanLuuTru.file("ThanhToanTienMat.txt");
+    }
+
+    @Override public String toDongFile() {
+        kiemTraDuLieuFile();
+        return DongDuLieu.ghep("TIENMAT", tienKhachDua, tienThua);
+    }
+
+    public static ThanhToanTienMat tuDongFile(String dong) {
+        String[] p = dong.split(";", -1);
+        DongDuLieu.yeuCau(p.length == 3 && "TIENMAT".equals(p[0]), "Sai dòng TIENMAT (cần 3 cột).");
+        ThanhToanTienMat obj = new ThanhToanTienMat();
+        obj.tienKhachDua = Long.parseLong(p[1]);
+        obj.tienThua = Long.parseLong(p[2]);
+        obj.kiemTraDuLieuFile();
+        return obj;
+    }
+
+    public void kiemTraDuLieuFile() {
+        DongDuLieu.khongAm(tienKhachDua, "tienKhachDua");
+        DongDuLieu.khongAm(tienThua, "tienThua");
+    }
 }

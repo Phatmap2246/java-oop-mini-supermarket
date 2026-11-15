@@ -26,13 +26,13 @@ public class UnitTest {
     }
     @Test
     void CSVLINETEST(){
-        DienTu sp = new DienTu("msp","dodientu","mcc",12,32,1,"mcc",0.05,24,0,"",LocalDate.now());
+        DienTu sp = new DienTu("SP001","dodientu","Điện tử",12,32,1,"NCC001",0.05,24,0,"",LocalDate.now());
         System.out.println(DataBase.getCSVHeader(sp));
         System.out.println(DataBase.getCSVLine(sp));
     }
     @Test
     void OBJECTFROMCSVLINETEST() throws Exception {
-        DienTu sp = new DienTu("msp","dodientu","mcc",12,32,1,"mcc",0.05,24,0,"",LocalDate.now());
+        DienTu sp = new DienTu("SP001","dodientu","Điện tử",12,32,1,"NCC001",0.05,24,0,"",LocalDate.now());
         String headers = DataBase.getCSVHeader(sp);
         String csvline = DataBase.getCSVLine(sp);
         DienTu sp2 = DataBase.taoObject(DienTu.class,headers,csvline);
@@ -40,7 +40,7 @@ public class UnitTest {
     }
     @Test
     void WRITEOBJECTTOFILE(){
-        DienTu sp = new DienTu("msp","dodientu","mcc",12,32,1,"mcc",0.05,24,0,"",LocalDate.now());
+        DienTu sp = new DienTu("SP001","dodientu","Điện tử",12,32,1,"NCC001",0.05,24,0,"",LocalDate.now());
         DataBase.ghiVaoFile(sp,"test/dientu.csv",true);
         DataBase.ghiVaoFile(sp,"test/dientu.csv",false);
         DataBase.ghiVaoFile(sp,"test/dientu.csv",false);
@@ -48,7 +48,7 @@ public class UnitTest {
     @Test
     void READFROMFILE() throws Exception {
         ArrayList<DienTu> sps = new ArrayList<>();
-        DienTu sp = new DienTu("msp","dodientu","mcc",12,32,1,"mcc",0.05,24,0,"",LocalDate.now());
+        DienTu sp = new DienTu("SP001","dodientu","Điện tử",12,32,1,"NCC001",0.05,24,0,"",LocalDate.now());
         sps.add(sp);
         sps.add(sp);
         sps.add(sp);

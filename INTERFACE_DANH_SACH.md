@@ -38,6 +38,13 @@ Các nhóm có trạng thái xóa mềm vẫn giữ cách xóa mềm.
 `timViTri` trả vị trí trong danh sách gốc hoặc `-1`; không trả vị trí trong một bản lọc.
 Tìm tên và từ khóa không phân biệt hoa/thường; đối tượng đã xóa mềm không được trả về.
 
+Các chỗ nhập mã để truy vấn/chọn đối tượng có sẵn dùng `Validation.inputStringRegex`
+bản 5 tham số, truyền bộ đếm tiếp theo của đúng loại mã: nhân viên, khách hàng,
+sản phẩm, khuyến mãi, NCC hoặc hóa đơn. Phần số phải lớn hơn 0 và nhỏ hơn bộ đếm;
+sau đó hàm tra cứu vẫn kiểm tra tồn tại/trạng thái trong danh sách. Mã hóa đơn mới
+bắt đầu ở `HD001`. Các chỗ tạo/đổi sang mã định danh mới và nhập mã phiếu nhập mới
+không dùng giới hạn mã đã cấp; mã số thuế, tài khoản ngân hàng cũng không dùng bộ đếm này.
+
 Các menu tìm kiếm cũ được đổi tên thành overload `timKhoa(Scanner sc)`, vẫn cho
 chọn nhiều tiêu chí và in nhiều kết quả. `DSKhachHang.timDanhSachTheoTen(...)`
 giữ chức năng trả nhiều khách hàng, còn `timTen(...)` lấy kết quả đầu tiên.

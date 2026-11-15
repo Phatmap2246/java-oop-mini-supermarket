@@ -1,4 +1,10 @@
 package dichvu ;
+import utils.BoDemMa;
+import utils.TepVanBan;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.ArrayList;
 
 import java.util.Locale;
 
@@ -403,7 +409,7 @@ public class Danhsachkhuyenmai implements interfaces.IQuanLy<Khuyenmai> {
             System.out.println("Kết quả tra cứu:");
             switch (luaChon) {
                 case 1: {
-                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã khuyến mãi cần tìm: ", Validation.MaKM_REGEX, "Mã khuyến mãi không đúng định dạng. Vui lòng nhập lại!");
+                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã khuyến mãi cần tìm: ", Validation.MaKM_REGEX, "Mã khuyến mãi không đúng định dạng. Vui lòng nhập lại!", Khuyenmai.getSoThuTu());
                     System.out.println("Đang tra cứu...");
                     Validation.danghoatdong(1);
                     for (Khuyenmai km : khuyenmais) {
@@ -468,6 +474,11 @@ public class Danhsachkhuyenmai implements interfaces.IQuanLy<Khuyenmai> {
     }
     public void thongKeCacloaiKhuyenMai( String Loai )
     {
+        if (Loai == null || Loai.isBlank()) {
+            System.out.println("Vui lòng chọn loại khuyến mãi.");
+            return;
+        }
+
         int tongKhuyenMai = 0 ;
         boolean flag = false ;
         System.out.println("Đang thống kê...");
@@ -475,7 +486,7 @@ public class Danhsachkhuyenmai implements interfaces.IQuanLy<Khuyenmai> {
         for ( Khuyenmai km: khuyenmais )
         {
             if (km == null) continue;
-            if ( km.isTonTai() && km.dangHoatDong(LocalDate.now()) && km.getLoaiKhuyenMai() != null && km.getLoaiKhuyenMai().equalsIgnoreCase(Loai))
+            if ( km.isTonTai() && km.dangHoatDong(LocalDate.now()) && km.getLoaiKhuyenMai() != null && km.getLoaiKhuyenMai().toLowerCase(Locale.ROOT).contains(Loai.toLowerCase(Locale.ROOT)))
             {
                 System.out.println(km);
                 tongKhuyenMai++ ;
@@ -507,11 +518,11 @@ public class Danhsachkhuyenmai implements interfaces.IQuanLy<Khuyenmai> {
                     break;
                 case 2:
                     System.out.println("Danh sách khuyến mãi giảm giá trực tiếp!");
-                    thongKeCacloaiKhuyenMai("Giảm theo trực tiếp!");
+                    thongKeCacloaiKhuyenMai("Giảm giá trực tiếp");
                     break;
                 case 3:
                     System.out.println("Danh sách khuyến mãi mua tặng!");
-                    thongKeCacloaiKhuyenMai("Khuyến mãi mua tặng");
+                    thongKeCacloaiKhuyenMai("Mua");
                     break;
                 case 0:
                     break;
@@ -645,12 +656,12 @@ public class Danhsachkhuyenmai implements interfaces.IQuanLy<Khuyenmai> {
                     break;
                 }
                 case 5: {
-                    String ma = Validation.inputStringRegex(sc, "Nhập mã khuyến mãi: ", Validation.MaKM_REGEX, "Mã khuyến mãi không đúng định dạng!");
+                    String ma = Validation.inputStringRegex(sc, "Nhập mã khuyến mãi: ", Validation.MaKM_REGEX, "Mã khuyến mãi không đúng định dạng!", Khuyenmai.getSoThuTu());
                     sua(ma, sc);
                     break;
                 }
                 case 6: {
-                    String ma = Validation.inputStringRegex(sc, "Nhập mã khuyến mãi: ", Validation.MaKM_REGEX, "Mã khuyến mãi không đúng định dạng!");
+                    String ma = Validation.inputStringRegex(sc, "Nhập mã khuyến mãi: ", Validation.MaKM_REGEX, "Mã khuyến mãi không đúng định dạng!", Khuyenmai.getSoThuTu());
                     xoa(ma);
                     break;
                 }
@@ -677,5 +688,42 @@ public class Danhsachkhuyenmai implements interfaces.IQuanLy<Khuyenmai> {
                     break;
             }
         } while (luaChon != 0);
+    }
+
+    /** Mỗi đối tượng tạo một dòng; thông tin con được ghi thành dòng riêng. */
+
+
+    /** Có lỗi thì giữ danh sách đang dùng, không bỏ dòng lỗi. */
+
+    // ================= ĐỌC / GHI FILE TXT =================
+
+    public void ghiFile(String tenFile) throws IOException {
+        ArrayList<String> cacDong = new ArrayList<>();
+        Set<String> maDaGhi = new HashSet<>();
+        for (int i = 0; i < soLuongKhuyenMai; i++) {
+            Khuyenmai obj = khuyenmais[i];
+            if (obj == null) throw new IOException("Danh sách chứa null.");
+            TepVanBan.khongTrung(maDaGhi, obj.getMaKhuyenMai());
+            cacDong.add(obj.toDongFile());
+        }
+        TepVanBan.ghi(tenFile, "Danhsachkhuyenmai", cacDong);
+    }
+
+    public void docFile(String tenFile) throws IOException {
+        int[] demTruoc = BoDemMa.chup();
+        ArrayList<Khuyenmai> moi = new ArrayList<>();
+        Set<String> maDaDoc = new HashSet<>();
+        try {
+            for (String dong : TepVanBan.doc(tenFile)) {
+                Khuyenmai obj = Khuyenmai.tuDongFile(dong);
+                TepVanBan.khongTrung(maDaDoc, obj.getMaKhuyenMai());
+                moi.add(obj);
+            }
+        } catch (RuntimeException | IOException e) {
+            BoDemMa.khoiPhuc(demTruoc);
+            throw new IOException("Không đọc được " + tenFile + ": " + e.getMessage(), e);
+        }
+        this.khuyenmais = moi.toArray(new Khuyenmai[0]);
+        this.soLuongKhuyenMai = moi.size();
     }
 }

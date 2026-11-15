@@ -120,19 +120,6 @@ public class DSYeuCau implements interfaces.IQuanLy<YeuCau> {
         return list;
     }
 
-    public void docDanhSachYeuCau(String file) throws IOException
-    {
-        tenFileNguon = file;
-        ArrayList<YeuCau.BanGhiDataBase> danhSach = YeuCau.docDanhSach(Paths.get(file));
-        ArrayList<YeuCau> danhSachMoi = new ArrayList<>();
-        for (YeuCau.BanGhiDataBase yeuCau : danhSach) {
-            if (yeuCau.laDongLoi()) continue;
-            danhSachMoi.add(new YeuCau(yeuCau.getMaNV(), yeuCau.getVaitro(),
-                    yeuCau.getNoiDung(), yeuCau.getTrangThai()));
-        }
-        list = danhSachMoi;
-    }
-
     public void duyetYeuCau(Scanner sc) throws IOException{
         Path filePath = Paths.get(tenFile());
         if (!Files.exists(filePath)) {
@@ -194,5 +181,31 @@ public class DSYeuCau implements interfaces.IQuanLy<YeuCau> {
                 yeuCauTheoTrangThai.getOrDefault("DaDuyet", 0),
                 yeuCauTheoTrangThai.getOrDefault("ChoDuyet", 0),
                 yeuCauTheoTrangThai.getOrDefault("KhongDuyet", 0));
+    }
+
+
+    /** Ghi yêu cầu theo dòng YEUCAU; giữ riêng hồ sơ lỗi lịch sử bằng LOICU. */
+
+    // ================= ĐỌC / GHI FILE TXT =================
+
+    public void docDanhSachYeuCau(String file) throws IOException
+    {
+        tenFileNguon = file;
+        ArrayList<YeuCau.BanGhiDataBase> danhSach = YeuCau.docDanhSach(Paths.get(file));
+        ArrayList<YeuCau> danhSachMoi = new ArrayList<>();
+        for (YeuCau.BanGhiDataBase yeuCau : danhSach) {
+            if (yeuCau.laDongLoi()) continue;
+            danhSachMoi.add(new YeuCau(yeuCau.getMaNV(), yeuCau.getVaitro(),
+                    yeuCau.getNoiDung(), yeuCau.getTrangThai()));
+        }
+        list = danhSachMoi;
+    }
+
+    public void ghiFile(String tenFile) throws java.io.IOException {
+        YeuCau.ghiDanhSachYeuCau(Paths.get(tenFile), list);
+    }
+
+    public void docFile(String tenFile) throws java.io.IOException {
+        docDanhSachYeuCau(tenFile);
     }
 }

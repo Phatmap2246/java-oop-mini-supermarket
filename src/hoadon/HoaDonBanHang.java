@@ -1,4 +1,6 @@
 package hoadon;
+
+import utils.DongDuLieu;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -18,20 +20,19 @@ public class HoaDonBanHang extends HoaDon {
     private IThanhToan phuongThucThanhToan;
     private boolean daThanhToan;
     private double chietKhau ;
-    public static final String MA_HD_BAN_REGEX = "(?i)^HD\\d+$";
+    public static final String MA_HD_BAN_REGEX = "(?i)^HD(B)?\\d+$";
     private ArrayList<CTHoaDonBan> ctHoaDonBans ;
     public HoaDonBanHang() {
         this("");
     }
     public HoaDonBanHang( String maNhanVien )
     {
-        super(maNhanVien);
+        super(maNhanVien, "Hoá đơn bán");
         maKhachHang = "" ;
         chietKhau = 0 ;
         phuongThucThanhToan = null ;
         daThanhToan = false ;
         ctHoaDonBans = new ArrayList<>() ;
-        super.setLoaiHoaDon("Hoá đơn bán");
     }
     public HoaDonBanHang(String maHoaDon, LocalDateTime ngayLap , String maNhanVien , String loaiHoaDon, IThanhToan thanhToan , boolean daThanhToan , long tienKhuyenMai)
     {
@@ -46,6 +47,9 @@ public class HoaDonBanHang extends HoaDon {
     }
 
     public void setChietKhau(double chietKhau) {
+        if (!Double.isFinite(chietKhau) || chietKhau < 0 || chietKhau > 1) {
+            throw new IllegalArgumentException("Chiết khấu phải nằm trong khoảng từ 0 đến 1.");
+        }
         this.chietKhau = chietKhau;
     }
 
@@ -72,6 +76,7 @@ public class HoaDonBanHang extends HoaDon {
     }
 
     public boolean nhapHoaDon(Scanner sc , QuanLySanPham qlsp , DanhSachSPKM danhSachSPKM, Danhsachkhuyenmai dsKhuyenMai , DSKhachHang dskh ) {
+        danhSachSPKM.tuDongGiamGiaCanHSD(qlsp, dsKhuyenMai);
         maKhachHang = Validation.inputStringRegex(sc , "Nhập mã khách hàng: " , Validation.MaKH_REGEX , "Mã khách hàng không hợp lệ vui lòng nhập lại!(VD:KH001)" , KhachHang.getSoThuTu()) ;
         while ( dskh.timMa(maKhachHang) == null || !dskh.timMa(maKhachHang).isTonTai())
         {
@@ -92,6 +97,8 @@ public class HoaDonBanHang extends HoaDon {
             }
             if (!flag) ctHoaDonBans.add(ct) ;
         } while (Validation.luaChon(sc, "Nhập tiếp sản phẩm? (1/0): ", 0, 1) == 1);
+        KhachHang kh = dskh.timMa(maKhachHang);
+        setChietKhau(kh.tinhChietKhau());
         System.out.println("\n--- CHỌN PHƯƠNG THỨC THANH TOÁN ---");
         System.out.println("1. Tiền mặt");
         System.out.println("2. Chuyển khoản ngân hàng");
@@ -120,11 +127,9 @@ public class HoaDonBanHang extends HoaDon {
                 sp.setSoLuongTonKho(sp.getSoLuongTonKho() - ct.getSoLuong());
                 qlsp.getDanhSachSanPham().set(qlsp.timViTri(ct.getMaSanPham()) , sp ) ;
             }
-            chietKhau = dskh.timMa(maKhachHang).tinhChietKhau() ;
-            dskh.timMa(maKhachHang).capNhatThuHang();
-            dskh.timMa(maKhachHang).tichLuyChiTieu(tinhTongTien());
+            kh.tichLuyChiTieu(tinhTongTien());
         }
-        System.out.println("Thanh toán thành công!");
+        System.out.println(daThanhToan ? "Thanh toán thành công!" : "Thanh toán chưa thành công!");
         return daThanhToan ;
     }
 
@@ -133,7 +138,7 @@ public class HoaDonBanHang extends HoaDon {
         long tongTienHang = 0;
         for(CTHoaDonBan ct : ctHoaDonBans){
             if (ct == null || !ct.isTonTai()) continue;
-            tongTienHang += ct.getThanhTienSauKhuyenMai();
+            tongTienHang += ct.tinhThanhTien();
         }
         return (long) (tongTienHang*(1-chietKhau));
     }
@@ -147,6 +152,7 @@ public class HoaDonBanHang extends HoaDon {
         {
             System.out.println(ct);
         }
+        System.out.println("Thành tiền phải trả: " + tinhTongTien());
         System.out.println( "Trạng thái: " + ((daThanhToan)?"Đã thanh toán":"Chưa thanh toán") + " | Phương thức thanh toán: " + (phuongThucThanhToan == null ? "Chưa chọn" : phuongThucThanhToan.getTenPhuongThuc()));
     }
     public void danhSachSanPhamDaMua()
@@ -165,8 +171,35 @@ public class HoaDonBanHang extends HoaDon {
         } this.phuongThucThanhToan = phuongThucThanhToan; }
     public String toString()
     {
-        return super.toString() + " | Mã khách hàng: " + maKhachHang + " | Trạng thái: " + ((daThanhToan)?"Đã thanh toán":"Chưa thanh toán") + " | Phương thức thanh toán: " + (phuongThucThanhToan == null ? "Chưa chọn" : phuongThucThanhToan.getTenPhuongThuc()) ;
+        return utils.HienThi.canLe(super.toString() + " | Mã khách hàng: " + maKhachHang + " | Trạng thái: " + ((daThanhToan)?"Đã thanh toán":"Chưa thanh toán") + " | Phương thức thanh toán: " + (phuongThucThanhToan == null ? "Chưa chọn" : phuongThucThanhToan.getTenPhuongThuc()) );
     }
     public boolean isDaThanhToan() { return daThanhToan; }
     public void setDaThanhToan(boolean daThanhToan) { this.daThanhToan = daThanhToan; }
+
+    // ================= ĐỌC / GHI FILE TXT =================
+
+    @Override public String toDongFile() {
+        kiemTraDuLieuFile();
+        return "HDBAN;" + thongTinHoaDonFile() + ";" + DongDuLieu.ghep(maKhachHang, daThanhToan, chietKhau);
+    }
+
+    public static HoaDonBanHang tuDongFile(String dong) {
+        String[] p = dong.split(";", -1);
+        DongDuLieu.yeuCau(p.length == 8 && "HDBAN".equals(p[0]), "Sai dòng HDBAN (cần 8 cột).");
+        int dem = HoaDon.getSoThuTu();
+        HoaDonBanHang obj = new HoaDonBanHang();
+        HoaDon.datBoDemFile(dem); // Constructor đọc file không cấp mã mới.
+        obj.docThongTinHoaDonFile(p);
+        obj.maKhachHang = p[5];
+        obj.daThanhToan = DongDuLieu.logic(p[6]);
+        obj.chietKhau = Double.parseDouble(p[7]);
+        obj.kiemTraDuLieuFile();
+        obj.capNhatMaFile();
+        return obj;
+    }
+
+    public void kiemTraDuLieuFile() {
+        super.kiemTraDuLieuFile();
+        DongDuLieu.tyLe(chietKhau, 1, "chiết khấu");
+    }
 }

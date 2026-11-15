@@ -1,5 +1,7 @@
 package sanpham;
 
+import utils.DongDuLieu;
+
 import java.util.Scanner;
 import utils.Validation;
 public class TieuDung extends SanPham
@@ -7,9 +9,8 @@ public class TieuDung extends SanPham
     private String thuongHieu , noiSanXuat , phanLoai , luuYAnToan ;
     public TieuDung()
     {
-        super();
+        super(0.05, "Tiêu dùng");
         thuongHieu = noiSanXuat = phanLoai = luuYAnToan = "" ;
-        super.setThue(0.05);
     }
     public TieuDung( String maSanPham , String tenSanPham , String loaiSanPham , long giaNhap , long giaBan , int soLuongTonKho , String maNhaCungCap , double thue ,
                      String thuongHieu , String noiSanXuat , String phanLoai , String luuYAnToan)
@@ -80,11 +81,38 @@ public class TieuDung extends SanPham
 
     @Override
     public long tinhThue() {
-        return (long)super.getThue()*super.getGiaBan() ;
+        return (long) (super.getThue() * super.getGiaBan()) ;
     }//
 
     @Override
     public String toString() {
-        return "Mã sản phẩm: " + super.getMaSanPham() + " | Tên sản phẩm: " + super.getTenSanPham() + " | Giá bán: " + super.getGiaBan() + " | Phân loại: " + phanLoai + " | Nơi sản xuất: " + noiSanXuat + " | Phân loại: " + phanLoai + " | Lưu ý an toàn: " + luuYAnToan;
+        return utils.HienThi.canLe("Mã sản phẩm: " + super.getMaSanPham() + " | Tên sản phẩm: " + super.getTenSanPham() + " | Giá bán: " + super.getGiaBan() + " | Thương hiệu: " + thuongHieu + " | Nơi sản xuất: " + noiSanXuat + " | Phân loại: " + phanLoai + " | Lưu ý an toàn: " + luuYAnToan);
+    }
+
+    // ================= ĐỌC / GHI FILE TXT =================
+
+    @Override public String toDongFile() {
+        kiemTraDuLieuFile();
+        return "TIEUDUNG;" + thongTinSanPhamFile() + ";" + DongDuLieu.ghep(thuongHieu, noiSanXuat, phanLoai, luuYAnToan);
+    }
+
+    public static TieuDung tuDongFile(String dong) {
+        String[] p = dong.split(";", -1);
+        DongDuLieu.yeuCau(p.length == 14 && "TIEUDUNG".equals(p[0]), "Sai dòng TIEUDUNG (cần 14 cột).");
+        int dem = SanPham.getSoThuTu();
+        TieuDung obj = new TieuDung();
+        SanPham.datBoDemFile(dem); // Constructor đọc file không cấp mã mới.
+        obj.docThongTinSanPhamFile(p);
+        obj.thuongHieu = p[10];
+        obj.noiSanXuat = p[11];
+        obj.phanLoai = p[12];
+        obj.luuYAnToan = p[13];
+        obj.kiemTraDuLieuFile();
+        obj.capNhatMaFile();
+        return obj;
+    }
+
+    public void kiemTraDuLieuFile() {
+        super.kiemTraDuLieuFile();
     }
 }

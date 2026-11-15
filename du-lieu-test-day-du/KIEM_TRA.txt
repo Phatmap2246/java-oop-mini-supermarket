@@ -1,0 +1,3 @@
+PASS: Đọc/lưu lại toàn bộ mười file không mất thuộc tính.
+PASS: Main đăng nhập kế toán, xem báo cáo năm và thoát trên bản sao.
+Số bản ghi: {"CONGNO": 10, "NHACUNGCAP": 10, "SPCC": 100, "HDBAN": 100, "CTBAN": 200, "THANHTOAN": 75, "HDNHAP": 20, "CTNHAP": 60, "KHACHHANG": 40, "KMPHANTRAM": 4, "KMMUATANG": 4, "KMTRUCTIEP": 4, "QUANLY": 4, "QUANKHO": 4, "THUNGAN": 4, "KETOAN": 4, "THUCPHAM": 40, "TIEUDUNG": 35, "DIENTU": 25, "SPKM": 80}

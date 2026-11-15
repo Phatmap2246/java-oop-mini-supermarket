@@ -1,4 +1,9 @@
 package sanpham;
+import utils.BoDemMa;
+import utils.TepVanBan;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 import java.time.LocalDate;
 
@@ -356,7 +361,7 @@ public class QuanLySanPham implements interfaces.IQuanLy<SanPham> {
 
     public void dieuChinhGiaBan(Scanner sc){
         String maSP = Validation.inputStringRegex(sc, "Nhập mã sản phẩm cần sửa giá: ",
-                Validation.MaSP_REGEX, "Mã sản phẩm không hợp lệ!");
+                Validation.MaSP_REGEX, "Mã sản phẩm không hợp lệ!", SanPham.getSoThuTu());
         SanPham sanPham = timMa(maSP);
         if(sanPham == null){
             return;
@@ -433,7 +438,7 @@ public class QuanLySanPham implements interfaces.IQuanLy<SanPham> {
             System.out.println("Kết quả tra cứu:");
             switch (luaChon) {
                 case 1: {
-                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã sản phẩm cần tìm: ", Validation.MaSP_REGEX, "Mã sản phẩm không đúng định dạng. Vui lòng nhập lại!");
+                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã sản phẩm cần tìm: ", Validation.MaSP_REGEX, "Mã sản phẩm không đúng định dạng. Vui lòng nhập lại!", SanPham.getSoThuTu());
                     System.out.println("Đang tra cứu...");
                     Validation.danghoatdong(1);
                     for (SanPham sp : danhSachSanPham) {
@@ -469,7 +474,7 @@ public class QuanLySanPham implements interfaces.IQuanLy<SanPham> {
                     break;
                 }
                 case 4: {
-                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã nhà cung cấp cần tìm: ", Validation.MaNCC_REGEX, "Mã nhà cung cấp không đúng định dạng. Vui lòng nhập lại!");
+                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã nhà cung cấp cần tìm: ", Validation.MaNCC_REGEX, "Mã nhà cung cấp không đúng định dạng. Vui lòng nhập lại!", Nhacungcap.getSoThuTuNCC());
                     System.out.println("Đang tra cứu...");
                     Validation.danghoatdong(1);
                     for (SanPham sp : danhSachSanPham) {
@@ -531,13 +536,13 @@ public class QuanLySanPham implements interfaces.IQuanLy<SanPham> {
         }
         if ( sp instanceof ThucPham )
         {
-            if ( ((ThucPham) sp).ktraNgayHetHan() > ((ThucPham) sp).kiemTraSoNgaySuDung()*0.5 )
-            {
-                System.out.println("Sản phẩm vẫn có thể sử dụng tốt với " + ((ThucPham) sp).ktraNgayHetHan() + " Ngày sử dụng!");
-            }
-            else if ( ((ThucPham) sp).kiemTraSanPhamHong() )
+            if ( ((ThucPham) sp).kiemTraSanPhamHong() )
             {
                 System.out.println("Sản phẩm đã bị hỏng vui lòng thay mới!");
+            }
+            else if ( ((ThucPham) sp).ktraNgayHetHan() > ((ThucPham) sp).kiemTraSoNgaySuDung()*0.5 )
+            {
+                System.out.println("Sản phẩm vẫn có thể sử dụng tốt với " + ((ThucPham) sp).ktraNgayHetHan() + " Ngày sử dụng!");
             }
             else
             {
@@ -840,5 +845,40 @@ public class QuanLySanPham implements interfaces.IQuanLy<SanPham> {
         System.out.printf("%s còn tồn: %d%n", nhan, danhSach.size());
         danhSach.forEach(sp -> System.out.printf("- %s | %s | Tồn: %d | HSD: %s%n",
                 sp.getMaSanPham(), sp.getTenSanPham(), sp.getSoLuongTonKho(), sp.getHanSuDung()));
+    }
+
+    /** Mỗi đối tượng tạo một dòng; thông tin con được ghi thành dòng riêng. */
+
+
+    /** Có lỗi thì giữ danh sách đang dùng, không bỏ dòng lỗi. */
+
+    // ================= ĐỌC / GHI FILE TXT =================
+
+    public void ghiFile(String tenFile) throws IOException {
+        ArrayList<String> cacDong = new ArrayList<>();
+        Set<String> maDaGhi = new HashSet<>();
+        for (SanPham obj : danhSachSanPham) {
+            if (obj == null) throw new IOException("Danh sách chứa null.");
+            TepVanBan.khongTrung(maDaGhi, obj.getMaSanPham());
+            cacDong.add(obj.toDongFile());
+        }
+        TepVanBan.ghi(tenFile, "QuanLySanPham", cacDong);
+    }
+
+    public void docFile(String tenFile) throws IOException {
+        int[] demTruoc = BoDemMa.chup();
+        ArrayList<SanPham> moi = new ArrayList<>();
+        Set<String> maDaDoc = new HashSet<>();
+        try {
+            for (String dong : TepVanBan.doc(tenFile)) {
+                SanPham obj = SanPham.tuDongFile(dong);
+                TepVanBan.khongTrung(maDaDoc, obj.getMaSanPham());
+                moi.add(obj);
+            }
+        } catch (RuntimeException | IOException e) {
+            BoDemMa.khoiPhuc(demTruoc);
+            throw new IOException("Không đọc được " + tenFile + ": " + e.getMessage(), e);
+        }
+        this.danhSachSanPham = moi;
     }
 }
