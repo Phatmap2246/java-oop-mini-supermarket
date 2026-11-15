@@ -49,22 +49,33 @@
                 <gia-tri kieu="java.lang.String">KM004</gia-tri>
               </thuoc-tinh>
             </doi-tuong>
+            <doi-tuong lop="dichvu.SanPhamKhuyenMai" ma="8">
+              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="tonTai">
+                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="maSanPham">
+                <gia-tri kieu="java.lang.String">SP002</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="maKhuyenMai">
+                <gia-tri kieu="java.lang.String">KM005</gia-tri>
+              </thuoc-tinh>
+            </doi-tuong>
           </mang>
         </thuoc-tinh>
         <thuoc-tinh khai-bao="dichvu.DanhSachSPKM" ten="soLuongSanPham">
-          <gia-tri kieu="java.lang.Integer">4</gia-tri>
+          <gia-tri kieu="java.lang.Integer">5</gia-tri>
         </thuoc-tinh>
       </doi-tuong>
     </thuoc-tinh>
     <thuoc-tinh khai-bao="utils.DataBase$BanLuu" ten="boDem">
-      <anh-xa lop="java.util.LinkedHashMap" ma="8">
+      <anh-xa lop="java.util.LinkedHashMap" ma="9">
         <cap>
           <gia-tri kieu="java.lang.String">sanpham.SanPham</gia-tri>
-          <gia-tri kieu="java.lang.Integer">9</gia-tri>
+          <gia-tri kieu="java.lang.Integer">10</gia-tri>
         </cap>
         <cap>
           <gia-tri kieu="java.lang.String">person.NhanVien</gia-tri>
-          <gia-tri kieu="java.lang.Integer">5</gia-tri>
+          <gia-tri kieu="java.lang.Integer">6</gia-tri>
         </cap>
         <cap>
           <gia-tri kieu="java.lang.String">person.KhachHang</gia-tri>
@@ -76,7 +87,7 @@
         </cap>
         <cap>
           <gia-tri kieu="java.lang.String">dichvu.Khuyenmai</gia-tri>
-          <gia-tri kieu="java.lang.Integer">5</gia-tri>
+          <gia-tri kieu="java.lang.Integer">6</gia-tri>
         </cap>
         <cap>
           <gia-tri kieu="java.lang.String">dichvu.Nhacungcap</gia-tri>

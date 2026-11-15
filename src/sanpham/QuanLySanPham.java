@@ -427,7 +427,7 @@ public class QuanLySanPham implements interfaces.IQuanLy<SanPham> {
             System.out.println("5. Giá bán");
             System.out.println("6. Số lượng tồn kho");
             System.out.println("0. Trở về");
-            int luaChon = Validation.luaChon(sc, "Nhập lựa chọn: ", 0, 7);
+            int luaChon = Validation.luaChon(sc, "Nhập lựa chọn: ", 0, 6);
             if (luaChon == 0) return;
             boolean flag = false;
             System.out.println("Kết quả tra cứu:");

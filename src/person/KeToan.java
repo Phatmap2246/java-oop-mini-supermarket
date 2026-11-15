@@ -210,6 +210,7 @@ public class KeToan extends NhanVien {
             System.out.printf("%d. HĐ: %s | Mã NCC: %s | Tiền: %,d VND | Hạn: %s | [%s]%n",
                     i + 1,
                     hdn.getMaHoaDon(),
+                    hdn.getMaNhaCungCap(),
                     hdn.tinhTongTien(),
                     DateUtil.formatDate(han),
                     trangThai);
@@ -223,6 +224,7 @@ public class KeToan extends NhanVien {
             System.out.printf("%d. HĐ: %s - NCC: %s (%,d VND - Hạn: %s)%n",
                     i + 1,
                     hdn.getMaHoaDon(),
+                    hdn.getMaNhaCungCap(),
                     hdn.tinhTongTien(),
                     DateUtil.formatDate(tinhNgayDenHan(hdn)));
         }
