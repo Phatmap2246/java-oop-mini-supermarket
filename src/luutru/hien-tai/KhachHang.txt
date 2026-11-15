@@ -1,197 +1,43 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<du-lieu phien-ban="1">
-  <doi-tuong lop="utils.DataBase$BanLuu" ma="1">
-    <thuoc-tinh khai-bao="utils.DataBase$BanLuu" ten="duLieu">
-      <doi-tuong lop="person.DSKhachHang" ma="2">
-        <thuoc-tinh khai-bao="person.DSKhachHang" ten="list">
-          <mang lop="person.KhachHang" ma="3">
-            <doi-tuong lop="person.KhachHang" ma="4">
-              <thuoc-tinh khai-bao="person.KhachHang" ten="maKhachHang">
-                <gia-tri kieu="java.lang.String">KH001</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.KhachHang" ten="ngayDangKy">
-                <gia-tri kieu="java.time.LocalDate">2026-05-14</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.KhachHang" ten="tongChiTieu">
-                <gia-tri kieu="java.lang.Long">250000</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.KhachHang" ten="hangThanhVien">
-                <gia-tri kieu="java.lang.String">Đồng</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.KhachHang" ten="diemTichLuy">
-                <gia-tri kieu="java.lang.Integer">250</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.KhachHang" ten="isTonTai">
-                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.Person" ten="email">
-                <gia-tri kieu="java.lang.String">khachhang1@example.com</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.Person" ten="hoten">
-                <gia-tri kieu="java.lang.String">Nguyễn Thảo Linh</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.Person" ten="sdt">
-                <gia-tri kieu="java.lang.String">0933000000</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.Person" ten="diachi">
-                <doi-tuong lop="person.DiaChi" ma="5">
-                  <thuoc-tinh khai-bao="person.DiaChi" ten="soNha">
-                    <gia-tri kieu="java.lang.String">14</gia-tri>
-                  </thuoc-tinh>
-                  <thuoc-tinh khai-bao="person.DiaChi" ten="duong">
-                    <gia-tri kieu="java.lang.String">Nguyễn Trãi</gia-tri>
-                  </thuoc-tinh>
-                  <thuoc-tinh khai-bao="person.DiaChi" ten="phuongXa">
-                    <gia-tri kieu="java.lang.String">Bến Thành</gia-tri>
-                  </thuoc-tinh>
-                  <thuoc-tinh khai-bao="person.DiaChi" ten="quanHuyen">
-                    <gia-tri kieu="java.lang.String">Quận 1</gia-tri>
-                  </thuoc-tinh>
-                  <thuoc-tinh khai-bao="person.DiaChi" ten="tinhThanhPho">
-                    <gia-tri kieu="java.lang.String">TP Hồ Chí Minh</gia-tri>
-                  </thuoc-tinh>
-                </doi-tuong>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.Person" ten="ngsinh">
-                <gia-tri kieu="java.time.LocalDate">1995-06-10</gia-tri>
-              </thuoc-tinh>
-            </doi-tuong>
-            <doi-tuong lop="person.KhachHang" ma="6">
-              <thuoc-tinh khai-bao="person.KhachHang" ten="maKhachHang">
-                <gia-tri kieu="java.lang.String">KH002</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.KhachHang" ten="ngayDangKy">
-                <gia-tri kieu="java.time.LocalDate">2026-05-14</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.KhachHang" ten="tongChiTieu">
-                <gia-tri kieu="java.lang.Long">1500000</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.KhachHang" ten="hangThanhVien">
-                <gia-tri kieu="java.lang.String">Bạc</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.KhachHang" ten="diemTichLuy">
-                <gia-tri kieu="java.lang.Integer">1500</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.KhachHang" ten="isTonTai">
-                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.Person" ten="email">
-                <gia-tri kieu="java.lang.String">khachhang2@example.com</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.Person" ten="hoten">
-                <gia-tri kieu="java.lang.String">Trần Hoàng Nam</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.Person" ten="sdt">
-                <gia-tri kieu="java.lang.String">0933000001</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.Person" ten="diachi">
-                <doi-tuong lop="person.DiaChi" ma="7">
-                  <thuoc-tinh khai-bao="person.DiaChi" ten="soNha">
-                    <gia-tri kieu="java.lang.String">15</gia-tri>
-                  </thuoc-tinh>
-                  <thuoc-tinh khai-bao="person.DiaChi" ten="duong">
-                    <gia-tri kieu="java.lang.String">Nguyễn Trãi</gia-tri>
-                  </thuoc-tinh>
-                  <thuoc-tinh khai-bao="person.DiaChi" ten="phuongXa">
-                    <gia-tri kieu="java.lang.String">Bến Thành</gia-tri>
-                  </thuoc-tinh>
-                  <thuoc-tinh khai-bao="person.DiaChi" ten="quanHuyen">
-                    <gia-tri kieu="java.lang.String">Quận 1</gia-tri>
-                  </thuoc-tinh>
-                  <thuoc-tinh khai-bao="person.DiaChi" ten="tinhThanhPho">
-                    <gia-tri kieu="java.lang.String">TP Hồ Chí Minh</gia-tri>
-                  </thuoc-tinh>
-                </doi-tuong>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.Person" ten="ngsinh">
-                <gia-tri kieu="java.time.LocalDate">1996-06-10</gia-tri>
-              </thuoc-tinh>
-            </doi-tuong>
-            <doi-tuong lop="person.KhachHang" ma="8">
-              <thuoc-tinh khai-bao="person.KhachHang" ten="maKhachHang">
-                <gia-tri kieu="java.lang.String">KH003</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.KhachHang" ten="ngayDangKy">
-                <gia-tri kieu="java.time.LocalDate">2026-05-14</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.KhachHang" ten="tongChiTieu">
-                <gia-tri kieu="java.lang.Long">5500000</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.KhachHang" ten="hangThanhVien">
-                <gia-tri kieu="java.lang.String">Vàng</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.KhachHang" ten="diemTichLuy">
-                <gia-tri kieu="java.lang.Integer">5500</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.KhachHang" ten="isTonTai">
-                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.Person" ten="email">
-                <gia-tri kieu="java.lang.String">khachhang3@example.com</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.Person" ten="hoten">
-                <gia-tri kieu="java.lang.String">Lê Hà My</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.Person" ten="sdt">
-                <gia-tri kieu="java.lang.String">0933000002</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.Person" ten="diachi">
-                <doi-tuong lop="person.DiaChi" ma="9">
-                  <thuoc-tinh khai-bao="person.DiaChi" ten="soNha">
-                    <gia-tri kieu="java.lang.String">16</gia-tri>
-                  </thuoc-tinh>
-                  <thuoc-tinh khai-bao="person.DiaChi" ten="duong">
-                    <gia-tri kieu="java.lang.String">Nguyễn Trãi</gia-tri>
-                  </thuoc-tinh>
-                  <thuoc-tinh khai-bao="person.DiaChi" ten="phuongXa">
-                    <gia-tri kieu="java.lang.String">Bến Thành</gia-tri>
-                  </thuoc-tinh>
-                  <thuoc-tinh khai-bao="person.DiaChi" ten="quanHuyen">
-                    <gia-tri kieu="java.lang.String">Quận 1</gia-tri>
-                  </thuoc-tinh>
-                  <thuoc-tinh khai-bao="person.DiaChi" ten="tinhThanhPho">
-                    <gia-tri kieu="java.lang.String">TP Hồ Chí Minh</gia-tri>
-                  </thuoc-tinh>
-                </doi-tuong>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="person.Person" ten="ngsinh">
-                <gia-tri kieu="java.time.LocalDate">1997-06-10</gia-tri>
-              </thuoc-tinh>
-            </doi-tuong>
-          </mang>
-        </thuoc-tinh>
-        <thuoc-tinh khai-bao="person.DSKhachHang" ten="n">
-          <gia-tri kieu="java.lang.Integer">3</gia-tri>
-        </thuoc-tinh>
-      </doi-tuong>
-    </thuoc-tinh>
-    <thuoc-tinh khai-bao="utils.DataBase$BanLuu" ten="boDem">
-      <anh-xa lop="java.util.LinkedHashMap" ma="10">
-        <cap>
-          <gia-tri kieu="java.lang.String">sanpham.SanPham</gia-tri>
-          <gia-tri kieu="java.lang.Integer">9</gia-tri>
-        </cap>
-        <cap>
-          <gia-tri kieu="java.lang.String">person.NhanVien</gia-tri>
-          <gia-tri kieu="java.lang.Integer">5</gia-tri>
-        </cap>
-        <cap>
-          <gia-tri kieu="java.lang.String">person.KhachHang</gia-tri>
-          <gia-tri kieu="java.lang.Integer">4</gia-tri>
-        </cap>
-        <cap>
-          <gia-tri kieu="java.lang.String">hoadon.HoaDon</gia-tri>
-          <gia-tri kieu="java.lang.Integer">7</gia-tri>
-        </cap>
-        <cap>
-          <gia-tri kieu="java.lang.String">dichvu.Khuyenmai</gia-tri>
-          <gia-tri kieu="java.lang.Integer">5</gia-tri>
-        </cap>
-        <cap>
-          <gia-tri kieu="java.lang.String">dichvu.Nhacungcap</gia-tri>
-          <gia-tri kieu="java.lang.Integer">4</gia-tri>
-        </cap>
-      </anh-xa>
-    </thuoc-tinh>
-  </doi-tuong>
-</du-lieu>
+#SIEUTHI_TXT_3
+#NHOM;DSKhachHang
+#BODEM;101;13;41;121;13;11
+KHACHHANG;KH001;11/10/2025;250000;Đồng;2;true;kh1@example.com;Nguyễn Minh Anh;0933000001;1;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH002;11/10/2025;1500000;Bạc;15;true;kh2@example.com;Nguyễn Minh Anh;0933000002;2;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH003;11/10/2025;5500000;Vàng;55;true;kh3@example.com;Nguyễn Minh Anh;0933000003;3;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH004;11/10/2025;11000000;Kim Cương;110;true;kh4@example.com;Nguyễn Minh Anh;0933000004;4;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH005;11/10/2025;250000;Đồng;2;true;kh5@example.com;Nguyễn Minh Anh;0933000005;5;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH006;11/10/2025;1500000;Bạc;15;true;kh6@example.com;Nguyễn Minh Anh;0933000006;6;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH007;11/10/2025;5500000;Vàng;55;true;kh7@example.com;Nguyễn Minh Anh;0933000007;7;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH008;11/10/2025;11000000;Kim Cương;110;true;kh8@example.com;Nguyễn Minh Anh;0933000008;8;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH009;11/10/2025;250000;Đồng;2;true;kh9@example.com;Nguyễn Minh Anh;0933000009;9;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH010;11/10/2025;1500000;Bạc;15;true;kh10@example.com;Nguyễn Minh Anh;0933000010;10;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH011;11/10/2025;5500000;Vàng;55;true;kh11@example.com;Nguyễn Minh Anh;0933000011;11;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH012;11/10/2025;11000000;Kim Cương;110;true;kh12@example.com;Nguyễn Minh Anh;0933000012;12;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH013;11/10/2025;250000;Đồng;2;true;kh13@example.com;Nguyễn Minh Anh;0933000013;13;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH014;11/10/2025;1500000;Bạc;15;true;kh14@example.com;Nguyễn Minh Anh;0933000014;14;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH015;11/10/2025;5500000;Vàng;55;true;kh15@example.com;Nguyễn Minh Anh;0933000015;15;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH016;11/10/2025;11000000;Kim Cương;110;true;kh16@example.com;Nguyễn Minh Anh;0933000016;16;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH017;11/10/2025;250000;Đồng;2;true;kh17@example.com;Nguyễn Minh Anh;0933000017;17;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH018;11/10/2025;1500000;Bạc;15;true;kh18@example.com;Nguyễn Minh Anh;0933000018;18;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH019;11/10/2025;5500000;Vàng;55;true;kh19@example.com;Nguyễn Minh Anh;0933000019;19;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH020;11/10/2025;11000000;Kim Cương;110;true;kh20@example.com;Nguyễn Minh Anh;0933000020;20;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH021;11/10/2025;250000;Đồng;2;true;kh21@example.com;Nguyễn Minh Anh;0933000021;21;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH022;11/10/2025;1500000;Bạc;15;true;kh22@example.com;Nguyễn Minh Anh;0933000022;22;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH023;11/10/2025;5500000;Vàng;55;true;kh23@example.com;Nguyễn Minh Anh;0933000023;23;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH024;11/10/2025;11000000;Kim Cương;110;true;kh24@example.com;Nguyễn Minh Anh;0933000024;24;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH025;11/10/2025;250000;Đồng;2;true;kh25@example.com;Nguyễn Minh Anh;0933000025;25;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH026;11/10/2025;1500000;Bạc;15;true;kh26@example.com;Nguyễn Minh Anh;0933000026;26;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH027;11/10/2025;5500000;Vàng;55;true;kh27@example.com;Nguyễn Minh Anh;0933000027;27;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH028;11/10/2025;11000000;Kim Cương;110;true;kh28@example.com;Nguyễn Minh Anh;0933000028;28;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH029;11/10/2025;250000;Đồng;2;true;kh29@example.com;Nguyễn Minh Anh;0933000029;29;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH030;11/10/2025;1500000;Bạc;15;true;kh30@example.com;Nguyễn Minh Anh;0933000030;30;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH031;11/10/2025;5500000;Vàng;55;true;kh31@example.com;Nguyễn Minh Anh;0933000031;31;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH032;11/10/2025;11000000;Kim Cương;110;true;kh32@example.com;Nguyễn Minh Anh;0933000032;32;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH033;11/10/2025;250000;Đồng;2;true;kh33@example.com;Nguyễn Minh Anh;0933000033;33;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH034;11/10/2025;1500000;Bạc;15;true;kh34@example.com;Nguyễn Minh Anh;0933000034;34;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH035;11/10/2025;5500000;Vàng;55;true;kh35@example.com;Nguyễn Minh Anh;0933000035;35;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH036;11/10/2025;11000000;Kim Cương;110;true;kh36@example.com;Nguyễn Minh Anh;0933000036;36;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH037;11/10/2025;250000;Đồng;2;true;kh37@example.com;Nguyễn Minh Anh;0933000037;37;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH038;11/10/2025;1500000;Bạc;15;true;kh38@example.com;Nguyễn Minh Anh;0933000038;38;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH039;11/10/2025;5500000;Vàng;55;true;kh39@example.com;Nguyễn Minh Anh;0933000039;39;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH040;11/10/2025;11000000;Kim Cương;110;false;kh40@example.com;Nguyễn Minh Anh;0933000040;40;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995

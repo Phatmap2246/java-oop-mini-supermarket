@@ -1,88 +1,83 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<du-lieu phien-ban="1">
-  <doi-tuong lop="utils.DataBase$BanLuu" ma="1">
-    <thuoc-tinh khai-bao="utils.DataBase$BanLuu" ten="duLieu">
-      <doi-tuong lop="dichvu.DanhSachSPKM" ma="2">
-        <thuoc-tinh khai-bao="dichvu.DanhSachSPKM" ten="sanPhamKhuyenMais">
-          <mang lop="dichvu.SanPhamKhuyenMai" ma="3">
-            <doi-tuong lop="dichvu.SanPhamKhuyenMai" ma="4">
-              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="tonTai">
-                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="maSanPham">
-                <gia-tri kieu="java.lang.String">SP001</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="maKhuyenMai">
-                <gia-tri kieu="java.lang.String">KM001</gia-tri>
-              </thuoc-tinh>
-            </doi-tuong>
-            <doi-tuong lop="dichvu.SanPhamKhuyenMai" ma="5">
-              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="tonTai">
-                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="maSanPham">
-                <gia-tri kieu="java.lang.String">SP004</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="maKhuyenMai">
-                <gia-tri kieu="java.lang.String">KM002</gia-tri>
-              </thuoc-tinh>
-            </doi-tuong>
-            <doi-tuong lop="dichvu.SanPhamKhuyenMai" ma="6">
-              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="tonTai">
-                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="maSanPham">
-                <gia-tri kieu="java.lang.String">SP007</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="maKhuyenMai">
-                <gia-tri kieu="java.lang.String">KM003</gia-tri>
-              </thuoc-tinh>
-            </doi-tuong>
-            <doi-tuong lop="dichvu.SanPhamKhuyenMai" ma="7">
-              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="tonTai">
-                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="maSanPham">
-                <gia-tri kieu="java.lang.String">SP005</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="dichvu.SanPhamKhuyenMai" ten="maKhuyenMai">
-                <gia-tri kieu="java.lang.String">KM004</gia-tri>
-              </thuoc-tinh>
-            </doi-tuong>
-          </mang>
-        </thuoc-tinh>
-        <thuoc-tinh khai-bao="dichvu.DanhSachSPKM" ten="soLuongSanPham">
-          <gia-tri kieu="java.lang.Integer">4</gia-tri>
-        </thuoc-tinh>
-      </doi-tuong>
-    </thuoc-tinh>
-    <thuoc-tinh khai-bao="utils.DataBase$BanLuu" ten="boDem">
-      <anh-xa lop="java.util.LinkedHashMap" ma="8">
-        <cap>
-          <gia-tri kieu="java.lang.String">sanpham.SanPham</gia-tri>
-          <gia-tri kieu="java.lang.Integer">9</gia-tri>
-        </cap>
-        <cap>
-          <gia-tri kieu="java.lang.String">person.NhanVien</gia-tri>
-          <gia-tri kieu="java.lang.Integer">5</gia-tri>
-        </cap>
-        <cap>
-          <gia-tri kieu="java.lang.String">person.KhachHang</gia-tri>
-          <gia-tri kieu="java.lang.Integer">4</gia-tri>
-        </cap>
-        <cap>
-          <gia-tri kieu="java.lang.String">hoadon.HoaDon</gia-tri>
-          <gia-tri kieu="java.lang.Integer">7</gia-tri>
-        </cap>
-        <cap>
-          <gia-tri kieu="java.lang.String">dichvu.Khuyenmai</gia-tri>
-          <gia-tri kieu="java.lang.Integer">5</gia-tri>
-        </cap>
-        <cap>
-          <gia-tri kieu="java.lang.String">dichvu.Nhacungcap</gia-tri>
-          <gia-tri kieu="java.lang.Integer">4</gia-tri>
-        </cap>
-      </anh-xa>
-    </thuoc-tinh>
-  </doi-tuong>
-</du-lieu>
+#SIEUTHI_TXT_3
+#NHOM;DanhSachSPKM
+#BODEM;101;13;41;121;13;11
+SPKM;SP002;KM002;true
+SPKM;SP003;KM003;true
+SPKM;SP004;KM004;true
+SPKM;SP005;KM005;true
+SPKM;SP007;KM007;true
+SPKM;SP008;KM008;true
+SPKM;SP009;KM009;true
+SPKM;SP010;KM010;true
+SPKM;SP012;KM012;true
+SPKM;SP013;KM001;true
+SPKM;SP014;KM002;true
+SPKM;SP015;KM003;true
+SPKM;SP017;KM005;true
+SPKM;SP018;KM006;true
+SPKM;SP019;KM007;true
+SPKM;SP020;KM008;true
+SPKM;SP022;KM010;true
+SPKM;SP023;KM011;true
+SPKM;SP024;KM012;true
+SPKM;SP025;KM001;true
+SPKM;SP027;KM003;true
+SPKM;SP028;KM004;true
+SPKM;SP029;KM005;true
+SPKM;SP030;KM006;true
+SPKM;SP032;KM008;true
+SPKM;SP033;KM009;true
+SPKM;SP034;KM010;true
+SPKM;SP035;KM011;true
+SPKM;SP037;KM001;true
+SPKM;SP038;KM002;true
+SPKM;SP039;KM003;true
+SPKM;SP040;KM004;true
+SPKM;SP042;KM006;true
+SPKM;SP043;KM007;true
+SPKM;SP044;KM008;true
+SPKM;SP045;KM009;true
+SPKM;SP047;KM011;true
+SPKM;SP048;KM012;true
+SPKM;SP049;KM001;true
+SPKM;SP050;KM002;true
+SPKM;SP052;KM004;true
+SPKM;SP053;KM005;true
+SPKM;SP054;KM006;true
+SPKM;SP055;KM007;true
+SPKM;SP057;KM009;true
+SPKM;SP058;KM010;true
+SPKM;SP059;KM011;true
+SPKM;SP060;KM012;true
+SPKM;SP062;KM002;true
+SPKM;SP063;KM003;true
+SPKM;SP064;KM004;true
+SPKM;SP065;KM005;true
+SPKM;SP067;KM007;true
+SPKM;SP068;KM008;true
+SPKM;SP069;KM009;true
+SPKM;SP070;KM010;true
+SPKM;SP072;KM012;true
+SPKM;SP073;KM001;true
+SPKM;SP074;KM002;true
+SPKM;SP075;KM003;true
+SPKM;SP077;KM005;true
+SPKM;SP078;KM006;true
+SPKM;SP079;KM007;true
+SPKM;SP080;KM008;true
+SPKM;SP082;KM010;true
+SPKM;SP083;KM011;true
+SPKM;SP084;KM012;true
+SPKM;SP085;KM001;true
+SPKM;SP087;KM003;true
+SPKM;SP088;KM004;true
+SPKM;SP089;KM005;true
+SPKM;SP090;KM006;true
+SPKM;SP092;KM008;true
+SPKM;SP093;KM009;true
+SPKM;SP094;KM010;true
+SPKM;SP095;KM011;true
+SPKM;SP097;KM001;true
+SPKM;SP098;KM002;true
+SPKM;SP099;KM003;false
+SPKM;SP100;KM004;true

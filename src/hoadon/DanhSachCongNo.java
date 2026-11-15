@@ -27,6 +27,25 @@ public class DanhSachCongNo implements interfaces.IQuanLy<DanhSachCongNo.KhoanCo
             ngayThanhToan = ds.ngayThanhToanCongNo.get(i); nganHang = ds.nganHangThanhToanCongNo.get(i);
             daThanhToan = ds.daThanhToanCongNo.get(i);
         }
+        /** Một khoản công nợ là một dòng CONGNO, không lưu các mảng song song. */
+        public String toDongFile() {
+            utils.DongDuLieu.khongAm(soTien, "Số tiền công nợ");
+            return utils.DongDuLieu.ghep("CONGNO", maHoaDon, maPhieuNhap, maNhaCungCap, tenNhaCungCap,
+                    Long.toString(soTien), utils.DongDuLieu.chuoi(ngayDenHan),
+                    utils.DongDuLieu.chuoi(ngayThanhToan), nganHang, Boolean.toString(daThanhToan));
+        }
+        private KhoanCongNo(String[] p) {
+            maHoaDon = p[1]; maPhieuNhap = p[2]; maNhaCungCap = p[3]; tenNhaCungCap = p[4];
+            soTien = Long.parseLong(p[5]); ngayDenHan = utils.DongDuLieu.ngay(p[6]);
+            ngayThanhToan = utils.DongDuLieu.ngay(p[7]); nganHang = p[8];
+            daThanhToan = utils.DongDuLieu.logic(p[9]);
+            utils.DongDuLieu.khongAm(soTien, "Số tiền công nợ");
+        }
+        public static KhoanCongNo tuDongFile(String dong) {
+            String[] p = dong.split(";", -1);
+            utils.DongDuLieu.yeuCau(p.length == 10 && "CONGNO".equals(p[0]), "Sai dòng công nợ.");
+            return new KhoanCongNo(p);
+        }
         public String getMaHoaDon() { return maHoaDon; }
         public String getMaPhieuNhap() { return maPhieuNhap; }
         public String getMaNhaCungCap() { return maNhaCungCap; }
@@ -37,9 +56,12 @@ public class DanhSachCongNo implements interfaces.IQuanLy<DanhSachCongNo.KhoanCo
         public String getNganHang() { return nganHang; }
         public boolean isDaThanhToan() { return daThanhToan; }
         @Override public String toString() {
-            return maHoaDon + " | " + maPhieuNhap + " | " + maNhaCungCap + " | " + tenNhaCungCap
-                    + " | " + soTien + " | " + ngayDenHan + " | " + ngayThanhToan + " | " + nganHang
-                    + " | " + (daThanhToan ? "Đã thanh toán" : "Chưa thanh toán");
+            return utils.HienThi.canLe("Mã hóa đơn: " + maHoaDon + " | Phiếu nhập: " + maPhieuNhap
+                    + " | Mã nhà cung cấp: " + maNhaCungCap + " | Nhà cung cấp: " + tenNhaCungCap
+                    + " | Số tiền: " + soTien + " | Hạn trả: " + ngayDenHan
+                    + " | Ngày thanh toán: " + (ngayThanhToan == null ? "Chưa thanh toán" : ngayThanhToan)
+                    + " | Ngân hàng: " + (nganHang == null ? "Chưa có" : nganHang)
+                    + " | Trạng thái: " + (daThanhToan ? "Đã thanh toán" : "Chưa thanh toán"));
         }
     }
 
@@ -111,7 +133,7 @@ public class DanhSachCongNo implements interfaces.IQuanLy<DanhSachCongNo.KhoanCo
 
     public void doiChieuVaGhiNhanCongNo(Scanner sc, DanhSachHoaDonNhap danhSachHoaDonNhap, Danhsachdoitac danhSachDoiTac) {
         String maHD = Validation.inputStringRegex(sc, "Nhập mã hóa đơn NCC: ",
-                HoaDonNhapHang.MA_HD_NHAP_REGEX, "Mã hóa đơn nhập không hợp lệ!");
+                HoaDonNhapHang.MA_HD_NHAP_REGEX, "Mã hóa đơn nhập không hợp lệ!", HoaDon.getSoThuTu());
 
         HoaDon hd = danhSachHoaDonNhap.timMa(maHD);
         if (!(hd instanceof HoaDonNhapHang)) {
@@ -132,6 +154,10 @@ public class DanhSachCongNo implements interfaces.IQuanLy<DanhSachCongNo.KhoanCo
         ArrayList<CTHoaDonNhap> dsChiTiet = hdNhap.getCtHoaDonNhaps();
         if (dsChiTiet.isEmpty()) {
             System.out.println(">> Hóa đơn trống, không có mặt hàng để đối chiếu.");
+            return;
+        }
+        if (!hdNhap.isDuyet() || !hdNhap.isDaNhapSP()) {
+            System.out.println("Chỉ ghi công nợ cho phiếu đã duyệt và nhập kho.");
             return;
         }
 
@@ -275,5 +301,61 @@ public class DanhSachCongNo implements interfaces.IQuanLy<DanhSachCongNo.KhoanCo
                     DateUtil.formatDate(han), trangThai);
         }
 
+    }
+
+
+    public void ghiFile(String tenFile) throws java.io.IOException {
+        java.util.ArrayList<String> cacDong = new java.util.ArrayList<>();
+        int n = maHoaDonCongNo.size();
+        utils.DongDuLieu.yeuCau(maPhieuNhapCongNo.size() == n, "Các cột công nợ lệch kích thước.");
+        utils.DongDuLieu.yeuCau(maNhaCungCapCongNo.size() == n, "Các cột công nợ lệch kích thước.");
+        utils.DongDuLieu.yeuCau(tenNhaCungCapCongNo.size() == n, "Các cột công nợ lệch kích thước.");
+        utils.DongDuLieu.yeuCau(soTienCongNo.size() == n, "Các cột công nợ lệch kích thước.");
+        utils.DongDuLieu.yeuCau(ngayDenHanCongNo.size() == n, "Các cột công nợ lệch kích thước.");
+        utils.DongDuLieu.yeuCau(ngayThanhToanCongNo.size() == n, "Các cột công nợ lệch kích thước.");
+        utils.DongDuLieu.yeuCau(nganHangThanhToanCongNo.size() == n, "Các cột công nợ lệch kích thước.");
+        utils.DongDuLieu.yeuCau(daThanhToanCongNo.size() == n, "Các cột công nợ lệch kích thước.");
+        java.util.Set<String> maDaGhi = new java.util.HashSet<>();
+        for (int i = 0; i < n; i++) {
+            KhoanCongNo no = new KhoanCongNo(this, i);
+            utils.TepVanBan.khongTrung(maDaGhi, no.getMaHoaDon());
+            cacDong.add(no.toDongFile());
+        }
+        utils.TepVanBan.ghi(tenFile, "DanhSachCongNo", cacDong);
+    }
+    public void docFile(String tenFile) throws java.io.IOException {
+        int[] demTruoc = utils.BoDemMa.chup();
+        java.util.ArrayList<KhoanCongNo> moi = new java.util.ArrayList<>();
+        java.util.Set<String> maDaDoc = new java.util.HashSet<>();
+        try {
+            for (String dong : utils.TepVanBan.doc(tenFile)) {
+                KhoanCongNo no = KhoanCongNo.tuDongFile(dong);
+                utils.TepVanBan.khongTrung(maDaDoc, no.getMaHoaDon());
+                moi.add(no);
+            }
+        } catch (RuntimeException | java.io.IOException e) {
+            utils.BoDemMa.khoiPhuc(demTruoc);
+            throw new java.io.IOException("Không đọc được " + tenFile + ": " + e.getMessage(), e);
+        }
+        maHoaDonCongNo.clear();
+        maPhieuNhapCongNo.clear();
+        maNhaCungCapCongNo.clear();
+        tenNhaCungCapCongNo.clear();
+        soTienCongNo.clear();
+        ngayDenHanCongNo.clear();
+        ngayThanhToanCongNo.clear();
+        nganHangThanhToanCongNo.clear();
+        daThanhToanCongNo.clear();
+        for (KhoanCongNo no : moi) {
+            maHoaDonCongNo.add(no.getMaHoaDon());
+            maPhieuNhapCongNo.add(no.getMaPhieuNhap());
+            maNhaCungCapCongNo.add(no.getMaNhaCungCap());
+            tenNhaCungCapCongNo.add(no.getTenNhaCungCap());
+            soTienCongNo.add(no.getSoTien());
+            ngayDenHanCongNo.add(no.getNgayDenHan());
+            ngayThanhToanCongNo.add(no.getNgayThanhToan());
+            nganHangThanhToanCongNo.add(no.getNganHang());
+            daThanhToanCongNo.add(no.isDaThanhToan());
+        }
     }
 }

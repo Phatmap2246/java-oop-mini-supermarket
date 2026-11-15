@@ -1,15 +1,16 @@
 package utils;
 
+import utils.DongDuLieu;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
-public class YeuCau {
+public class YeuCau implements interfaces.BanGhiFile {
     private String maNV;
     private String vaitro;
     private String noiDung;
@@ -72,12 +73,8 @@ public class YeuCau {
 
     @Override
     public String toString() {
-        return "YeuCau{"
-                + "maNV='" + maNV + '\''
-                + ", vaitro='" + vaitro + '\''
-                + ", noiDung='" + noiDung + '\''
-                + ", trangThai='" + trangThai + '\''
-                + '}';
+        return utils.HienThi.canLe("Mã nhân viên: " + maNV + " | Vai trò: " + vaitro
+                + " | Nội dung: " + noiDung + " | Trạng thái: " + trangThai);
     }
 
     public static void themVaoFile(YeuCau yeuCau, Path filePath) throws IOException {
@@ -91,20 +88,22 @@ public class YeuCau {
             return new ArrayList<>();
         }
 
+        if (TepVanBan.dinhDangMoi(filePath.toString())) {
+            ArrayList<BanGhiDataBase> moi = new ArrayList<>();
+            for (String dong : TepVanBan.doc(filePath.toString())) {
+                if (dong.startsWith("LOICU;")) {
+                    String[] cot = dong.split(";", 2);
+                    moi.add(BanGhiDataBase.dongCuSaiDinhDang(cot[1]));
+                } else {
+                    try { moi.add(new BanGhiDataBase(YeuCau.tuDongFile(dong))); }
+                    catch (RuntimeException e) { throw new IOException("Yêu cầu không hợp lệ trong " + filePath, e); }
+                }
+            }
+            return moi;
+        }
         List<String> dongDuLieu = Files.readAllLines(filePath, StandardCharsets.UTF_8);
         if (dongDuLieu.isEmpty()) {
             return new ArrayList<>();
-        }
-
-        String header = DataBase.getCSVHeader(new BanGhiDataBase());
-        if (header.equals(dongDuLieu.get(0))) {
-            ArrayList<BanGhiDataBase> danhSach =
-                    DataBase.docfile(BanGhiDataBase.class, filePath.toString());
-            if (danhSach.size() != dongDuLieu.size() - 1
-                    || danhSach.stream().anyMatch(ghi -> ghi == null)) {
-                throw new IOException("Không thể đọc đầy đủ dữ liệu yêu cầu từ " + filePath);
-            }
-            return danhSach;
         }
 
         ArrayList<BanGhiDataBase> danhSach = new ArrayList<>();
@@ -130,43 +129,25 @@ public class YeuCau {
 
     public static void ghiDanhSach(Path filePath, ArrayList<BanGhiDataBase> danhSach)
             throws IOException {
-        Path thuMuc = filePath.toAbsolutePath().getParent();
-        if (thuMuc != null) {
-            Files.createDirectories(thuMuc);
-        }
-
-        if (danhSach.isEmpty()) {
-            Files.writeString(filePath, DataBase.getCSVHeader(new BanGhiDataBase()) + System.lineSeparator(), StandardCharsets.UTF_8);
-            return;
-        }
-
-        ArrayList<Object> cacBanGhi = new ArrayList<>(danhSach);
-        DataBase.ghiVaoFile(cacBanGhi, filePath.toString(), true);
-
-        ArrayList<BanGhiDataBase> daGhi =
-                DataBase.docfile(BanGhiDataBase.class, filePath.toString());
-        if (daGhi.size() != danhSach.size()) {
-            throw new IOException("Không ghi đủ dữ liệu yêu cầu vào " + filePath);
-        }
-        for (int i = 0; i < danhSach.size(); i++) {
-            BanGhiDataBase mongDoi = danhSach.get(i);
-            BanGhiDataBase thucTe = daGhi.get(i);
-            if (!mongDoi.maNV.equals(thucTe.maNV)
-                    || !mongDoi.vaitro.equals(thucTe.vaitro)
-                    || !mongDoi.noiDungBase64.equals(thucTe.noiDungBase64)
-                    || !mongDoi.trangThai.equals(thucTe.trangThai)
-                    || !mongDoi.dongLoiBase64.equals(thucTe.dongLoiBase64)) {
-                throw new IOException("Dữ liệu yêu cầu ghi ra không khớp: " + filePath);
+        ArrayList<String> cacDong = new ArrayList<>();
+        try {
+            for (BanGhiDataBase ghi : danhSach) {
+                if (ghi == null) throw new IOException("Yêu cầu null.");
+                // Dòng lịch sử lỗi cũ giữ nguyên sau LOICU; không xử lý escape mới.
+                String dong = ghi.laDongLoi() ? "LOICU;" + ghi.getDongLoi()
+                        : new YeuCau(ghi.maNV, ghi.vaitro, ghi.getNoiDung(), ghi.trangThai).toDongFile();
+                cacDong.add(dong);
             }
-        }
+            TepVanBan.ghi(filePath.toString(), "YeuCau", cacDong);
+        } catch (IllegalArgumentException e) { throw new IOException(e.getMessage(), e); }
     }
 
     public static final class BanGhiDataBase {
         private String maNV = "";
         private String vaitro = "";
-        private String noiDungBase64 = "";
+        private String noiDung = "";
         private String trangThai = "";
-        private String dongLoiBase64 = "";
+        private String dongLoi = "";
 
         public BanGhiDataBase() {
         }
@@ -174,13 +155,13 @@ public class YeuCau {
         private BanGhiDataBase(YeuCau yeuCau) {
             maNV = yeuCau.maNV;
             vaitro = yeuCau.vaitro;
-            noiDungBase64 = maHoa(yeuCau.noiDung);
+            noiDung = yeuCau.noiDung;
             trangThai = yeuCau.trangThai;
         }
 
         private static BanGhiDataBase dongCuSaiDinhDang(String dong) {
             BanGhiDataBase ghi = new BanGhiDataBase();
-            ghi.dongLoiBase64 = maHoa(dong);
+            ghi.dongLoi = dong;
             return ghi;
         }
 
@@ -193,7 +174,7 @@ public class YeuCau {
         }
 
         public String getNoiDung() {
-            return giaiMa(noiDungBase64);
+            return noiDung;
         }
 
         public String getTrangThai() {
@@ -208,26 +189,18 @@ public class YeuCau {
         }
 
         public boolean laDongLoi() {
-            return !dongLoiBase64.isEmpty();
+            return !dongLoi.isEmpty();
         }
 
         public String getDongLoi() {
-            return giaiMa(dongLoiBase64);
+            return dongLoi;
         }
 
-        private static String maHoa(String giaTri) {
-            return Base64.getUrlEncoder().withoutPadding()
-                    .encodeToString(giaTri.getBytes(StandardCharsets.UTF_8));
-        }
-
-        private static String giaiMa(String giaTri) {
-            return new String(Base64.getUrlDecoder().decode(giaTri), StandardCharsets.UTF_8);
-        }
     }
 
     public static YeuCau taoYeuCau(Scanner sc) {
-        System.out.print("Nhập mã nhân viên: ");
-        String maNV = sc.nextLine().trim();
+        String maNV = Validation.inputStringRegex(sc, "Nhập mã nhân viên: ", Validation.MaNV_REGEX,
+                "Mã nhân viên không đúng định dạng!", person.NhanVien.getSoThuTu());
 
         System.out.print("Nhập vai trò: ");
         String vaitro = sc.nextLine().trim();
@@ -237,5 +210,24 @@ public class YeuCau {
 
         return new YeuCau(maNV, vaitro, noiDung, "ChoDuyet");
     }
-    
+
+    // TXT đơn giản: mỗi thuộc tính ứng với một cột, tách bằng dấu ;.
+    @Override public String toDongFile() {
+        kiemTraDuLieuFile();
+        return DongDuLieu.ghep("YEUCAU", maNV, vaitro, noiDung, trangThai);
+    }
+    public static YeuCau tuDongFile(String dong) {
+        String[] p = dong.split(";", -1);
+        DongDuLieu.yeuCau(p.length == 5 && "YEUCAU".equals(p[0]), "Sai dòng YEUCAU (cần 5 cột).");
+        YeuCau obj = new YeuCau();
+        obj.maNV = p[1];
+        obj.vaitro = p[2];
+        obj.noiDung = p[3];
+        obj.trangThai = p[4];
+        obj.kiemTraDuLieuFile();
+        return obj;
+    }
+
+    public void kiemTraDuLieuFile() {
+    }
 }

@@ -69,11 +69,11 @@ public class QuanLyInterfaceTest {
             check(no.xoa("HD004") && no.timMa("HD005").getSoTien() == 4500000, "Xóa đồng bộ các danh sách công nợ");
 
             Files.writeString(fileYC, "dong-cu-sai-dinh-dang\n");
-            yc.them(new Scanner("NV010\nQuanKho\nCần nhập sữa\n"));
-            check(yc.timMa("NV010") != null && yc.timTen("sữa") != null && yc.timKhoa("QuanKho") != null, "Thêm/tìm yêu cầu");
-            check(yc.sua("NV010", new Scanner("Bổ sung sữa\n2\n")), "Sửa yêu cầu");
-            check(yc.timMa("NV010").getTrangThai().equals("DaDuyet"), "Trạng thái yêu cầu");
-            check(yc.xoa("NV010") && yc.getList().isEmpty(), "Xóa yêu cầu cuối cùng");
+            yc.them(new Scanner("NV002\nQuanKho\nCần nhập sữa\n"));
+            check(yc.timMa("NV002") != null && yc.timTen("sữa") != null && yc.timKhoa("QuanKho") != null, "Thêm/tìm yêu cầu");
+            check(yc.sua("NV002", new Scanner("Bổ sung sữa\n2\n")), "Sửa yêu cầu");
+            check(yc.timMa("NV002").getTrangThai().equals("DaDuyet"), "Trạng thái yêu cầu");
+            check(yc.xoa("NV002") && yc.getList().isEmpty(), "Xóa yêu cầu cuối cùng");
             check(YeuCau.docDanhSach(fileYC).stream().anyMatch(YeuCau.BanGhiDataBase::laDongLoi), "Giữ dòng lỗi lịch sử yêu cầu");
 
             check(sp.xoa("SP001") && sp.timMa("SP001") == null && sp.timTen("hộp 1 lít") == null, "Xóa mềm sản phẩm");

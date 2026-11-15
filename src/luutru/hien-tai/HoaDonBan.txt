@@ -1,279 +1,378 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<du-lieu phien-ban="1">
-  <doi-tuong lop="utils.DataBase$BanLuu" ma="1">
-    <thuoc-tinh khai-bao="utils.DataBase$BanLuu" ten="duLieu">
-      <doi-tuong lop="hoadon.DanhSachHoaDonBan" ma="2">
-        <thuoc-tinh khai-bao="hoadon.DanhSachHoaDonBan" ten="dsHoaDonBanHang">
-          <danh-sach lop="java.util.ArrayList" ma="3">
-            <doi-tuong lop="hoadon.HoaDonBanHang" ma="4">
-              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="maKhachHang">
-                <gia-tri kieu="java.lang.String">KH001</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="phuongThucThanhToan">
-                <doi-tuong lop="hoadon.ThanhToanTienMat" ma="5">
-                  <thuoc-tinh khai-bao="hoadon.ThanhToanTienMat" ten="tienKhachDua">
-                    <gia-tri kieu="java.lang.Long">0</gia-tri>
-                  </thuoc-tinh>
-                  <thuoc-tinh khai-bao="hoadon.ThanhToanTienMat" ten="tienThua">
-                    <gia-tri kieu="java.lang.Long">0</gia-tri>
-                  </thuoc-tinh>
-                </doi-tuong>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="daThanhToan">
-                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="chietKhau">
-                <gia-tri kieu="java.lang.Double">0.0</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="ctHoaDonBans">
-                <danh-sach lop="java.util.ArrayList" ma="6">
-                  <doi-tuong lop="hoadon.CTHoaDonBan" ma="7">
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="tonTai">
-                      <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="thanhTienSauKhuyenMai">
-                      <gia-tri kieu="java.lang.Long">57600</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="soLuongTangKem">
-                      <gia-tri kieu="java.lang.Integer">0</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="soLuongPhaiTra">
-                      <gia-tri kieu="java.lang.Integer">2</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="soTienGiam">
-                      <gia-tri kieu="java.lang.Long">6400</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="loaiKhuyenMai">
-                      <gia-tri kieu="java.lang.String">Giảm theo phần trăm</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="maSanpham">
-                      <gia-tri kieu="java.lang.String">SP001</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="tenSanPham">
-                      <gia-tri kieu="java.lang.String">Sữa tươi hộp 1 lít</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="soLuong">
-                      <gia-tri kieu="java.lang.Integer">2</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="donGia">
-                      <gia-tri kieu="java.lang.Long">32000</gia-tri>
-                    </thuoc-tinh>
-                  </doi-tuong>
-                  <doi-tuong lop="hoadon.CTHoaDonBan" ma="8">
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="tonTai">
-                      <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="thanhTienSauKhuyenMai">
-                      <gia-tri kieu="java.lang.Long">32000</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="soLuongTangKem">
-                      <gia-tri kieu="java.lang.Integer">0</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="soLuongPhaiTra">
-                      <gia-tri kieu="java.lang.Integer">4</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="soTienGiam">
-                      <gia-tri kieu="java.lang.Long">0</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="loaiKhuyenMai">
-                      <gia-tri kieu="java.lang.String">Không áp dụng</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="maSanpham">
-                      <gia-tri kieu="java.lang.String">SP002</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="tenSanPham">
-                      <gia-tri kieu="java.lang.String">Sữa chua dâu</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="soLuong">
-                      <gia-tri kieu="java.lang.Integer">4</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="donGia">
-                      <gia-tri kieu="java.lang.Long">8000</gia-tri>
-                    </thuoc-tinh>
-                  </doi-tuong>
-                </danh-sach>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="maHoaDon">
-                <gia-tri kieu="java.lang.String">HD001</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="ngayLap">
-                <gia-tri kieu="java.time.LocalDateTime">2026-11-12T10:30</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="maNhanVien">
-                <gia-tri kieu="java.lang.String">NV003</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="loaiHoaDon">
-                <gia-tri kieu="java.lang.String">Hoá đơn bán</gia-tri>
-              </thuoc-tinh>
-            </doi-tuong>
-            <doi-tuong lop="hoadon.HoaDonBanHang" ma="9">
-              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="maKhachHang">
-                <gia-tri kieu="java.lang.String">KH002</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="phuongThucThanhToan">
-                <doi-tuong lop="hoadon.ThanhToanChuyenKhoan" ma="10">
-                  <thuoc-tinh khai-bao="hoadon.ThanhToanChuyenKhoan" ten="tenNganHang">
-                    <gia-tri kieu="java.lang.String">Ngân hàng mẫu</gia-tri>
-                  </thuoc-tinh>
-                  <thuoc-tinh khai-bao="hoadon.ThanhToanChuyenKhoan" ten="soTaiKhoan">
-                    <gia-tri kieu="java.lang.String">0123456789</gia-tri>
-                  </thuoc-tinh>
-                  <thuoc-tinh khai-bao="hoadon.ThanhToanChuyenKhoan" ten="maGiaoDich">
-                    <gia-tri kieu="java.lang.String"/>
-                  </thuoc-tinh>
-                  <thuoc-tinh khai-bao="hoadon.ThanhToanChuyenKhoan" ten="noiDungQR">
-                    <gia-tri kieu="java.lang.String"/>
-                  </thuoc-tinh>
-                </doi-tuong>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="daThanhToan">
-                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="chietKhau">
-                <gia-tri kieu="java.lang.Double">0.0</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="ctHoaDonBans">
-                <danh-sach lop="java.util.ArrayList" ma="11">
-                  <doi-tuong lop="hoadon.CTHoaDonBan" ma="12">
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="tonTai">
-                      <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="thanhTienSauKhuyenMai">
-                      <gia-tri kieu="java.lang.Long">600000</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="soLuongTangKem">
-                      <gia-tri kieu="java.lang.Integer">0</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="soLuongPhaiTra">
-                      <gia-tri kieu="java.lang.Integer">1</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="soTienGiam">
-                      <gia-tri kieu="java.lang.Long">50000</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="loaiKhuyenMai">
-                      <gia-tri kieu="java.lang.String">Giảm giá trực tiếp</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="maSanpham">
-                      <gia-tri kieu="java.lang.String">SP007</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="tenSanPham">
-                      <gia-tri kieu="java.lang.String">Nồi cơm điện 1.8 lít</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="soLuong">
-                      <gia-tri kieu="java.lang.Integer">1</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="donGia">
-                      <gia-tri kieu="java.lang.Long">650000</gia-tri>
-                    </thuoc-tinh>
-                  </doi-tuong>
-                </danh-sach>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="maHoaDon">
-                <gia-tri kieu="java.lang.String">HD002</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="ngayLap">
-                <gia-tri kieu="java.time.LocalDateTime">2026-11-13T10:30</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="maNhanVien">
-                <gia-tri kieu="java.lang.String">NV003</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="loaiHoaDon">
-                <gia-tri kieu="java.lang.String">Hoá đơn bán</gia-tri>
-              </thuoc-tinh>
-            </doi-tuong>
-            <doi-tuong lop="hoadon.HoaDonBanHang" ma="13">
-              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="maKhachHang">
-                <gia-tri kieu="java.lang.String">KH003</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="phuongThucThanhToan">
-                <rong/>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="daThanhToan">
-                <gia-tri kieu="java.lang.Boolean">false</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="chietKhau">
-                <gia-tri kieu="java.lang.Double">0.0</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonBanHang" ten="ctHoaDonBans">
-                <danh-sach lop="java.util.ArrayList" ma="14">
-                  <doi-tuong lop="hoadon.CTHoaDonBan" ma="15">
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="tonTai">
-                      <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="thanhTienSauKhuyenMai">
-                      <gia-tri kieu="java.lang.Long">300000</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="soLuongTangKem">
-                      <gia-tri kieu="java.lang.Integer">1</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="soLuongPhaiTra">
-                      <gia-tri kieu="java.lang.Integer">2</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="soTienGiam">
-                      <gia-tri kieu="java.lang.Long">0</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDonBan" ten="loaiKhuyenMai">
-                      <gia-tri kieu="java.lang.String">Khuyến mãi mua tặng</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="maSanpham">
-                      <gia-tri kieu="java.lang.String">SP004</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="tenSanPham">
-                      <gia-tri kieu="java.lang.String">Nước giặt 3 lít</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="soLuong">
-                      <gia-tri kieu="java.lang.Integer">2</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="donGia">
-                      <gia-tri kieu="java.lang.Long">150000</gia-tri>
-                    </thuoc-tinh>
-                  </doi-tuong>
-                </danh-sach>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="maHoaDon">
-                <gia-tri kieu="java.lang.String">HD003</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="ngayLap">
-                <gia-tri kieu="java.time.LocalDateTime">2026-11-14T10:30</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="maNhanVien">
-                <gia-tri kieu="java.lang.String">NV003</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="loaiHoaDon">
-                <gia-tri kieu="java.lang.String">Hoá đơn bán</gia-tri>
-              </thuoc-tinh>
-            </doi-tuong>
-          </danh-sach>
-        </thuoc-tinh>
-      </doi-tuong>
-    </thuoc-tinh>
-    <thuoc-tinh khai-bao="utils.DataBase$BanLuu" ten="boDem">
-      <anh-xa lop="java.util.LinkedHashMap" ma="16">
-        <cap>
-          <gia-tri kieu="java.lang.String">sanpham.SanPham</gia-tri>
-          <gia-tri kieu="java.lang.Integer">9</gia-tri>
-        </cap>
-        <cap>
-          <gia-tri kieu="java.lang.String">person.NhanVien</gia-tri>
-          <gia-tri kieu="java.lang.Integer">5</gia-tri>
-        </cap>
-        <cap>
-          <gia-tri kieu="java.lang.String">person.KhachHang</gia-tri>
-          <gia-tri kieu="java.lang.Integer">4</gia-tri>
-        </cap>
-        <cap>
-          <gia-tri kieu="java.lang.String">hoadon.HoaDon</gia-tri>
-          <gia-tri kieu="java.lang.Integer">7</gia-tri>
-        </cap>
-        <cap>
-          <gia-tri kieu="java.lang.String">dichvu.Khuyenmai</gia-tri>
-          <gia-tri kieu="java.lang.Integer">5</gia-tri>
-        </cap>
-        <cap>
-          <gia-tri kieu="java.lang.String">dichvu.Nhacungcap</gia-tri>
-          <gia-tri kieu="java.lang.Integer">4</gia-tri>
-        </cap>
-      </anh-xa>
-    </thuoc-tinh>
-  </doi-tuong>
-</du-lieu>
+#SIEUTHI_TXT_3
+#NHOM;DanhSachHoaDonBan
+#BODEM;101;13;41;121;13;11
+HDBAN;HD001;2026-11-15T10:30;NV003;Hoá đơn bán;KH001;true;0.01
+CTBAN;HD001;SP001;Thực phẩm mẫu 001;2;25000;true;30000;0;2;20000;Giảm giá trực tiếp
+CTBAN;HD001;SP014;Thực phẩm mẫu 014;2;90000;true;160000;0;2;20000;Giảm giá trực tiếp
+THANHTOAN;HD001;TIENMAT;238100;50000
+HDBAN;HD002;2026-11-01T10:30;NV007;Hoá đơn bán;KH002;true;0.03
+CTBAN;HD002;SP002;Thực phẩm mẫu 002;2;30000;true;54000;0;2;6000;Giảm theo phần trăm
+CTBAN;HD002;SP015;Thực phẩm mẫu 015;2;95000;true;171000;0;2;19000;Giảm theo phần trăm
+CTBAN;HD002;SP028;Thực phẩm mẫu 028;2;60000;true;108000;0;2;12000;Giảm theo phần trăm
+THANHTOAN;HD002;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000002;Thanh toán thử HD002
+HDBAN;HD003;2026-11-30T10:30;NV003;Hoá đơn bán;KH003;true;0.05
+CTBAN;HD003;SP003;Thực phẩm mẫu 003;2;35000;true;70000;0;2;0;Không áp dụng
+THANHTOAN;HD003;TIENMAT;116500;50000
+HDBAN;HD004;2026-10-25T10:30;NV007;Hoá đơn bán;KH004;true;0.1
+CTBAN;HD004;SP004;Thực phẩm mẫu 004;3;40000;true;80000;1;2;40000;Mua 2 tặng 1
+CTBAN;HD004;SP017;Thực phẩm mẫu 017;3;105000;true;210000;1;2;105000;Mua 2 tặng 1
+THANHTOAN;HD004;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000004;Thanh toán thử HD004
+HDBAN;HD005;2026-10-18T10:30;NV003;Hoá đơn bán;KH005;true;0.01
+CTBAN;HD005;SP005;Thực phẩm mẫu 005;2;45000;true;70000;0;2;20000;Giảm giá trực tiếp
+CTBAN;HD005;SP018;Thực phẩm mẫu 018;2;110000;true;200000;0;2;20000;Giảm giá trực tiếp
+CTBAN;HD005;SP031;Thực phẩm mẫu 031;2;75000;true;130000;0;2;20000;Giảm giá trực tiếp
+THANHTOAN;HD005;TIENMAT;446000;50000
+HDBAN;HD006;2026-10-11T10:30;NV007;Hoá đơn bán;KH006;true;0.03
+CTBAN;HD006;SP006;Thực phẩm mẫu 006;2;50000;true;90000;0;2;10000;Giảm theo phần trăm
+THANHTOAN;HD006;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000006;Thanh toán thử HD006
+HDBAN;HD007;2026-10-04T10:30;NV003;Hoá đơn bán;KH007;true;0.05
+CTBAN;HD007;SP007;Thực phẩm mẫu 007;2;55000;true;110000;0;2;0;Không áp dụng
+CTBAN;HD007;SP020;Thực phẩm mẫu 020;2;20000;true;40000;0;2;0;Không áp dụng
+THANHTOAN;HD007;TIENMAT;192500;50000
+HDBAN;HD008;2026-09-27T10:30;NV007;Hoá đơn bán;KH008;true;0.1
+CTBAN;HD008;SP008;Thực phẩm mẫu 008;3;60000;true;120000;1;2;60000;Mua 2 tặng 1
+CTBAN;HD008;SP021;Thực phẩm mẫu 021;3;25000;true;50000;1;2;25000;Mua 2 tặng 1
+CTBAN;HD008;SP034;Thực phẩm mẫu 034;3;90000;true;180000;1;2;90000;Mua 2 tặng 1
+THANHTOAN;HD008;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000008;Thanh toán thử HD008
+HDBAN;HD009;2026-09-20T10:30;NV003;Hoá đơn bán;KH009;true;0.01
+CTBAN;HD009;SP009;Thực phẩm mẫu 009;2;65000;true;110000;0;2;20000;Giảm giá trực tiếp
+THANHTOAN;HD009;TIENMAT;158900;50000
+HDBAN;HD010;2026-09-13T10:30;NV007;Hoá đơn bán;KH010;true;0.03
+CTBAN;HD010;SP010;Thực phẩm mẫu 010;2;70000;true;126000;0;2;14000;Giảm theo phần trăm
+CTBAN;HD010;SP023;Thực phẩm mẫu 023;2;35000;true;63000;0;2;7000;Giảm theo phần trăm
+THANHTOAN;HD010;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000010;Thanh toán thử HD010
+HDBAN;HD011;2026-09-06T10:30;NV003;Hoá đơn bán;KH011;true;0.05
+CTBAN;HD011;SP011;Thực phẩm mẫu 011;2;75000;true;150000;0;2;0;Không áp dụng
+CTBAN;HD011;SP024;Thực phẩm mẫu 024;2;40000;true;80000;0;2;0;Không áp dụng
+CTBAN;HD011;SP037;Thực phẩm mẫu 037;2;105000;true;210000;0;2;0;Không áp dụng
+THANHTOAN;HD011;TIENMAT;468000;50000
+HDBAN;HD012;2026-08-30T10:30;NV007;Hoá đơn bán;KH012;true;0.1
+CTBAN;HD012;SP012;Thực phẩm mẫu 012;3;80000;true;160000;1;2;80000;Mua 2 tặng 1
+THANHTOAN;HD012;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000012;Thanh toán thử HD012
+HDBAN;HD013;2026-08-23T10:30;NV003;Hoá đơn bán;KH013;true;0.01
+CTBAN;HD013;SP013;Thực phẩm mẫu 013;2;85000;true;150000;0;2;20000;Giảm giá trực tiếp
+CTBAN;HD013;SP026;Thực phẩm mẫu 026;2;50000;true;80000;0;2;20000;Giảm giá trực tiếp
+THANHTOAN;HD013;TIENMAT;277700;50000
+HDBAN;HD014;2026-08-16T10:30;NV007;Hoá đơn bán;KH014;true;0.03
+CTBAN;HD014;SP014;Thực phẩm mẫu 014;2;90000;true;162000;0;2;18000;Giảm theo phần trăm
+CTBAN;HD014;SP027;Thực phẩm mẫu 027;2;55000;true;99000;0;2;11000;Giảm theo phần trăm
+CTBAN;HD014;SP040;Thực phẩm mẫu 040;2;20000;true;36000;0;2;4000;Giảm theo phần trăm
+THANHTOAN;HD014;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000014;Thanh toán thử HD014
+HDBAN;HD015;2026-08-09T10:30;NV003;Hoá đơn bán;KH015;true;0.05
+CTBAN;HD015;SP015;Thực phẩm mẫu 015;2;95000;true;190000;0;2;0;Không áp dụng
+THANHTOAN;HD015;TIENMAT;230500;50000
+HDBAN;HD016;2026-08-02T10:30;NV007;Hoá đơn bán;KH016;true;0.1
+CTBAN;HD016;SP016;Thực phẩm mẫu 016;3;100000;true;200000;1;2;100000;Mua 2 tặng 1
+CTBAN;HD016;SP029;Thực phẩm mẫu 029;3;65000;true;130000;1;2;65000;Mua 2 tặng 1
+THANHTOAN;HD016;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000016;Thanh toán thử HD016
+HDBAN;HD017;2026-07-26T10:30;NV003;Hoá đơn bán;KH017;true;0.01
+CTBAN;HD017;SP017;Thực phẩm mẫu 017;2;105000;true;190000;0;2;20000;Giảm giá trực tiếp
+CTBAN;HD017;SP030;Thực phẩm mẫu 030;2;70000;true;120000;0;2;20000;Giảm giá trực tiếp
+CTBAN;HD017;SP043;Tiêu dùng mẫu 043;2;35000;true;50000;0;2;20000;Giảm giá trực tiếp
+THANHTOAN;HD017;TIENMAT;406400;50000
+HDBAN;HD018;2026-07-19T10:30;NV007;Hoá đơn bán;KH018;true;0.03
+CTBAN;HD018;SP018;Thực phẩm mẫu 018;2;110000;true;198000;0;2;22000;Giảm theo phần trăm
+THANHTOAN;HD018;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000018;Thanh toán thử HD018
+HDBAN;HD019;2026-07-12T10:30;NV003;Hoá đơn bán;KH019;true;0.05
+CTBAN;HD019;SP019;Thực phẩm mẫu 019;2;115000;true;230000;0;2;0;Không áp dụng
+CTBAN;HD019;SP032;Thực phẩm mẫu 032;2;80000;true;160000;0;2;0;Không áp dụng
+THANHTOAN;HD019;TIENMAT;420500;50000
+HDBAN;HD020;2026-07-05T10:30;NV007;Hoá đơn bán;KH020;true;0.1
+CTBAN;HD020;SP020;Thực phẩm mẫu 020;3;20000;true;40000;1;2;20000;Mua 2 tặng 1
+CTBAN;HD020;SP033;Thực phẩm mẫu 033;3;85000;true;170000;1;2;85000;Mua 2 tặng 1
+CTBAN;HD020;SP046;Tiêu dùng mẫu 046;3;50000;true;100000;1;2;50000;Mua 2 tặng 1
+THANHTOAN;HD020;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000020;Thanh toán thử HD020
+HDBAN;HD021;2026-06-28T10:30;NV003;Hoá đơn bán;KH021;true;0.01
+CTBAN;HD021;SP021;Thực phẩm mẫu 021;2;25000;true;30000;0;2;20000;Giảm giá trực tiếp
+THANHTOAN;HD021;TIENMAT;79700;50000
+HDBAN;HD022;2026-06-21T10:30;NV007;Hoá đơn bán;KH022;true;0.03
+CTBAN;HD022;SP022;Thực phẩm mẫu 022;2;30000;true;54000;0;2;6000;Giảm theo phần trăm
+CTBAN;HD022;SP035;Thực phẩm mẫu 035;2;95000;true;171000;0;2;19000;Giảm theo phần trăm
+THANHTOAN;HD022;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000022;Thanh toán thử HD022
+HDBAN;HD023;2026-06-14T10:30;NV003;Hoá đơn bán;KH023;true;0.05
+CTBAN;HD023;SP023;Thực phẩm mẫu 023;2;35000;true;70000;0;2;0;Không áp dụng
+CTBAN;HD023;SP036;Thực phẩm mẫu 036;2;100000;true;200000;0;2;0;Không áp dụng
+CTBAN;HD023;SP049;Tiêu dùng mẫu 049;2;65000;true;130000;0;2;0;Không áp dụng
+THANHTOAN;HD023;TIENMAT;430000;50000
+HDBAN;HD024;2026-06-07T10:30;NV007;Hoá đơn bán;KH024;true;0.1
+CTBAN;HD024;SP024;Thực phẩm mẫu 024;3;40000;true;80000;1;2;40000;Mua 2 tặng 1
+THANHTOAN;HD024;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000024;Thanh toán thử HD024
+HDBAN;HD025;2026-05-31T10:30;NV003;Hoá đơn bán;KH025;true;0.01
+CTBAN;HD025;SP025;Thực phẩm mẫu 025;2;45000;true;70000;0;2;20000;Giảm giá trực tiếp
+CTBAN;HD025;SP038;Thực phẩm mẫu 038;2;110000;true;200000;0;2;20000;Giảm giá trực tiếp
+THANHTOAN;HD025;TIENMAT;317300;50000
+HDBAN;HD026;2026-05-24T10:30;NV007;Hoá đơn bán;KH026;true;0.03
+CTBAN;HD026;SP026;Thực phẩm mẫu 026;2;50000;true;90000;0;2;10000;Giảm theo phần trăm
+CTBAN;HD026;SP039;Thực phẩm mẫu 039;2;115000;true;207000;0;2;23000;Giảm theo phần trăm
+CTBAN;HD026;SP052;Tiêu dùng mẫu 052;2;80000;true;144000;0;2;16000;Giảm theo phần trăm
+THANHTOAN;HD026;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000026;Thanh toán thử HD026
+HDBAN;HD027;2026-05-17T10:30;NV003;Hoá đơn bán;KH027;true;0.05
+CTBAN;HD027;SP027;Thực phẩm mẫu 027;2;55000;true;110000;0;2;0;Không áp dụng
+THANHTOAN;HD027;TIENMAT;154500;50000
+HDBAN;HD028;2026-05-10T10:30;NV007;Hoá đơn bán;KH028;true;0.1
+CTBAN;HD028;SP028;Thực phẩm mẫu 028;3;60000;true;120000;1;2;60000;Mua 2 tặng 1
+CTBAN;HD028;SP041;Tiêu dùng mẫu 041;3;25000;true;50000;1;2;25000;Mua 2 tặng 1
+THANHTOAN;HD028;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000028;Thanh toán thử HD028
+HDBAN;HD029;2026-05-03T10:30;NV003;Hoá đơn bán;KH029;true;0.01
+CTBAN;HD029;SP029;Thực phẩm mẫu 029;2;65000;true;110000;0;2;20000;Giảm giá trực tiếp
+CTBAN;HD029;SP042;Tiêu dùng mẫu 042;2;30000;true;40000;0;2;20000;Giảm giá trực tiếp
+CTBAN;HD029;SP055;Tiêu dùng mẫu 055;2;95000;true;170000;0;2;20000;Giảm giá trực tiếp
+THANHTOAN;HD029;TIENMAT;366800;50000
+HDBAN;HD030;2026-04-26T10:30;NV007;Hoá đơn bán;KH030;true;0.03
+CTBAN;HD030;SP030;Thực phẩm mẫu 030;2;70000;true;126000;0;2;14000;Giảm theo phần trăm
+THANHTOAN;HD030;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000030;Thanh toán thử HD030
+HDBAN;HD031;2026-04-19T10:30;NV003;Hoá đơn bán;KH031;true;0.05
+CTBAN;HD031;SP031;Thực phẩm mẫu 031;2;75000;true;150000;0;2;0;Không áp dụng
+CTBAN;HD031;SP044;Tiêu dùng mẫu 044;2;40000;true;80000;0;2;0;Không áp dụng
+THANHTOAN;HD031;TIENMAT;268500;50000
+HDBAN;HD032;2026-04-12T10:30;NV007;Hoá đơn bán;KH032;true;0.1
+CTBAN;HD032;SP032;Thực phẩm mẫu 032;3;80000;true;160000;1;2;80000;Mua 2 tặng 1
+CTBAN;HD032;SP045;Tiêu dùng mẫu 045;3;45000;true;90000;1;2;45000;Mua 2 tặng 1
+CTBAN;HD032;SP058;Tiêu dùng mẫu 058;3;110000;true;220000;1;2;110000;Mua 2 tặng 1
+THANHTOAN;HD032;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000032;Thanh toán thử HD032
+HDBAN;HD033;2026-04-05T10:30;NV003;Hoá đơn bán;KH033;true;0.01
+CTBAN;HD033;SP033;Thực phẩm mẫu 033;2;85000;true;150000;0;2;20000;Giảm giá trực tiếp
+THANHTOAN;HD033;TIENMAT;198500;50000
+HDBAN;HD034;2026-03-29T10:30;NV007;Hoá đơn bán;KH034;true;0.03
+CTBAN;HD034;SP034;Thực phẩm mẫu 034;2;90000;true;162000;0;2;18000;Giảm theo phần trăm
+CTBAN;HD034;SP047;Tiêu dùng mẫu 047;2;55000;true;99000;0;2;11000;Giảm theo phần trăm
+THANHTOAN;HD034;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000034;Thanh toán thử HD034
+HDBAN;HD035;2026-03-22T10:30;NV003;Hoá đơn bán;KH035;true;0.05
+CTBAN;HD035;SP035;Thực phẩm mẫu 035;2;95000;true;190000;0;2;0;Không áp dụng
+CTBAN;HD035;SP048;Tiêu dùng mẫu 048;2;60000;true;120000;0;2;0;Không áp dụng
+CTBAN;HD035;SP061;Tiêu dùng mẫu 061;2;25000;true;50000;0;2;0;Không áp dụng
+THANHTOAN;HD035;TIENMAT;392000;50000
+HDBAN;HD036;2026-03-15T10:30;NV007;Hoá đơn bán;KH036;true;0.1
+CTBAN;HD036;SP036;Thực phẩm mẫu 036;3;100000;true;200000;1;2;100000;Mua 2 tặng 1
+THANHTOAN;HD036;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000036;Thanh toán thử HD036
+HDBAN;HD037;2026-03-08T10:30;NV003;Hoá đơn bán;KH037;true;0.01
+CTBAN;HD037;SP037;Thực phẩm mẫu 037;2;105000;true;190000;0;2;20000;Giảm giá trực tiếp
+CTBAN;HD037;SP050;Tiêu dùng mẫu 050;2;70000;true;120000;0;2;20000;Giảm giá trực tiếp
+THANHTOAN;HD037;TIENMAT;356900;50000
+HDBAN;HD038;2026-03-01T10:30;NV007;Hoá đơn bán;KH038;true;0.03
+CTBAN;HD038;SP038;Thực phẩm mẫu 038;2;110000;true;198000;0;2;22000;Giảm theo phần trăm
+CTBAN;HD038;SP051;Tiêu dùng mẫu 051;2;75000;true;135000;0;2;15000;Giảm theo phần trăm
+CTBAN;HD038;SP064;Tiêu dùng mẫu 064;2;40000;true;72000;0;2;8000;Giảm theo phần trăm
+THANHTOAN;HD038;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000038;Thanh toán thử HD038
+HDBAN;HD039;2026-02-22T10:30;NV003;Hoá đơn bán;KH039;true;0.05
+CTBAN;HD039;SP039;Thực phẩm mẫu 039;2;115000;true;230000;0;2;0;Không áp dụng
+THANHTOAN;HD039;TIENMAT;268500;50000
+HDBAN;HD040;2026-02-15T10:30;NV007;Hoá đơn bán;KH001;true;0.1
+CTBAN;HD040;SP040;Thực phẩm mẫu 040;3;20000;true;40000;1;2;20000;Mua 2 tặng 1
+CTBAN;HD040;SP053;Tiêu dùng mẫu 053;3;85000;true;170000;1;2;85000;Mua 2 tặng 1
+THANHTOAN;HD040;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000040;Thanh toán thử HD040
+HDBAN;HD041;2026-02-08T10:30;NV003;Hoá đơn bán;KH002;true;0.01
+CTBAN;HD041;SP041;Tiêu dùng mẫu 041;2;25000;true;30000;0;2;20000;Giảm giá trực tiếp
+CTBAN;HD041;SP054;Tiêu dùng mẫu 054;2;90000;true;160000;0;2;20000;Giảm giá trực tiếp
+CTBAN;HD041;SP067;Tiêu dùng mẫu 067;2;55000;true;90000;0;2;20000;Giảm giá trực tiếp
+THANHTOAN;HD041;TIENMAT;327200;50000
+HDBAN;HD042;2026-02-01T10:30;NV007;Hoá đơn bán;KH003;true;0.03
+CTBAN;HD042;SP042;Tiêu dùng mẫu 042;2;30000;true;54000;0;2;6000;Giảm theo phần trăm
+THANHTOAN;HD042;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000042;Thanh toán thử HD042
+HDBAN;HD043;2026-01-25T10:30;NV003;Hoá đơn bán;KH004;true;0.05
+CTBAN;HD043;SP043;Tiêu dùng mẫu 043;2;35000;true;70000;0;2;0;Không áp dụng
+CTBAN;HD043;SP056;Tiêu dùng mẫu 056;2;100000;true;200000;0;2;0;Không áp dụng
+THANHTOAN;HD043;TIENMAT;306500;50000
+HDBAN;HD044;2026-01-18T10:30;NV007;Hoá đơn bán;KH005;true;0.1
+CTBAN;HD044;SP044;Tiêu dùng mẫu 044;3;40000;true;80000;1;2;40000;Mua 2 tặng 1
+CTBAN;HD044;SP057;Tiêu dùng mẫu 057;3;105000;true;210000;1;2;105000;Mua 2 tặng 1
+CTBAN;HD044;SP070;Tiêu dùng mẫu 070;3;70000;true;140000;1;2;70000;Mua 2 tặng 1
+THANHTOAN;HD044;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000044;Thanh toán thử HD044
+HDBAN;HD045;2026-01-11T10:30;NV003;Hoá đơn bán;KH006;true;0.01
+CTBAN;HD045;SP045;Tiêu dùng mẫu 045;2;45000;true;70000;0;2;20000;Giảm giá trực tiếp
+THANHTOAN;HD045;TIENMAT;119300;50000
+HDBAN;HD046;2026-01-04T10:30;NV007;Hoá đơn bán;KH007;true;0.03
+CTBAN;HD046;SP046;Tiêu dùng mẫu 046;2;50000;true;90000;0;2;10000;Giảm theo phần trăm
+CTBAN;HD046;SP059;Tiêu dùng mẫu 059;2;115000;true;207000;0;2;23000;Giảm theo phần trăm
+THANHTOAN;HD046;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000046;Thanh toán thử HD046
+HDBAN;HD047;2025-12-28T10:30;NV003;Hoá đơn bán;KH008;true;0.05
+CTBAN;HD047;SP047;Tiêu dùng mẫu 047;2;55000;true;110000;0;2;0;Không áp dụng
+CTBAN;HD047;SP060;Tiêu dùng mẫu 060;2;20000;true;40000;0;2;0;Không áp dụng
+CTBAN;HD047;SP073;Tiêu dùng mẫu 073;2;85000;true;170000;0;2;0;Không áp dụng
+THANHTOAN;HD047;TIENMAT;354000;50000
+HDBAN;HD048;2025-12-21T10:30;NV007;Hoá đơn bán;KH009;true;0.1
+CTBAN;HD048;SP048;Tiêu dùng mẫu 048;3;60000;true;120000;1;2;60000;Mua 2 tặng 1
+THANHTOAN;HD048;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000048;Thanh toán thử HD048
+HDBAN;HD049;2025-12-14T10:30;NV003;Hoá đơn bán;KH010;true;0.01
+CTBAN;HD049;SP049;Tiêu dùng mẫu 049;2;65000;true;110000;0;2;20000;Giảm giá trực tiếp
+CTBAN;HD049;SP062;Tiêu dùng mẫu 062;2;30000;true;40000;0;2;20000;Giảm giá trực tiếp
+THANHTOAN;HD049;TIENMAT;198500;50000
+HDBAN;HD050;2025-12-07T10:30;NV007;Hoá đơn bán;KH011;true;0.03
+CTBAN;HD050;SP050;Tiêu dùng mẫu 050;2;70000;true;126000;0;2;14000;Giảm theo phần trăm
+CTBAN;HD050;SP063;Tiêu dùng mẫu 063;2;35000;true;63000;0;2;7000;Giảm theo phần trăm
+CTBAN;HD050;SP076;Điện tử mẫu 076;2;100000;true;180000;0;2;20000;Giảm theo phần trăm
+THANHTOAN;HD050;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000050;Thanh toán thử HD050
+HDBAN;HD051;2025-11-30T10:30;NV003;Hoá đơn bán;KH012;true;0.05
+CTBAN;HD051;SP051;Tiêu dùng mẫu 051;2;75000;true;150000;0;2;0;Không áp dụng
+THANHTOAN;HD051;TIENMAT;192500;50000
+HDBAN;HD052;2025-11-23T10:30;NV007;Hoá đơn bán;KH013;true;0.1
+CTBAN;HD052;SP052;Tiêu dùng mẫu 052;3;80000;true;160000;1;2;80000;Mua 2 tặng 1
+CTBAN;HD052;SP065;Tiêu dùng mẫu 065;3;45000;true;90000;1;2;45000;Mua 2 tặng 1
+THANHTOAN;HD052;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000052;Thanh toán thử HD052
+HDBAN;HD053;2025-11-16T10:30;NV003;Hoá đơn bán;KH014;true;0.01
+CTBAN;HD053;SP053;Tiêu dùng mẫu 053;2;85000;true;150000;0;2;20000;Giảm giá trực tiếp
+CTBAN;HD053;SP066;Tiêu dùng mẫu 066;2;50000;true;80000;0;2;20000;Giảm giá trực tiếp
+CTBAN;HD053;SP079;Điện tử mẫu 079;2;115000;true;210000;0;2;20000;Giảm giá trực tiếp
+THANHTOAN;HD053;TIENMAT;485600;50000
+HDBAN;HD054;2025-11-09T10:30;NV007;Hoá đơn bán;KH015;true;0.03
+CTBAN;HD054;SP054;Tiêu dùng mẫu 054;2;90000;true;162000;0;2;18000;Giảm theo phần trăm
+THANHTOAN;HD054;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000054;Thanh toán thử HD054
+HDBAN;HD055;2025-11-02T10:30;NV003;Hoá đơn bán;KH016;true;0.05
+CTBAN;HD055;SP055;Tiêu dùng mẫu 055;2;95000;true;190000;0;2;0;Không áp dụng
+CTBAN;HD055;SP068;Tiêu dùng mẫu 068;2;60000;true;120000;0;2;0;Không áp dụng
+THANHTOAN;HD055;TIENMAT;344500;50000
+HDBAN;HD056;2025-10-26T10:30;NV007;Hoá đơn bán;KH017;true;0.1
+CTBAN;HD056;SP056;Tiêu dùng mẫu 056;3;100000;true;200000;1;2;100000;Mua 2 tặng 1
+CTBAN;HD056;SP069;Tiêu dùng mẫu 069;3;65000;true;130000;1;2;65000;Mua 2 tặng 1
+CTBAN;HD056;SP082;Điện tử mẫu 082;3;30000;true;60000;1;2;30000;Mua 2 tặng 1
+THANHTOAN;HD056;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000056;Thanh toán thử HD056
+HDBAN;HD057;2025-10-19T10:30;NV003;Hoá đơn bán;KH018;true;0.01
+CTBAN;HD057;SP057;Tiêu dùng mẫu 057;2;105000;true;190000;0;2;20000;Giảm giá trực tiếp
+THANHTOAN;HD057;TIENMAT;238100;50000
+HDBAN;HD058;2025-10-12T10:30;NV007;Hoá đơn bán;KH019;true;0.03
+CTBAN;HD058;SP058;Tiêu dùng mẫu 058;2;110000;true;198000;0;2;22000;Giảm theo phần trăm
+CTBAN;HD058;SP071;Tiêu dùng mẫu 071;2;75000;true;135000;0;2;15000;Giảm theo phần trăm
+THANHTOAN;HD058;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000058;Thanh toán thử HD058
+HDBAN;HD059;2025-10-05T10:30;NV003;Hoá đơn bán;KH020;true;0.05
+CTBAN;HD059;SP059;Tiêu dùng mẫu 059;2;115000;true;230000;0;2;0;Không áp dụng
+CTBAN;HD059;SP072;Tiêu dùng mẫu 072;2;80000;true;160000;0;2;0;Không áp dụng
+CTBAN;HD059;SP085;Điện tử mẫu 085;2;45000;true;90000;0;2;0;Không áp dụng
+THANHTOAN;HD059;TIENMAT;506000;50000
+HDBAN;HD060;2025-09-28T10:30;NV007;Hoá đơn bán;KH021;true;0.1
+CTBAN;HD060;SP060;Tiêu dùng mẫu 060;3;20000;true;40000;1;2;20000;Mua 2 tặng 1
+THANHTOAN;HD060;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000060;Thanh toán thử HD060
+HDBAN;HD061;2025-09-21T10:30;NV003;Hoá đơn bán;KH022;true;0.01
+CTBAN;HD061;SP061;Tiêu dùng mẫu 061;2;25000;true;30000;0;2;20000;Giảm giá trực tiếp
+CTBAN;HD061;SP074;Tiêu dùng mẫu 074;2;90000;true;160000;0;2;20000;Giảm giá trực tiếp
+THANHTOAN;HD061;TIENMAT;238100;50000
+HDBAN;HD062;2025-09-14T10:30;NV007;Hoá đơn bán;KH023;true;0.03
+CTBAN;HD062;SP062;Tiêu dùng mẫu 062;2;30000;true;54000;0;2;6000;Giảm theo phần trăm
+CTBAN;HD062;SP075;Tiêu dùng mẫu 075;2;95000;true;171000;0;2;19000;Giảm theo phần trăm
+CTBAN;HD062;SP088;Điện tử mẫu 088;2;60000;true;108000;0;2;12000;Giảm theo phần trăm
+THANHTOAN;HD062;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000062;Thanh toán thử HD062
+HDBAN;HD063;2025-09-07T10:30;NV003;Hoá đơn bán;KH024;true;0.05
+CTBAN;HD063;SP063;Tiêu dùng mẫu 063;2;35000;true;70000;0;2;0;Không áp dụng
+THANHTOAN;HD063;TIENMAT;116500;50000
+HDBAN;HD064;2025-08-31T10:30;NV007;Hoá đơn bán;KH025;true;0.1
+CTBAN;HD064;SP064;Tiêu dùng mẫu 064;3;40000;true;80000;1;2;40000;Mua 2 tặng 1
+CTBAN;HD064;SP077;Điện tử mẫu 077;3;105000;true;210000;1;2;105000;Mua 2 tặng 1
+THANHTOAN;HD064;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000064;Thanh toán thử HD064
+HDBAN;HD065;2025-08-24T10:30;NV003;Hoá đơn bán;KH026;true;0.01
+CTBAN;HD065;SP065;Tiêu dùng mẫu 065;2;45000;true;70000;0;2;20000;Giảm giá trực tiếp
+CTBAN;HD065;SP078;Điện tử mẫu 078;2;110000;true;200000;0;2;20000;Giảm giá trực tiếp
+CTBAN;HD065;SP091;Điện tử mẫu 091;2;75000;true;130000;0;2;20000;Giảm giá trực tiếp
+THANHTOAN;HD065;TIENMAT;446000;50000
+HDBAN;HD066;2025-08-17T10:30;NV007;Hoá đơn bán;KH027;true;0.03
+CTBAN;HD066;SP066;Tiêu dùng mẫu 066;2;50000;true;90000;0;2;10000;Giảm theo phần trăm
+THANHTOAN;HD066;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000066;Thanh toán thử HD066
+HDBAN;HD067;2025-08-10T10:30;NV003;Hoá đơn bán;KH028;true;0.05
+CTBAN;HD067;SP067;Tiêu dùng mẫu 067;2;55000;true;110000;0;2;0;Không áp dụng
+CTBAN;HD067;SP080;Điện tử mẫu 080;2;20000;true;40000;0;2;0;Không áp dụng
+THANHTOAN;HD067;TIENMAT;192500;50000
+HDBAN;HD068;2025-08-03T10:30;NV007;Hoá đơn bán;KH029;true;0.1
+CTBAN;HD068;SP068;Tiêu dùng mẫu 068;3;60000;true;120000;1;2;60000;Mua 2 tặng 1
+CTBAN;HD068;SP081;Điện tử mẫu 081;3;25000;true;50000;1;2;25000;Mua 2 tặng 1
+CTBAN;HD068;SP094;Điện tử mẫu 094;3;90000;true;180000;1;2;90000;Mua 2 tặng 1
+THANHTOAN;HD068;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000068;Thanh toán thử HD068
+HDBAN;HD069;2025-07-27T10:30;NV003;Hoá đơn bán;KH030;true;0.01
+CTBAN;HD069;SP069;Tiêu dùng mẫu 069;2;65000;true;110000;0;2;20000;Giảm giá trực tiếp
+THANHTOAN;HD069;TIENMAT;158900;50000
+HDBAN;HD070;2025-07-20T10:30;NV007;Hoá đơn bán;KH031;true;0.03
+CTBAN;HD070;SP070;Tiêu dùng mẫu 070;2;70000;true;126000;0;2;14000;Giảm theo phần trăm
+CTBAN;HD070;SP083;Điện tử mẫu 083;2;35000;true;63000;0;2;7000;Giảm theo phần trăm
+THANHTOAN;HD070;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000070;Thanh toán thử HD070
+HDBAN;HD071;2025-07-13T10:30;NV003;Hoá đơn bán;KH032;true;0.05
+CTBAN;HD071;SP071;Tiêu dùng mẫu 071;2;75000;true;150000;0;2;0;Không áp dụng
+CTBAN;HD071;SP084;Điện tử mẫu 084;2;40000;true;80000;0;2;0;Không áp dụng
+CTBAN;HD071;SP001;Thực phẩm mẫu 001;2;25000;true;50000;0;2;0;Không áp dụng
+THANHTOAN;HD071;TIENMAT;316000;50000
+HDBAN;HD072;2025-07-06T10:30;NV007;Hoá đơn bán;KH033;true;0.1
+CTBAN;HD072;SP072;Tiêu dùng mẫu 072;3;80000;true;160000;1;2;80000;Mua 2 tặng 1
+THANHTOAN;HD072;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000072;Thanh toán thử HD072
+HDBAN;HD073;2026-11-11T10:30;NV003;Hoá đơn bán;KH034;true;0.01
+CTBAN;HD073;SP073;Tiêu dùng mẫu 073;2;85000;true;150000;0;2;20000;Giảm giá trực tiếp
+CTBAN;HD073;SP086;Điện tử mẫu 086;2;50000;true;80000;0;2;20000;Giảm giá trực tiếp
+THANHTOAN;HD073;TIENMAT;277700;50000
+HDBAN;HD074;2026-11-04T10:30;NV007;Hoá đơn bán;KH035;true;0.03
+CTBAN;HD074;SP074;Tiêu dùng mẫu 074;2;90000;true;162000;0;2;18000;Giảm theo phần trăm
+CTBAN;HD074;SP087;Điện tử mẫu 087;2;55000;true;99000;0;2;11000;Giảm theo phần trăm
+CTBAN;HD074;SP004;Thực phẩm mẫu 004;2;40000;true;72000;0;2;8000;Giảm theo phần trăm
+THANHTOAN;HD074;CHUYENKHOAN;Ngân hàng mẫu;0123456789;FT000074;Thanh toán thử HD074
+HDBAN;HD075;2026-10-28T10:30;NV003;Hoá đơn bán;KH036;true;0.05
+CTBAN;HD075;SP075;Tiêu dùng mẫu 075;2;95000;true;190000;0;2;0;Không áp dụng
+THANHTOAN;HD075;TIENMAT;230500;50000
+HDBAN;HD076;2026-10-21T10:30;NV007;Hoá đơn bán;KH037;false;0.1
+CTBAN;HD076;SP076;Điện tử mẫu 076;3;100000;true;200000;1;2;100000;Mua 2 tặng 1
+CTBAN;HD076;SP089;Điện tử mẫu 089;3;65000;true;130000;1;2;65000;Mua 2 tặng 1
+HDBAN;HD077;2026-10-14T10:30;NV003;Hoá đơn bán;KH038;false;0.01
+CTBAN;HD077;SP077;Điện tử mẫu 077;2;105000;true;190000;0;2;20000;Giảm giá trực tiếp
+CTBAN;HD077;SP090;Điện tử mẫu 090;2;70000;true;120000;0;2;20000;Giảm giá trực tiếp
+CTBAN;HD077;SP007;Thực phẩm mẫu 007;2;55000;true;90000;0;2;20000;Giảm giá trực tiếp
+HDBAN;HD078;2026-10-07T10:30;NV007;Hoá đơn bán;KH039;false;0.03
+CTBAN;HD078;SP078;Điện tử mẫu 078;2;110000;true;198000;0;2;22000;Giảm theo phần trăm
+HDBAN;HD079;2026-09-30T10:30;NV003;Hoá đơn bán;KH001;false;0.05
+CTBAN;HD079;SP079;Điện tử mẫu 079;2;115000;true;230000;0;2;0;Không áp dụng
+CTBAN;HD079;SP092;Điện tử mẫu 092;2;80000;true;160000;0;2;0;Không áp dụng
+HDBAN;HD080;2026-09-23T10:30;NV007;Hoá đơn bán;KH002;false;0.1
+CTBAN;HD080;SP080;Điện tử mẫu 080;3;20000;true;40000;1;2;20000;Mua 2 tặng 1
+CTBAN;HD080;SP093;Điện tử mẫu 093;3;85000;true;170000;1;2;85000;Mua 2 tặng 1
+CTBAN;HD080;SP010;Thực phẩm mẫu 010;3;70000;true;140000;1;2;70000;Mua 2 tặng 1
+HDBAN;HD081;2026-09-16T10:30;NV003;Hoá đơn bán;KH003;false;0.01
+CTBAN;HD081;SP081;Điện tử mẫu 081;2;25000;true;30000;0;2;20000;Giảm giá trực tiếp
+HDBAN;HD082;2026-09-09T10:30;NV007;Hoá đơn bán;KH004;false;0.03
+CTBAN;HD082;SP082;Điện tử mẫu 082;2;30000;true;54000;0;2;6000;Giảm theo phần trăm
+CTBAN;HD082;SP095;Điện tử mẫu 095;2;95000;true;171000;0;2;19000;Giảm theo phần trăm
+HDBAN;HD083;2026-09-02T10:30;NV003;Hoá đơn bán;KH005;false;0.05
+CTBAN;HD083;SP083;Điện tử mẫu 083;2;35000;true;70000;0;2;0;Không áp dụng
+CTBAN;HD083;SP096;Điện tử mẫu 096;2;100000;true;200000;0;2;0;Không áp dụng
+CTBAN;HD083;SP013;Thực phẩm mẫu 013;2;85000;true;170000;0;2;0;Không áp dụng
+HDBAN;HD084;2026-08-26T10:30;NV007;Hoá đơn bán;KH006;false;0.1
+CTBAN;HD084;SP084;Điện tử mẫu 084;3;40000;true;80000;1;2;40000;Mua 2 tặng 1
+HDBAN;HD085;2026-08-19T10:30;NV003;Hoá đơn bán;KH007;false;0.01
+CTBAN;HD085;SP085;Điện tử mẫu 085;2;45000;true;70000;0;2;20000;Giảm giá trực tiếp
+CTBAN;HD085;SP002;Thực phẩm mẫu 002;2;30000;true;40000;0;2;20000;Giảm giá trực tiếp
+HDBAN;HD086;2026-08-12T10:30;NV007;Hoá đơn bán;KH008;false;0.03
+CTBAN;HD086;SP086;Điện tử mẫu 086;2;50000;true;90000;0;2;10000;Giảm theo phần trăm
+CTBAN;HD086;SP003;Thực phẩm mẫu 003;2;35000;true;63000;0;2;7000;Giảm theo phần trăm
+CTBAN;HD086;SP016;Thực phẩm mẫu 016;2;100000;true;180000;0;2;20000;Giảm theo phần trăm
+HDBAN;HD087;2026-08-05T10:30;NV003;Hoá đơn bán;KH009;false;0.05
+CTBAN;HD087;SP087;Điện tử mẫu 087;2;55000;true;110000;0;2;0;Không áp dụng
+HDBAN;HD088;2026-07-29T10:30;NV007;Hoá đơn bán;KH010;false;0.1
+CTBAN;HD088;SP088;Điện tử mẫu 088;3;60000;true;120000;1;2;60000;Mua 2 tặng 1
+CTBAN;HD088;SP005;Thực phẩm mẫu 005;3;45000;true;90000;1;2;45000;Mua 2 tặng 1
+HDBAN;HD089;2026-07-22T10:30;NV003;Hoá đơn bán;KH011;false;0.01
+CTBAN;HD089;SP089;Điện tử mẫu 089;2;65000;true;110000;0;2;20000;Giảm giá trực tiếp
+CTBAN;HD089;SP006;Thực phẩm mẫu 006;2;50000;true;80000;0;2;20000;Giảm giá trực tiếp
+CTBAN;HD089;SP019;Thực phẩm mẫu 019;2;115000;true;210000;0;2;20000;Giảm giá trực tiếp
+HDBAN;HD090;2026-07-15T10:30;NV007;Hoá đơn bán;KH012;false;0.03
+CTBAN;HD090;SP090;Điện tử mẫu 090;2;70000;true;126000;0;2;14000;Giảm theo phần trăm
+HDBAN;HD091;2026-07-08T10:30;NV003;Hoá đơn bán;KH013;false;0.05
+CTBAN;HD091;SP091;Điện tử mẫu 091;2;75000;true;150000;0;2;0;Không áp dụng
+CTBAN;HD091;SP008;Thực phẩm mẫu 008;2;60000;true;120000;0;2;0;Không áp dụng
+HDBAN;HD092;2026-07-01T10:30;NV007;Hoá đơn bán;KH014;false;0.1
+CTBAN;HD092;SP092;Điện tử mẫu 092;3;80000;true;160000;1;2;80000;Mua 2 tặng 1
+CTBAN;HD092;SP009;Thực phẩm mẫu 009;3;65000;true;130000;1;2;65000;Mua 2 tặng 1
+CTBAN;HD092;SP022;Thực phẩm mẫu 022;3;30000;true;60000;1;2;30000;Mua 2 tặng 1
+HDBAN;HD093;2026-06-24T10:30;NV003;Hoá đơn bán;KH015;false;0.01
+CTBAN;HD093;SP093;Điện tử mẫu 093;2;85000;true;150000;0;2;20000;Giảm giá trực tiếp
+HDBAN;HD094;2026-06-17T10:30;NV007;Hoá đơn bán;KH016;false;0.03
+CTBAN;HD094;SP094;Điện tử mẫu 094;2;90000;true;162000;0;2;18000;Giảm theo phần trăm
+CTBAN;HD094;SP011;Thực phẩm mẫu 011;2;75000;true;135000;0;2;15000;Giảm theo phần trăm
+HDBAN;HD095;2026-06-10T10:30;NV003;Hoá đơn bán;KH017;false;0.05
+CTBAN;HD095;SP095;Điện tử mẫu 095;2;95000;true;190000;0;2;0;Không áp dụng
+CTBAN;HD095;SP012;Thực phẩm mẫu 012;2;80000;true;160000;0;2;0;Không áp dụng
+CTBAN;HD095;SP025;Thực phẩm mẫu 025;2;45000;true;90000;0;2;0;Không áp dụng
+HDBAN;HD096;2026-06-03T10:30;NV007;Hoá đơn bán;KH018;false;0.1
+CTBAN;HD096;SP096;Điện tử mẫu 096;3;100000;true;200000;1;2;100000;Mua 2 tặng 1
+HDBAN;HD097;2026-05-27T10:30;NV003;Hoá đơn bán;KH019;false;0.01
+CTBAN;HD097;SP001;Thực phẩm mẫu 001;2;25000;true;30000;0;2;20000;Giảm giá trực tiếp
+CTBAN;HD097;SP014;Thực phẩm mẫu 014;2;90000;true;160000;0;2;20000;Giảm giá trực tiếp
+HDBAN;HD098;2026-05-20T10:30;NV007;Hoá đơn bán;KH020;false;0.03
+CTBAN;HD098;SP002;Thực phẩm mẫu 002;2;30000;true;54000;0;2;6000;Giảm theo phần trăm
+CTBAN;HD098;SP015;Thực phẩm mẫu 015;2;95000;true;171000;0;2;19000;Giảm theo phần trăm
+CTBAN;HD098;SP028;Thực phẩm mẫu 028;2;60000;true;108000;0;2;12000;Giảm theo phần trăm
+HDBAN;HD099;2026-05-13T10:30;NV003;Hoá đơn bán;KH021;false;0.05
+CTBAN;HD099;SP003;Thực phẩm mẫu 003;2;35000;true;70000;0;2;0;Không áp dụng
+HDBAN;HD100;2026-05-06T10:30;NV007;Hoá đơn bán;KH022;false;0.1
+CTBAN;HD100;SP004;Thực phẩm mẫu 004;3;40000;true;80000;1;2;40000;Mua 2 tặng 1
+CTBAN;HD100;SP017;Thực phẩm mẫu 017;3;105000;true;210000;1;2;105000;Mua 2 tặng 1

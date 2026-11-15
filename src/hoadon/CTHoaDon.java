@@ -1,6 +1,8 @@
 package hoadon;
 
-public abstract class CTHoaDon {
+import utils.DongDuLieu;
+
+public abstract class CTHoaDon implements interfaces.BanGhiFile {
    private String maSanpham , tenSanPham ;
    private int soLuong ;
    private long donGia ;
@@ -56,9 +58,34 @@ public abstract class CTHoaDon {
     }
     public String toString()
     {
-        return "Mã sản phẩm: " + maSanpham +
+        return utils.HienThi.canLe("Mã sản phẩm: " + maSanpham +
                 " | Tên sản phẩm: " + tenSanPham +
                 " | Số lượng: " + soLuong +
-                " | Đơn giá: " + donGia ;
+                " | Đơn giá: " + donGia );
+    }
+
+    // ================= ĐỌC / GHI FILE TXT =================
+
+    protected String thongTinChiTietFile() {
+        return DongDuLieu.ghep(maSanpham, tenSanPham, soLuong, donGia);
+    }
+
+    protected void docThongTinChiTietFile(String[] p) {
+        maSanpham = p[1];
+        tenSanPham = p[2];
+        soLuong = Integer.parseInt(p[3]);
+        donGia = Long.parseLong(p[4]);
+    }
+
+    public static CTHoaDon tuDongFile(String dong) {
+        String loai = dong.split(";", -1)[0];
+        if ("CTBAN".equals(loai)) return CTHoaDonBan.tuDongFile(dong);
+        if ("CTNHAP".equals(loai)) return CTHoaDonNhap.tuDongFile(dong);
+        throw new IllegalArgumentException("Loại CTHoaDon không hợp lệ: " + loai);
+    }
+
+    public void kiemTraDuLieuFile() {
+        DongDuLieu.khongAm(soLuong, "soLuong");
+        DongDuLieu.khongAm(donGia, "donGia");
     }
 }

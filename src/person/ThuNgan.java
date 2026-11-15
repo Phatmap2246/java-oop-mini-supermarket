@@ -1,5 +1,7 @@
 package person;
 
+import utils.DongDuLieu;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Scanner;
@@ -153,5 +155,30 @@ public class ThuNgan extends NhanVien {
                     break;
             }
         } while (luaChon != 0);
+    }
+
+    // ================= ĐỌC / GHI FILE TXT =================
+
+    @Override public String toDongFile() {
+        kiemTraDuLieuFile();
+        return "THUNGAN;" + thongTinNhanVienFile() + ";" + DongDuLieu.ghep(tongTienDauCa);
+    }
+
+    public static ThuNgan tuDongFile(String dong) {
+        String[] p = dong.split(";", -1);
+        DongDuLieu.yeuCau(p.length == 16 && "THUNGAN".equals(p[0]), "Sai dòng THUNGAN (cần 16 cột).");
+        int dem = NhanVien.getSoThuTu();
+        ThuNgan obj = new ThuNgan();
+        NhanVien.datBoDemFile(dem); // Constructor đọc file không cấp mã mới.
+        obj.docThongTinNhanVienFile(p);
+        obj.tongTienDauCa = Long.parseLong(p[15]);
+        obj.kiemTraDuLieuFile();
+        obj.capNhatMaFile();
+        return obj;
+    }
+
+    public void kiemTraDuLieuFile() {
+        super.kiemTraDuLieuFile();
+        DongDuLieu.khongAm(tongTienDauCa, "tongTienDauCa");
     }
 }

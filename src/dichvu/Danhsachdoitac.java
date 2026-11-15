@@ -1,4 +1,12 @@
 package dichvu ;
+import utils.BoDemMa;
+import utils.DongDuLieu;
+import utils.TepVanBan;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import java.util.Locale;
 
@@ -216,7 +224,7 @@ public class Danhsachdoitac implements interfaces.IQuanLy<Doitac> {
             System.out.println("Kết quả tra cứu:");
             switch (luaChon) {
                 case 1: {
-                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã đối tác cần tìm: ", Validation.MaDT_REGEX, "Mã đối tác không đúng định dạng. Vui lòng nhập lại!");
+                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã đối tác cần tìm: ", Validation.MaDT_REGEX, "Mã đối tác không đúng định dạng. Vui lòng nhập lại!", Nhacungcap.getSoThuTuNCC());
                     System.out.println("Đang tra cứu...");
                     Validation.danghoatdong(1);
                     for (Doitac doiTac : danhSachDoiTac) {
@@ -328,7 +336,7 @@ public class Danhsachdoitac implements interfaces.IQuanLy<Doitac> {
         {
             System.out.println("Mã đối tác đã tồn tại vui lòng nhập mã mới!");
             doiTac.setMaDoiTac(Validation.inputStringRegex(sc, "Nhập mã đối tác: ",
-                    "DT\\d{3}", "Mã đối tác không đúng định dạng (VD: DT001)!"));
+                    Validation.MaDT_REGEX, "Mã đối tác không đúng định dạng (VD: NCC001)!"));
         }
     }
 
@@ -366,12 +374,12 @@ public class Danhsachdoitac implements interfaces.IQuanLy<Doitac> {
                     break;
                 }
                 case 5: {
-                    String ma = Validation.inputStringRegex(sc, "Nhập mã đối tác: ", Validation.MaDT_REGEX, "Mã đối tác không đúng định dạng!");
+                    String ma = Validation.inputStringRegex(sc, "Nhập mã đối tác: ", Validation.MaDT_REGEX, "Mã đối tác không đúng định dạng!", Nhacungcap.getSoThuTuNCC());
                     sua(ma, sc);
                     break;
                 }
                 case 6: {
-                    String ma = Validation.inputStringRegex(sc, "Nhập mã đối tác: ", Validation.MaDT_REGEX, "Mã đối tác không đúng định dạng!");
+                    String ma = Validation.inputStringRegex(sc, "Nhập mã đối tác: ", Validation.MaDT_REGEX, "Mã đối tác không đúng định dạng!", Nhacungcap.getSoThuTuNCC());
                     xoa(ma);
                     break;
                 }
@@ -386,5 +394,54 @@ public class Danhsachdoitac implements interfaces.IQuanLy<Doitac> {
                     break;
             }
         } while (luaChon != 0);
+    }
+
+    /** Mỗi đối tượng tạo một dòng; thông tin con được ghi thành dòng riêng. */
+
+
+    /** Có lỗi thì giữ danh sách đang dùng, không bỏ dòng lỗi. */
+
+    // ================= ĐỌC / GHI FILE TXT =================
+
+    public void ghiFile(String tenFile) throws IOException {
+        ArrayList<String> cacDong = new ArrayList<>();
+        Set<String> maDaGhi = new HashSet<>();
+        for (Doitac obj : danhSachDoiTac) {
+            if (obj == null) throw new IOException("Danh sách chứa null.");
+            TepVanBan.khongTrung(maDaGhi, obj.getMaDoiTac());
+            cacDong.add(obj.toDongFile());
+            if (obj instanceof Nhacungcap) {
+                for (sanpham.SanPham sp : ((Nhacungcap) obj).getSanPhamCungCap().getDanhSachSanPham()) {
+                    cacDong.add("SPCC;" + obj.getMaDoiTac() + ";" + sp.toDongFile());
+                }
+            }
+        }
+        TepVanBan.ghi(tenFile, "Danhsachdoitac", cacDong);
+    }
+
+    public void docFile(String tenFile) throws IOException {
+        int[] demTruoc = BoDemMa.chup();
+        ArrayList<Doitac> moi = new ArrayList<>();
+        Set<String> maDaDoc = new HashSet<>();
+        Map<String, Doitac> theoMa = new LinkedHashMap<>();
+        try {
+            for (String dong : TepVanBan.doc(tenFile)) {
+                if (dong.startsWith("SPCC;")) {
+                    String[] p = dong.split(";", 3);
+                    Doitac chu = p.length == 3 ? theoMa.get(p[1].toUpperCase(Locale.ROOT)) : null;
+                    DongDuLieu.yeuCau(chu instanceof Nhacungcap, "Sản phẩm cung cấp không có nhà cung cấp.");
+                    ((Nhacungcap) chu).getSanPhamCungCap().getDanhSachSanPham().add(sanpham.SanPham.tuDongFile(p[2]));
+                    continue;
+                }
+                Doitac obj = Doitac.tuDongFile(dong);
+                TepVanBan.khongTrung(maDaDoc, obj.getMaDoiTac());
+                moi.add(obj);
+                theoMa.put(obj.getMaDoiTac().toUpperCase(Locale.ROOT), obj);
+            }
+        } catch (RuntimeException | IOException e) {
+            BoDemMa.khoiPhuc(demTruoc);
+            throw new IOException("Không đọc được " + tenFile + ": " + e.getMessage(), e);
+        }
+        this.danhSachDoiTac = moi;
     }
 }

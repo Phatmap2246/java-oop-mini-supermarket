@@ -1,0 +1,21 @@
+#SIEUTHI_TXT_3
+#NHOM;YeuCau
+#BODEM;101;13;41;121;13;11
+YEUCAU;NV002;ThuNgan;Yêu cầu kiểm thử 01;DaDuyet
+YEUCAU;NV003;KeToan;Yêu cầu kiểm thử 02;KhongDuyet
+YEUCAU;NV004;QuanKho;Yêu cầu kiểm thử 03;ChoDuyet
+YEUCAU;NV005;ThuNgan;Yêu cầu kiểm thử 04;DaDuyet
+YEUCAU;NV006;KeToan;Yêu cầu kiểm thử 05;KhongDuyet
+YEUCAU;NV007;QuanKho;Yêu cầu kiểm thử 06;ChoDuyet
+YEUCAU;NV008;ThuNgan;Yêu cầu kiểm thử 07;DaDuyet
+YEUCAU;NV009;KeToan;Yêu cầu kiểm thử 08;KhongDuyet
+YEUCAU;NV010;QuanKho;Yêu cầu kiểm thử 09;ChoDuyet
+YEUCAU;NV011;ThuNgan;Yêu cầu kiểm thử 10;DaDuyet
+YEUCAU;NV001;KeToan;Yêu cầu kiểm thử 11;KhongDuyet
+YEUCAU;NV002;QuanKho;Yêu cầu kiểm thử 12;ChoDuyet
+YEUCAU;NV003;ThuNgan;Yêu cầu kiểm thử 13;DaDuyet
+YEUCAU;NV004;KeToan;Yêu cầu kiểm thử 14;KhongDuyet
+YEUCAU;NV005;QuanKho;Yêu cầu kiểm thử 15;ChoDuyet
+YEUCAU;NV006;ThuNgan;Yêu cầu kiểm thử 16;DaDuyet
+YEUCAU;NV007;KeToan;Yêu cầu kiểm thử 17;KhongDuyet
+YEUCAU;NV008;QuanKho;Yêu cầu kiểm thử 18;ChoDuyet

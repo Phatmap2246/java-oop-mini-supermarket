@@ -1,4 +1,6 @@
 package dichvu;
+
+import utils.DongDuLieu;
 import hoadon.HoaDon;
 import sanpham.SanPham;
 import sanpham.QuanLySanPham;
@@ -94,7 +96,42 @@ public class Nhacungcap extends Doitac{
     }
     public String toString()
     {
-        return super.toString() + " | Ngành hàng cung cấp: " + nganhHangCungCap + " | Hạn mức nợ công: " + hanMucNoCong ;
+        return utils.HienThi.canLe(super.toString() + " | Ngành hàng cung cấp: " + nganhHangCungCap + " | Hạn mức nợ công: " + hanMucNoCong );
     }
 
+    // ================= ĐỌC / GHI FILE TXT =================
+
+    @Override public String toDongFile() {
+        kiemTraDuLieuFile();
+        return "NHACUNGCAP;" + thongTinDoiTacFile() + ";" + DongDuLieu.ghep(nganhHangCungCap, hanMucNoCong);
+    }
+
+    public static Nhacungcap tuDongFile(String dong) {
+        String[] p = dong.split(";", -1);
+        DongDuLieu.yeuCau(p.length == 11 && "NHACUNGCAP".equals(p[0]), "Sai dòng NHACUNGCAP (cần 11 cột).");
+        int dem = Nhacungcap.getSoThuTuNCC();
+        Nhacungcap obj = new Nhacungcap();
+        Nhacungcap.datBoDemFile(dem); // Constructor đọc file không cấp mã mới.
+        obj.docThongTinDoiTacFile(p);
+        obj.nganhHangCungCap = p[9];
+        obj.hanMucNoCong = Long.parseLong(p[10]);
+        obj.kiemTraDuLieuFile();
+        obj.capNhatMaFile();
+        return obj;
+    }
+
+    public void kiemTraDuLieuFile() {
+        super.kiemTraDuLieuFile();
+        DongDuLieu.khongAm(hanMucNoCong, "hanMucNoCong");
+        DongDuLieu.maKeTiep(getMaDoiTac(), "(?i)NCC\\d+");
+    }
+
+    public static void datBoDemFile(int value) {
+        DongDuLieu.yeuCau(value > 0, "Bộ đếm mã phải dương.");
+        soThuTuNCC = value;
+    }
+
+    public void capNhatMaFile() {
+        soThuTuNCC = Math.max(soThuTuNCC, DongDuLieu.maKeTiep(getMaDoiTac(), "(?i)NCC\\d+"));
+    }
 }

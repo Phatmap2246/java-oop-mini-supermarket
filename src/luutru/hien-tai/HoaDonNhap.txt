@@ -1,182 +1,83 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<du-lieu phien-ban="1">
-  <doi-tuong lop="utils.DataBase$BanLuu" ma="1">
-    <thuoc-tinh khai-bao="utils.DataBase$BanLuu" ten="duLieu">
-      <doi-tuong lop="hoadon.DanhSachHoaDonNhap" ma="2">
-        <thuoc-tinh khai-bao="hoadon.DanhSachHoaDonNhap" ten="dsHoaDonNhapHang">
-          <danh-sach lop="java.util.ArrayList" ma="3">
-            <doi-tuong lop="hoadon.HoaDonNhapHang" ma="4">
-              <thuoc-tinh khai-bao="hoadon.HoaDonNhapHang" ten="maNhaCungCap">
-                <gia-tri kieu="java.lang.String">NCC002</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonNhapHang" ten="chiPhiVanChuyen">
-                <gia-tri kieu="java.lang.Long">0</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonNhapHang" ten="thueVAT">
-                <gia-tri kieu="java.lang.Double">0.0</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonNhapHang" ten="ctHoaDonNhaps">
-                <danh-sach lop="java.util.ArrayList" ma="5">
-                  <doi-tuong lop="hoadon.CTHoaDonNhap" ma="6">
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="maSanpham">
-                      <gia-tri kieu="java.lang.String">SP004</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="tenSanPham">
-                      <gia-tri kieu="java.lang.String">Nước giặt 3 lít</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="soLuong">
-                      <gia-tri kieu="java.lang.Integer">50</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="donGia">
-                      <gia-tri kieu="java.lang.Long">110000</gia-tri>
-                    </thuoc-tinh>
-                  </doi-tuong>
-                </danh-sach>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonNhapHang" ten="Duyet">
-                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonNhapHang" ten="daNhapSP">
-                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="maHoaDon">
-                <gia-tri kieu="java.lang.String">HD004</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="ngayLap">
-                <gia-tri kieu="java.time.LocalDateTime">2026-10-05T09:00</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="maNhanVien">
-                <gia-tri kieu="java.lang.String">NV002</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="loaiHoaDon">
-                <gia-tri kieu="java.lang.String">Hoá đơn nhập</gia-tri>
-              </thuoc-tinh>
-            </doi-tuong>
-            <doi-tuong lop="hoadon.HoaDonNhapHang" ma="7">
-              <thuoc-tinh khai-bao="hoadon.HoaDonNhapHang" ten="maNhaCungCap">
-                <gia-tri kieu="java.lang.String">NCC003</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonNhapHang" ten="chiPhiVanChuyen">
-                <gia-tri kieu="java.lang.Long">0</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonNhapHang" ten="thueVAT">
-                <gia-tri kieu="java.lang.Double">0.0</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonNhapHang" ten="ctHoaDonNhaps">
-                <danh-sach lop="java.util.ArrayList" ma="8">
-                  <doi-tuong lop="hoadon.CTHoaDonNhap" ma="9">
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="maSanpham">
-                      <gia-tri kieu="java.lang.String">SP007</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="tenSanPham">
-                      <gia-tri kieu="java.lang.String">Nồi cơm điện 1.8 lít</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="soLuong">
-                      <gia-tri kieu="java.lang.Integer">10</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="donGia">
-                      <gia-tri kieu="java.lang.Long">450000</gia-tri>
-                    </thuoc-tinh>
-                  </doi-tuong>
-                </danh-sach>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonNhapHang" ten="Duyet">
-                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonNhapHang" ten="daNhapSP">
-                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="maHoaDon">
-                <gia-tri kieu="java.lang.String">HD005</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="ngayLap">
-                <gia-tri kieu="java.time.LocalDateTime">2026-11-04T09:00</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="maNhanVien">
-                <gia-tri kieu="java.lang.String">NV002</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="loaiHoaDon">
-                <gia-tri kieu="java.lang.String">Hoá đơn nhập</gia-tri>
-              </thuoc-tinh>
-            </doi-tuong>
-            <doi-tuong lop="hoadon.HoaDonNhapHang" ma="10">
-              <thuoc-tinh khai-bao="hoadon.HoaDonNhapHang" ten="maNhaCungCap">
-                <gia-tri kieu="java.lang.String">NCC001</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonNhapHang" ten="chiPhiVanChuyen">
-                <gia-tri kieu="java.lang.Long">0</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonNhapHang" ten="thueVAT">
-                <gia-tri kieu="java.lang.Double">0.0</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonNhapHang" ten="ctHoaDonNhaps">
-                <danh-sach lop="java.util.ArrayList" ma="11">
-                  <doi-tuong lop="hoadon.CTHoaDonNhap" ma="12">
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="maSanpham">
-                      <gia-tri kieu="java.lang.String">SP001</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="tenSanPham">
-                      <gia-tri kieu="java.lang.String">Sữa tươi hộp 1 lít</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="soLuong">
-                      <gia-tri kieu="java.lang.Integer">20</gia-tri>
-                    </thuoc-tinh>
-                    <thuoc-tinh khai-bao="hoadon.CTHoaDon" ten="donGia">
-                      <gia-tri kieu="java.lang.Long">25000</gia-tri>
-                    </thuoc-tinh>
-                  </doi-tuong>
-                </danh-sach>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonNhapHang" ten="Duyet">
-                <gia-tri kieu="java.lang.Boolean">false</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDonNhapHang" ten="daNhapSP">
-                <gia-tri kieu="java.lang.Boolean">false</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="maHoaDon">
-                <gia-tri kieu="java.lang.String">HD006</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="ngayLap">
-                <gia-tri kieu="java.time.LocalDateTime">2026-11-14T09:00</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="maNhanVien">
-                <gia-tri kieu="java.lang.String">NV002</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="hoadon.HoaDon" ten="loaiHoaDon">
-                <gia-tri kieu="java.lang.String">Hoá đơn nhập</gia-tri>
-              </thuoc-tinh>
-            </doi-tuong>
-          </danh-sach>
-        </thuoc-tinh>
-      </doi-tuong>
-    </thuoc-tinh>
-    <thuoc-tinh khai-bao="utils.DataBase$BanLuu" ten="boDem">
-      <anh-xa lop="java.util.LinkedHashMap" ma="13">
-        <cap>
-          <gia-tri kieu="java.lang.String">sanpham.SanPham</gia-tri>
-          <gia-tri kieu="java.lang.Integer">9</gia-tri>
-        </cap>
-        <cap>
-          <gia-tri kieu="java.lang.String">person.NhanVien</gia-tri>
-          <gia-tri kieu="java.lang.Integer">5</gia-tri>
-        </cap>
-        <cap>
-          <gia-tri kieu="java.lang.String">person.KhachHang</gia-tri>
-          <gia-tri kieu="java.lang.Integer">4</gia-tri>
-        </cap>
-        <cap>
-          <gia-tri kieu="java.lang.String">hoadon.HoaDon</gia-tri>
-          <gia-tri kieu="java.lang.Integer">7</gia-tri>
-        </cap>
-        <cap>
-          <gia-tri kieu="java.lang.String">dichvu.Khuyenmai</gia-tri>
-          <gia-tri kieu="java.lang.Integer">5</gia-tri>
-        </cap>
-        <cap>
-          <gia-tri kieu="java.lang.String">dichvu.Nhacungcap</gia-tri>
-          <gia-tri kieu="java.lang.Integer">4</gia-tri>
-        </cap>
-      </anh-xa>
-    </thuoc-tinh>
-  </doi-tuong>
-</du-lieu>
+#SIEUTHI_TXT_3
+#NHOM;DanhSachHoaDonNhap
+#BODEM;101;13;41;121;13;11
+HDNHAP;HD101;2026-11-11T09:00;NV002;Hoá đơn nhập;NCC001;10000;8.0;true;true
+CTNHAP;HD101;SP001;Thực phẩm mẫu 001;11;15000
+CTNHAP;HD101;SP011;Thực phẩm mẫu 011;11;65000
+CTNHAP;HD101;SP021;Thực phẩm mẫu 021;11;15000
+HDNHAP;HD102;2026-11-07T09:00;NV002;Hoá đơn nhập;NCC002;10000;8.0;true;true
+CTNHAP;HD102;SP002;Thực phẩm mẫu 002;12;20000
+CTNHAP;HD102;SP012;Thực phẩm mẫu 012;12;70000
+CTNHAP;HD102;SP022;Thực phẩm mẫu 022;12;20000
+HDNHAP;HD103;2026-11-03T09:00;NV002;Hoá đơn nhập;NCC003;10000;8.0;true;true
+CTNHAP;HD103;SP003;Thực phẩm mẫu 003;13;25000
+CTNHAP;HD103;SP013;Thực phẩm mẫu 013;13;75000
+CTNHAP;HD103;SP023;Thực phẩm mẫu 023;13;25000
+HDNHAP;HD104;2026-10-30T09:00;NV002;Hoá đơn nhập;NCC004;10000;8.0;true;true
+CTNHAP;HD104;SP004;Thực phẩm mẫu 004;14;30000
+CTNHAP;HD104;SP014;Thực phẩm mẫu 014;14;80000
+CTNHAP;HD104;SP024;Thực phẩm mẫu 024;14;30000
+HDNHAP;HD105;2026-10-26T09:00;NV002;Hoá đơn nhập;NCC005;10000;8.0;true;true
+CTNHAP;HD105;SP005;Thực phẩm mẫu 005;15;35000
+CTNHAP;HD105;SP015;Thực phẩm mẫu 015;15;85000
+CTNHAP;HD105;SP025;Thực phẩm mẫu 025;15;35000
+HDNHAP;HD106;2026-10-22T09:00;NV002;Hoá đơn nhập;NCC006;10000;8.0;true;true
+CTNHAP;HD106;SP006;Thực phẩm mẫu 006;16;40000
+CTNHAP;HD106;SP016;Thực phẩm mẫu 016;16;90000
+CTNHAP;HD106;SP026;Thực phẩm mẫu 026;16;40000
+HDNHAP;HD107;2026-10-18T09:00;NV002;Hoá đơn nhập;NCC007;10000;8.0;true;true
+CTNHAP;HD107;SP007;Thực phẩm mẫu 007;17;45000
+CTNHAP;HD107;SP017;Thực phẩm mẫu 017;17;95000
+CTNHAP;HD107;SP027;Thực phẩm mẫu 027;17;45000
+HDNHAP;HD108;2026-10-14T09:00;NV002;Hoá đơn nhập;NCC008;10000;8.0;true;true
+CTNHAP;HD108;SP008;Thực phẩm mẫu 008;18;50000
+CTNHAP;HD108;SP018;Thực phẩm mẫu 018;18;100000
+CTNHAP;HD108;SP028;Thực phẩm mẫu 028;18;50000
+HDNHAP;HD109;2026-10-10T09:00;NV002;Hoá đơn nhập;NCC009;10000;8.0;true;true
+CTNHAP;HD109;SP009;Thực phẩm mẫu 009;19;55000
+CTNHAP;HD109;SP019;Thực phẩm mẫu 019;19;105000
+CTNHAP;HD109;SP029;Thực phẩm mẫu 029;19;55000
+HDNHAP;HD110;2026-10-06T09:00;NV002;Hoá đơn nhập;NCC010;10000;8.0;true;true
+CTNHAP;HD110;SP010;Thực phẩm mẫu 010;20;60000
+CTNHAP;HD110;SP020;Thực phẩm mẫu 020;20;10000
+CTNHAP;HD110;SP030;Thực phẩm mẫu 030;20;60000
+HDNHAP;HD111;2026-10-02T09:00;NV002;Hoá đơn nhập;NCC001;10000;8.0;true;false
+CTNHAP;HD111;SP001;Thực phẩm mẫu 001;21;15000
+CTNHAP;HD111;SP011;Thực phẩm mẫu 011;21;65000
+CTNHAP;HD111;SP021;Thực phẩm mẫu 021;21;15000
+HDNHAP;HD112;2026-09-28T09:00;NV002;Hoá đơn nhập;NCC002;10000;8.0;true;false
+CTNHAP;HD112;SP002;Thực phẩm mẫu 002;22;20000
+CTNHAP;HD112;SP012;Thực phẩm mẫu 012;22;70000
+CTNHAP;HD112;SP022;Thực phẩm mẫu 022;22;20000
+HDNHAP;HD113;2026-09-24T09:00;NV002;Hoá đơn nhập;NCC003;10000;8.0;true;false
+CTNHAP;HD113;SP003;Thực phẩm mẫu 003;23;25000
+CTNHAP;HD113;SP013;Thực phẩm mẫu 013;23;75000
+CTNHAP;HD113;SP023;Thực phẩm mẫu 023;23;25000
+HDNHAP;HD114;2026-09-20T09:00;NV002;Hoá đơn nhập;NCC004;10000;8.0;true;false
+CTNHAP;HD114;SP004;Thực phẩm mẫu 004;24;30000
+CTNHAP;HD114;SP014;Thực phẩm mẫu 014;24;80000
+CTNHAP;HD114;SP024;Thực phẩm mẫu 024;24;30000
+HDNHAP;HD115;2026-09-16T09:00;NV002;Hoá đơn nhập;NCC005;10000;8.0;true;false
+CTNHAP;HD115;SP005;Thực phẩm mẫu 005;25;35000
+CTNHAP;HD115;SP015;Thực phẩm mẫu 015;25;85000
+CTNHAP;HD115;SP025;Thực phẩm mẫu 025;25;35000
+HDNHAP;HD116;2026-09-12T09:00;NV002;Hoá đơn nhập;NCC006;10000;8.0;false;false
+CTNHAP;HD116;SP006;Thực phẩm mẫu 006;26;40000
+CTNHAP;HD116;SP016;Thực phẩm mẫu 016;26;90000
+CTNHAP;HD116;SP026;Thực phẩm mẫu 026;26;40000
+HDNHAP;HD117;2026-09-08T09:00;NV002;Hoá đơn nhập;NCC007;10000;8.0;false;false
+CTNHAP;HD117;SP007;Thực phẩm mẫu 007;27;45000
+CTNHAP;HD117;SP017;Thực phẩm mẫu 017;27;95000
+CTNHAP;HD117;SP027;Thực phẩm mẫu 027;27;45000
+HDNHAP;HD118;2026-09-04T09:00;NV002;Hoá đơn nhập;NCC008;10000;8.0;false;false
+CTNHAP;HD118;SP008;Thực phẩm mẫu 008;28;50000
+CTNHAP;HD118;SP018;Thực phẩm mẫu 018;28;100000
+CTNHAP;HD118;SP028;Thực phẩm mẫu 028;28;50000
+HDNHAP;HD119;2026-08-31T09:00;NV002;Hoá đơn nhập;NCC009;10000;8.0;false;false
+CTNHAP;HD119;SP009;Thực phẩm mẫu 009;29;55000
+CTNHAP;HD119;SP019;Thực phẩm mẫu 019;29;105000
+CTNHAP;HD119;SP029;Thực phẩm mẫu 029;29;55000
+HDNHAP;HD120;2026-08-27T09:00;NV002;Hoá đơn nhập;NCC010;10000;8.0;false;false
+CTNHAP;HD120;SP010;Thực phẩm mẫu 010;30;60000
+CTNHAP;HD120;SP020;Thực phẩm mẫu 020;30;10000
+CTNHAP;HD120;SP030;Thực phẩm mẫu 030;30;60000

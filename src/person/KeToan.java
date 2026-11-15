@@ -1,11 +1,14 @@
 package person;
 
+import utils.DongDuLieu;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import hoadon.HoaDon;
 import hoadon.HoaDonBanHang;
+import hoadon.HoaDonNhapHang;
 import hoadon.DanhSachHoaDonBan;
 import hoadon.DanhSachHoaDonNhap;
 import hoadon.DanhSachCongNo;
@@ -45,40 +48,55 @@ public class KeToan extends NhanVien {
             System.out.println("2. Đối chiếu và ghi nhận công nợ");
             System.out.println("3. Xem và thanh toán công nợ");
             System.out.println("4. Thống kê công nợ");
+            System.out.println("5. Thống kê tài chính theo quý");
+            System.out.println("6. Thống kê tài chính theo năm");
             System.out.println("0. Trở về trang chủ");
-            int chon = Validation.luaChon(sc, "Chọn chức năng: ", 0, 4);
+            int chon = Validation.luaChon(sc, "Chọn chức năng: ", 0, 6);
             switch (chon) {
-                case 0:
-                    return;
-                case 1:
+                case 0: return;
+                case 1: {
                     LocalDate batDau = Validation.inputLocalDateRegex(sc, "Ngày bắt đầu (dd/MM/yyyy): ");
                     LocalDate ketThuc = Validation.inputLocalDateRegex(sc, "Ngày kết thúc (dd/MM/yyyy): ");
                     if (ketThuc.isBefore(batDau)) {
                         System.out.println("Ngày kết thúc phải từ ngày bắt đầu trở đi.");
                         break;
                     }
-                    ArrayList<HoaDon> hoaDons = new ArrayList<>();
-                    hoaDons.addAll(dsHoaDonBan.getDsHoaDonBanHang());
-                    hoaDons.addAll(dsHoaDonNhap.getDsHoaDonNhapHang());
-                    System.out.printf("Doanh thu: %,d VND%nChi phí nhập hàng: %,d VND%n"
-                                    + "Lợi nhuận: %,d VND%nLợi nhuận ròng: %,d VND%n",
-                            tinhTongDoanhThu(hoaDons, batDau, ketThuc),
-                            tinhTongChiPhi(hoaDons, batDau, ketThuc),
-                            tinhLoiNhuan(hoaDons, batDau, ketThuc),
-                            tinhLoiNhuanRong(hoaDons, batDau, ketThuc));
+                    inThongKeTaiChinh(tapHopHoaDon(dsHoaDonBan, dsHoaDonNhap), batDau, ketThuc);
                     break;
-                case 2:
-                    dsCongNo.them(sc);
+                }
+                case 2: dsCongNo.them(sc); break;
+                case 3: dsCongNo.hienThiVaThanhToanCongNo(sc); break;
+                case 4: dsCongNo.xuatDanhSach(); break;
+                case 5: {
+                    int quy = Validation.luaChon(sc, "Quý (1-4): ", 1, 4);
+                    int nam = Validation.luaChon(sc, "Năm: ", 1, LocalDate.now().getYear());
+                    LocalDate batDau = LocalDate.of(nam, (quy - 1) * 3 + 1, 1);
+                    inThongKeTaiChinh(tapHopHoaDon(dsHoaDonBan, dsHoaDonNhap), batDau, batDau.plusMonths(3).minusDays(1));
                     break;
-                case 3:
-                    dsCongNo.hienThiVaThanhToanCongNo(sc);
+                }
+                case 6: {
+                    int nam = Validation.luaChon(sc, "Năm: ", 1, LocalDate.now().getYear());
+                    inThongKeTaiChinh(tapHopHoaDon(dsHoaDonBan, dsHoaDonNhap), LocalDate.of(nam, 1, 1), LocalDate.of(nam, 12, 31));
                     break;
-                case 4:
-                    dsCongNo.xuatDanhSach();
-                    break;
+                }
             }
         }
     }
+
+    private ArrayList<HoaDon> tapHopHoaDon(DanhSachHoaDonBan bans, DanhSachHoaDonNhap nhaps) {
+        ArrayList<HoaDon> hoaDons = new ArrayList<>();
+        hoaDons.addAll(bans.getDsHoaDonBanHang());
+        hoaDons.addAll(nhaps.getDsHoaDonNhapHang());
+        return hoaDons;
+    }
+
+    private void inThongKeTaiChinh(ArrayList<HoaDon> hoaDons, LocalDate batDau, LocalDate ketThuc) {
+        System.out.printf("Từ %s đến %s%nDoanh thu: %,d VND%nChi phí nhập hàng: %,d VND%nLợi nhuận: %,d VND%nLợi nhuận ròng: %,d VND%n",
+                DateUtil.formatDate(batDau), DateUtil.formatDate(ketThuc),
+                tinhTongDoanhThu(hoaDons, batDau, ketThuc), tinhTongChiPhi(hoaDons, batDau, ketThuc),
+                tinhLoiNhuan(hoaDons, batDau, ketThuc), tinhLoiNhuanRong(hoaDons, batDau, ketThuc));
+    }
+
 
     // ==================== 1. NHÓM HÀM TÍNH TOÁN TÀI CHÍNH ====================
 
@@ -90,7 +108,8 @@ public class KeToan extends NhanVien {
         for (HoaDon hd : dshd) {
             if (hd == null || hd.getNgayLap() == null) continue;
             LocalDate ngayLap = hd.getNgayLap().toLocalDate();
-            if (hd instanceof HoaDonBanHang
+            if (hd instanceof HoaDonBanHang hdb
+                    && hdb.isDaThanhToan()
                     && !ngayLap.isBefore(ngayBatDau)
                     && !ngayLap.isAfter(ngayKetThuc)) {
                 tongDoanhThu += hd.tinhTongTien();
@@ -107,8 +126,8 @@ public class KeToan extends NhanVien {
         for (HoaDon hd : dshd) {
             if (hd == null || hd.getNgayLap() == null) continue;
             LocalDate ngayLap = hd.getNgayLap().toLocalDate();
-            // Đã sửa: lấy các hóa đơn KHÔNG phải HoaDonBanHang làm chi phí
-            if (!(hd instanceof HoaDonBanHang)
+            if (hd instanceof HoaDonNhapHang hdn
+                    && hdn.isDuyet()
                     && !ngayLap.isBefore(ngayBatDau)
                     && !ngayLap.isAfter(ngayKetThuc)) {
                 tongChiPhi += hd.tinhTongTien();
@@ -273,15 +292,8 @@ public class KeToan extends NhanVien {
 
     public void thongKe(ArrayList<HoaDon> dshd, ArrayList<String> dsMaDaThanhToan,
             LocalDate ngayBatDau, LocalDate ngayKetThuc) {
-        System.out.println("\n=== BẢNG THỐNG KÊ TÀI CHÍNH ===");
-        System.out.printf("1. Doanh thu từ %s đến %s: %,d VND%n",
-                DateUtil.formatDate(ngayBatDau), DateUtil.formatDate(ngayKetThuc),
-                tinhTongDoanhThu(dshd, ngayBatDau, ngayKetThuc));
-        System.out.printf("2. Lợi nhuận ròng từ %s đến %s: %,d VND%n",
-                DateUtil.formatDate(ngayBatDau), DateUtil.formatDate(ngayKetThuc),
-                tinhLoiNhuanRong(dshd, ngayBatDau, ngayKetThuc));
-
-        hienThiDanhSachCongNo(dshd, dsMaDaThanhToan);
+        // Báo cáo tài chính không tự suy luận mọi hóa đơn nhập thành khoản công nợ.
+        inThongKeTaiChinh(dshd, ngayBatDau, ngayKetThuc);
     }
 
     public void thongKe(int quy, int nam, ArrayList<HoaDon> dshd,
@@ -319,5 +331,28 @@ public class KeToan extends NhanVien {
         LocalDate dauNam = LocalDate.of(nam, 1, 1);
         LocalDate cuoiNam = LocalDate.of(nam, 12, 31);
         thongKe(dshd, dsMaDaThanhToan, dauNam, cuoiNam);
+    }
+
+    // ================= ĐỌC / GHI FILE TXT =================
+
+    @Override public String toDongFile() {
+        kiemTraDuLieuFile();
+        return "KETOAN;" + thongTinNhanVienFile();
+    }
+
+    public static KeToan tuDongFile(String dong) {
+        String[] p = dong.split(";", -1);
+        DongDuLieu.yeuCau(p.length == 15 && "KETOAN".equals(p[0]), "Sai dòng KETOAN (cần 15 cột).");
+        int dem = NhanVien.getSoThuTu();
+        KeToan obj = new KeToan();
+        NhanVien.datBoDemFile(dem); // Constructor đọc file không cấp mã mới.
+        obj.docThongTinNhanVienFile(p);
+        obj.kiemTraDuLieuFile();
+        obj.capNhatMaFile();
+        return obj;
+    }
+
+    public void kiemTraDuLieuFile() {
+        super.kiemTraDuLieuFile();
     }
 }

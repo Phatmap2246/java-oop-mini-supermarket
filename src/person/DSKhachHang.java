@@ -1,4 +1,10 @@
 package person;
+import utils.BoDemMa;
+import utils.TepVanBan;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.ArrayList;
 
 import java.util.Locale;
 
@@ -6,7 +12,6 @@ import java.time.LocalDate;
 
 import java.util.Scanner;
 
-import utils.DataBase;
 import utils.Validation;
 
 public class DSKhachHang implements interfaces.IQuanLy<KhachHang> {
@@ -650,21 +655,9 @@ public class DSKhachHang implements interfaces.IQuanLy<KhachHang> {
     }
 
     /**
-     * Ghi đè toàn bộ danh sách khách hàng vào file KhachHang.txt bằng DataBase.ghiVaoFile
+     * Ghi toàn bộ khách hàng theo định dạng dòng TXT, kể cả danh sách rỗng.
      */
-    public void ghiFileKhachHang() {
-        if (n == 0 || list == null) {
-            System.out.println("[!] Danh sach khach hang rong, khong co du lieu de ghi file.");
-            return;
-        }
-        java.util.ArrayList<Object> objs = new java.util.ArrayList<>();
-        for (int i = 0; i < n; i++) {
-            objs.add(list[i]);
-        }
 
-        DataBase.ghiVaoFile(objs, utils.DuongDanLuuTru.file("KhachHang.txt"), true);
-        System.out.println("[+] Da ghi de danh sach vao file KhachHang.txt bang DataBase thanh cong!");
-    }
 
     public void quanLyDanhSach(Scanner sc)
     {
@@ -696,12 +689,12 @@ public class DSKhachHang implements interfaces.IQuanLy<KhachHang> {
                     break;
                 }
                 case 4: {
-                    String ma = Validation.inputStringRegex(sc, "Nhập mã khách hàng: ", Validation.MaKH_REGEX, "Mã khách hàng không đúng định dạng!");
+                    String ma = Validation.inputStringRegex(sc, "Nhập mã khách hàng: ", Validation.MaKH_REGEX, "Mã khách hàng không đúng định dạng!", KhachHang.getSoThuTu());
                     sua(ma, sc);
                     break;
                 }
                 case 5: {
-                    String ma = Validation.inputStringRegex(sc, "Nhập mã khách hàng: ", Validation.MaKH_REGEX, "Mã khách hàng không đúng định dạng!");
+                    String ma = Validation.inputStringRegex(sc, "Nhập mã khách hàng: ", Validation.MaKH_REGEX, "Mã khách hàng không đúng định dạng!", KhachHang.getSoThuTu());
                     xoa(ma);
                     break;
                 }
@@ -724,5 +717,47 @@ public class DSKhachHang implements interfaces.IQuanLy<KhachHang> {
                     break;
             }
         } while (luaChon != 0);
+    }
+
+    /** Mỗi đối tượng tạo một dòng; thông tin con được ghi thành dòng riêng. */
+
+
+    /** Có lỗi thì giữ danh sách đang dùng, không bỏ dòng lỗi. */
+
+    // ================= ĐỌC / GHI FILE TXT =================
+
+    public void ghiFileKhachHang() {
+        try { ghiFile(utils.DuongDanLuuTru.file("KhachHang.txt")); }
+        catch (java.io.IOException e) { throw new IllegalStateException("Không lưu được khách hàng.", e); }
+    }
+
+    public void ghiFile(String tenFile) throws IOException {
+        ArrayList<String> cacDong = new ArrayList<>();
+        Set<String> maDaGhi = new HashSet<>();
+        for (int i = 0; i < n; i++) {
+            KhachHang obj = list[i];
+            if (obj == null) throw new IOException("Danh sách chứa null.");
+            TepVanBan.khongTrung(maDaGhi, obj.getMaKhachHang());
+            cacDong.add(obj.toDongFile());
+        }
+        TepVanBan.ghi(tenFile, "DSKhachHang", cacDong);
+    }
+
+    public void docFile(String tenFile) throws IOException {
+        int[] demTruoc = BoDemMa.chup();
+        ArrayList<KhachHang> moi = new ArrayList<>();
+        Set<String> maDaDoc = new HashSet<>();
+        try {
+            for (String dong : TepVanBan.doc(tenFile)) {
+                KhachHang obj = KhachHang.tuDongFile(dong);
+                TepVanBan.khongTrung(maDaDoc, obj.getMaKhachHang());
+                moi.add(obj);
+            }
+        } catch (RuntimeException | IOException e) {
+            BoDemMa.khoiPhuc(demTruoc);
+            throw new IOException("Không đọc được " + tenFile + ": " + e.getMessage(), e);
+        }
+        this.list = moi.toArray(new KhachHang[0]);
+        this.n = moi.size();
     }
 }
