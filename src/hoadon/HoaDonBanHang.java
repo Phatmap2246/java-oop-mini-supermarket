@@ -9,10 +9,9 @@ import interfaces.IThanhToan;
 import person.DSKhachHang;
 import person.KhachHang;
 import sanpham.QuanLySanPham;
-import sanpham.QuanLyTonKho;
 import sanpham.SanPham;
 import utils.Validation;
-
+import interfaces.IThanhToan;
 public class HoaDonBanHang extends HoaDon {
     private String maKhachHang ;
     private IThanhToan phuongThucThanhToan;
@@ -25,13 +24,12 @@ public class HoaDonBanHang extends HoaDon {
     }
     public HoaDonBanHang( String maNhanVien )
     {
-        super(maNhanVien);
+        super(maNhanVien, "Hoá đơn bán");
         maKhachHang = "" ;
         chietKhau = 0 ;
         phuongThucThanhToan = null ;
         daThanhToan = false ;
         ctHoaDonBans = new ArrayList<>() ;
-        super.setLoaiHoaDon("Hoá đơn bán");
     }
     public HoaDonBanHang(String maHoaDon, LocalDateTime ngayLap , String maNhanVien , String loaiHoaDon, IThanhToan thanhToan , boolean daThanhToan , long tienKhuyenMai)
     {
@@ -46,6 +44,9 @@ public class HoaDonBanHang extends HoaDon {
     }
 
     public void setChietKhau(double chietKhau) {
+        if (!Double.isFinite(chietKhau) || chietKhau < 0 || chietKhau > 1) {
+            throw new IllegalArgumentException("Chiết khấu phải nằm trong khoảng từ 0 đến 1.");
+        }
         this.chietKhau = chietKhau;
     }
 
@@ -92,6 +93,10 @@ public class HoaDonBanHang extends HoaDon {
             }
             if (!flag) ctHoaDonBans.add(ct) ;
         } while (Validation.luaChon(sc, "Nhập tiếp sản phẩm? (1/0): ", 0, 1) == 1);
+        KhachHang kh = dskh.timMa(maKhachHang);
+        if (kh != null) {
+            this.chietKhau = kh.tinhChietKhau();
+        }
         System.out.println("\n--- CHỌN PHƯƠNG THỨC THANH TOÁN ---");
         System.out.println("1. Tiền mặt");
         System.out.println("2. Chuyển khoản ngân hàng");
@@ -105,7 +110,6 @@ public class HoaDonBanHang extends HoaDon {
             String stk = sc.nextLine();
 
             ThanhToanChuyenKhoan ck = new ThanhToanChuyenKhoan(bank, stk);
-            // SỬA: TẠO MÃ QR TRƯỚC KHI THANH TOÁN
             ck.taoMaQR(tinhTongTien());
             this.phuongThucThanhToan = ck;
         }
@@ -124,7 +128,6 @@ public class HoaDonBanHang extends HoaDon {
             dskh.timMa(maKhachHang).capNhatThuHang();
             dskh.timMa(maKhachHang).tichLuyChiTieu(tinhTongTien());
         }
-        System.out.println("Thanh toán thành công!");
         return daThanhToan ;
     }
 
@@ -133,7 +136,7 @@ public class HoaDonBanHang extends HoaDon {
         long tongTienHang = 0;
         for(CTHoaDonBan ct : ctHoaDonBans){
             if (ct == null || !ct.isTonTai()) continue;
-            tongTienHang += ct.getThanhTienSauKhuyenMai();
+            tongTienHang += ct.tinhThanhTien();
         }
         return (long) (tongTienHang*(1-chietKhau));
     }

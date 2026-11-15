@@ -2,9 +2,8 @@ package person;
 
 import java.util.Scanner;
 
-import interfaces.TrongFile;
 
-public class DiaChi implements TrongFile {
+public class DiaChi  {
     private String soNha;
     private String duong;
     private String phuongXa;
@@ -47,9 +46,6 @@ public class DiaChi implements TrongFile {
 
     /** Cập nhật số nhà. */
     public void setSoNha(String soNha) {
-        if (soNha == null || soNha.isBlank()) {
-            throw new IllegalArgumentException("SoNha không được để trống.");
-        }
         this.soNha = soNha;
     }
 
@@ -60,9 +56,6 @@ public class DiaChi implements TrongFile {
 
     /** Cập nhật tên đường. */
     public void setDuong(String duong) {
-        if (duong == null || duong.isBlank()) {
-            throw new IllegalArgumentException("Duong không được để trống.");
-        }
         this.duong = duong;
     }
 
@@ -73,9 +66,6 @@ public class DiaChi implements TrongFile {
 
     /** Cập nhật phường hoặc xã. */
     public void setPhuongXa(String phuongXa) {
-        if (phuongXa == null || phuongXa.isBlank()) {
-            throw new IllegalArgumentException("PhuongXa không được để trống.");
-        }
         this.phuongXa = phuongXa;
     }
 
@@ -86,9 +76,6 @@ public class DiaChi implements TrongFile {
 
     /** Cập nhật quận hoặc huyện. */
     public void setQuanHuyen(String quanHuyen) {
-        if (quanHuyen == null || quanHuyen.isBlank()) {
-            throw new IllegalArgumentException("QuanHuyen không được để trống.");
-        }
         this.quanHuyen = quanHuyen;
     }
 
@@ -99,9 +86,6 @@ public class DiaChi implements TrongFile {
 
     /** Cập nhật tỉnh hoặc thành phố. */
     public void setTinhThanhPho(String tinhThanhPho) {
-        if (tinhThanhPho == null || tinhThanhPho.isBlank()) {
-            throw new IllegalArgumentException("TinhThanhPho không được để trống.");
-        }
         this.tinhThanhPho = tinhThanhPho;
     }
 
@@ -120,15 +104,15 @@ public class DiaChi implements TrongFile {
         this.tinhThanhPho = sc.nextLine().trim();
     }
 
+    public void nhapThongTin(Scanner sc) {
+        nhapDiaChi(sc);
+    }
+
     /** Ghép các thành phần địa chỉ thành chuỗi phân cách bằng dấu phẩy. */
-    @Override
     public String toString() {
         return String.join(", ", soNha, duong, phuongXa, quanHuyen, tinhThanhPho);
     }
-    @Override
-    public String getFilePath(){
-        return utils.DuongDanLuuTru.file("DiaChi.csv");
-    }
+
     /** In địa chỉ ra console. */
     public void xuatDiaChi() {
         System.out.println("Địa chỉ: " + this);

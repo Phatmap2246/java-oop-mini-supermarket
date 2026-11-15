@@ -5,13 +5,14 @@ import sanpham.ThucPham;
 import java.util.ArrayList;
 
 import sanpham.QuanLySanPham;
+import interfaces.IQuanLy;
 import utils.Validation;
 import sanpham.SanPham ;
 
 import java.time.LocalDate;
 import java.util.Scanner;
 
-public class DanhSachSPKM implements interfaces.IQuanLy<SanPhamKhuyenMai> {
+public class DanhSachSPKM implements IQuanLy<SanPhamKhuyenMai> {
     private transient QuanLySanPham nguonSanPham;
     private transient Danhsachkhuyenmai nguonKhuyenMai;
 
@@ -328,13 +329,15 @@ public class DanhSachSPKM implements interfaces.IQuanLy<SanPhamKhuyenMai> {
         Validation.danghoatdong(1);
         for ( Khuyenmai km : danhsachkhuyenmai.getKhuyenmais() )
         {
+            if (km == null || !km.isTonTai() || !km.dangHoatDong(LocalDate.now())) continue;
             boolean flag = false ;
             int tongSanPham = 0 ;
-            if ( km.isTonTai() && km.dangHoatDong(LocalDate.now()))
+            System.out.println(km);
+            System.out.println("Các sản phẩm chứa khuyến mãi: ");
+            for ( SanPhamKhuyenMai spkm: sanPhamKhuyenMais )
             {
-                System.out.println(km);
-                System.out.println("Các sản phẩm chứa khuyến mãi: ");
-                for ( SanPhamKhuyenMai spkm: sanPhamKhuyenMais )
+                if (spkm == null || !spkm.isTonTai()) continue;
+                if ( spkm.getMaKhuyenMai().equalsIgnoreCase(km.getMaKhuyenMai()))
                 {
                     SanPham sp = qlsp.timMa(spkm.getMaSanPham()) ;
                     if ( spkm.getMaKhuyenMai().equalsIgnoreCase(km.getMaKhuyenMai()))
@@ -344,8 +347,8 @@ public class DanhSachSPKM implements interfaces.IQuanLy<SanPhamKhuyenMai> {
                         flag = true ;
                     }
                 }
-                System.out.println("Tổng sản phẩm áp dụng mã khuyến mãi " + km.getMaKhuyenMai() + " là: " + tongSanPham);
             }
+            System.out.println("Tổng sản phẩm áp dụng mã khuyến mãi " + km.getMaKhuyenMai() + " là: " + tongSanPham);
             if ( !flag )
             {
                 System.out.println("Chưa có sản phẩm nào áp dụng mã giảm giá này!");

@@ -16,6 +16,18 @@ public class NhanVien extends Person {
     private boolean isSaThai;
     private static int soThuTu = 1 ;
     /** Khởi tạo nhân viên với giá trị mặc định. */
+    private static void capNhatSoThuTuTuMa(String ma) {
+        if (ma != null && ma.matches("(?i)^NV\\d+$")) {
+            try {
+                int num = Integer.parseInt(ma.substring(2));
+                if (num >= soThuTu) {
+                    soThuTu = num + 1;
+                }
+            } catch (NumberFormatException ignored) {
+            }
+        }
+    }
+
     public NhanVien() {
         super();
         maNV = Validation.taoMa("NV%03d" , soThuTu) ;
@@ -25,14 +37,23 @@ public class NhanVien extends Person {
         isSaThai = false;
         soThuTu++ ;
     }
+
+    protected NhanVien(String vaitroMacDinh) {
+        this();
+        this.vaitro = vaitroMacDinh;
+    }
+
     /** Khởi tạo nhân viên từ các thông tin được truyền vào. */
     public NhanVien(String email, String hoten, String sdt, DiaChi diachi, LocalDate ngsinh,
             String maNV, String vaitro, long luong, long phuCapTrachNhiem) {
         super(email, hoten, sdt, diachi, ngsinh);
+        if (luong < 0) throw new IllegalArgumentException("Luong không được âm.");
+        if (phuCapTrachNhiem < 0) throw new IllegalArgumentException("PhuCapTrachNhiem không được âm.");
         this.maNV = maNV;
         this.vaitro = vaitro;
         this.luong = luong;
         this.phuCapTrachNhiem = phuCapTrachNhiem;
+        capNhatSoThuTuTuMa(maNV);
     }
     /** Khởi tạo nhân viên từ thông tin được truyền vào, bao gồm trạng thái sa thải. */
     public NhanVien(String email, String hoten, String sdt, DiaChi diachi, LocalDate ngsinh,
@@ -65,6 +86,7 @@ public class NhanVien extends Person {
             throw new IllegalArgumentException("MaNV không đúng định dạng.");
         }
         this.maNV = maNV;
+        capNhatSoThuTuTuMa(maNV);
     }
 
     /** Nhập mã nhân viên và kiểm tra theo mẫu mã quy định. */

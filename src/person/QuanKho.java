@@ -14,11 +14,11 @@ public class QuanKho extends NhanVien
         this(new QuanLySanPham(), new DanhSachHoaDonNhap());
     }
     public QuanKho(QuanLySanPham qlsp , DanhSachHoaDonNhap dsHoaDonNhap) {
-        super();
-        setQlsp(qlsp);
+        super("QuanKho");
+        if (qlsp == null) throw new IllegalArgumentException("Danh sách sản phẩm không được null.");
         if (dsHoaDonNhap == null) throw new IllegalArgumentException("Danh sách hóa đơn nhập không được null.");
+        this.qlsp = qlsp;
         this.dsHoaDonNhap = dsHoaDonNhap ;
-        super.setVaiTro("QuanKho");
     }
 
     public QuanKho(String email, String hoten, String sdt, DiaChi diachi, LocalDate ngsinh,

@@ -16,6 +16,7 @@ public class HoaDonNhapHang extends HoaDon {
     private ArrayList<CTHoaDonNhap> ctHoaDonNhaps ;
     private boolean Duyet ;
     private boolean daNhapSP ;
+    private boolean daThanhToan ;
 
     // Mã hóa đơn nhập: Bắt đầu bằng chữ "HDN" (in hoa) và theo sau là các chữ số. VD: HDN001
     public static final String MA_HD_NHAP_REGEX = "^HD\\d+$";
@@ -28,24 +29,27 @@ public class HoaDonNhapHang extends HoaDon {
         this("");
     }
     public HoaDonNhapHang( String maNhanVien) {
-        super(maNhanVien);
+        super(maNhanVien, "Hoá đơn nhập");
         this.maNhaCungCap = "";
         this.thueVAT = 0;
         this.chiPhiVanChuyen = 0;
         this.Duyet = false ;
         this.daNhapSP = false ;
         this.ctHoaDonNhaps = new ArrayList<>() ;
-        super.setLoaiHoaDon("Hoá đơn nhập");
+        this.daThanhToan =false; 
     }
 
-    public HoaDonNhapHang(String maHoaDon, LocalDateTime ngayLap, String maNhanvien, String loaiHoaDon , String maNhaCungCap, long chiPhiVanChuyen, double thueVAT , boolean Duyet , boolean daNhapSP) {
+    public HoaDonNhapHang(String maHoaDon, LocalDateTime ngayLap, String maNhanvien, String loaiHoaDon , String maNhaCungCap, long chiPhiVanChuyen, double thueVAT , boolean Duyet , boolean daNhapSP,boolean daThanhToan) {
         super(maHoaDon, ngayLap , maNhanvien , loaiHoaDon);
-        this.maNhaCungCap = maNhaCungCap; // ĐÃ THÊM DÒNG NÀY
+        if (chiPhiVanChuyen < 0) throw new IllegalArgumentException("ChiPhiVanChuyen không được âm.");
+        if (!Double.isFinite(thueVAT) || thueVAT < 0 || thueVAT > 100) throw new IllegalArgumentException("thueVAT không hợp lệ.");
+        this.maNhaCungCap = maNhaCungCap;
         this.chiPhiVanChuyen = chiPhiVanChuyen;
         this.thueVAT = thueVAT;
         this.Duyet = Duyet ;
         this.daNhapSP = daNhapSP ;
         this.ctHoaDonNhaps = new ArrayList<>();
+        this.daThanhToan = daThanhToan;
     }
 
     // Override
@@ -72,10 +76,10 @@ public class HoaDonNhapHang extends HoaDon {
 
     // Nhập hóa đơn nhập hàng
     public void nhapHoaDon(Scanner sc , QuanLySanPham qlsp , Danhsachdoitac dsdt ){
-        this.maNhaCungCap = Validation.inputStringRegex(sc , "Nhập mã nhà cung cấp: " , "NCC\\%d03" , "Mã nhà cung cấp đang nhập sai định dạng vui lòng nhập lại!(VD:NCC001): " , Nhacungcap.getSoThuTuNCC()) ;
+        this.maNhaCungCap = Validation.inputStringRegex(sc , "Nhập mã nhà cung cấp: " , Validation.MaNCC_REGEX , "Mã nhà cung cấp đang nhập sai định dạng vui lòng nhập lại!(VD:NCC001): " , Nhacungcap.getSoThuTuNCC()) ;
         while (dsdt.timViTri(maNhaCungCap) == -1)
         {
-            this.maNhaCungCap = Validation.inputStringRegex(sc , "Nhập mã nhà cung cấp: " , "NCC\\%d03" , "Mã nhà cung cấp đang nhập sai định dạng vui lòng nhập lại!(VD:NCC001): " , Nhacungcap.getSoThuTuNCC()) ;
+            this.maNhaCungCap = Validation.inputStringRegex(sc , "Nhập mã nhà cung cấp: " , Validation.MaNCC_REGEX , "Mã nhà cung cấp đang nhập sai định dạng vui lòng nhập lại!(VD:NCC001): " , Nhacungcap.getSoThuTuNCC()) ;
             System.out.println("Mã nhà cung cấp không tồn tại vui lòng nhập lại!");
         }
         this.thueVAT = Validation.inputDouble(sc, "Nhập thuế VAT (%): ");
@@ -157,7 +161,13 @@ public class HoaDonNhapHang extends HoaDon {
     public void setDaNhapSP(boolean daNhapSP) {
         this.daNhapSP = daNhapSP;
     }
+    public boolean isDaThanhToan() {
+    return daThanhToan;
+    }
 
+    public void setDaThanhToan(boolean daThanhToan) {
+    this.daThanhToan = daThanhToan;
+    }
     @Override
     public String toString() {
         return super.toString() + " | Mã nhà cung cấp: " + maNhaCungCap + " | Chi phí vận chuyển: " + chiPhiVanChuyen + " | Thuế VAT: " + thueVAT + " | Trạng thái duyệt: " + ((Duyet)?"Đã duyệt":"Chưa duyệt");
