@@ -85,6 +85,6 @@ public class TieuDung extends SanPham
 
     @Override
     public String toString() {
-        return "Mã sản phẩm: " + super.getMaSanPham() + " | Tên sản phẩm: " + super.getTenSanPham() + " | Giá bán: " + super.getGiaBan() + " | Phân loại: " + phanLoai + " | Nơi sản xuất: " + noiSanXuat + " | Phân loại: " + phanLoai + " | Lưu ý an toàn: " + luuYAnToan;
+        return "Mã sản phẩm: " + super.getMaSanPham() + " | Tên sản phẩm: " + super.getTenSanPham() + " | Giá bán: " + super.getGiaBan() + " | Phân loại: " + phanLoai + " | Nơi sản xuất: " + noiSanXuat + " | Lưu ý an toàn: " + luuYAnToan;
     }
 }

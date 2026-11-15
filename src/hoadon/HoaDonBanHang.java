@@ -9,7 +9,6 @@ import interfaces.IThanhToan;
 import person.DSKhachHang;
 import person.KhachHang;
 import sanpham.QuanLySanPham;
-import sanpham.QuanLyTonKho;
 import sanpham.SanPham;
 import utils.Validation;
 

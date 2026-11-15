@@ -71,7 +71,7 @@ public class CTHoaDonBan extends CTHoaDon{
                 SanPhamKhuyenMai spkm = dsspkm.getSanPhamKhuyenMais()[index_spkm] ;
                 int indexKm = dskm.timViTri(spkm.getMaKhuyenMai());
                 Khuyenmai km = indexKm == -1 ? null : dskm.getKhuyenmais()[indexKm];
-                if ( km != null && km.dangHoatDong(LocalDate.now()) && km.isTonTai() && super.getDonGia()*super.getSoLuong() > km.getMucChiToiThieu())
+                if ( km != null && km.dangHoatDong(LocalDate.now()) && km.isTonTai() && super.getDonGia()*super.getSoLuong() >= km.getMucChiToiThieu())
                 {
                     if ( km instanceof KhuyenMaiPhanTram )
                     {
@@ -86,7 +86,7 @@ public class CTHoaDonBan extends CTHoaDon{
                     }
                     else if ( km instanceof KhuyenMaiMuaTang && ((KhuyenMaiMuaTang) km).getSoLuongMuaToiThieu() > 0 )
                     {
-                        soLuongTangKem  = super.getSoLuong()/((KhuyenMaiMuaTang) km).getSoLuongMuaToiThieu() ;
+                        soLuongTangKem  = (super.getSoLuong()/((KhuyenMaiMuaTang) km).getSoLuongMuaToiThieu()) *((KhuyenMaiMuaTang) km).getSoLuongTang() ;
                         soTienGiam = soLuongTangKem*super.getDonGia() ;
                         soLuongPhaiTra = super.getSoLuong() - soLuongTangKem ;
                         loaiKhuyenMai = km.getLoaiKhuyenMai() ;

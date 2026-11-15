@@ -56,7 +56,7 @@ public class DienTu extends SanPham
 
     @Override
     public long tinhThue() {
-        return 0;
+        return (long) (super.getThue() * super.getGiaBan());
     }
 
     @Override

@@ -238,6 +238,7 @@ public class KeToan extends NhanVien {
             dsMaDaThanhToan.add(hoaDonNo.getMaHoaDon());
         }
         System.out.println(">> Cập nhật trạng thái: Đã thanh toán thành công!");
+        hoaDonNo.setDaThanhToan(true);
     }
 
     public void hienThiVaThanhToanCongNo(Scanner sc, ArrayList<HoaDon> dshd,

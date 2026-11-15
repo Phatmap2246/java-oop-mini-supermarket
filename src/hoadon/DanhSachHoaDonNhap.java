@@ -921,6 +921,7 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
         ktraHoaDonDaDuyet();
         for ( HoaDonNhapHang hdn: dsHoaDonNhapHang)
         {
+            if (!hdn.isDuyet()) continue;
             int soSanPham = qlsp.getDanhSachSanPham().size();
             int[] tonDuKien = new int[soSanPham];
             for (int i = 0; i < soSanPham; i++) {

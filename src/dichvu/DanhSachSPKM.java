@@ -349,6 +349,7 @@ public class DanhSachSPKM implements interfaces.IQuanLy<SanPhamKhuyenMai> {
                 for ( SanPhamKhuyenMai spkm: sanPhamKhuyenMais )
                 {
                     SanPham sp = qlsp.timMa(spkm.getMaSanPham()) ;
+                    if (sp == null || !spkm.isTonTai()) continue;
                     if ( spkm.getMaKhuyenMai().equalsIgnoreCase(km.getMaKhuyenMai()))
                     {
                         System.out.println( getString(sp , km));
