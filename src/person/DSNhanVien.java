@@ -541,9 +541,6 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
     }
 
     public void getDSNhanVien() {
-        ArrayList<NhanVien> docTuFile = DataBase.docfile(NhanVien.class, "src/person/NhanVien.txt");
-        if (!docTuFile.isEmpty()) {
-            this.list = docTuFile;
-        }
+        // đọc file danh sách nhân viên và lưu và list
     }
 }

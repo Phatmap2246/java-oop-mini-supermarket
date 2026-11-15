@@ -475,7 +475,7 @@ public class Danhsachkhuyenmai implements interfaces.IQuanLy<Khuyenmai> {
         for ( Khuyenmai km: khuyenmais )
         {
             if (km == null) continue;
-            if ( km.isTonTai() && km.dangHoatDong(LocalDate.now()) && km.getLoaiKhuyenMai() != null && km.getLoaiKhuyenMai().toLowerCase(Locale.ROOT).contains(Loai.toLowerCase(Locale.ROOT)))
+            if ( km.isTonTai() && km.dangHoatDong(LocalDate.now()) && km.getLoaiKhuyenMai() != null && km.getLoaiKhuyenMai().equalsIgnoreCase(Loai))
             {
                 System.out.println(km);
                 tongKhuyenMai++ ;
@@ -507,11 +507,11 @@ public class Danhsachkhuyenmai implements interfaces.IQuanLy<Khuyenmai> {
                     break;
                 case 2:
                     System.out.println("Danh sách khuyến mãi giảm giá trực tiếp!");
-                    thongKeCacloaiKhuyenMai("Giảm giá trực tiếp");
+                    thongKeCacloaiKhuyenMai("Giảm theo trực tiếp!");
                     break;
                 case 3:
                     System.out.println("Danh sách khuyến mãi mua tặng!");
-                    thongKeCacloaiKhuyenMai("Mua");
+                    thongKeCacloaiKhuyenMai("Khuyến mãi mua tặng");
                     break;
                 case 0:
                     break;

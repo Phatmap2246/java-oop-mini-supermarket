@@ -208,8 +208,7 @@ public class Danhsachdoitac implements interfaces.IQuanLy<Doitac> {
             System.out.println("3. Loại đối tác");
             System.out.println("4. Địa chỉ");
             System.out.println("5. Số điện thoại");
-            System.out.println("6. Mã số thuế");
-            System.out.println("7. Email");
+            System.out.println("6. Email");
             System.out.println("0. Trở về");
             int luaChon = Validation.luaChon(sc, "Nhập lựa chọn: ", 0, 7);
             if (luaChon == 0) return;
@@ -329,7 +328,7 @@ public class Danhsachdoitac implements interfaces.IQuanLy<Doitac> {
         {
             System.out.println("Mã đối tác đã tồn tại vui lòng nhập mã mới!");
             doiTac.setMaDoiTac(Validation.inputStringRegex(sc, "Nhập mã đối tác: ",
-                    Validation.MaDT_REGEX, "Mã đối tác không đúng định dạng (VD: NCC001)!"));
+                    "DT\\d{3}", "Mã đối tác không đúng định dạng (VD: DT001)!"));
         }
     }
 
