@@ -447,6 +447,66 @@ public class DanhSachHoaDonBan implements interfaces.IQuanLy<HoaDonBanHang> {
         }
     }
 
+    /**
+     * Thống kê Top N sản phẩm bán chạy nhất dựa trên các hóa đơn bán đã thanh toán.
+     */
+    public ArrayList<String> topNSanPham(int n) {
+        ArrayList<String> ketQua = new ArrayList<>();
+        if (n <= 0) {
+            System.out.println("[!] Số lượng N phải lớn hơn 0!");
+            return ketQua;
+        }
+        if (dsHoaDonBanHang.isEmpty()) {
+            System.out.println("[!] Danh sách hóa đơn bán đang trống!");
+            return ketQua;
+        }
+
+        java.util.Map<String, String> tenSPMap = new java.util.LinkedHashMap<>();
+        java.util.Map<String, Integer> soLuongBanMap = new java.util.LinkedHashMap<>();
+        java.util.Map<String, Long> doanhThuMap = new java.util.LinkedHashMap<>();
+
+        for (HoaDonBanHang hdb : dsHoaDonBanHang) {
+            if (hdb == null || !hdb.isDaThanhToan()) continue;
+            for (CTHoaDonBan ct : hdb.getCtHoaDonBans()) {
+                if (ct == null || !ct.isTonTai() || ct.getMaSanPham() == null) continue;
+                String maKey = ct.getMaSanPham().trim().toUpperCase(java.util.Locale.ROOT);
+                tenSPMap.putIfAbsent(maKey, ct.getTenSanPham());
+                soLuongBanMap.merge(maKey, ct.getSoLuong(), Integer::sum);
+                doanhThuMap.merge(maKey, ct.tinhThanhTien(), Long::sum);
+            }
+        }
+
+        if (soLuongBanMap.isEmpty()) {
+            System.out.println("[i] Chưa có sản phẩm nào được bán trong các hóa đơn đã thanh toán.");
+            return ketQua;
+        }
+
+        ArrayList<String> dsMa = new ArrayList<>(soLuongBanMap.keySet());
+        dsMa.sort((ma1, ma2) -> {
+            int cmpSL = Integer.compare(soLuongBanMap.get(ma2), soLuongBanMap.get(ma1));
+            if (cmpSL != 0) return cmpSL;
+            return Long.compare(doanhThuMap.get(ma2), doanhThuMap.get(ma1));
+        });
+
+        int gioiHan = Math.min(n, dsMa.size());
+        System.out.println("\n============== TOP " + gioiHan + " SẢN PHẨM BÁN CHẠY NHẤT ==============");
+        System.out.println("Đang thống kê...");
+        Validation.danghoatdong(1);
+        for (int i = 0; i < gioiHan; i++) {
+            String ma = dsMa.get(i);
+            String dong = String.format("Top %d | Mã SP: %s | Tên SP: %s | Đã bán: %d | Doanh thu: %,d VND",
+                    i + 1, ma, tenSPMap.get(ma), soLuongBanMap.get(ma), doanhThuMap.get(ma));
+            System.out.println(dong);
+            ketQua.add(dong);
+        }
+        return ketQua;
+    }
+
+    public void thongKeTopNSanPham(Scanner sc) {
+        int n = Validation.inputInt(sc, "Nhập số lượng N sản phẩm bán chạy cần xem: ");
+        topNSanPham(n);
+    }
+
     public void timKiemHoaDon( String maHoaDon )
     {
         HoaDonBanHang hdb = timMa(maHoaDon) ;
@@ -559,8 +619,9 @@ public class DanhSachHoaDonBan implements interfaces.IQuanLy<HoaDonBanHang> {
             System.out.println("3. Thống kê hóa đơn chưa thanh toán!");
             System.out.println("4. Thống kê doanh thu!");
             System.out.println("5. Lọc hóa đơn theo tổng giá!");
+            System.out.println("6. Thống kê Top N sản phẩm bán chạy!");
             System.out.println("0. Trở về.");
-            luaChon = Validation.luaChon(sc, "Nhập lựa chọn: ", 0, 5);
+            luaChon = Validation.luaChon(sc, "Nhập lựa chọn: ", 0, 6);
             switch (luaChon)
             {
                 case 1: {
@@ -582,6 +643,10 @@ public class DanhSachHoaDonBan implements interfaces.IQuanLy<HoaDonBanHang> {
                 case 5: {
                     long nguongGia = Validation.inputLong(sc, "Nhập ngưỡng tổng giá: ");
                     locCacHoaDonTheoTongGia(nguongGia);
+                    break;
+                }
+                case 6: {
+                    thongKeTopNSanPham(sc);
                     break;
                 }
                 case 0:

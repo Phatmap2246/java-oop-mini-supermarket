@@ -39,6 +39,9 @@
               <thuoc-tinh khai-bao="hoadon.HoaDonNhapHang" ten="daNhapSP">
                 <gia-tri kieu="java.lang.Boolean">true</gia-tri>
               </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDonNhapHang" ten="daThanhToan">
+                <gia-tri kieu="java.lang.Boolean">false</gia-tri>
+              </thuoc-tinh>
               <thuoc-tinh khai-bao="hoadon.HoaDon" ten="maHoaDon">
                 <gia-tri kieu="java.lang.String">HD004</gia-tri>
               </thuoc-tinh>
@@ -86,6 +89,9 @@
               <thuoc-tinh khai-bao="hoadon.HoaDonNhapHang" ten="daNhapSP">
                 <gia-tri kieu="java.lang.Boolean">true</gia-tri>
               </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDonNhapHang" ten="daThanhToan">
+                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+              </thuoc-tinh>
               <thuoc-tinh khai-bao="hoadon.HoaDon" ten="maHoaDon">
                 <gia-tri kieu="java.lang.String">HD005</gia-tri>
               </thuoc-tinh>
@@ -128,9 +134,12 @@
                 </danh-sach>
               </thuoc-tinh>
               <thuoc-tinh khai-bao="hoadon.HoaDonNhapHang" ten="Duyet">
-                <gia-tri kieu="java.lang.Boolean">false</gia-tri>
+                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
               </thuoc-tinh>
               <thuoc-tinh khai-bao="hoadon.HoaDonNhapHang" ten="daNhapSP">
+                <gia-tri kieu="java.lang.Boolean">false</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="hoadon.HoaDonNhapHang" ten="daThanhToan">
                 <gia-tri kieu="java.lang.Boolean">false</gia-tri>
               </thuoc-tinh>
               <thuoc-tinh khai-bao="hoadon.HoaDon" ten="maHoaDon">
@@ -154,11 +163,11 @@
       <anh-xa lop="java.util.LinkedHashMap" ma="13">
         <cap>
           <gia-tri kieu="java.lang.String">sanpham.SanPham</gia-tri>
-          <gia-tri kieu="java.lang.Integer">9</gia-tri>
+          <gia-tri kieu="java.lang.Integer">10</gia-tri>
         </cap>
         <cap>
           <gia-tri kieu="java.lang.String">person.NhanVien</gia-tri>
-          <gia-tri kieu="java.lang.Integer">5</gia-tri>
+          <gia-tri kieu="java.lang.Integer">6</gia-tri>
         </cap>
         <cap>
           <gia-tri kieu="java.lang.String">person.KhachHang</gia-tri>
@@ -170,7 +179,7 @@
         </cap>
         <cap>
           <gia-tri kieu="java.lang.String">dichvu.Khuyenmai</gia-tri>
-          <gia-tri kieu="java.lang.Integer">5</gia-tri>
+          <gia-tri kieu="java.lang.Integer">6</gia-tri>
         </cap>
         <cap>
           <gia-tri kieu="java.lang.String">dichvu.Nhacungcap</gia-tri>

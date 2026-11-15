@@ -211,11 +211,11 @@
       <anh-xa lop="java.util.LinkedHashMap" ma="13">
         <cap>
           <gia-tri kieu="java.lang.String">sanpham.SanPham</gia-tri>
-          <gia-tri kieu="java.lang.Integer">9</gia-tri>
+          <gia-tri kieu="java.lang.Integer">10</gia-tri>
         </cap>
         <cap>
           <gia-tri kieu="java.lang.String">person.NhanVien</gia-tri>
-          <gia-tri kieu="java.lang.Integer">5</gia-tri>
+          <gia-tri kieu="java.lang.Integer">6</gia-tri>
         </cap>
         <cap>
           <gia-tri kieu="java.lang.String">person.KhachHang</gia-tri>
@@ -227,7 +227,7 @@
         </cap>
         <cap>
           <gia-tri kieu="java.lang.String">dichvu.Khuyenmai</gia-tri>
-          <gia-tri kieu="java.lang.Integer">5</gia-tri>
+          <gia-tri kieu="java.lang.Integer">6</gia-tri>
         </cap>
         <cap>
           <gia-tri kieu="java.lang.String">dichvu.Nhacungcap</gia-tri>

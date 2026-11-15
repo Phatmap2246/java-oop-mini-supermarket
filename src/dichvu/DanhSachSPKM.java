@@ -138,60 +138,72 @@ public class DanhSachSPKM implements interfaces.IQuanLy<SanPhamKhuyenMai> {
         System.out.println("Thêm " + k + " sản phẩm khuyến mãi thành công!");
     }
 
-    public void giamGiaCanHSD(Scanner sc, ArrayList<ThucPham> dscanDate, Danhsachkhuyenmai dsKhuyenMai) {
-        //ràng điều kiện
-        if (sc == null || dscanDate == null) {
-            throw new IllegalArgumentException("Scanner và danh sách thực phẩm không được null.");
+
+    /**
+     * Tự động quét kho và định giá động (Dynamic Pricing) theo bậc thang cho Thực phẩm cận hạn (<= 15 ngày).
+     */
+    public int tuDongGiamGiaCanHSD(QuanLySanPham dssp, Danhsachkhuyenmai dsKhuyenMai) {
+        if (dssp == null || dssp.getDanhSachSanPham().isEmpty()) {
+            System.out.println("[!] Kho hàng trống, không có sản phẩm để quét.");
+            return 0;
         }
-        if (dscanDate.isEmpty()) {
-            System.out.println("Không có thực phẩm cận hạn để tạo khuyến mãi.");
-            return;
+        if (dsKhuyenMai == null) {
+            throw new IllegalArgumentException("Danh sách khuyến mãi không được null.");
         }
 
         LocalDate homNay = LocalDate.now();
-        for (ThucPham thucPham : dscanDate) {
-            if (thucPham == null || !thucPham.isTonTai() || thucPham.getHanSuDung() == null
-                    || thucPham.getHanSuDung().isBefore(homNay)) {
-                continue;
-            }
-            if (thucPham.getSoLuongTonKho() <= 0) {
-                System.out.println("Bỏ qua " + thucPham.getMaSanPham()
-                        + " vì số lượng tồn không còn.");
-                continue;
-            }
-            if (timViTri(thucPham.getMaSanPham()) != -1) {
-                System.out.println("Bỏ qua " + thucPham.getMaSanPham()
-                        + " vì sản phẩm đã có khuyến mãi.");
+        int demDaApDung = 0;
+
+        System.out.println("\n=== HỆ THỐNG TỰ ĐỘNG ĐỊNH GIÁ ĐỘNG (DYNAMIC PRICING) ===");
+        for (SanPham sp : dssp.getDanhSachSanPham()) {
+            if (sp == null || !sp.isTonTai() || !(sp instanceof ThucPham tp)
+                    || tp.getSoLuongTonKho() <= 0 || tp.getHanSuDung() == null) {
                 continue;
             }
 
-            System.out.printf("%s - %s | Tồn: %d | HSD: %s%n",
-                    thucPham.getMaSanPham(), thucPham.getTenSanPham(),
-                    thucPham.getSoLuongTonKho(), thucPham.getHanSuDung());
-            int luaChon = Validation.luaChon(
-                    sc, "Chọn loại giảm giá (1: phần trăm, 2: trực tiếp): ", 1, 2);
-            Khuyenmai khuyenMai = luaChon == 1
-                    ? new KhuyenMaiPhanTram()
-                    : new KhuyenMaiTrucTiep();
+            long soNgayConLai = java.time.temporal.ChronoUnit.DAYS.between(homNay, tp.getHanSuDung());
+            if (soNgayConLai < 0 || soNgayConLai > 15) {
+                continue;
+            }
+            if (timViTri(tp.getMaSanPham()) != -1) {
+                System.out.println("[i] Bỏ qua " + tp.getMaSanPham() + " (" + tp.getTenSanPham() + ") vì đã có khuyến mãi.");
+                continue;
+            }
 
-            do {
-                khuyenMai.setKM(sc);
-                if (khuyenMai.getNgayBatDau().isBefore(homNay)
-                        || khuyenMai.getNgayKetThuc().isAfter(thucPham.getHanSuDung())) {
-                    System.out.println("[!] Thời gian khuyến mãi phải bắt đầu từ hôm nay "
-                            + "và kết thúc không muộn hơn hạn sử dụng.");
-                } else {
-                    break;
-                }
-            } while (true);
-// thêm sp giảm cận date vào dsSanPhamKhuyenMais
-            dsKhuyenMai.them(khuyenMai);
-            them(
-                    new SanPhamKhuyenMai(thucPham.getMaSanPham(),
-                            khuyenMai.getMaKhuyenMai()));
-            System.out.println("Đã gắn khuyến mãi " + khuyenMai.getMaKhuyenMai()
-                    + " cho sản phẩm " + thucPham.getMaSanPham() + ".");
+            double tyLeGiam;
+            if (soNgayConLai <= 3) {
+                tyLeGiam = 0.50;
+            } else if (soNgayConLai <= 7) {
+                tyLeGiam = 0.30;
+            } else {
+                tyLeGiam = 0.15;
+            }
+
+            KhuyenMaiPhanTram kmTuDong = new KhuyenMaiPhanTram();
+            kmTuDong.setNgayBatDau(homNay);
+            kmTuDong.setNgayKetThuc(tp.getHanSuDung());
+            kmTuDong.setMucChiToiThieu(0);
+            kmTuDong.setPhanTramGiamGia(tyLeGiam);
+            long mucToiDa = Math.max(1000L, (tp.getGiaBan() * tp.getSoLuongTonKho()) / 2);
+            kmTuDong.setMucGiamToiDa(mucToiDa);
+            int phanTramInt = (int) Math.round(tyLeGiam * 100);
+            kmTuDong.setLoaiKhuyenMai("Giảm theo phần trăm - Auto Cận Date (-" + phanTramInt + "%)");
+
+            dsKhuyenMai.them(kmTuDong);
+            them(new SanPhamKhuyenMai(tp.getMaSanPham(), kmTuDong.getMaKhuyenMai()));
+
+            System.out.printf("[+] Tự động gắn mã %s (-%d%%) cho [%s - %s] | Còn %d ngày (HSD: %s)%n",
+                    kmTuDong.getMaKhuyenMai(), phanTramInt,
+                    tp.getMaSanPham(), tp.getTenSanPham(), soNgayConLai, tp.getHanSuDung());
+            demDaApDung++;
         }
+
+        if (demDaApDung == 0) {
+            System.out.println("[i] Không phát hiện thực phẩm cận hạn (<= 15 ngày) nào cần tạo mã mới.");
+        } else {
+            System.out.println("=> Hoàn tất! Đã tự động kích hoạt khuyến mãi cho " + demDaApDung + " mặt hàng.");
+        }
+        return demDaApDung;
     }
     @Override
     public boolean sua(String maSanPham, Scanner sc)
@@ -391,8 +403,9 @@ public class DanhSachSPKM implements interfaces.IQuanLy<SanPhamKhuyenMai> {
             System.out.println("7. Tìm kiếm sản phẩm khuyến mãi!");
             System.out.println("8. Thống kê sản phẩm đang giảm giá!");
             System.out.println("9. Thống kê theo từng khuyến mãi!");
+            System.out.println("10. Tự động định giá động thực phẩm cận hạn (Dynamic Pricing)!");
             System.out.println("0. Trở về.");
-            luaChon = Validation.luaChon(sc, "Nhập lựa chọn: ", 0, 9);
+            luaChon = Validation.luaChon(sc, "Nhập lựa chọn: ", 0, 10);
             switch (luaChon)
             {
                 case 1: {
@@ -432,6 +445,10 @@ public class DanhSachSPKM implements interfaces.IQuanLy<SanPhamKhuyenMai> {
                 }
                 case 9: {
                     thongKeSanPhamTheoTungKhuyenMai(qlsp, dskm);
+                    break;
+                }
+                case 10: {
+                    tuDongGiamGiaCanHSD(qlsp, dskm);
                     break;
                 }
                 case 0:

@@ -37,7 +37,7 @@
                 <gia-tri kieu="java.lang.Long">25000</gia-tri>
               </thuoc-tinh>
               <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaBan">
-                <gia-tri kieu="java.lang.Long">32000</gia-tri>
+                <gia-tri kieu="java.lang.Long">1000</gia-tri>
               </thuoc-tinh>
               <thuoc-tinh khai-bao="sanpham.SanPham" ten="soLuongTonKho">
                 <gia-tri kieu="java.lang.Integer">40</gia-tri>
@@ -321,19 +321,60 @@
                 <gia-tri kieu="java.lang.Double">0.05</gia-tri>
               </thuoc-tinh>
             </doi-tuong>
+            <doi-tuong lop="sanpham.ThucPham" ma="12">
+              <thuoc-tinh khai-bao="sanpham.ThucPham" ten="ngaySanXuat">
+                <gia-tri kieu="java.time.LocalDate">1999-11-12</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="sanpham.ThucPham" ten="hanSuDung">
+                <gia-tri kieu="java.time.LocalDate">3000-01-12</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="sanpham.ThucPham" ten="nhietDoBaoQuan">
+                <gia-tri kieu="java.lang.Double">12.0</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="sanpham.ThucPham" ten="baoQuan">
+                <gia-tri kieu="java.lang.String">Khô</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="sanpham.SanPham" ten="tonTai">
+                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="sanpham.SanPham" ten="maSanPham">
+                <gia-tri kieu="java.lang.String">SP009</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="sanpham.SanPham" ten="tenSanPham">
+                <gia-tri kieu="java.lang.String">Soytex</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="sanpham.SanPham" ten="loaiSanPham">
+                <gia-tri kieu="java.lang.String">Thực phẩm</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="sanpham.SanPham" ten="maNhaCungCap">
+                <gia-tri kieu="java.lang.String">NCC001</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaNhap">
+                <gia-tri kieu="java.lang.Long">1</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaBan">
+                <gia-tri kieu="java.lang.Long">100000000</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="sanpham.SanPham" ten="soLuongTonKho">
+                <gia-tri kieu="java.lang.Integer">10</gia-tri>
+              </thuoc-tinh>
+              <thuoc-tinh khai-bao="sanpham.SanPham" ten="thue">
+                <gia-tri kieu="java.lang.Double">0.08</gia-tri>
+              </thuoc-tinh>
+            </doi-tuong>
           </danh-sach>
         </thuoc-tinh>
       </doi-tuong>
     </thuoc-tinh>
     <thuoc-tinh khai-bao="utils.DataBase$BanLuu" ten="boDem">
-      <anh-xa lop="java.util.LinkedHashMap" ma="12">
+      <anh-xa lop="java.util.LinkedHashMap" ma="13">
         <cap>
           <gia-tri kieu="java.lang.String">sanpham.SanPham</gia-tri>
-          <gia-tri kieu="java.lang.Integer">9</gia-tri>
+          <gia-tri kieu="java.lang.Integer">10</gia-tri>
         </cap>
         <cap>
           <gia-tri kieu="java.lang.String">person.NhanVien</gia-tri>
-          <gia-tri kieu="java.lang.Integer">5</gia-tri>
+          <gia-tri kieu="java.lang.Integer">6</gia-tri>
         </cap>
         <cap>
           <gia-tri kieu="java.lang.String">person.KhachHang</gia-tri>
@@ -345,7 +386,7 @@
         </cap>
         <cap>
           <gia-tri kieu="java.lang.String">dichvu.Khuyenmai</gia-tri>
-          <gia-tri kieu="java.lang.Integer">5</gia-tri>
+          <gia-tri kieu="java.lang.Integer">6</gia-tri>
         </cap>
         <cap>
           <gia-tri kieu="java.lang.String">dichvu.Nhacungcap</gia-tri>
