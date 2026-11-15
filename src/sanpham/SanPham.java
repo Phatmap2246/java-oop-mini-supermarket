@@ -1,5 +1,6 @@
 package sanpham;
 
+
 import utils.Validation;
 import java.util.Scanner;
 
@@ -15,19 +16,6 @@ public abstract class SanPham {
     private int soLuongTonKho  ;
     private double thue ;
     private static int soThuTu = 1 ;
-
-    private static void capNhatSoThuTuTuMa(String ma) {
-        if (ma != null && ma.matches("(?i)^SP\\d+$")) {
-            try {
-                int num = Integer.parseInt(ma.substring(2));
-                if (num >= soThuTu) {
-                    soThuTu = num + 1;
-                }
-            } catch (NumberFormatException ignored) {
-            }
-        }
-    }
-
     public SanPham()
     {
         maSanPham = tenSanPham = loaiSanPham = maNhaCungCap = "" ;
@@ -37,31 +25,8 @@ public abstract class SanPham {
         maSanPham = Validation.taoMa("SP%03d" , soThuTu) ;
         soThuTu++ ;
     }
-
-    protected SanPham(double thueMacDinh, String loaiMacDinh) {
-        this();
-        if (!Double.isFinite(thueMacDinh) || thueMacDinh < 0 || thueMacDinh > 1) {
-            throw new IllegalArgumentException("thue không hợp lệ.");
-        }
-        this.thue = thueMacDinh;
-        this.loaiSanPham = loaiMacDinh;
-    }
-
     public SanPham( String maSanPham , String tenSanPham , String loaiSanPham , long giaNhap , long giaBan , int soLuongTonKho , String maNhaCungCap , double thue )
     {
-        if (giaNhap < 0) throw new IllegalArgumentException("GiaNhap không được âm.");
-        if (giaBan < 0) throw new IllegalArgumentException("GiaBan không được âm.");
-        if (soLuongTonKho < 0) throw new IllegalArgumentException("SoLuongTonKho không được âm.");
-        if (!Double.isFinite(thue) || thue < 0 || thue > 1) throw new IllegalArgumentException("thue không hợp lệ.");
-        if (maSanPham != null && !maSanPham.isEmpty() && !maSanPham.matches("(?i)SP\\d+")) {
-            throw new IllegalArgumentException("MaSanPham không đúng định dạng.");
-        }
-        if (tenSanPham != null && !tenSanPham.isEmpty() && tenSanPham.isBlank()) {
-            throw new IllegalArgumentException("TenSanPham không được để trống.");
-        }
-        if (maNhaCungCap != null && !maNhaCungCap.isEmpty() && !maNhaCungCap.matches("(?i)NCC\\d+")) {
-            throw new IllegalArgumentException("MaNhaCungCap không đúng định dạng.");
-        }
         this.maSanPham = maSanPham ;
         this.tenSanPham = tenSanPham ;
         this.loaiSanPham = loaiSanPham ;
@@ -70,12 +35,12 @@ public abstract class SanPham {
         this.soLuongTonKho = soLuongTonKho ;
         this.maNhaCungCap = maNhaCungCap ;
         this.thue = thue ;
-        capNhatSoThuTuTuMa(maSanPham);
     }
 
     public static int getSoThuTu() {
         return soThuTu;
     }
+
 
     public void setThue(double thue) {
         if (!Double.isFinite(thue) || thue < 0 || thue > 1) {
@@ -93,7 +58,6 @@ public abstract class SanPham {
             throw new IllegalArgumentException("MaSanPham không đúng định dạng.");
         }
         this.maSanPham = maSanPham;
-        capNhatSoThuTuTuMa(maSanPham);
     }
 
     public void setTenSanPham(String tenSanPham) {
@@ -158,6 +122,7 @@ public abstract class SanPham {
         return soLuongTonKho;
     }
 
+
     public long getGiaBan() {
         return giaBan;
     }
@@ -174,13 +139,7 @@ public abstract class SanPham {
         giaNhap = Validation.inputLong(sc , "Nhập giá nhập hàng: ") ;
         soLuongTonKho = Validation.inputInt(sc , "Nhập số lượng tồn kho: ") ;
     }
-
-    public void nhapThongTin(Scanner sc) {
-        setSanPham(sc);
-    }
-
     public abstract long tinhThue() ;
-
     @Override
     public String toString() {
         return "Mã sản phẩm: " + maSanPham + " | Tên sản phẩm: " + tenSanPham + " | Giá nhập: " + giaNhap + " | Giá bán: " + giaBan + " | Số sản phẩm tồn kho : " + soLuongTonKho + " | Nhà cung cấp : " + maNhaCungCap;

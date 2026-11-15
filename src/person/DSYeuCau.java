@@ -5,12 +5,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Scanner;
 import utils.YeuCau;
 import utils.Validation;
-import utils.YeuCau;
 
 public class DSYeuCau implements interfaces.IQuanLy<YeuCau> {
     private ArrayList<YeuCau> list = new ArrayList<>();
@@ -146,7 +145,8 @@ public class DSYeuCau implements interfaces.IQuanLy<YeuCau> {
         for (int index = 0; index < dsYeuCau.size(); index++) {
             YeuCau.BanGhiDataBase yeuCau = dsYeuCau.get(index);
             if (yeuCau.laDongLoi()) {
-                System.err.println("[!] Dòng yêu cầu sai định dạng, giữ nguyên: " + yeuCau.getDongLoi());
+                System.err.println("[!] Dòng yêu cầu sai định dạng, giữ nguyên: "
+                        + yeuCau.getDongLoi());
                 continue;
             }
             if (!yeuCau.getTrangThai().equals("ChoDuyet")) {
@@ -178,8 +178,11 @@ public class DSYeuCau implements interfaces.IQuanLy<YeuCau> {
         }
     }
 
-    public void thongKe() {
+    public void thongKe()
+    {
         Map<String, Integer> yeuCauTheoTrangThai = new HashMap<>();
+        System.out.println("Đang thống kê...");
+        Validation.danghoatdong(1);
         for (YeuCau yeuCau : list) {
             if (yeuCau != null)
                 yeuCauTheoTrangThai.merge(yeuCau.getTrangThai(), 1, Integer::sum);
