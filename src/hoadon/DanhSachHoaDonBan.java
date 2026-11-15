@@ -306,11 +306,9 @@ public class DanhSachHoaDonBan implements interfaces.IQuanLy<HoaDonBanHang> {
         for ( HoaDonBanHang hdb: dsHoaDonBanHang )
         {
             if (hdb == null) continue;
-            if ( hdb.getNgayLap() != null ) {
-                LocalDate ngayLap = hdb.getNgayLap().toLocalDate();
-                if (!ngayLap.isBefore(thoiGianBatDau) && !ngayLap.isAfter(thoiGianKetThuc)) {
-                    hdb.hienThiHoaDon();
-                }
+            if ( hdb.getNgayLap() != null && hdb.getNgayLap().isAfter(thoiGianBatDau.atStartOfDay()) && hdb.getNgayLap().isBefore(thoiGianKetThuc.atStartOfDay()))
+            {
+                hdb.hienThiHoaDon();
             }
         }
     }
@@ -496,12 +494,8 @@ public class DanhSachHoaDonBan implements interfaces.IQuanLy<HoaDonBanHang> {
         for ( HoaDonBanHang hdb: dsHoaDonBanHang )
         {
             if (hdb == null) continue;
-            if ( hdb.isDaThanhToan() && hdb.getNgayLap() != null ) {
-                LocalDate ngayLap = hdb.getNgayLap().toLocalDate();
-                if (!ngayLap.isBefore(ngayBD) && !ngayLap.isAfter(ngayKT)) {
-                    tongTien += hdb.tinhTongTien();
-                }
-            }
+            if ( hdb.isDaThanhToan() && hdb.getNgayLap() != null && hdb.getNgayLap().isAfter(ngayBD.atStartOfDay()) && hdb.getNgayLap().isBefore(ngayKT.atStartOfDay()))
+                tongTien += hdb.tinhTongTien();
         }
         return tongTien ;
     }
@@ -603,19 +597,15 @@ public class DanhSachHoaDonBan implements interfaces.IQuanLy<HoaDonBanHang> {
         try (java.io.BufferedWriter bw = new java.io.BufferedWriter(new java.io.OutputStreamWriter(new java.io.FileOutputStream(tenFile), java.nio.charset.StandardCharsets.UTF_8))) {
             for (HoaDonBanHang hdb : dsHoaDonBanHang) {
                 if (hdb == null) continue;
-                String maKH = hdb.getMaKhachHang() == null ? "" : hdb.getMaKhachHang();
-                String ngayStr = hdb.getNgayLap() == null ? "" : hdb.getNgayLap().toString();
-                String maNV = hdb.getMaNhanVien() == null ? "" : hdb.getMaNhanVien();
-                bw.write("BAN|" + hdb.getMaHoaDon() + "|" + maKH + "|" + hdb.isDaThanhToan()
-                        + "|" + hdb.getChietKhau() + "|" + ngayStr + "|" + maNV);
+                // Lưu thông tin chung: BAN|MaHD|MaKH|DaThanhToan
+                bw.write("BAN|" + hdb.getMaHoaDon() + "|" + hdb.getMaKhachHang() + "|" + hdb.isDaThanhToan());
                 bw.newLine();
 
+                // Lưu chi tiết: CT|MaSP|TenSP|SoLuong|DonGia|SoTienGiam|SoLuongTangKem
                 for (CTHoaDonBan ct : hdb.getCtHoaDonBans()) {
-                    if (ct == null) continue;
                     bw.write("CT|" + ct.getMaSanPham() + "|" + ct.getTenSanPham() + "|" +
                             ct.getSoLuong() + "|" + ct.getDonGia() + "|" +
-                            ct.getSoTienGiam() + "|" + ct.getSoLuongTangKem() + "|" +
-                            ct.getSoLuongPhaiTra() + "|" + ct.getLoaiKhuyenMai());
+                            ct.getSoTienGiam() + "|" + ct.getSoLuongTangKem());
                     bw.newLine();
                 }
             }
@@ -626,14 +616,8 @@ public class DanhSachHoaDonBan implements interfaces.IQuanLy<HoaDonBanHang> {
     }
 
     public void docFileText(String tenFile) {
-        if (tenFile == null || tenFile.isBlank()) return;
-        File file = new File(tenFile);
-        if (!file.exists() || !file.isFile()) {
-            System.out.println("[!] Lỗi khi đọc file (Có thể file chưa tồn tại): " + tenFile);
-            return;
-        }
-        ArrayList<HoaDonBanHang> danhSachMoi = new ArrayList<>();
-        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(file), java.nio.charset.StandardCharsets.UTF_8))) {
+        this.dsHoaDonBanHang.clear();
+        try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(tenFile), java.nio.charset.StandardCharsets.UTF_8))) {
             String line;
             HoaDonBanHang hdbHienTai = null;
 
@@ -648,28 +632,22 @@ public class DanhSachHoaDonBan implements interfaces.IQuanLy<HoaDonBanHang> {
                             hdbHienTai.setMaKhachHang(parts[2]);
                             hdbHienTai.setCtHoaDonBans(new ArrayList<>());
                             hdbHienTai.setDaThanhToan(Boolean.parseBoolean(parts[3]));
-                            danhSachMoi.add(hdbHienTai);
+                            this.dsHoaDonBanHang.add(hdbHienTai);
                         } else {
                             hdbHienTai = null;
                         }
                     }
-                    else if (loai.equals("CT") && hdbHienTai != null && (parts.length == 7 || parts.length >= 9)) {
-                        String loaiKM = (parts.length >= 9 && !parts[8].isEmpty()) ? parts[8] : "Không áp dụng";
-                        CTHoaDonBan ct = new CTHoaDonBan(parts[1], parts[2], Integer.parseInt(parts[3]), Long.parseLong(parts[4]), loaiKM);
+                    else if (loai.equals("CT") && hdbHienTai != null && parts.length == 7) {
+                        CTHoaDonBan ct = new CTHoaDonBan(parts[1], parts[2], Integer.parseInt(parts[3]), Long.parseLong(parts[4]), "Không áp dụng");
                         ct.setSoTienGiam(Long.parseLong(parts[5]));
                         ct.setSoLuongTangKem(Integer.parseInt(parts[6]));
-                        if (parts.length >= 8 && !parts[7].isEmpty()) {
-                            ct.setSoLuongPhaiTra(Integer.parseInt(parts[7]));
-                        }
                         hdbHienTai.getCtHoaDonBans().add(ct);
                     }
                 }
             }
-            this.dsHoaDonBanHang.clear();
-            this.dsHoaDonBanHang.addAll(danhSachMoi);
             System.out.println("[+] Đã đọc dữ liệu hóa đơn bán hàng từ file: " + tenFile);
         } catch (Exception e) {
-            System.out.println("[!] Lỗi khi đọc file: " + e.getMessage());
+            System.out.println("[!] Lỗi khi đọc file (Có thể file chưa tồn tại): " + e.getMessage());
         }
     }
 

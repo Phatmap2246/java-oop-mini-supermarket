@@ -18,21 +18,9 @@ public class KhachHang extends Person {
 
     // ========================= CONSTRUCTOR =========================
 
-    private static void capNhatSoThuTuTuMa(String ma) {
-        if (ma != null && ma.matches("(?i)^KH\\d+$")) {
-            try {
-                int num = Integer.parseInt(ma.substring(2));
-                if (num >= soThuTu) {
-                    soThuTu = num + 1;
-                }
-            } catch (NumberFormatException ignored) {
-            }
-        }
-    }
-
     public KhachHang() {
         super();
-        this.maKhachHang = Validation.taoMa("KH%03d" , soThuTu) ;
+        this.maKhachHang = Validation.taoMa("KH%d03" , soThuTu) ;
         this.ngayDangKy = LocalDate.now();
         this.tongChiTieu = 0;
         this.hangThanhVien = "Đồng";
@@ -50,7 +38,6 @@ public class KhachHang extends Person {
         this.hangThanhVien = "Đồng";
         this.diemTichLuy = 0;
         this.isTonTai = true;
-        capNhatSoThuTuTuMa(maKhachHang);
     }
 
     public KhachHang(String email, String hoTen, String soDienThoai, DiaChi diaChi, LocalDate ngaySinh,
@@ -63,7 +50,6 @@ public class KhachHang extends Person {
         this.hangThanhVien = hangThanhVien;
         this.diemTichLuy = diemTichLuy;
         this.isTonTai = isTonTai;
-        capNhatSoThuTuTuMa(maKhachHang);
     }
 
     // ========================= KẾ THỪA PERSON =========================
@@ -90,7 +76,6 @@ public class KhachHang extends Person {
             throw new IllegalArgumentException("MaKhachHang không đúng định dạng.");
         }
         this.maKhachHang = maKhachHang;
-        capNhatSoThuTuTuMa(maKhachHang);
     }
 
     public LocalDate getNgayDangKy() {
@@ -143,7 +128,6 @@ public class KhachHang extends Person {
 
     public void setTonTai(boolean isTonTai) {
         this.isTonTai = isTonTai;
-        capNhatSoThuTuTuMa(maKhachHang);
     }
 
 

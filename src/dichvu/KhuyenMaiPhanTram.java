@@ -1,5 +1,4 @@
-package dichvu;
-
+package dichvu ;
 import interfaces.TrongFile;
 import sanpham.SanPham;
 import utils.Validation;
@@ -9,26 +8,21 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class KhuyenMaiPhanTram extends Khuyenmai implements TrongFile {
-    private double phanTramGiamGia;
-    private long mucGiamToiDa;
-
-    public KhuyenMaiPhanTram() {
-        super("Giảm theo phần trăm");
-        phanTramGiamGia = 0;
-        mucGiamToiDa = 0;
+    private double phanTramGiamGia ;
+    private long mucGiamToiDa ;
+    public KhuyenMaiPhanTram()
+    {
+        super();
+        phanTramGiamGia = 0 ;
+        mucGiamToiDa = 0 ;
+        super.setLoaiKhuyenMai("Giảm theo phần trăm");
     }
-
-    public KhuyenMaiPhanTram(String maKhuyenMai, String loaiKhuyenMai, LocalDate ngayBatDau, LocalDate ngayKetThuc, long mucChiToiThieu, ArrayList<SanPham> danhSachKhuyenMai, double phanTramGiamGia, long mucGiamToiDa, int soThuTu) {
+    public KhuyenMaiPhanTram(String maKhuyenMai , String loaiKhuyenMai , LocalDate ngayBatDau , LocalDate ngayKetThuc , long mucChiToiThieu , ArrayList<SanPham> danhSachKhuyenMai , double phanTramGiamGia , long mucGiamToiDa , int soThuTu)
+    {
         super(maKhuyenMai, loaiKhuyenMai, ngayBatDau, ngayKetThuc, mucChiToiThieu, soThuTu);
-        if (mucGiamToiDa < 0) {
-            throw new IllegalArgumentException("Mức giảm tối đa không được âm.");
-        }
-        double rate = phanTramGiamGia > 1 ? phanTramGiamGia / 100.0 : phanTramGiamGia;
-        if (!Double.isFinite(rate) || rate < 0 || rate > 1) {
-            throw new IllegalArgumentException("Tỷ lệ giảm giá phải từ 0 đến 1.");
-        }
-        this.phanTramGiamGia = rate;
-        this.mucGiamToiDa = mucGiamToiDa;
+        setPhanTramGiamGia(phanTramGiamGia > 1
+                ? phanTramGiamGia / 100.0 : phanTramGiamGia);
+        this.mucGiamToiDa = mucGiamToiDa ;
     }
 
     public void setPhanTramGiamGia(double phanTramGiamGia) {
@@ -47,26 +41,13 @@ public class KhuyenMaiPhanTram extends Khuyenmai implements TrongFile {
     }
 
     public void setMucGiamToiDa(long mucGiamToiDa) {
-        if (mucGiamToiDa <= 0)
-            throw new IllegalArgumentException("Mức giảm tối đa phải lớn hơn 0");
+        if (mucGiamToiDa <= 0 )
+            throw new IllegalArgumentException("Mức giảm tối đa phải lớn hơn 0") ;
         this.mucGiamToiDa = mucGiamToiDa;
     }
 
-    @Override
-    public long tinhTienGiam(long donGia, int soLuong) {
-        long tong = donGia * soLuong;
-        if (!dangHoatDong(LocalDate.now()) || tong < getMucChiToiThieu()) {
-            return 0;
-        }
-        long giam = (long) (tong * phanTramGiamGia);
-        if (mucGiamToiDa > 0 && giam > mucGiamToiDa) {
-            giam = mucGiamToiDa;
-        }
-        return Math.min(tong, giam);
-    }
-
-    @Override
-    public void setKM(Scanner sc) {
+    public void setKM(Scanner sc )
+    {
         super.setKM(sc);
         double phanTramNhap = Validation.inputDouble(sc, "Nhập phần trăm giảm giá cho sản phẩm: ");
         while (phanTramNhap > 100) {
@@ -81,14 +62,12 @@ public class KhuyenMaiPhanTram extends Khuyenmai implements TrongFile {
             }
         } while (mucGiamToiDa == 0);
     }
-
-    @Override
-    public String toString() {
+    public String toString()
+    {
         return super.toString() + String.format(
                 " | Phần trăm giảm giá: %.2f%% | Mức giảm tối đa: %d",
                 phanTramGiamGia * 100, mucGiamToiDa);
     }
-
     @Override
     public String getFilePath(){
         return utils.DuongDanLuuTru.file("KhuyenMaiPhanTram.csv");

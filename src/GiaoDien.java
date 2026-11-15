@@ -2,9 +2,7 @@ import person.*;
 import sanpham.QuanLySanPham;
 import hoadon.DanhSachHoaDonBan;
 import hoadon.DanhSachHoaDonNhap;
-import hoadon.HoaDon;
-import hoadon.HoaDonBanHang;
-import hoadon.HoaDonNhapHang;
+import hoadon.DanhSachCongNo;
 import dichvu.Danhsachdoitac;
 import dichvu.Danhsachkhuyenmai;
 import dichvu.DanhSachSPKM;
@@ -39,6 +37,7 @@ public class GiaoDien {
             gd.dsSanPhamKhuyenMai = docFile(DanhSachSPKM.class, hienTai, "SanPhamKhuyenMai.txt");
             gd.dsHoaDonBan = docFile(DanhSachHoaDonBan.class, hienTai, "HoaDonBan.txt");
             gd.dsHoaDonNhap = docFile(DanhSachHoaDonNhap.class, hienTai, "HoaDonNhap.txt");
+            gd.dsCongNo = docFile(DanhSachCongNo.class, hienTai, "CongNo.txt");
             NhanVien[] vaiTro = docFile(NhanVien[].class, hienTai, "NhanVienDangNhap.txt");
             if (vaiTro.length != 4 || !(vaiTro[0] instanceof QuanLy)
                     || !(vaiTro[1] instanceof QuanKho) || !(vaiTro[2] instanceof ThuNgan)
@@ -73,6 +72,7 @@ public class GiaoDien {
         duLieu.put("SanPhamKhuyenMai.txt", dsSanPhamKhuyenMai);
         duLieu.put("HoaDonBan.txt", dsHoaDonBan);
         duLieu.put("HoaDonNhap.txt", dsHoaDonNhap);
+        duLieu.put("CongNo.txt", dsCongNo);
         duLieu.put("NhanVienDangNhap.txt", new NhanVien[]{quanLy, quanKho, thuNgan, keToan});
         LuuTruNhieuFile.ghiDuLieu(thuMuc, duLieu);
     }
@@ -96,6 +96,7 @@ public class GiaoDien {
         dsSanPhamKhuyenMai.cauHinh(dsSanPham, dsKhuyenMai);
         dsHoaDonBan.cauHinh(dsSanPhamKhuyenMai, dsKhuyenMai, dsSanPham, dsKhachHang, thuNgan.getMaNV());
         dsHoaDonNhap.cauHinh(quanKho.getMaNV(), dsSanPham, dsDoiTac);
+        dsCongNo.cauHinh(dsHoaDonNhap, dsDoiTac);
         lienKetVaiTro(quanLy);
         lienKetVaiTro(quanKho);
         lienKetVaiTro(thuNgan);
@@ -133,11 +134,12 @@ public class GiaoDien {
     private DanhSachSPKM dsSanPhamKhuyenMai = new DanhSachSPKM();
     private DanhSachHoaDonBan dsHoaDonBan = new DanhSachHoaDonBan();
     private DanhSachHoaDonNhap dsHoaDonNhap = new DanhSachHoaDonNhap();
+    private DanhSachCongNo dsCongNo = new DanhSachCongNo();
     private QuanLy quanLy = new QuanLy();
     private QuanKho quanKho = new QuanKho(dsSanPham, dsHoaDonNhap);
     private ThuNgan thuNgan = new ThuNgan();
     private KeToan keToan = new KeToan();
-    private ArrayList<String> dsMaDaThanhToan = new ArrayList<>();
+
     private String taiKhoanQuanKho , matKhauQuanKho , taiKhoanThuNgan , matKhauThuNgan , taiKhoanKeToan , matKhauKeToan , taiKhoanQuanLy, matKhauQuanLy  ;
     public GiaoDien()
     {
@@ -191,22 +193,18 @@ public class GiaoDien {
     {
         System.out.println("=================ĐĂNG NHẬP QUẢN LÝ KHO=================");
         System.out.println("Vui lòng nhập thông tin đăng nhập!");
-        if (!sc.hasNextLine()) return;
         System.out.println("Nhâp tài khoản: ");
         String taiKhoan = sc.nextLine() ;
-        if (!sc.hasNextLine()) return;
         System.out.println("Nhập mật khẩu: ");
         String matKhau = sc.nextLine() ;
         int soLanNhapSai = 5 ;
-        while ( !taiKhoan.equalsIgnoreCase(taiKhoanQuanKho) || !matKhau.equals(matKhauQuanKho) )
+        while ( !taiKhoan.equalsIgnoreCase(taiKhoanQuanKho) || !matKhau.equalsIgnoreCase(matKhauQuanKho) )
         {
             soLanNhapSai-- ;
             if ( soLanNhapSai == 0 ) break;
             System.out.println("Bạn đã nhập sai mật khẩu hoặc tài khoản vui lòng nhập lại!(Còn " +soLanNhapSai + " lần thử)");
-            if (!sc.hasNextLine()) return;
             System.out.println("Nhâp tài khoản: ");
             taiKhoan = sc.nextLine() ;
-            if (!sc.hasNextLine()) return;
             System.out.println("Nhập mật khẩu: ");
             matKhau = sc.nextLine() ;
         }
@@ -219,25 +217,20 @@ public class GiaoDien {
     }
     public void MenuKeToan( Scanner sc )
     {
-        ArrayList<HoaDon> hoaDons = new ArrayList<>(); 
         System.out.println("=================ĐĂNG NHẬP KẾ TOÁN=================");
         System.out.println("Vui lòng nhập thông tin đăng nhập!");
-        if (!sc.hasNextLine()) return;
         System.out.println("Nhâp tài khoản: ");
         String taiKhoan = sc.nextLine() ;
-        if (!sc.hasNextLine()) return;
         System.out.println("Nhập mật khẩu: ");
         String matKhau = sc.nextLine() ;
         int soLanNhapSai = 5 ;
-        while ( !taiKhoan.equalsIgnoreCase(taiKhoanKeToan) || !matKhau.equals(matKhauKeToan) )
+        while ( !taiKhoan.equalsIgnoreCase(taiKhoanKeToan) || !matKhau.equalsIgnoreCase(matKhauKeToan) )
         {
             soLanNhapSai--;
             if ( soLanNhapSai == 0 ) break;
             System.out.println("Bạn đã nhập sai mật khẩu hoặc tài khoản vui lòng nhập lại!(Còn " +soLanNhapSai + " lần thử)");
-            if (!sc.hasNextLine()) return;
             System.out.println("Nhâp tài khoản: ");
             taiKhoan = sc.nextLine() ;
-            if (!sc.hasNextLine()) return;
             System.out.println("Nhập mật khẩu: ");
             matKhau = sc.nextLine() ;
         }
@@ -246,35 +239,24 @@ public class GiaoDien {
             System.out.println("Bạn đã nhập sai quá 5 lần do đó bạn phải chờ thời gian nhập lại!");
             return;
         }
-        for(HoaDonBanHang hdb : dsHoaDonBan.getDsHoaDonBanHang() )
-            if(hdb.isDaThanhToan()) dsMaDaThanhToan.add(hdb.getMaHoaDon());
-            
-        for(HoaDonNhapHang hdn : dsHoaDonNhap.getDsHoaDonNhapHang() )
-            if(hdn.isDaThanhToan()) dsMaDaThanhToan.add(hdn.getMaHoaDon());
-        hoaDons.addAll(dsHoaDonNhap.getDsHoaDonNhapHang());
-        hoaDons.addAll(dsHoaDonBan.getDsHoaDonBanHang());    
-        keToan.thucHienNghiepVu(sc,hoaDons,dsMaDaThanhToan);
+        keToan.thucHienNghiepVu(sc, dsHoaDonBan, dsHoaDonNhap, dsDoiTac, dsCongNo);
     }
     public void MenuQuanLy( Scanner sc )
     {
         System.out.println("=================ĐĂNG NHẬP QUẢN LÝ=================");
         System.out.println("Vui lòng nhập thông tin đăng nhập!");
-        if (!sc.hasNextLine()) return;
         System.out.println("Nhâp tài khoản: ");
         String taiKhoan = sc.nextLine() ;
-        if (!sc.hasNextLine()) return;
         System.out.println("Nhập mật khẩu: ");
         String matKhau = sc.nextLine() ;
         int soLanNhapSai = 5 ;
-        while ( !taiKhoan.equalsIgnoreCase(taiKhoanQuanLy) || !matKhau.equals(matKhauQuanLy) )
+        while ( !taiKhoan.equalsIgnoreCase(taiKhoanQuanLy) || !matKhau.equalsIgnoreCase(matKhauQuanLy) )
         {
             soLanNhapSai--;
             if ( soLanNhapSai == 0 ) break;
             System.out.println("Bạn đã nhập sai mật khẩu hoặc tài khoản vui lòng nhập lại!(Còn " +soLanNhapSai + " lần thử)");
-            if (!sc.hasNextLine()) return;
             System.out.println("Nhâp tài khoản: ");
             taiKhoan = sc.nextLine() ;
-            if (!sc.hasNextLine()) return;
             System.out.println("Nhập mật khẩu: ");
             matKhau = sc.nextLine() ;
         }
@@ -289,22 +271,18 @@ public class GiaoDien {
     {
         System.out.println("=================ĐĂNG NHẬP THU NGÂN=================");
         System.out.println("Vui lòng nhập thông tin đăng nhập!");
-        if (!sc.hasNextLine()) return;
         System.out.println("Nhâp tài khoản: ");
         String taiKhoan = sc.nextLine() ;
-        if (!sc.hasNextLine()) return;
         System.out.println("Nhập mật khẩu: ");
         String matKhau = sc.nextLine() ;
         int soLanNhapSai = 5 ;
-        while ( !taiKhoan.equalsIgnoreCase(taiKhoanThuNgan) || !matKhau.equals(matKhauThuNgan) )
+        while ( !taiKhoan.equalsIgnoreCase(taiKhoanThuNgan) || !matKhau.equalsIgnoreCase(matKhauThuNgan) )
         {
             soLanNhapSai--;
             if ( soLanNhapSai == 0 ) break;
             System.out.println("Bạn đã nhập sai mật khẩu hoặc tài khoản vui lòng nhập lại!(Còn " +soLanNhapSai + " lần thử)");
-            if (!sc.hasNextLine()) return;
             System.out.println("Nhâp tài khoản: ");
             taiKhoan = sc.nextLine() ;
-            if (!sc.hasNextLine()) return;
             System.out.println("Nhập mật khẩu: ");
             matKhau = sc.nextLine() ;
         }
