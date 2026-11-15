@@ -1,7 +1,5 @@
 package hoadon;
 
-import utils.DongDuLieu;
-
 
 import sanpham.QuanLySanPham;
 import sanpham.SanPham;
@@ -41,24 +39,4 @@ public class CTHoaDonNhap extends CTHoaDon {
    {
        return super.getSoLuong()*super.getDonGia() ;
    }
-
-    // ================= ĐỌC / GHI FILE TXT =================
-
-    @Override public String toDongFile() {
-        kiemTraDuLieuFile();
-        return "CTNHAP;" + thongTinChiTietFile();
-    }
-
-    public static CTHoaDonNhap tuDongFile(String dong) {
-        String[] p = dong.split(";", -1);
-        DongDuLieu.yeuCau(p.length == 5 && "CTNHAP".equals(p[0]), "Sai dòng CTNHAP (cần 5 cột).");
-        CTHoaDonNhap obj = new CTHoaDonNhap();
-        obj.docThongTinChiTietFile(p);
-        obj.kiemTraDuLieuFile();
-        return obj;
-    }
-
-    public void kiemTraDuLieuFile() {
-        super.kiemTraDuLieuFile();
-    }
 }

@@ -1,7 +1,5 @@
 package person;
 
-import utils.DongDuLieu;
-
 import hoadon.DanhSachHoaDonBan;
 import hoadon.DanhSachHoaDonNhap;
 
@@ -94,12 +92,12 @@ public class QuanLy extends NhanVien {
                     break;
                 case 2:
                     String maNV = Validation.inputStringRegex(sc, "Nhập mã nhân viên cần sa thải: ",
-                            Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng (NVxxx).", NhanVien.getSoThuTu());
+                            Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng (NVxxx).");
                     dsnv.xoa(maNV);
                     break;
                 case 3:
                     String maNVSua = Validation.inputStringRegex(sc, "Nhập mã nhân viên cần sửa: ",
-                            Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng (NVxxx).", NhanVien.getSoThuTu());
+                            Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng (NVxxx).");
                     dsnv.sua(maNVSua, sc);
                     break;
                 case 4:
@@ -166,21 +164,12 @@ public class QuanLy extends NhanVien {
                     dsSanPham.them(sc, dsNCC);
                     break;
                 case 3:
-<<<<<<< HEAD
-                    String c =Validation.inputStringRegex(sc, "Nhap ma san pham can sua (vi du: SP001)","^SP\\d+$", "Sai dinh dang ma san pham, nhap lai ", sanpham.SanPham.getSoThuTu());
-                    dsSanPham.xoa(c);
-                    break;
-                case 4:
-                    String d =Validation.inputStringRegex(sc, "Nhap ma san pham can sua (vi du: SP001)","^SP\\d+$", "Sai dinh dang ma san pham, nhap lai ", sanpham.SanPham.getSoThuTu());
-                    dsSanPham.sua(sc,d,dsNCC);
-=======
                     String c = Validation.inputStringRegex(sc, "Nhap ma san pham can sua (vi du: SP001)", "^SP\\d+$", "Sai dinh dang ma san pham, nhap lai ");
                     dsSanPham.xoa(c);
                     break;
                 case 4:
                     String d = Validation.inputStringRegex(sc, "Nhap ma san pham can sua (vi du: SP001)", "^SP\\d+$", "Sai dinh dang ma san pham, nhap lai ");
                     dsSanPham.sua(sc, d, dsNCC);
->>>>>>> origin/main
                     break;
                 case 5:
                     dieuChinhGiaBan(sc, dsSanPham);
@@ -201,7 +190,7 @@ public class QuanLy extends NhanVien {
                     dsSanPham.thongKeTheoLoai(sc);
                     break;
                 case 11:
-                    String maNCC = Validation.inputStringRegex(sc, "Nhập mã nhà cung cấp: ", Validation.MaNCC_REGEX, "Mã nhà cung cấp không hợp lệ!", Nhacungcap.getSoThuTuNCC());
+                    String maNCC = Validation.inputStringRegex(sc, "Nhập mã nhà cung cấp: ", Validation.MaNCC_REGEX, "Mã nhà cung cấp không hợp lệ!");
                     dsSanPham.thongKeSanPhamTheoNhaCungCap(maNCC);
                     break;
                 case 12:
@@ -336,12 +325,7 @@ public class QuanLy extends NhanVien {
                     break;
                 }
                 case 10: {
-<<<<<<< HEAD
-                    int soLuong = dsSanPhamKhuyenMai.tuDongGiamGiaCanHSD(qlsp, dsKhuyenMai);
-                    System.out.println("Đã cập nhật giảm giá cận hạn cho " + soLuong + " sản phẩm.");
-=======
                     tuDongGiamGiaCanHSD(qlsp);
->>>>>>> origin/main
                     break;
                 }
                 case 11: {
@@ -360,33 +344,4 @@ public class QuanLy extends NhanVien {
             }
         } while (luaChon != 0);
     }
-<<<<<<< HEAD
-
-    public DSYeuCau getDsYeuCauFile() { return dsYeuCau; }
-
-    // ================= ĐỌC / GHI FILE TXT =================
-
-    @Override public String toDongFile() {
-        kiemTraDuLieuFile();
-        return "QUANLY;" + thongTinNhanVienFile();
-    }
-
-    public static QuanLy tuDongFile(String dong) {
-        String[] p = dong.split(";", -1);
-        DongDuLieu.yeuCau(p.length == 15 && "QUANLY".equals(p[0]), "Sai dòng QUANLY (cần 15 cột).");
-        int dem = NhanVien.getSoThuTu();
-        QuanLy obj = new QuanLy();
-        NhanVien.datBoDemFile(dem); // Constructor đọc file không cấp mã mới.
-        obj.docThongTinNhanVienFile(p);
-        obj.kiemTraDuLieuFile();
-        obj.capNhatMaFile();
-        return obj;
-    }
-
-    public void kiemTraDuLieuFile() {
-        super.kiemTraDuLieuFile();
-    }
 }
-=======
-}
->>>>>>> origin/main

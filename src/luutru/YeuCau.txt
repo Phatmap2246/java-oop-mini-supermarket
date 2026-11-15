@@ -1,6 +1,4 @@
-#SIEUTHI_TXT_3
-#NHOM;YeuCau
-#BODEM;9;5;4;7;5;4
-LOICU;NV001|KeToan|bad|ChoDuyet|extra
-YEUCAU;NV002;KeToan;already done;DaDuyet
-YEUCAU;NV003;KeToan;pending;DaDuyet
+maNV,vaitro,noiDungBase64,trangThai,dongLoiBase64
+,,,,TlYwMDF8S2VUb2FufGJhZHxDaG9EdXlldHxleHRyYQ
+NV002,KeToan,YWxyZWFkeSBkb25l,DaDuyet,
+NV003,KeToan,cGVuZGluZw,DaDuyet,

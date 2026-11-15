@@ -1,7 +1,5 @@
 package hoadon;
 
-import utils.DongDuLieu;
-
 import interfaces.TrongFile;
 import utils.QRCodeGenerator;
 import java.util.Random;
@@ -12,7 +10,7 @@ import interfaces.IThanhToan;
 import java.io.File;
 import java.awt.Desktop;
 
-public class ThanhToanChuyenKhoan implements IThanhToan, TrongFile, interfaces.BanGhiFile {
+public class ThanhToanChuyenKhoan implements IThanhToan, TrongFile {
     private String tenNganHang;
     private String soTaiKhoan;
     private String maGiaoDich;
@@ -93,7 +91,10 @@ public class ThanhToanChuyenKhoan implements IThanhToan, TrongFile, interfaces.B
         System.out.println(" - So TK: " + soTaiKhoan);
         System.out.println(" - Ma giao dich: " + maGiaoDich);
     }
-
+    @Override
+    public String getFilePath(){
+        return utils.DuongDanLuuTru.file("ThanhToanChuyenKhoan.csv");
+    }
 
     // Hàm vẽ QR bằng ký tự vuông (Không dùng màu, hiển thị tốt trên VS Code)
     private void inQRRaConsole(String noiDung) {
@@ -123,31 +124,4 @@ public class ThanhToanChuyenKhoan implements IThanhToan, TrongFile, interfaces.B
 
     public String getMaGiaoDich() { return maGiaoDich; }
     public String getNoiDungQR() { return noiDungQR; }
-
-    // ================= ĐỌC / GHI FILE TXT =================
-
-    @Override
-    public String getFilePath(){
-        return utils.DuongDanLuuTru.file("ThanhToanChuyenKhoan.txt");
-    }
-
-    @Override public String toDongFile() {
-        kiemTraDuLieuFile();
-        return DongDuLieu.ghep("CHUYENKHOAN", tenNganHang, soTaiKhoan, maGiaoDich, noiDungQR);
-    }
-
-    public static ThanhToanChuyenKhoan tuDongFile(String dong) {
-        String[] p = dong.split(";", -1);
-        DongDuLieu.yeuCau(p.length == 5 && "CHUYENKHOAN".equals(p[0]), "Sai dòng CHUYENKHOAN (cần 5 cột).");
-        ThanhToanChuyenKhoan obj = new ThanhToanChuyenKhoan();
-        obj.tenNganHang = p[1];
-        obj.soTaiKhoan = p[2];
-        obj.maGiaoDich = p[3];
-        obj.noiDungQR = p[4];
-        obj.kiemTraDuLieuFile();
-        return obj;
-    }
-
-    public void kiemTraDuLieuFile() {
-    }
 }

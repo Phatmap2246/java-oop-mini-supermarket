@@ -1,11 +1,9 @@
 package dichvu;
-
-import utils.DongDuLieu;
 import utils.Validation;
 
 import java.util.Scanner;
 
-public abstract class Doitac implements interfaces.BanGhiFile {
+public abstract class Doitac {
     // 11/11/2026: Xóa bằng trạng thái để giữ dữ liệu trong danh sách.
     private boolean tonTai = true;
 
@@ -29,6 +27,8 @@ public abstract class Doitac implements interfaces.BanGhiFile {
         this.email = email;
         this.loaiDoiTac = loaiDoiTac;
     }
+
+
 
     public String getLoaiDoiTac() {
         return loaiDoiTac;
@@ -120,32 +120,6 @@ public abstract class Doitac implements interfaces.BanGhiFile {
     }
     @Override
     public String toString() {
-        return utils.HienThi.canLe("Mã đối tác: " + maDoiTac + " | Tên đối tác: " + tenDoiTac + " | Số điện thoại: " + soDienThoai + " | Địa chỉ: " + diaChi + " | Email: " + email + " | Mã số thuế: " + maSoThue );
-    }
-
-    // ================= ĐỌC / GHI FILE TXT =================
-
-    protected String thongTinDoiTacFile() {
-        return DongDuLieu.ghep(maDoiTac, tenDoiTac, soDienThoai, diaChi, email, maSoThue, loaiDoiTac, tonTai);
-    }
-
-    protected void docThongTinDoiTacFile(String[] p) {
-        maDoiTac = p[1];
-        tenDoiTac = p[2];
-        soDienThoai = p[3];
-        diaChi = p[4];
-        email = p[5];
-        maSoThue = p[6];
-        loaiDoiTac = p[7];
-        tonTai = DongDuLieu.logic(p[8]);
-    }
-
-    public static Doitac tuDongFile(String dong) {
-        String loai = dong.split(";", -1)[0];
-        if ("NHACUNGCAP".equals(loai)) return Nhacungcap.tuDongFile(dong);
-        throw new IllegalArgumentException("Loại Doitac không hợp lệ: " + loai);
-    }
-
-    public void kiemTraDuLieuFile() {
+        return "Mã đối tác: " + maDoiTac + " | Tên đối tác: " + tenDoiTac + " | Số điện thoại: " + soDienThoai + " | Địa chỉ: " + diaChi + " | Email: " + email + " | Mã số thuế: " + maSoThue ;
     }
 }

@@ -1,14 +1,12 @@
 package person;
 
-import utils.DongDuLieu;
-
 import java.time.LocalDate;
 import java.util.Scanner;
 
 import utils.DateUtil;
 import utils.Validation;
 
-public abstract class Person implements interfaces.BanGhiFile {
+public abstract class Person {
     private String email, hoten, sdt;
     private DiaChi diachi;
     private LocalDate ngsinh;
@@ -180,35 +178,13 @@ public abstract class Person implements interfaces.BanGhiFile {
     @Override
     public String toString() {
         String ngaySinhStr = ngsinh != null ? ngsinh.format(DateUtil.DATE_FORMATTER) : "N/A";
-        return utils.HienThi.canLe("Họ tên: " + hoten
+        return "Họ tên: " + hoten
                 + " | SĐT: " + sdt
                 + " | Email: " + email
                 + " | Địa chỉ: " + diachi
-                + " | Ngày sinh: " + ngaySinhStr);
+                + " | Ngày sinh: " + ngaySinhStr;
     }
 
     /** Trả về vai trò do lớp con định nghĩa. */
     public abstract String getVaiTro();
-
-    // ================= ĐỌC / GHI FILE TXT =================
-
-    protected String thongTinNguoiFile() {
-        DiaChi dc = diachi == null ? new DiaChi() : diachi;
-        return DongDuLieu.ghep(email, hoten, sdt) + ";" + dc.thongTinDiaChiFile() + ";" + DongDuLieu.chuoi(ngsinh);
-    }
-
-    protected void docThongTinNguoiFile(String[] p, int start) {
-        email = p[start]; hoten = p[start + 1]; sdt = p[start + 2];
-        diachi = new DiaChi(p[start + 3], p[start + 4], p[start + 5], p[start + 6], p[start + 7]);
-        ngsinh = DongDuLieu.ngay(p[start + 8]);
-    }
-
-    public static Person tuDongFile(String dong) {
-        String loai = dong.split(";", -1)[0];
-        if ("KHACHHANG".equals(loai)) return KhachHang.tuDongFile(dong);
-        return NhanVien.tuDongFile(dong);
-    }
-
-    public void kiemTraDuLieuFile() {
-    }
 }

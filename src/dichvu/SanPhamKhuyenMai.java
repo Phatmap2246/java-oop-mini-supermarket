@@ -1,11 +1,9 @@
 package dichvu;
-
-import utils.DongDuLieu;
 import utils.Validation;
 
 import java.util.Scanner;
 
-public class SanPhamKhuyenMai implements interfaces.BanGhiFile {
+public class SanPhamKhuyenMai {
     private boolean tonTai = true;
 
     public boolean isTonTai() { return tonTai; }
@@ -46,60 +44,11 @@ public class SanPhamKhuyenMai implements interfaces.BanGhiFile {
     }
     public void setSanPhamKhuyenMai(Scanner sc )
     {
-        maSanPham = Validation.inputStringRegex(sc , "Nhập mã sản phẩm: " , Validation.MaSP_REGEX , "Mã sản phẩm không đúng đi dạng vui lòng nhập lại!(ví dụ hợp lệ: SP001)", sanpham.SanPham.getSoThuTu());
-        maKhuyenMai = Validation.inputStringRegex( sc , "Nhập mã khuyến mãi: " , Validation.MaKM_REGEX , "Mã khuyến mãi không đúng định dạng vui lòng nhập lại!(ví dụ hợp lệ: KM001", dichvu.Khuyenmai.getSoThuTu());
+        maSanPham = Validation.inputStringRegex(sc , "Nhập mã sản phẩm: " , "SP\\d{3}" , "Mã sản phẩm không đúng đi dạng vui lòng nhập lại!(ví dụ hợp lệ: SP001)", sanpham.SanPham.getSoThuTu());
+        maKhuyenMai = Validation.inputStringRegex( sc , "Nhập mã khuyến mãi: " , "KM\\d{3}" , "Mã khuyến mãi không đúng định dạng vui lòng nhập lại!(ví dụ hợp lệ: KM001", dichvu.Khuyenmai.getSoThuTu());
     }
     @Override
     public String toString() {
-        return utils.HienThi.canLe("Mã sản phẩm: " + maSanPham + " | Mã khuyến mãi: " + maKhuyenMai );
-    }
-
-    public void setSanPhamKhuyenMai(Scanner sc, sanpham.QuanLySanPham qlsp, Danhsachkhuyenmai dskm) {
-        if (qlsp == null || dskm == null) {
-            setSanPhamKhuyenMai(sc);
-            return;
-        }
-
-        while (true) {
-            String maSP = Validation.inputStringRegex(sc, "Nhập mã sản phẩm: ", Validation.MaSP_REGEX,
-                    "Mã sản phẩm không đúng định dạng (VD: SP001)!");
-            if (qlsp != null && qlsp.timMa(maSP) == null) {
-                System.out.println("[!] Mã sản phẩm không tồn tại trong danh mục!");
-                continue;
-            }
-            this.maSanPham = maSP;
-            break;
-        }
-        while (true) {
-            String maKM = Validation.inputStringRegex(sc, "Nhập mã khuyến mãi: ", Validation.MaKM_REGEX,
-                    "Mã khuyến mãi không đúng định dạng (VD: KM001)!");
-            if (dskm != null && dskm.timMa(maKM) == null) {
-                System.out.println("[!] Mã khuyến mãi không tồn tại trong danh sách!");
-                continue;
-            }
-            this.maKhuyenMai = maKM;
-            break;
-        }
-    }
-
-    // ================= ĐỌC / GHI FILE TXT =================
-
-    @Override public String toDongFile() {
-        kiemTraDuLieuFile();
-        return DongDuLieu.ghep("SPKM", maSanPham, maKhuyenMai, tonTai);
-    }
-
-    public static SanPhamKhuyenMai tuDongFile(String dong) {
-        String[] p = dong.split(";", -1);
-        DongDuLieu.yeuCau(p.length == 4 && "SPKM".equals(p[0]), "Sai dòng SPKM (cần 4 cột).");
-        SanPhamKhuyenMai obj = new SanPhamKhuyenMai();
-        obj.maSanPham = p[1];
-        obj.maKhuyenMai = p[2];
-        obj.tonTai = DongDuLieu.logic(p[3]);
-        obj.kiemTraDuLieuFile();
-        return obj;
-    }
-
-    public void kiemTraDuLieuFile() {
+        return "Mã sản phẩm: " + maSanPham + " | Mã khuyến mãi: " + maKhuyenMai ;
     }
 }

@@ -2,6 +2,11 @@
 
 Đồ án môn học Lập trình Hướng đối tượng. Dự án xây dựng hệ thống quản lý siêu thị mini với đầy đủ các nghiệp vụ cơ bản: quản lý nhân sự, sản phẩm, hóa đơn, khuyến mãi và thanh toán.
 
+## Tài liệu dự án
+
+- [Tổng quan project, luồng nghiệp vụ và sơ đồ quan hệ class](doc/project-overview.md)
+- [Tài liệu chi tiết từng class](doc/project-overview.md#cấu-trúc-mã-nguồn)
+
 ## Công nghệ sử dụng
 
 - **Ngôn ngữ:** Java (JDK 21+)

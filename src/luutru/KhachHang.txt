@@ -1,3 +1,1 @@
-#SIEUTHI_TXT_3
-#NHOM;DSKhachHang
-#BODEM;9;5;4;7;5;4
+# UTF-8 tab-separated data; DocGhiFile_temp writes the column header and records.

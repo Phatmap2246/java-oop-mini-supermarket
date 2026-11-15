@@ -1,12 +1,6 @@
-<<<<<<< HEAD
-#SIEUTHI_TXT_3
-#NHOM;DSNhanVien
-#BODEM;9;5;4;7;5;4
-=======
 dsYeuCau,maNV,vaitro,luong,phuCapTrachNhiem,isSaThai,email,hoten,sdt,diachi,ngsinh
 person.DSYeuCau@7e774085,NV001,QuanLy,15000000,1000000,false,nhanvien1@example.com,Nguyễn Minh An,0901000000,10, Nguyễn Trãi, Bến Thành, Quận 1, TP Hồ Chí Minh,1990-03-15
 NV002,QuanKho,8000000,1000000,false,nhanvien2@example.com,Trần Quốc Bình,0901000001,11, Nguyễn Trãi, Bến Thành, Quận 1, TP Hồ Chí Minh,1991-03-15
 0,NV003,ThuNgan,8000000,1000000,false,nhanvien3@example.com,Lê Ngọc Chi,0901000002,12, Nguyễn Trãi, Bến Thành, Quận 1, TP Hồ Chí Minh,1992-03-15
 NV004,KeToan,8000000,1000000,false,nhanvien4@example.com,Phạm Thanh Dũng,0901000003,13, Nguyễn Trãi, Bến Thành, Quận 1, TP Hồ Chí Minh,1993-03-15
 NV005,QuanLy,1,1909,true,tt445336@gmail.com,Tran Thien danh,0933949056,12, 2341, 12, 1, 3123,2007-10-10
->>>>>>> origin/main

@@ -34,7 +34,7 @@ public class LuuTruNhieuFile {
         Path tam = Files.createTempDirectory(goc, "dang-ghi-");
         try {
             for (String ten : TEN_FILE) {
-                KhoDuLieuTxt.ghi(duLieu.get(ten), tam.resolve(ten).toString());
+                DataBase.ghiDoiTuong(duLieu.get(ten), tam.resolve(ten).toString());
             }
             // Chỉ thay dữ liệu hiện tại khi tất cả các file đều đã ghi xong.
             xoaBanLuu(truoc);

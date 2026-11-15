@@ -1,6 +1,4 @@
 package sanpham;
-
-import utils.DongDuLieu;
 import utils.Validation;
 
 import java.time.LocalDate;
@@ -13,19 +11,17 @@ public class ThucPham extends SanPham
     private String baoQuan ;
     public ThucPham()
     {
-        super(0.08, "Thực phẩm");
+        super();
         ngaySanXuat = hanSuDung = null ;
         nhietDoBaoQuan = 0 ;
         baoQuan = "" ;
+        super.setThue(0.08);
+        super.setLoaiSanPham("Thực phẩm");
     }
     public ThucPham ( String maSanPham , String tenSanPham , String loaiSanPham , long giaNhap , long giaBan , int soLuongTonKho , String maNhaCungCap , double thue ,
                       LocalDate ngaySanXuat , LocalDate hanSuDung , double nhietDoBaoQuan , String baoQuan)
     {
         super( maSanPham, tenSanPham, loaiSanPham, giaNhap, giaBan, soLuongTonKho, maNhaCungCap , thue );
-        if (!Double.isFinite(nhietDoBaoQuan)) throw new IllegalArgumentException("Nhiệt độ không hợp lệ.");
-        if (ngaySanXuat != null && hanSuDung != null && hanSuDung.isBefore(ngaySanXuat)) {
-            throw new IllegalArgumentException("Hạn sử dụng không được trước ngày sản xuất.");
-        }
         this.ngaySanXuat = ngaySanXuat ;
         this.hanSuDung = hanSuDung ;
         this.nhietDoBaoQuan = nhietDoBaoQuan ;
@@ -47,9 +43,6 @@ public class ThucPham extends SanPham
     public void setHanSuDung(LocalDate hanSuDung) {
         if (hanSuDung == null) {
             throw new IllegalArgumentException("Hạn sử dụng không được null.");
-        }
-        if (ngaySanXuat!= null && hanSuDung.isBefore(ngaySanXuat)) {
-            throw new IllegalArgumentException("Hạn sử dụng không được trước ngày sản xuất!");
         }
         this.hanSuDung = hanSuDung;
     }
@@ -76,10 +69,6 @@ public class ThucPham extends SanPham
         if (ngaySanXuat == null) {
             throw new IllegalArgumentException("Ngày sản xuất không được null.");
         }
-        if ( hanSuDung != null && ngaySanXuat.isAfter(hanSuDung))
-        {
-            throw new IllegalArgumentException("Ngày sản xuất không được sau hạn sử dụng!") ;
-        }
         this.ngaySanXuat = ngaySanXuat;
     }
 
@@ -98,9 +87,9 @@ public class ThucPham extends SanPham
         baoQuan = sc.nextLine() ;
         System.out.println("Nhập nhiệt độ bảo quản: ");
         nhietDoBaoQuan = Validation.inputInt(sc , "Nhập nhiệt độ bảo quản: ") ;
-        while ( nhietDoBaoQuan < 0 || Double.isFinite(nhietDoBaoQuan))
+        while ( nhietDoBaoQuan < 0 )
         {
-            System.out.println("Sản phẩm không nên được bảo quản ở nhiệt độ quá lạnh và nhiệt độ không nhập số thập phân!");
+            System.out.println("Sản phẩm không nên được bảo quản ở nhiệt độ quá lạnh!");
             nhietDoBaoQuan = Validation.inputInt(sc , "Nhập nhiệt độ bảo quản: ") ;
         }
     }
@@ -139,35 +128,6 @@ public class ThucPham extends SanPham
 
     @Override
     public String toString() {
-        return utils.HienThi.canLe(super.toString() + " | Ngày sản xuất: " + ngaySanXuat + " | Hạn sử dụng: " + hanSuDung + " | Môi trường bảo quản: " + baoQuan + " | Nhiệt độ bảo quản : " + nhietDoBaoQuan);
-    }
-
-    // ================= ĐỌC / GHI FILE TXT =================
-
-    @Override public String toDongFile() {
-        kiemTraDuLieuFile();
-        return "THUCPHAM;" + thongTinSanPhamFile() + ";" + DongDuLieu.ghep(ngaySanXuat, hanSuDung, nhietDoBaoQuan, baoQuan);
-    }
-
-    public static ThucPham tuDongFile(String dong) {
-        String[] p = dong.split(";", -1);
-        DongDuLieu.yeuCau(p.length == 14 && "THUCPHAM".equals(p[0]), "Sai dòng THUCPHAM (cần 14 cột).");
-        int dem = SanPham.getSoThuTu();
-        ThucPham obj = new ThucPham();
-        SanPham.datBoDemFile(dem); // Constructor đọc file không cấp mã mới.
-        obj.docThongTinSanPhamFile(p);
-        obj.ngaySanXuat = DongDuLieu.ngay(p[10]);
-        obj.hanSuDung = DongDuLieu.ngay(p[11]);
-        obj.nhietDoBaoQuan = Double.parseDouble(p[12]);
-        obj.baoQuan = p[13];
-        obj.kiemTraDuLieuFile();
-        obj.capNhatMaFile();
-        return obj;
-    }
-
-    public void kiemTraDuLieuFile() {
-        super.kiemTraDuLieuFile();
-        DongDuLieu.yeuCau(Double.isFinite(nhietDoBaoQuan), "Nhiệt độ không hữu hạn.");
-        DongDuLieu.thuTuNgay(ngaySanXuat, hanSuDung);
+        return super.toString() + " | Ngày sản xuất: " + ngaySanXuat + " | Hạn sử dụng: " + hanSuDung + " | Môi trường bảo quản: " + baoQuan + " | Nhiệt độ bảo quản : " + nhietDoBaoQuan;
     }
 }

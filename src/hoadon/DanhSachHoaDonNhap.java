@@ -1,15 +1,4 @@
 package hoadon;
-import sanpham.ThucPham;
-import utils.BoDemMa;
-import utils.DongDuLieu;
-import utils.TepVanBan;
-import java.io.IOException;
-import java.time.temporal.ChronoUnit;
-import java.util.Locale;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.HashSet;
-import java.util.Set;
 
 import sanpham.SanPham;
 
@@ -51,10 +40,7 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
     }
     @Override public boolean xoa(String ma) {
         HoaDonNhapHang hd = timMa(ma);
-        if (hd == null || hd.isDuyet() || hd.isDaNhapSP())
-        {
-            return false;
-        }
+        if (hd == null || hd.isDuyet() || hd.isDaNhapSP()) return false;
         return dsHoaDonNhapHang.remove(hd);
     }
     @Override public int timViTri(String ma) {
@@ -428,7 +414,7 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
             System.out.println("Mã hoá đơn không tồn tại!");
             return false;
         }
-        if (hdn.isDuyet() || hdn.isDaNhapSP()) {
+        if (hdn.isDuyet()) {
             System.out.println("Hoá đơn đã được duyệt nên không thể chỉnh sửa thuộc tính!");
             return false;
         }
@@ -442,7 +428,7 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
                 case 1:
                     hdn.setMaNhaCungCap(Validation.inputStringRegex(sc,
                             "Nhập mã nhà cung cấp mới: ", HoaDonNhapHang.MA_NCC_REGEX,
-                            "Mã nhà cung cấp không đúng định dạng (VD: NCC001)!", Nhacungcap.getSoThuTuNCC()));
+                            "Mã nhà cung cấp không đúng định dạng (VD: NCC001)!"));
                     System.out.println("Sửa mã nhà cung cấp thành công!");
                     break;
                 case 2:
@@ -558,7 +544,7 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
         {
             if (hdn == null) continue;
             LocalDate ngayLap = hdn.getNgayLap().toLocalDate() ;
-            if ( ngayLap != null && !ngayLap.isAfter(thoiGianKetThuc) && !ngayLap.isBefore(thoiGianBatDau))
+            if ( ngayLap != null && ngayLap.isAfter(thoiGianBatDau) && ngayLap.isBefore(thoiGianKetThuc))
             {
                 hdn.hienThiHoaDon();
             }
@@ -607,7 +593,7 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
             System.out.println("Kết quả tra cứu:");
             switch (luaChon) {
                 case 1: {
-                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã hóa đơn cần tìm: ", "(?i)" + HoaDonNhapHang.MA_HD_NHAP_REGEX, "Mã hóa đơn không đúng định dạng. Vui lòng nhập lại!", HoaDon.getSoThuTu());
+                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã hóa đơn cần tìm: ", "(?i)" + HoaDonNhapHang.MA_HD_NHAP_REGEX, "Mã hóa đơn không đúng định dạng. Vui lòng nhập lại!");
                     System.out.println("Đang tra cứu...");
                     Validation.danghoatdong(1);
                     for (HoaDonNhapHang hdn : dsHoaDonNhapHang) {
@@ -619,7 +605,7 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
                     break;
                 }
                 case 2: {
-                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã nhà cung cấp cần tìm: ", Validation.MaNCC_REGEX, "Mã nhà cung cấp không đúng định dạng. Vui lòng nhập lại!", Nhacungcap.getSoThuTuNCC());
+                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã nhà cung cấp cần tìm: ", Validation.MaNCC_REGEX, "Mã nhà cung cấp không đúng định dạng. Vui lòng nhập lại!");
                     System.out.println("Đang tra cứu...");
                     Validation.danghoatdong(1);
                     for (HoaDonNhapHang hdn : dsHoaDonNhapHang) {
@@ -680,7 +666,7 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
                     break;
                 }
                 case 4: {
-                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã nhân viên cần tìm: ", Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng. Vui lòng nhập lại!", person.NhanVien.getSoThuTu());
+                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã nhân viên cần tìm: ", Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng. Vui lòng nhập lại!");
                     System.out.println("Đang tra cứu...");
                     Validation.danghoatdong(1);
                     for (HoaDonNhapHang hdn : dsHoaDonNhapHang) {
@@ -702,16 +688,17 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
     public void ktraHoaDonDaDuyet()
     {
         System.out.println("Các hoá đơn nhập đã được quản lý duyệt!");
-        for ( HoaDonNhapHang hdn: dsHoaDonNhapHang ) {
-            if (hdn != null && hdn.isDuyet()) {
-                System.out.println(hdn);
-            }
-        }
+        System.out.println("Đang tải danh sách...");
+        Validation.danghoatdong(1);
+        for ( HoaDonNhapHang hdn: dsHoaDonNhapHang )
+            System.out.println(hdn);
     }
 
     public void kiemTraThongTinSanPham( String maSanPham)
     {
         System.out.println("===================THÔNG TIN NHẬP HÀNG CỦA SẢN PHẨM===================");
+        System.out.println("Đang tra cứu...");
+        Validation.danghoatdong(1);
         for ( HoaDonNhapHang hdn: dsHoaDonNhapHang)
         {
             if (hdn == null) continue;
@@ -720,10 +707,9 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
                 for ( CTHoaDonNhap ct: hdn.getCtHoaDonNhaps() )
                 {
                     if (ct == null) continue;
-                    if (ct.getMaSanpham() != null && ct.getMaSanpham().equalsIgnoreCase(maSanPham)) {
+                    if (ct.getMaSanpham() != null && ct.getMaSanpham().equalsIgnoreCase(maSanPham))
                         System.out.println(ct + " | Thời gian nhập: " + hdn.getNgayLap() + " | Nhân viên nhập: " + hdn.getMaNhanVien());
-                        break;
-                    }
+                    break;
                 }
             }
         }
@@ -831,12 +817,8 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
         for ( HoaDonNhapHang hdn: dsHoaDonNhapHang)
         {
             if (hdn == null) continue;
-            if ( hdn.getNgayLap() != null ) {
-                LocalDate ngayLap = hdn.getNgayLap().toLocalDate();
-                if (!ngayLap.isBefore(ngayBD) && !ngayLap.isAfter(ngayKT)) {
-                    tongTien += hdn.tinhTongTien() ;
-                }
-            }
+            if ( hdn.getNgayLap() != null && hdn.getNgayLap().isAfter(ngayBD.atStartOfDay()) && hdn.getNgayLap().isBefore(ngayKT.atStartOfDay()))
+                tongTien += hdn.tinhTongTien() ;
         }
         return tongTien ;
     }
@@ -909,7 +891,7 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
                     break;
                 }
                 case 4: {
-                    String ma = Validation.inputStringRegex(sc, "Nhập mã nhà cung cấp: ", Validation.MaNCC_REGEX, "Mã nhà cung cấp không đúng định dạng!", Nhacungcap.getSoThuTuNCC());
+                    String ma = Validation.inputStringRegex(sc, "Nhập mã nhà cung cấp: ", Validation.MaNCC_REGEX, "Mã nhà cung cấp không đúng định dạng!");
                     thongKeHoaDonTheoNhaCungCap(ma);
                     break;
                 }
@@ -939,7 +921,7 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
         ktraHoaDonDaDuyet();
         for ( HoaDonNhapHang hdn: dsHoaDonNhapHang)
         {
-            if (hdn == null || !hdn.isDuyet() || hdn.isDaNhapSP()) continue;
+            if (!hdn.isDuyet()) continue;
             int soSanPham = qlsp.getDanhSachSanPham().size();
             int[] tonDuKien = new int[soSanPham];
             for (int i = 0; i < soSanPham; i++) {
@@ -977,12 +959,6 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
                 for (int i = 0; i < soSanPham; i++) {
                     qlsp.getDanhSachSanPham().get(i)
                             .setSoLuongTonKho(tonDuKien[i]);
-                    if ( qlsp.getDanhSachSanPham().get(i) instanceof ThucPham)
-                    {
-                        long soNgaySuDung = ChronoUnit.DAYS.between(((ThucPham) qlsp.getDanhSachSanPham().get(i)).getNgaySanXuat() , ((ThucPham) qlsp.getDanhSachSanPham().get(i)).getHanSuDung());
-                        ((ThucPham) qlsp.getDanhSachSanPham().get(i)).setHanSuDung(hdn.getNgayLap().toLocalDate().plusDays(soNgaySuDung)) ;
-                        ((ThucPham) qlsp.getDanhSachSanPham().get(i)).setNgaySanXuat(hdn.getNgayLap().toLocalDate());
-                    }
                 }
 
                 hdn.setDaNhapSP(true);
@@ -991,6 +967,7 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
                 System.out.println("Hóa đơn chưa được nhập kho.");
             }
         }
+        System.out.println("Thêm hàng vào kho thành công!");
     }
 
     public void quanLyDanhSach(Scanner sc, String maNhanVien, QuanLySanPham qlsp, Danhsachdoitac dsDoiTac)
@@ -1003,10 +980,9 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
             System.out.println("2. Xuất danh sách hóa đơn nhập!");
             System.out.println("3. Thêm hóa đơn nhập!");
             System.out.println("4. Thêm k hóa đơn nhập!");
-            System.out.println("5. Xoá hoá đơn chưa được duyệt!");
-            System.out.println("6. Sửa hóa đơn nhập!");
-            System.out.println("7. Tìm kiếm hóa đơn nhập!");
-            System.out.println("8. Xem báo cáo nhập hàng!");
+            System.out.println("5. Sửa hóa đơn nhập!");
+            System.out.println("6. Tìm kiếm hóa đơn nhập!");
+            System.out.println("7. Xem báo cáo nhập hàng!");
             System.out.println("0. Trở về.");
             luaChon = Validation.luaChon(sc, "Nhập lựa chọn: ", 0, 7);
             switch (luaChon)
@@ -1029,21 +1005,15 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
                     break;
                 }
                 case 5: {
-                    String ma = Validation.inputStringRegex(sc, "Nhập mã hóa đơn: ", "(?i)" + HoaDonNhapHang.MA_HD_NHAP_REGEX, "Mã hóa đơn không đúng định dạng!", HoaDon.getSoThuTu());
-                    if (!xoa(ma))
-                        System.out.println("Hoá đơn đã được duyệt nên không thể xoá!");
-                    break;
-                }
-                case 6: {
-                    String ma = Validation.inputStringRegex(sc, "Nhập mã hóa đơn: ", "(?i)" + HoaDonNhapHang.MA_HD_NHAP_REGEX, "Mã hóa đơn không đúng định dạng!", HoaDon.getSoThuTu());
+                    String ma = Validation.inputStringRegex(sc, "Nhập mã hóa đơn: ", "(?i)" + HoaDonNhapHang.MA_HD_NHAP_REGEX, "Mã hóa đơn không đúng định dạng!");
                     sua(sc, ma, qlsp);
                     break;
                 }
-                case 7: {
+                case 6: {
                     timKhoa(sc);
                     break;
                 }
-                case 8: {
+                case 7: {
                     xemBaoCao(sc);
                     break;
                 }
@@ -1060,7 +1030,7 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
     {
         thongKeCacDonChuaDuyet();
         String maHoaDon = Validation.inputStringRegex(sc, "Nhập mã hóa đơn cần duyệt: ",
-                "(?i)" + HoaDonNhapHang.MA_HD_NHAP_REGEX, "Mã hóa đơn không đúng định dạng!", HoaDon.getSoThuTu());
+                "(?i)" + HoaDonNhapHang.MA_HD_NHAP_REGEX, "Mã hóa đơn không đúng định dạng!");
         HoaDonNhapHang hdn = timMa(maHoaDon);
         if (hdn == null) return;
         if (hdn.isDuyet()) {
@@ -1071,58 +1041,5 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
             hdn.setDuyet(true);
             System.out.println("Duyệt hóa đơn nhập thành công!");
         }
-    }
-
-    /** Mỗi đối tượng tạo một dòng; thông tin con được ghi thành dòng riêng. */
-
-
-    /** Có lỗi thì giữ danh sách đang dùng, không bỏ dòng lỗi. */
-
-    // ================= ĐỌC / GHI FILE TXT =================
-
-    public void ghiFile(String tenFile) throws IOException {
-        ArrayList<String> cacDong = new ArrayList<>();
-        Set<String> maDaGhi = new HashSet<>();
-        for (HoaDonNhapHang obj : dsHoaDonNhapHang) {
-            if (obj == null) throw new IOException("Danh sách chứa null.");
-            TepVanBan.khongTrung(maDaGhi, obj.getMaHoaDon());
-            cacDong.add(obj.toDongFile());
-            Set<String> maChiTiet = new HashSet<>();
-            for (CTHoaDonNhap ct : obj.getCtHoaDonNhaps()) {
-                TepVanBan.khongTrung(maChiTiet, ct.getMaSanpham());
-                String[] p = ct.toDongFile().split(";", 2);
-                cacDong.add(p[0] + ";" + obj.getMaHoaDon() + ";" + p[1]);
-            }
-        }
-        TepVanBan.ghi(tenFile, "DanhSachHoaDonNhap", cacDong);
-    }
-
-    public void docFile(String tenFile) throws IOException {
-        int[] demTruoc = BoDemMa.chup();
-        ArrayList<HoaDonNhapHang> moi = new ArrayList<>();
-        Set<String> maDaDoc = new HashSet<>();
-        Map<String, HoaDonNhapHang> theoMa = new LinkedHashMap<>();
-        Set<String> maChiTiet = new HashSet<>();
-        try {
-            for (String dong : TepVanBan.doc(tenFile)) {
-                if (dong.startsWith("CTNHAP;")) {
-                    String[] p = dong.split(";", 3);
-                    HoaDonNhapHang chu = p.length == 3 ? theoMa.get(p[1].toUpperCase(Locale.ROOT)) : null;
-                    DongDuLieu.yeuCau(chu != null, "Chi tiết phải đứng sau hóa đơn tương ứng.");
-                    CTHoaDonNhap ct = CTHoaDonNhap.tuDongFile(p[0] + ";" + p[2]);
-                    TepVanBan.khongTrung(maChiTiet, p[1] + ":" + ct.getMaSanpham());
-                    chu.getCtHoaDonNhaps().add(ct);
-                    continue;
-                }
-                HoaDonNhapHang obj = HoaDonNhapHang.tuDongFile(dong);
-                TepVanBan.khongTrung(maDaDoc, obj.getMaHoaDon());
-                moi.add(obj);
-                theoMa.put(obj.getMaHoaDon().toUpperCase(Locale.ROOT), obj);
-            }
-        } catch (RuntimeException | IOException e) {
-            BoDemMa.khoiPhuc(demTruoc);
-            throw new IOException("Không đọc được " + tenFile + ": " + e.getMessage(), e);
-        }
-        this.dsHoaDonNhapHang = moi;
     }
 }
