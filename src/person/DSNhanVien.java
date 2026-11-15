@@ -126,7 +126,7 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
                 System.out.println("8. Phụ cấp trách nhiệm");
                 System.out.println("9. Trạng thái làm việc");
                 System.out.println("0. Hoàn tất");
-                choice = Validation.luaChon(sc, "Chọn thông tin cần sửa (0-10): ", 0, 10);
+                choice = Validation.luaChon(sc, "Chọn thông tin cần sửa (0-9): ", 0, 9);
 
                 switch (choice) {
                     case 1:

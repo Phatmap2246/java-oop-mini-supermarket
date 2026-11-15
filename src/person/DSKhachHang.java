@@ -584,10 +584,6 @@ public class DSKhachHang implements interfaces.IQuanLy<KhachHang> {
         if (!flag) System.out.println("Không có khách hàng nào có mức điểm tích luỹ từ " + nguongDuoi + " đến " + nguongTren + " điểm");
         System.out.println("Tổng khách hàng có điểm tích luỹ từ " + nguongDuoi + " đến " + nguongTren + " là: " + tongKhachHang);
     }
-    public void thongKeKhachHang()
-    {
-        thongKeKhachHang(new Scanner(System.in));
-    }
     public void thongKeKhachHang(Scanner sc)
     {
         int luaChon;

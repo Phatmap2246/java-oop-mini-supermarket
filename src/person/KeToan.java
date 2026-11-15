@@ -216,8 +216,9 @@ public class KeToan extends NhanVien {
 
             System.out.printf("%d. HĐ: %s | Đối tác: %s | Tiền: %,d VND | Hạn: %s | [%s]%n",
                     i + 1,
-                    hd.getMaHoaDon(),
-                    hd.tinhTongTien(),
+                    hdn.getMaHoaDon(),
+                    hdn.getMaNhaCungCap(),
+                    hdn.tinhTongTien(),
                     DateUtil.formatDate(han),
                     trangThai);
         }
@@ -229,9 +230,10 @@ public class KeToan extends NhanVien {
             HoaDon hd = dsChuaTra.get(i);
             System.out.printf("%d. HĐ: %s - %s (%,d VND - Hạn: %s)%n",
                     i + 1,
-                    hd.getMaHoaDon(),
-                    hd.tinhTongTien(),
-                    DateUtil.formatDate(tinhNgayDenHan(hd)));
+                    hdn.getMaHoaDon(),
+                    hdn.getMaNhaCungCap(),
+                    hdn.tinhTongTien(),
+                    DateUtil.formatDate(tinhNgayDenHan(hdn)));
         }
         System.out.println("0. Quay lại");
     }
