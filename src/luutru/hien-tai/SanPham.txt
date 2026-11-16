@@ -1,398 +1,103 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<du-lieu phien-ban="1">
-  <doi-tuong lop="utils.DataBase$BanLuu" ma="1">
-    <thuoc-tinh khai-bao="utils.DataBase$BanLuu" ten="duLieu">
-      <doi-tuong lop="sanpham.QuanLySanPham" ma="2">
-        <thuoc-tinh khai-bao="sanpham.QuanLySanPham" ten="danhSachSanPham">
-          <danh-sach lop="java.util.ArrayList" ma="3">
-            <doi-tuong lop="sanpham.ThucPham" ma="4">
-              <thuoc-tinh khai-bao="sanpham.ThucPham" ten="ngaySanXuat">
-                <gia-tri kieu="java.time.LocalDate">2026-10-25</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.ThucPham" ten="hanSuDung">
-                <gia-tri kieu="java.time.LocalDate">2027-02-12</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.ThucPham" ten="nhietDoBaoQuan">
-                <gia-tri kieu="java.lang.Double">5.0</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.ThucPham" ten="baoQuan">
-                <gia-tri kieu="java.lang.String">Bảo quản mát, tránh ánh nắng</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="tonTai">
-                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="maSanPham">
-                <gia-tri kieu="java.lang.String">SP001</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="tenSanPham">
-                <gia-tri kieu="java.lang.String">Sữa tươi hộp 1 lít</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="loaiSanPham">
-                <gia-tri kieu="java.lang.String">Thực phẩm</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="maNhaCungCap">
-                <gia-tri kieu="java.lang.String">NCC001</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaNhap">
-                <gia-tri kieu="java.lang.Long">25000</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaBan">
-                <gia-tri kieu="java.lang.Long">1000</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="soLuongTonKho">
-                <gia-tri kieu="java.lang.Integer">40</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="thue">
-                <gia-tri kieu="java.lang.Double">0.08</gia-tri>
-              </thuoc-tinh>
-            </doi-tuong>
-            <doi-tuong lop="sanpham.ThucPham" ma="5">
-              <thuoc-tinh khai-bao="sanpham.ThucPham" ten="ngaySanXuat">
-                <gia-tri kieu="java.time.LocalDate">2026-10-25</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.ThucPham" ten="hanSuDung">
-                <gia-tri kieu="java.time.LocalDate">2026-11-19</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.ThucPham" ten="nhietDoBaoQuan">
-                <gia-tri kieu="java.lang.Double">5.0</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.ThucPham" ten="baoQuan">
-                <gia-tri kieu="java.lang.String">Bảo quản mát, tránh ánh nắng</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="tonTai">
-                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="maSanPham">
-                <gia-tri kieu="java.lang.String">SP002</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="tenSanPham">
-                <gia-tri kieu="java.lang.String">Sữa chua dâu</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="loaiSanPham">
-                <gia-tri kieu="java.lang.String">Thực phẩm</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="maNhaCungCap">
-                <gia-tri kieu="java.lang.String">NCC001</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaNhap">
-                <gia-tri kieu="java.lang.Long">6000</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaBan">
-                <gia-tri kieu="java.lang.Long">8000</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="soLuongTonKho">
-                <gia-tri kieu="java.lang.Integer">15</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="thue">
-                <gia-tri kieu="java.lang.Double">0.08</gia-tri>
-              </thuoc-tinh>
-            </doi-tuong>
-            <doi-tuong lop="sanpham.ThucPham" ma="6">
-              <thuoc-tinh khai-bao="sanpham.ThucPham" ten="ngaySanXuat">
-                <gia-tri kieu="java.time.LocalDate">2026-10-25</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.ThucPham" ten="hanSuDung">
-                <gia-tri kieu="java.time.LocalDate">2026-11-12</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.ThucPham" ten="nhietDoBaoQuan">
-                <gia-tri kieu="java.lang.Double">5.0</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.ThucPham" ten="baoQuan">
-                <gia-tri kieu="java.lang.String">Bảo quản mát, tránh ánh nắng</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="tonTai">
-                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="maSanPham">
-                <gia-tri kieu="java.lang.String">SP003</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="tenSanPham">
-                <gia-tri kieu="java.lang.String">Bánh mì sandwich</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="loaiSanPham">
-                <gia-tri kieu="java.lang.String">Thực phẩm</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="maNhaCungCap">
-                <gia-tri kieu="java.lang.String">NCC001</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaNhap">
-                <gia-tri kieu="java.lang.Long">12000</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaBan">
-                <gia-tri kieu="java.lang.Long">18000</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="soLuongTonKho">
-                <gia-tri kieu="java.lang.Integer">6</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="thue">
-                <gia-tri kieu="java.lang.Double">0.08</gia-tri>
-              </thuoc-tinh>
-            </doi-tuong>
-            <doi-tuong lop="sanpham.TieuDung" ma="7">
-              <thuoc-tinh khai-bao="sanpham.TieuDung" ten="thuongHieu">
-                <gia-tri kieu="java.lang.String">Bình Minh</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.TieuDung" ten="noiSanXuat">
-                <gia-tri kieu="java.lang.String">Việt Nam</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.TieuDung" ten="phanLoai">
-                <gia-tri kieu="java.lang.String">Chăm sóc gia đình</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.TieuDung" ten="luuYAnToan">
-                <gia-tri kieu="java.lang.String">Để xa tầm tay trẻ em</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="tonTai">
-                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="maSanPham">
-                <gia-tri kieu="java.lang.String">SP004</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="tenSanPham">
-                <gia-tri kieu="java.lang.String">Nước giặt 3 lít</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="loaiSanPham">
-                <gia-tri kieu="java.lang.String">Tiêu dùng</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="maNhaCungCap">
-                <gia-tri kieu="java.lang.String">NCC002</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaNhap">
-                <gia-tri kieu="java.lang.Long">110000</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaBan">
-                <gia-tri kieu="java.lang.Long">150000</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="soLuongTonKho">
-                <gia-tri kieu="java.lang.Integer">25</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="thue">
-                <gia-tri kieu="java.lang.Double">0.05</gia-tri>
-              </thuoc-tinh>
-            </doi-tuong>
-            <doi-tuong lop="sanpham.TieuDung" ma="8">
-              <thuoc-tinh khai-bao="sanpham.TieuDung" ten="thuongHieu">
-                <gia-tri kieu="java.lang.String">Bình Minh</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.TieuDung" ten="noiSanXuat">
-                <gia-tri kieu="java.lang.String">Việt Nam</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.TieuDung" ten="phanLoai">
-                <gia-tri kieu="java.lang.String">Chăm sóc gia đình</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.TieuDung" ten="luuYAnToan">
-                <gia-tri kieu="java.lang.String">Để xa tầm tay trẻ em</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="tonTai">
-                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="maSanPham">
-                <gia-tri kieu="java.lang.String">SP005</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="tenSanPham">
-                <gia-tri kieu="java.lang.String">Dầu gội 650 ml</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="loaiSanPham">
-                <gia-tri kieu="java.lang.String">Tiêu dùng</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="maNhaCungCap">
-                <gia-tri kieu="java.lang.String">NCC002</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaNhap">
-                <gia-tri kieu="java.lang.Long">70000</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaBan">
-                <gia-tri kieu="java.lang.Long">95000</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="soLuongTonKho">
-                <gia-tri kieu="java.lang.Integer">12</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="thue">
-                <gia-tri kieu="java.lang.Double">0.05</gia-tri>
-              </thuoc-tinh>
-            </doi-tuong>
-            <doi-tuong lop="sanpham.TieuDung" ma="9">
-              <thuoc-tinh khai-bao="sanpham.TieuDung" ten="thuongHieu">
-                <gia-tri kieu="java.lang.String">Bình Minh</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.TieuDung" ten="noiSanXuat">
-                <gia-tri kieu="java.lang.String">Việt Nam</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.TieuDung" ten="phanLoai">
-                <gia-tri kieu="java.lang.String">Chăm sóc gia đình</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.TieuDung" ten="luuYAnToan">
-                <gia-tri kieu="java.lang.String">Để xa tầm tay trẻ em</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="tonTai">
-                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="maSanPham">
-                <gia-tri kieu="java.lang.String">SP006</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="tenSanPham">
-                <gia-tri kieu="java.lang.String">Bàn chải đánh răng</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="loaiSanPham">
-                <gia-tri kieu="java.lang.String">Tiêu dùng</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="maNhaCungCap">
-                <gia-tri kieu="java.lang.String">NCC002</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaNhap">
-                <gia-tri kieu="java.lang.Long">10000</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaBan">
-                <gia-tri kieu="java.lang.Long">18000</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="soLuongTonKho">
-                <gia-tri kieu="java.lang.Integer">0</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="thue">
-                <gia-tri kieu="java.lang.Double">0.05</gia-tri>
-              </thuoc-tinh>
-            </doi-tuong>
-            <doi-tuong lop="sanpham.DienTu" ma="10">
-              <thuoc-tinh khai-bao="sanpham.DienTu" ten="thoiGianBaoHanh">
-                <gia-tri kieu="java.lang.Integer">12</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.DienTu" ten="chatLieu">
-                <gia-tri kieu="java.lang.String">Nhựa và inox</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="tonTai">
-                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="maSanPham">
-                <gia-tri kieu="java.lang.String">SP007</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="tenSanPham">
-                <gia-tri kieu="java.lang.String">Nồi cơm điện 1.8 lít</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="loaiSanPham">
-                <gia-tri kieu="java.lang.String">Điện tử</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="maNhaCungCap">
-                <gia-tri kieu="java.lang.String">NCC003</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaNhap">
-                <gia-tri kieu="java.lang.Long">450000</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaBan">
-                <gia-tri kieu="java.lang.Long">650000</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="soLuongTonKho">
-                <gia-tri kieu="java.lang.Integer">5</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="thue">
-                <gia-tri kieu="java.lang.Double">0.05</gia-tri>
-              </thuoc-tinh>
-            </doi-tuong>
-            <doi-tuong lop="sanpham.DienTu" ma="11">
-              <thuoc-tinh khai-bao="sanpham.DienTu" ten="thoiGianBaoHanh">
-                <gia-tri kieu="java.lang.Integer">12</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.DienTu" ten="chatLieu">
-                <gia-tri kieu="java.lang.String">Nhựa và inox</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="tonTai">
-                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="maSanPham">
-                <gia-tri kieu="java.lang.String">SP008</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="tenSanPham">
-                <gia-tri kieu="java.lang.String">Ấm đun siêu tốc</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="loaiSanPham">
-                <gia-tri kieu="java.lang.String">Điện tử</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="maNhaCungCap">
-                <gia-tri kieu="java.lang.String">NCC003</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaNhap">
-                <gia-tri kieu="java.lang.Long">220000</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaBan">
-                <gia-tri kieu="java.lang.Long">350000</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="soLuongTonKho">
-                <gia-tri kieu="java.lang.Integer">3</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="thue">
-                <gia-tri kieu="java.lang.Double">0.05</gia-tri>
-              </thuoc-tinh>
-            </doi-tuong>
-            <doi-tuong lop="sanpham.ThucPham" ma="12">
-              <thuoc-tinh khai-bao="sanpham.ThucPham" ten="ngaySanXuat">
-                <gia-tri kieu="java.time.LocalDate">1999-11-12</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.ThucPham" ten="hanSuDung">
-                <gia-tri kieu="java.time.LocalDate">3000-01-12</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.ThucPham" ten="nhietDoBaoQuan">
-                <gia-tri kieu="java.lang.Double">12.0</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.ThucPham" ten="baoQuan">
-                <gia-tri kieu="java.lang.String">Khô</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="tonTai">
-                <gia-tri kieu="java.lang.Boolean">true</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="maSanPham">
-                <gia-tri kieu="java.lang.String">SP009</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="tenSanPham">
-                <gia-tri kieu="java.lang.String">Soytex</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="loaiSanPham">
-                <gia-tri kieu="java.lang.String">Thực phẩm</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="maNhaCungCap">
-                <gia-tri kieu="java.lang.String">NCC001</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaNhap">
-                <gia-tri kieu="java.lang.Long">1</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="giaBan">
-                <gia-tri kieu="java.lang.Long">100000000</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="soLuongTonKho">
-                <gia-tri kieu="java.lang.Integer">10</gia-tri>
-              </thuoc-tinh>
-              <thuoc-tinh khai-bao="sanpham.SanPham" ten="thue">
-                <gia-tri kieu="java.lang.Double">0.08</gia-tri>
-              </thuoc-tinh>
-            </doi-tuong>
-          </danh-sach>
-        </thuoc-tinh>
-      </doi-tuong>
-    </thuoc-tinh>
-    <thuoc-tinh khai-bao="utils.DataBase$BanLuu" ten="boDem">
-      <anh-xa lop="java.util.LinkedHashMap" ma="13">
-        <cap>
-          <gia-tri kieu="java.lang.String">sanpham.SanPham</gia-tri>
-          <gia-tri kieu="java.lang.Integer">10</gia-tri>
-        </cap>
-        <cap>
-          <gia-tri kieu="java.lang.String">person.NhanVien</gia-tri>
-          <gia-tri kieu="java.lang.Integer">6</gia-tri>
-        </cap>
-        <cap>
-          <gia-tri kieu="java.lang.String">person.KhachHang</gia-tri>
-          <gia-tri kieu="java.lang.Integer">4</gia-tri>
-        </cap>
-        <cap>
-          <gia-tri kieu="java.lang.String">hoadon.HoaDon</gia-tri>
-          <gia-tri kieu="java.lang.Integer">7</gia-tri>
-        </cap>
-        <cap>
-          <gia-tri kieu="java.lang.String">dichvu.Khuyenmai</gia-tri>
-          <gia-tri kieu="java.lang.Integer">6</gia-tri>
-        </cap>
-        <cap>
-          <gia-tri kieu="java.lang.String">dichvu.Nhacungcap</gia-tri>
-          <gia-tri kieu="java.lang.Integer">4</gia-tri>
-        </cap>
-      </anh-xa>
-    </thuoc-tinh>
-  </doi-tuong>
-</du-lieu>
+#SIEUTHI_TXT_3
+#NHOM;QuanLySanPham
+#BODEM;101;13;41;122;17;11
+THUCPHAM;SP001;Sữa tươi không đường 1 lít;Thực phẩm;NCC001;15000;25000;2;0.08;true;16/10/2026;15/11/2026;5.0;Giữ lạnh
+THUCPHAM;SP002;Sữa chua có đường lốc 4 hộp;Thực phẩm;NCC002;20000;30000;5;0.08;true;16/10/2026;18/11/2026;5.0;Giữ lạnh
+THUCPHAM;SP003;Cá basa phi lê đông lạnh 500 g;Thực phẩm;NCC003;25000;35000;53;0.08;true;16/10/2026;13/02/2027;-18.0;Giữ lạnh
+THUCPHAM;SP004;Phô mai lát 200 g;Thực phẩm;NCC004;30000;40000;54;0.08;true;16/10/2026;13/02/2027;5.0;Giữ lạnh
+THUCPHAM;SP005;Xúc xích heo 500 g;Thực phẩm;NCC005;35000;45000;55;0.08;true;16/10/2026;13/02/2027;5.0;Giữ lạnh
+THUCPHAM;SP006;Tôm sú đông lạnh 500 g;Thực phẩm;NCC006;40000;50000;56;0.08;true;16/10/2026;13/02/2027;-18.0;Giữ lạnh
+THUCPHAM;SP007;Đậu hũ non 300 g;Thực phẩm;NCC007;45000;55000;57;0.08;true;16/10/2026;13/02/2027;5.0;Giữ lạnh
+THUCPHAM;SP008;Bánh flan caramel hộp 4 cái;Thực phẩm;NCC008;50000;60000;58;0.08;true;16/10/2026;13/11/2026;5.0;Giữ lạnh
+THUCPHAM;SP009;Bò viên đông lạnh 500 g;Thực phẩm;NCC009;55000;65000;59;0.08;true;16/10/2026;15/11/2026;-18.0;Giữ lạnh
+THUCPHAM;SP010;Nước cam ép 1 lít;Thực phẩm;NCC010;60000;70000;0;0.08;true;16/10/2026;18/11/2026;5.0;Giữ lạnh
+THUCPHAM;SP011;Kim chi cải thảo 500 g;Thực phẩm;NCC001;65000;75000;2;0.08;true;16/10/2026;13/02/2027;5.0;Giữ lạnh
+THUCPHAM;SP012;Mực ống đông lạnh 500 g;Thực phẩm;NCC002;70000;80000;5;0.08;true;16/10/2026;13/02/2027;-18.0;Giữ lạnh
+THUCPHAM;SP013;Bơ lạt 200 g;Thực phẩm;NCC003;75000;85000;63;0.08;true;16/10/2026;13/02/2027;5.0;Giữ lạnh
+THUCPHAM;SP014;Sữa tươi có đường 1 lít;Thực phẩm;NCC004;80000;90000;64;0.08;true;16/10/2026;13/02/2027;5.0;Giữ lạnh
+THUCPHAM;SP015;Há cảo tôm đông lạnh 500 g;Thực phẩm;NCC005;85000;95000;65;0.08;true;16/10/2026;13/02/2027;-18.0;Giữ lạnh
+THUCPHAM;SP016;Chả lụa heo 500 g;Thực phẩm;NCC006;90000;100000;66;0.08;true;16/10/2026;13/11/2026;5.0;Giữ lạnh
+THUCPHAM;SP017;Sữa chua uống dâu 700 ml;Thực phẩm;NCC007;95000;105000;67;0.08;true;16/10/2026;15/11/2026;5.0;Giữ lạnh
+THUCPHAM;SP018;Đùi gà đông lạnh 1 kg;Thực phẩm;NCC008;100000;110000;68;0.08;true;16/10/2026;18/11/2026;-18.0;Giữ lạnh
+THUCPHAM;SP019;Nấm kim châm 150 g;Thực phẩm;NCC009;105000;115000;69;0.08;true;16/10/2026;13/02/2027;5.0;Giữ lạnh
+THUCPHAM;SP020;Rau xà lách túi 300 g;Thực phẩm;NCC010;10000;20000;0;0.08;true;16/10/2026;13/02/2027;5.0;Giữ lạnh
+THUCPHAM;SP021;Thịt heo xay đông lạnh 500 g;Thực phẩm;NCC001;15000;25000;2;0.08;true;16/10/2026;13/02/2027;-18.0;Giữ lạnh
+THUCPHAM;SP022;Nước táo ép 1 lít;Thực phẩm;NCC002;20000;30000;5;0.08;true;16/10/2026;13/02/2027;5.0;Giữ lạnh
+THUCPHAM;SP023;Đậu hũ trứng 200 g;Thực phẩm;NCC003;25000;35000;73;0.08;true;16/10/2026;13/02/2027;5.0;Giữ lạnh
+THUCPHAM;SP024;Cá hồi đông lạnh 300 g;Thực phẩm;NCC004;30000;40000;74;0.08;true;16/10/2026;13/11/2026;-18.0;Giữ lạnh
+THUCPHAM;SP025;Mì tươi trứng 500 g;Thực phẩm;NCC005;35000;45000;75;0.08;true;16/10/2026;15/11/2026;5.0;Giữ lạnh
+THUCPHAM;SP026;Bánh bao nhân thịt 400 g;Thực phẩm;NCC006;40000;50000;76;0.08;true;16/10/2026;18/11/2026;5.0;Giữ lạnh
+THUCPHAM;SP027;Chả giò đông lạnh 500 g;Thực phẩm;NCC007;45000;55000;77;0.08;true;16/10/2026;13/02/2027;-18.0;Giữ lạnh
+THUCPHAM;SP028;Sữa đậu nành 1 lít;Thực phẩm;NCC008;50000;60000;76;0.08;true;16/10/2026;13/02/2027;5.0;Giữ lạnh
+THUCPHAM;SP029;Salad rau trộn hộp 250 g;Thực phẩm;NCC009;55000;65000;79;0.08;true;16/10/2026;13/02/2027;5.0;Giữ lạnh
+THUCPHAM;SP030;Bắp ngọt đông lạnh 500 g;Thực phẩm;NCC010;60000;70000;0;0.08;true;16/10/2026;13/02/2027;-18.0;Giữ lạnh
+THUCPHAM;SP031;Bánh pudding sữa 200 g;Thực phẩm;NCC001;65000;75000;2;0.08;true;16/10/2026;13/02/2027;5.0;Giữ lạnh
+THUCPHAM;SP032;Nước dừa tươi 500 ml;Thực phẩm;NCC002;70000;80000;5;0.08;true;16/10/2026;13/11/2026;5.0;Giữ lạnh
+THUCPHAM;SP033;Khoai tây chiên đông lạnh 1 kg;Thực phẩm;NCC003;75000;85000;83;0.08;true;16/10/2026;15/11/2026;-18.0;Giữ lạnh
+THUCPHAM;SP034;Phô mai mozzarella 200 g;Thực phẩm;NCC004;80000;90000;84;0.08;true;16/10/2026;18/11/2026;5.0;Giữ lạnh
+THUCPHAM;SP035;Sữa chua nha đam lốc 4 hộp;Thực phẩm;NCC005;85000;95000;85;0.08;true;16/10/2026;13/02/2027;5.0;Giữ lạnh
+THUCPHAM;SP036;Cá viên đông lạnh 500 g;Thực phẩm;NCC006;90000;100000;86;0.08;true;16/10/2026;13/02/2027;-18.0;Giữ lạnh
+THUCPHAM;SP037;Bánh su kem hộp 200 g;Thực phẩm;NCC007;95000;105000;87;0.08;true;16/10/2026;13/02/2027;5.0;Giữ lạnh
+THUCPHAM;SP038;Nấm đùi gà 200 g;Thực phẩm;NCC008;100000;110000;88;0.08;true;16/10/2026;13/02/2027;5.0;Giữ lạnh
+THUCPHAM;SP039;Ức gà đông lạnh 500 g;Thực phẩm;NCC009;105000;115000;89;0.08;true;16/10/2026;13/02/2027;-18.0;Giữ lạnh
+THUCPHAM;SP040;Nước ép ổi 1 lít;Thực phẩm;NCC010;10000;20000;0;0.08;true;16/10/2026;13/11/2026;5.0;Giữ lạnh
+TIEUDUNG;SP041;Nước rửa chén chanh 750 ml;Tiêu dùng;NCC001;15000;25000;2;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP042;Bột giặt hương hoa 3 kg;Tiêu dùng;NCC002;20000;30000;5;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP043;Nước lau sàn sả 1 lít;Tiêu dùng;NCC003;25000;35000;93;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP044;Khăn giấy hộp 180 tờ;Tiêu dùng;NCC004;30000;40000;94;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP045;Giấy vệ sinh lốc 10 cuộn;Tiêu dùng;NCC005;35000;45000;95;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP046;Bàn chải đánh răng mềm;Tiêu dùng;NCC006;40000;50000;96;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP047;Kem đánh răng bạc hà 180 g;Tiêu dùng;NCC007;45000;55000;97;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP048;Dầu gội bưởi 650 ml;Tiêu dùng;NCC008;50000;60000;98;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP049;Sữa tắm hoa hồng 650 ml;Tiêu dùng;NCC009;55000;65000;99;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP050;Nước rửa tay 500 ml;Tiêu dùng;NCC010;60000;70000;0;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP051;Túi rác cuộn cỡ trung;Tiêu dùng;NCC001;65000;75000;2;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP052;Màng bọc thực phẩm 30 m;Tiêu dùng;NCC002;70000;80000;5;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP053;Giấy bạc nướng thực phẩm 5 m;Tiêu dùng;NCC003;75000;85000;103;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP054;Miếng rửa chén bộ 5 cái;Tiêu dùng;NCC004;80000;90000;104;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP055;Găng tay cao su cỡ M;Tiêu dùng;NCC005;85000;95000;105;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP056;Chổi quét nhà cán dài;Tiêu dùng;NCC006;90000;100000;106;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP057;Cây lau nhà xoay 360 độ;Tiêu dùng;NCC007;95000;105000;107;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP058;Thau nhựa tròn 10 lít;Tiêu dùng;NCC008;100000;110000;108;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP059;Rổ nhựa đựng rau 25 cm;Tiêu dùng;NCC009;105000;115000;109;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP060;Hộp đựng thực phẩm 1 lít;Tiêu dùng;NCC010;10000;20000;0;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP061;Bình nước nhựa 700 ml;Tiêu dùng;NCC001;15000;25000;2;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP062;Ly thủy tinh bộ 6 cái;Tiêu dùng;NCC002;20000;30000;5;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP063;Chén sứ trắng bộ 6 cái;Tiêu dùng;NCC003;25000;35000;113;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP064;Đĩa sứ tròn 20 cm;Tiêu dùng;NCC004;30000;40000;114;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP065;Đũa tre bộ 10 đôi;Tiêu dùng;NCC005;35000;45000;115;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP066;Muỗng inox bộ 6 cái;Tiêu dùng;NCC006;40000;50000;116;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP067;Dao gọt trái cây;Tiêu dùng;NCC007;45000;55000;117;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP068;Thớt nhựa kháng khuẩn;Tiêu dùng;NCC008;50000;60000;118;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP069;Khăn lau bếp bộ 3 cái;Tiêu dùng;NCC009;55000;65000;119;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP070;Móc áo nhựa bộ 10 cái;Tiêu dùng;NCC010;60000;70000;0;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP071;Kẹp phơi quần áo bộ 20 cái;Tiêu dùng;NCC001;65000;75000;2;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP072;Nước xả vải 1,8 lít;Tiêu dùng;NCC002;70000;80000;5;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP073;Xà phòng giặt 200 g;Tiêu dùng;NCC003;75000;85000;123;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP074;Bông tẩy trang 100 miếng;Tiêu dùng;NCC004;80000;90000;124;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+TIEUDUNG;SP075;Khẩu trang y tế hộp 50 cái;Tiêu dùng;NCC005;85000;95000;125;0.05;true;Nhãn Việt;Việt Nam;Gia dụng;Để xa trẻ em
+DIENTU;SP076;Ấm đun nước siêu tốc 1,8 lít;Điện tử;NCC006;90000;100000;126;0.05;true;24;Nhựa và inox
+DIENTU;SP077;Nồi cơm điện 1,8 lít;Điện tử;NCC007;95000;105000;127;0.05;true;12;Nhựa và inox
+DIENTU;SP078;Máy xay sinh tố 1,5 lít;Điện tử;NCC008;100000;110000;128;0.05;true;24;Nhựa và inox
+DIENTU;SP079;Quạt bàn 30 cm;Điện tử;NCC009;105000;115000;126;0.05;true;12;Nhựa và inox
+DIENTU;SP080;Máy sấy tóc 1200 W;Điện tử;NCC010;10000;20000;0;0.05;true;24;Nhựa và inox
+DIENTU;SP081;Bàn ủi khô 1000 W;Điện tử;NCC001;15000;25000;2;0.05;true;12;Nhựa và inox
+DIENTU;SP082;Bếp điện từ đơn 2000 W;Điện tử;NCC002;20000;30000;5;0.05;true;24;Nhựa và inox
+DIENTU;SP083;Nồi chiên không dầu 4 lít;Điện tử;NCC003;25000;35000;133;0.05;true;12;Nhựa và inox
+DIENTU;SP084;Máy đánh trứng cầm tay;Điện tử;NCC004;30000;40000;134;0.05;true;24;Nhựa và inox
+DIENTU;SP085;Máy ép cam 40 W;Điện tử;NCC005;35000;45000;135;0.05;true;12;Nhựa và inox
+DIENTU;SP086;Đèn bàn học LED 8 W;Điện tử;NCC006;40000;50000;136;0.05;true;24;Nhựa và inox
+DIENTU;SP087;Bóng đèn LED 9 W;Điện tử;NCC007;45000;55000;137;0.05;true;12;Nhựa và inox
+DIENTU;SP088;Ổ cắm điện 3 chấu dây 3 m;Điện tử;NCC008;50000;60000;138;0.05;true;24;Nhựa và inox
+DIENTU;SP089;Dây nối điện 5 m;Điện tử;NCC009;55000;65000;139;0.05;true;12;Nhựa và inox
+DIENTU;SP090;Sạc điện thoại USB-C 20 W;Điện tử;NCC010;60000;70000;0;0.05;true;24;Nhựa và inox
+DIENTU;SP091;Cáp sạc USB-C 1 m;Điện tử;NCC001;65000;75000;2;0.05;true;12;Nhựa và inox
+DIENTU;SP092;Pin sạc dự phòng 10000 mAh;Điện tử;NCC002;70000;80000;5;0.05;true;24;Nhựa và inox
+DIENTU;SP093;Tai nghe có dây 3,5 mm;Điện tử;NCC003;75000;85000;143;0.05;true;12;Nhựa và inox
+DIENTU;SP094;Loa Bluetooth mini;Điện tử;NCC004;80000;90000;144;0.05;true;24;Nhựa và inox
+DIENTU;SP095;Chuột máy tính không dây;Điện tử;NCC005;85000;95000;145;0.05;true;12;Nhựa và inox
+DIENTU;SP096;Bàn phím USB;Điện tử;NCC006;90000;100000;146;0.05;true;24;Nhựa và inox
+DIENTU;SP097;Đồng hồ báo thức điện tử;Điện tử;NCC007;95000;105000;147;0.05;false;12;Nhựa và inox
+DIENTU;SP098;Cân nhà bếp điện tử 5 kg;Điện tử;NCC008;100000;110000;148;0.05;false;24;Nhựa và inox
+DIENTU;SP099;Đèn pin sạc LED;Điện tử;NCC009;105000;115000;149;0.05;false;12;Nhựa và inox
+DIENTU;SP100;Quạt tích điện mini;Điện tử;NCC010;10000;20000;0;0.05;true;24;Nhựa và inox

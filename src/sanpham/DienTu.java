@@ -1,5 +1,7 @@
 package sanpham;
 
+import utils.DongDuLieu;
+
 import utils.Validation;
 
 import java.time.LocalDate;
@@ -10,15 +12,15 @@ public class DienTu extends SanPham
     private String chatLieu ;
     public DienTu()
     {
-        super();
+        super(0.05, "Điện tử");
         thoiGianBaoHanh = 0 ;
         chatLieu = "" ;
-        super.setThue(0.05) ;
     }
     public DienTu( String maSanPham , String tenSanPham , String loaiSanPham , long giaNhap , long giaBan , int soLuongTonKho , String maNhaCungCap , double thue ,
                    int thoiGianBaoHanh , long tienBaoHanh , String chatLieu , LocalDate ngayMua)
     {
         super( maSanPham, tenSanPham, loaiSanPham, giaNhap, giaBan, soLuongTonKho, maNhaCungCap , thue );
+        if (thoiGianBaoHanh < 0) throw new IllegalArgumentException("ThoiGianBaoHanh không được âm.");
         this.thoiGianBaoHanh = thoiGianBaoHanh ;
         this.chatLieu = chatLieu ;
     }
@@ -61,7 +63,7 @@ public class DienTu extends SanPham
 
     @Override
     public String toString() {
-        return super.toString() + " | Chất liệu: " + chatLieu + " | Thời gian bảo hành: " + thoiGianBaoHanh ;
+        return utils.HienThi.canLe(super.toString() + " | Chất liệu: " + chatLieu + " | Thời gian bảo hành: " + thoiGianBaoHanh );
     }
     public LocalDate ngayHetHanBaoHanh( LocalDate ngayMua )
     {
@@ -71,5 +73,31 @@ public class DienTu extends SanPham
     public boolean kiemTraBaoHanh ( LocalDate ngayMua)
     {
         return LocalDate.now().isAfter(ngayHetHanBaoHanh(ngayMua)) ;
+    }
+
+    // ================= ĐỌC / GHI FILE TXT =================
+
+    @Override public String toDongFile() {
+        kiemTraDuLieuFile();
+        return "DIENTU;" + thongTinSanPhamFile() + ";" + DongDuLieu.ghep(thoiGianBaoHanh, chatLieu);
+    }
+
+    public static DienTu tuDongFile(String dong) {
+        String[] p = dong.split(";", -1);
+        DongDuLieu.yeuCau(p.length == 12 && "DIENTU".equals(p[0]), "Sai dòng DIENTU (cần 12 cột).");
+        int dem = SanPham.getSoThuTu();
+        DienTu obj = new DienTu();
+        SanPham.datBoDemFile(dem); // Constructor đọc file không cấp mã mới.
+        obj.docThongTinSanPhamFile(p);
+        obj.thoiGianBaoHanh = Integer.parseInt(p[10]);
+        obj.chatLieu = p[11];
+        obj.kiemTraDuLieuFile();
+        obj.capNhatMaFile();
+        return obj;
+    }
+
+    public void kiemTraDuLieuFile() {
+        super.kiemTraDuLieuFile();
+        DongDuLieu.khongAm(thoiGianBaoHanh, "thoiGianBaoHanh");
     }
 }

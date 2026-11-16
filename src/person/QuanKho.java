@@ -1,8 +1,10 @@
 package person;
+
+import utils.DongDuLieu;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
-import dichvu.Danhsachdoitac;
+import doitac.Danhsachdoitac;
 import hoadon.*;
 import sanpham.*;
 import utils.Validation;
@@ -14,11 +16,11 @@ public class QuanKho extends NhanVien
         this(new QuanLySanPham(), new DanhSachHoaDonNhap());
     }
     public QuanKho(QuanLySanPham qlsp , DanhSachHoaDonNhap dsHoaDonNhap) {
-        super();
-        setQlsp(qlsp);
+        super("QuanKho");
+        if (qlsp == null) throw new IllegalArgumentException("Danh sách sản phẩm không được null.");
         if (dsHoaDonNhap == null) throw new IllegalArgumentException("Danh sách hóa đơn nhập không được null.");
+        this.qlsp = qlsp;
         this.dsHoaDonNhap = dsHoaDonNhap ;
-        super.setVaiTro("QuanKho");
     }
 
     public QuanKho(String email, String hoten, String sdt, DiaChi diachi, LocalDate ngsinh,
@@ -142,7 +144,7 @@ public class QuanKho extends NhanVien
                     break;
                 }
                 case 3: {
-                    String ma = Validation.inputStringRegex(sc, "Nhập mã sản phẩm: ", Validation.MaSP_REGEX, "Mã sản phẩm không đúng định dạng!");
+                    String ma = Validation.inputStringRegex(sc, "Nhập mã sản phẩm: ", Validation.MaSP_REGEX, "Mã sản phẩm không đúng định dạng!", SanPham.getSoThuTu());
                     checkHSD(ma);
                     break;
                 }
@@ -175,12 +177,12 @@ public class QuanKho extends NhanVien
                     break;
                 }
                 case 11: {
-                    String ma = Validation.inputStringRegex(sc, "Nhập mã sản phẩm: ", Validation.MaSP_REGEX, "Mã sản phẩm không đúng định dạng!");
+                    String ma = Validation.inputStringRegex(sc, "Nhập mã sản phẩm: ", Validation.MaSP_REGEX, "Mã sản phẩm không đúng định dạng!", SanPham.getSoThuTu());
                     kiemTraThongTinSanPham(ma);
                     break;
                 }
                 case 12: {
-                    String ma = Validation.inputStringRegex(sc, "Nhập mã sản phẩm: ", Validation.MaSP_REGEX, "Mã sản phẩm không đúng định dạng!");
+                    String ma = Validation.inputStringRegex(sc, "Nhập mã sản phẩm: ", Validation.MaSP_REGEX, "Mã sản phẩm không đúng định dạng!", SanPham.getSoThuTu());
                     System.out.println("Số lượng nhập gần nhất là: " + kiemTraSoLuongSPNhapGanNhat(ma));
                     break;
                 }
@@ -195,5 +197,28 @@ public class QuanKho extends NhanVien
                     break;
             }
         } while (luaChon != 0);
+    }
+
+    // ================= ĐỌC / GHI FILE TXT =================
+
+    @Override public String toDongFile() {
+        kiemTraDuLieuFile();
+        return "QUANKHO;" + thongTinNhanVienFile();
+    }
+
+    public static QuanKho tuDongFile(String dong) {
+        String[] p = dong.split(";", -1);
+        DongDuLieu.yeuCau(p.length == 15 && "QUANKHO".equals(p[0]), "Sai dòng QUANKHO (cần 15 cột).");
+        int dem = NhanVien.getSoThuTu();
+        QuanKho obj = new QuanKho();
+        NhanVien.datBoDemFile(dem); // Constructor đọc file không cấp mã mới.
+        obj.docThongTinNhanVienFile(p);
+        obj.kiemTraDuLieuFile();
+        obj.capNhatMaFile();
+        return obj;
+    }
+
+    public void kiemTraDuLieuFile() {
+        super.kiemTraDuLieuFile();
     }
 }

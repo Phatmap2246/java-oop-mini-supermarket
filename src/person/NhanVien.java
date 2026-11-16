@@ -1,5 +1,7 @@
 package person;
 
+import utils.DongDuLieu;
+
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -10,12 +12,22 @@ import utils.YeuCau;
 
 public class NhanVien extends Person {
     private String maNV;
-    private String vaitro;
     private long luong;
     private long phuCapTrachNhiem;
     private boolean isSaThai;
     private static int soThuTu = 1 ;
     /** Khởi tạo nhân viên với giá trị mặc định. */
+    private static void capNhatSoThuTuTuMa(String ma) {
+        if (ma != null && !ma.isEmpty()) {
+            soThuTu = Math.max(soThuTu, DongDuLieu.maKeTiep(ma, "(?i)NV\\d+"));
+        }
+    }
+
+    protected NhanVien(String vaitroMacDinh) {
+        this();
+        this.vaitro = vaitroMacDinh;
+    }
+
     public NhanVien() {
         super();
         maNV = Validation.taoMa("NV%03d" , soThuTu) ;
@@ -29,10 +41,13 @@ public class NhanVien extends Person {
     public NhanVien(String email, String hoten, String sdt, DiaChi diachi, LocalDate ngsinh,
             String maNV, String vaitro, long luong, long phuCapTrachNhiem) {
         super(email, hoten, sdt, diachi, ngsinh);
+        if (luong < 0) throw new IllegalArgumentException("Luong không được âm.");
+        if (phuCapTrachNhiem < 0) throw new IllegalArgumentException("PhuCapTrachNhiem không được âm.");
         this.maNV = maNV;
         this.vaitro = vaitro;
         this.luong = luong;
         this.phuCapTrachNhiem = phuCapTrachNhiem;
+        capNhatSoThuTuTuMa(maNV);
     }
     /** Khởi tạo nhân viên từ thông tin được truyền vào, bao gồm trạng thái sa thải. */
     public NhanVien(String email, String hoten, String sdt, DiaChi diachi, LocalDate ngsinh,
@@ -64,17 +79,18 @@ public class NhanVien extends Person {
         if (maNV == null || !maNV.matches(Validation.MaNV_REGEX)) {
             throw new IllegalArgumentException("MaNV không đúng định dạng.");
         }
+        capNhatSoThuTuTuMa(maNV);
         this.maNV = maNV;
     }
 
     /** Nhập mã nhân viên và kiểm tra theo mẫu mã quy định. */
     public void setManv(Scanner sc) {
-        maNV = Validation.inputStringRegex(
+        setMaNV(Validation.inputStringRegex(
                 sc,
                 "Nhập mã nhân viên: ",
                 Validation.MaNV_REGEX,
                 "Mã nhân viên không đúng định dạng (NVxxx)."
-        );
+        ));
     }
 
     /** Trả về vai trò của nhân viên. */
@@ -170,12 +186,12 @@ public class NhanVien extends Person {
     /** Tạo chuỗi biểu diễn thông tin nhân viên để in hoặc hiển thị. */
     @Override
     public String toString() {
-        return super.toString()
+        return utils.HienThi.canLe(super.toString()
                 + " | Mã NV: " + maNV
                 + " | Vai trò: " + vaitro
                 + " | Lương: " + luong
                 + " | Phụ cấp trách nhiệm: " + phuCapTrachNhiem
-                + " | Trạng thái: " + (isSaThai ? "Đã sa thải" : "Đang làm");
+                + " | Trạng thái: " + (isSaThai ? "Đã sa thải" : "Đang làm"));
     }
 
     public void taoYeuCau(Scanner sc) throws IOException {
@@ -191,5 +207,57 @@ public class NhanVien extends Person {
         YeuCau yeuCau = new YeuCau(getMaNV(), getVaiTro(), noiDung, "ChoDuyet");
         YeuCau.themVaoFile(yeuCau, Paths.get(utils.DuongDanLuuTru.file("YeuCau.txt")));
         System.out.println("Đã ghi yêu cầu vào YeuCau.txt.");
+    }
+
+    // ================= ĐỌC / GHI FILE TXT =================
+
+    protected String thongTinNhanVienFile() {
+        return DongDuLieu.ghep(maNV, vaitro, luong, phuCapTrachNhiem, isSaThai) + ";" + thongTinNguoiFile();
+    }
+
+    protected void docThongTinNhanVienFile(String[] p) {
+        maNV = p[1];
+        vaitro = p[2];
+        luong = Long.parseLong(p[3]);
+        phuCapTrachNhiem = Long.parseLong(p[4]);
+        isSaThai = DongDuLieu.logic(p[5]);
+        docThongTinNguoiFile(p, 6);
+    }
+
+    @Override public String toDongFile() {
+        kiemTraDuLieuFile();
+        return "NHANVIEN;" + thongTinNhanVienFile();
+    }
+
+    public static NhanVien tuDongFile(String dong) {
+        String[] p = dong.split(";", -1);
+        if ("QUANLY".equals(p[0])) return QuanLy.tuDongFile(dong);
+        if ("QUANKHO".equals(p[0])) return QuanKho.tuDongFile(dong);
+        if ("KETOAN".equals(p[0])) return KeToan.tuDongFile(dong);
+        if ("THUNGAN".equals(p[0])) return ThuNgan.tuDongFile(dong);
+        DongDuLieu.yeuCau(p.length == 15 && "NHANVIEN".equals(p[0]), "Sai dòng NHANVIEN (cần 15 cột).");
+        int dem = NhanVien.getSoThuTu();
+        NhanVien obj = new NhanVien();
+        NhanVien.datBoDemFile(dem); // Constructor đọc file không cấp mã mới.
+        obj.docThongTinNhanVienFile(p);
+        obj.kiemTraDuLieuFile();
+        obj.capNhatMaFile();
+        return obj;
+    }
+
+    public void kiemTraDuLieuFile() {
+        super.kiemTraDuLieuFile();
+        DongDuLieu.khongAm(luong, "luong");
+        DongDuLieu.khongAm(phuCapTrachNhiem, "phuCapTrachNhiem");
+        DongDuLieu.maKeTiep(maNV, "(?i)NV\\d+");
+    }
+
+    public static void datBoDemFile(int value) {
+        DongDuLieu.yeuCau(value > 0, "Bộ đếm mã phải dương.");
+        soThuTu = value;
+    }
+
+    public void capNhatMaFile() {
+        soThuTu = Math.max(soThuTu, DongDuLieu.maKeTiep(maNV, "(?i)NV\\d+"));
     }
 }

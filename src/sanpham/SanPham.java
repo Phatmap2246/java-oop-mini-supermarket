@@ -1,10 +1,12 @@
 package sanpham;
 
+import utils.DongDuLieu;
+
 
 import utils.Validation;
 import java.util.Scanner;
 
-public abstract class SanPham {
+public abstract class SanPham implements interfaces.BanGhiFile {
     private boolean tonTai = true;
 
     public boolean isTonTai() { return tonTai; }
@@ -16,6 +18,21 @@ public abstract class SanPham {
     private int soLuongTonKho  ;
     private double thue ;
     private static int soThuTu = 1 ;
+    private static void capNhatSoThuTuTuMa(String ma) {
+        if (ma != null && !ma.isEmpty()) {
+            soThuTu = Math.max(soThuTu, DongDuLieu.maKeTiep(ma, "(?i)SP\\d+"));
+        }
+    }
+
+    protected SanPham(double thueMacDinh, String loaiMacDinh) {
+        this();
+        if (!Double.isFinite(thueMacDinh) || thueMacDinh < 0 || thueMacDinh > 1) {
+            throw new IllegalArgumentException("thue không hợp lệ.");
+        }
+        this.thue = thueMacDinh;
+        this.loaiSanPham = loaiMacDinh;
+    }
+
     public SanPham()
     {
         maSanPham = tenSanPham = loaiSanPham = maNhaCungCap = "" ;
@@ -27,6 +44,19 @@ public abstract class SanPham {
     }
     public SanPham( String maSanPham , String tenSanPham , String loaiSanPham , long giaNhap , long giaBan , int soLuongTonKho , String maNhaCungCap , double thue )
     {
+        if (giaNhap < 0) throw new IllegalArgumentException("GiaNhap không được âm.");
+        if (giaBan < 0) throw new IllegalArgumentException("GiaBan không được âm.");
+        if (soLuongTonKho < 0) throw new IllegalArgumentException("SoLuongTonKho không được âm.");
+        if (!Double.isFinite(thue) || thue < 0 || thue > 1) throw new IllegalArgumentException("thue không hợp lệ.");
+        if (maSanPham != null && !maSanPham.isEmpty() && !maSanPham.matches("(?i)SP\\d+")) {
+            throw new IllegalArgumentException("MaSanPham không đúng định dạng.");
+        }
+        if (tenSanPham != null && !tenSanPham.isEmpty() && tenSanPham.isBlank()) {
+            throw new IllegalArgumentException("TenSanPham không được để trống.");
+        }
+        if (maNhaCungCap != null && !maNhaCungCap.isEmpty() && !maNhaCungCap.matches("(?i)NCC\\d+")) {
+            throw new IllegalArgumentException("MaNhaCungCap không đúng định dạng.");
+        }
         this.maSanPham = maSanPham ;
         this.tenSanPham = tenSanPham ;
         this.loaiSanPham = loaiSanPham ;
@@ -35,6 +65,7 @@ public abstract class SanPham {
         this.soLuongTonKho = soLuongTonKho ;
         this.maNhaCungCap = maNhaCungCap ;
         this.thue = thue ;
+        capNhatSoThuTuTuMa(maSanPham);
     }
 
     public static int getSoThuTu() {
@@ -57,6 +88,7 @@ public abstract class SanPham {
         if (maSanPham == null || !maSanPham.matches("(?i)SP\\d+")) {
             throw new IllegalArgumentException("MaSanPham không đúng định dạng.");
         }
+        capNhatSoThuTuTuMa(maSanPham);
         this.maSanPham = maSanPham;
     }
 
@@ -142,6 +174,49 @@ public abstract class SanPham {
     public abstract long tinhThue() ;
     @Override
     public String toString() {
-        return "Mã sản phẩm: " + maSanPham + " | Tên sản phẩm: " + tenSanPham + " | Giá nhập: " + giaNhap + " | Giá bán: " + giaBan + " | Số sản phẩm tồn kho : " + soLuongTonKho + " | Nhà cung cấp : " + maNhaCungCap;
+        return utils.HienThi.canLe("Mã sản phẩm: " + maSanPham + " | Tên sản phẩm: " + tenSanPham + " | Giá nhập: " + giaNhap + " | Giá bán: " + giaBan + " | Số sản phẩm tồn kho : " + soLuongTonKho + " | Nhà cung cấp : " + maNhaCungCap);
+    }
+
+    // ================= ĐỌC / GHI FILE TXT =================
+
+    protected String thongTinSanPhamFile() {
+        return DongDuLieu.ghep(maSanPham, tenSanPham, loaiSanPham, maNhaCungCap, giaNhap, giaBan, soLuongTonKho, thue, tonTai);
+    }
+
+    protected void docThongTinSanPhamFile(String[] p) {
+        maSanPham = p[1];
+        tenSanPham = p[2];
+        loaiSanPham = p[3];
+        maNhaCungCap = p[4];
+        giaNhap = Long.parseLong(p[5]);
+        giaBan = Long.parseLong(p[6]);
+        soLuongTonKho = Integer.parseInt(p[7]);
+        thue = Double.parseDouble(p[8]);
+        tonTai = DongDuLieu.logic(p[9]);
+    }
+
+    public static SanPham tuDongFile(String dong) {
+        String loai = dong.split(";", -1)[0];
+        if ("THUCPHAM".equals(loai)) return ThucPham.tuDongFile(dong);
+        if ("DIENTU".equals(loai)) return DienTu.tuDongFile(dong);
+        if ("TIEUDUNG".equals(loai)) return TieuDung.tuDongFile(dong);
+        throw new IllegalArgumentException("Loại SanPham không hợp lệ: " + loai);
+    }
+
+    public void kiemTraDuLieuFile() {
+        DongDuLieu.khongAm(giaNhap, "giaNhap");
+        DongDuLieu.khongAm(giaBan, "giaBan");
+        DongDuLieu.khongAm(soLuongTonKho, "soLuongTonKho");
+        DongDuLieu.maKeTiep(maSanPham, "(?i)SP\\d+");
+        DongDuLieu.tyLe(thue, 1, "thuế sản phẩm");
+    }
+
+    public static void datBoDemFile(int value) {
+        DongDuLieu.yeuCau(value > 0, "Bộ đếm mã phải dương.");
+        soThuTu = value;
+    }
+
+    public void capNhatMaFile() {
+        soThuTu = Math.max(soThuTu, DongDuLieu.maKeTiep(maSanPham, "(?i)SP\\d+"));
     }
 }

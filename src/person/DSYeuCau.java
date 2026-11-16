@@ -5,14 +5,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
-import utils.YeuCau;
 import utils.Validation;
+import utils.YeuCau;
 
 public class DSYeuCau implements interfaces.IQuanLy<YeuCau> {
-    private ArrayList<YeuCau> list = new ArrayList<>();
+    private YeuCau[] list = new YeuCau[0];
     private transient String tenFileNguon;
 
     public void cauHinhFile(String tenFile) { tenFileNguon = tenFile; }
@@ -22,9 +23,9 @@ public class DSYeuCau implements interfaces.IQuanLy<YeuCau> {
     private void napTruocKhiSua() throws IOException {
         if (Files.exists(Paths.get(tenFile()))) docDanhSachYeuCau(tenFile());
     }
-    private boolean luuMoi(ArrayList<YeuCau> moi) {
+    private boolean luuMoi(YeuCau[] moi) {
         try {
-            YeuCau.ghiDanhSachYeuCau(Paths.get(tenFile()), moi);
+            YeuCau.ghiDanhSachYeuCau(Paths.get(tenFile()), new ArrayList<>(Arrays.asList(moi)));
             list = moi;
             return true;
         } catch (IOException e) {
@@ -37,6 +38,7 @@ public class DSYeuCau implements interfaces.IQuanLy<YeuCau> {
         int n = Validation.inputInt(sc, "Nhập số yêu cầu cần thêm: ");
         for (int i = 0; i < n; i++) them(sc);
     }
+
     @Override public void them(Scanner sc) {
         try {
             napTruocKhiSua();
@@ -45,52 +47,62 @@ public class DSYeuCau implements interfaces.IQuanLy<YeuCau> {
                 System.out.println("Mã nhân viên, vai trò và nội dung không được trống.");
                 return;
             }
-            ArrayList<YeuCau> moi = new ArrayList<>(list);
-            moi.add(yc);
+            YeuCau[] moi = Arrays.copyOf(list, list.length + 1);
+            moi[list.length] = yc;
             luuMoi(moi);
         } catch (IOException e) {
             System.out.println("Không thể đọc yêu cầu: " + e.getMessage());
         }
     }
+
     @Override public boolean sua(String ma, Scanner sc) {
         try {
             napTruocKhiSua();
             int i = timViTri(ma);
             if (i == -1) return false;
-            YeuCau cu = list.get(i);
+            YeuCau cu = list[i];
             String noiDung = Validation.inputStringRegex(sc, "Nội dung mới: ", ".+", "Không được trống.");
             int chon = Validation.luaChon(sc, "Trạng thái: 1. Chờ duyệt | 2. Đã duyệt | 3. Không duyệt: ", 1, 3);
             YeuCau moi = new YeuCau(cu.getMaNV(), cu.getVaitro(), noiDung,
                     chon == 1 ? "ChoDuyet" : chon == 2 ? "DaDuyet" : "KhongDuyet");
-            ArrayList<YeuCau> dsMoi = new ArrayList<>(list);
-            dsMoi.set(i, moi);
+            YeuCau[] dsMoi = Arrays.copyOf(list, list.length);
+            dsMoi[i] = moi;
             return luuMoi(dsMoi);
         } catch (IOException e) { System.out.println(e.getMessage()); return false; }
     }
+
     @Override public boolean xoa(String ma) {
         try {
             napTruocKhiSua();
             int i = timViTri(ma);
             if (i == -1) return false;
-            ArrayList<YeuCau> moi = new ArrayList<>(list);
-            moi.remove(i);
+            YeuCau[] moi = new YeuCau[list.length - 1];
+            for (int j = 0, k = 0; j < list.length; j++) {
+                if (j != i) {
+                    moi[k++] = list[j];
+                }
+            }
             return luuMoi(moi);
         } catch (IOException e) { System.out.println(e.getMessage()); return false; }
     }
+
     @Override public void xuatDanhSach() {
         for (YeuCau yc : list) if (yc != null) System.out.println(yc);
     }
+
     @Override public int timViTri(String ma) {
         if (ma == null || ma.isBlank()) return -1;
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i) != null && ma.trim().equalsIgnoreCase(list.get(i).getMaNV())) return i;
+        for (int i = 0; i < list.length; i++) {
+            if (list[i] != null && ma.trim().equalsIgnoreCase(list[i].getMaNV())) return i;
         }
         return -1;
     }
+
     @Override public YeuCau timMa(String ma) {
         int i = timViTri(ma);
-        return i == -1 ? null : list.get(i);
+        return i == -1 ? null : list[i];
     }
+
     @Override public YeuCau timTen(String ten) {
         if (ten == null || ten.isBlank()) return null;
         for (YeuCau yc : list) {
@@ -99,6 +111,7 @@ public class DSYeuCau implements interfaces.IQuanLy<YeuCau> {
         }
         return null;
     }
+
     @Override public YeuCau timKhoa(String khoa) {
         if (khoa == null || khoa.isBlank()) return null;
         for (YeuCau yc : list) {
@@ -111,39 +124,61 @@ public class DSYeuCau implements interfaces.IQuanLy<YeuCau> {
     public DSYeuCau() {
     }
 
-    public DSYeuCau(ArrayList<YeuCau> list) {
+    public DSYeuCau(YeuCau[] list) {
         if (list == null) throw new IllegalArgumentException("Danh sách yêu cầu không được null.");
         this.list = list;
     }
 
-    public ArrayList<YeuCau> getList() {
+    public YeuCau[] getList() {
         return list;
     }
 
-    public void docDanhSachYeuCau(String file) throws IOException
-    {
-        tenFileNguon = file;
-        ArrayList<YeuCau.BanGhiDataBase> danhSach = YeuCau.docDanhSach(Paths.get(file));
-        ArrayList<YeuCau> danhSachMoi = new ArrayList<>();
-        for (YeuCau.BanGhiDataBase yeuCau : danhSach) {
-            if (yeuCau.laDongLoi()) continue;
-            danhSachMoi.add(new YeuCau(yeuCau.getMaNV(), yeuCau.getVaitro(),
-                    yeuCau.getNoiDung(), yeuCau.getTrangThai()));
-        }
-        list = danhSachMoi;
+    /** Thêm vào bộ nhớ khi khôi phục dữ liệu nhân viên, không ghi file yêu cầu riêng. */
+    public void them(YeuCau yeuCau) {
+        if (yeuCau == null) throw new IllegalArgumentException("Yêu cầu không được null.");
+        YeuCau[] moi = Arrays.copyOf(list, list.length + 1);
+        moi[list.length] = yeuCau;
+        list = moi;
     }
 
-    public void duyetYeuCau(Scanner sc) throws IOException{
+    public void ghiFile(String file) throws IOException {
+        YeuCau.ghiDanhSachYeuCau(Paths.get(file), new ArrayList<>(Arrays.asList(list)));
+    }
+
+    public void docFile(String file) throws IOException {
+        docDanhSachYeuCau(file);
+    }
+
+    public void docDanhSachYeuCau(String file) throws IOException {
+        YeuCau.BanGhiDataBase[] danhSach = YeuCau.docDanhSach(Paths.get(file))
+                .toArray(new YeuCau.BanGhiDataBase[0]);
+        int count = 0;
+        for (YeuCau.BanGhiDataBase yeuCau : danhSach) {
+            if (!yeuCau.laDongLoi()) count++;
+        }
+        YeuCau[] danhSachMoi = new YeuCau[count];
+        int idx = 0;
+        for (YeuCau.BanGhiDataBase yeuCau : danhSach) {
+            if (yeuCau.laDongLoi()) continue;
+            danhSachMoi[idx++] = new YeuCau(yeuCau.getMaNV(), yeuCau.getVaitro(),
+                    yeuCau.getNoiDung(), yeuCau.getTrangThai());
+        }
+        list = danhSachMoi;
+        tenFileNguon = file;
+    }
+
+    public void duyetYeuCau(Scanner sc) throws IOException {
         Path filePath = Paths.get(tenFile());
         if (!Files.exists(filePath)) {
             System.out.println("Chưa có file YeuCau.txt.");
             return;
         }
 
-        ArrayList<YeuCau.BanGhiDataBase> dsYeuCau = YeuCau.docDanhSach(filePath);
+        YeuCau.BanGhiDataBase[] dsYeuCau = YeuCau.docDanhSach(filePath)
+                .toArray(new YeuCau.BanGhiDataBase[0]);
         boolean coThayDoi = false;
-        for (int index = 0; index < dsYeuCau.size(); index++) {
-            YeuCau.BanGhiDataBase yeuCau = dsYeuCau.get(index);
+        for (int index = 0; index < dsYeuCau.length; index++) {
+            YeuCau.BanGhiDataBase yeuCau = dsYeuCau[index];
             if (yeuCau.laDongLoi()) {
                 System.err.println("[!] Dòng yêu cầu sai định dạng, giữ nguyên: "
                         + yeuCau.getDongLoi());
@@ -163,12 +198,12 @@ public class DSYeuCau implements interfaces.IQuanLy<YeuCau> {
         }
 
         if (coThayDoi) {
-            YeuCau.ghiDanhSach(filePath, dsYeuCau);
+            YeuCau.ghiDanhSach(filePath, new ArrayList<>(Arrays.asList(dsYeuCau)));
             docDanhSachYeuCau(filePath.toString());
         }
     }
 
-    public void xemLichSuDuyet(String file){
+    public void xemLichSuDuyet(String file) {
         try {
             docDanhSachYeuCau(file);
             System.out.println("LỊCH SỬ YÊU CẦU DUYỆT");
@@ -178,8 +213,7 @@ public class DSYeuCau implements interfaces.IQuanLy<YeuCau> {
         }
     }
 
-    public void thongKe()
-    {
+    public void thongKe() {
         Map<String, Integer> yeuCauTheoTrangThai = new HashMap<>();
         System.out.println("Đang thống kê...");
         Validation.danghoatdong(1);
@@ -190,7 +224,7 @@ public class DSYeuCau implements interfaces.IQuanLy<YeuCau> {
 
         System.out.println("\n--- YÊU CẦU DUYỆT ---");
         System.out.printf("Tổng: %d | Đã duyệt: %d | Chờ duyệt: %d | Không duyệt: %d%n",
-                list.size(),
+                list.length,
                 yeuCauTheoTrangThai.getOrDefault("DaDuyet", 0),
                 yeuCauTheoTrangThai.getOrDefault("ChoDuyet", 0),
                 yeuCauTheoTrangThai.getOrDefault("KhongDuyet", 0));

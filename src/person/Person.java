@@ -1,15 +1,19 @@
 package person;
 
+import utils.DongDuLieu;
+
 import java.time.LocalDate;
 import java.util.Scanner;
 
 import utils.DateUtil;
 import utils.Validation;
 
-public abstract class Person {
+public abstract class Person implements interfaces.BanGhiFile {
     private String email, hoten, sdt;
     private DiaChi diachi;
     private LocalDate ngsinh;
+    protected String vaitro;
+
     /** Khởi tạo người với thông tin mặc định và địa chỉ rỗng. */
     public Person() {
         email = null;
@@ -17,6 +21,7 @@ public abstract class Person {
         sdt = null;
         diachi = new DiaChi();
         ngsinh = LocalDate.now();
+        vaitro = null;
     }
 
     /** Khởi tạo người từ các thông tin được truyền vào. */
@@ -26,6 +31,17 @@ public abstract class Person {
         this.sdt = sdt;
         this.diachi = diachi;
         this.ngsinh = ngsinh;
+        this.vaitro = null;
+    }
+
+    /** Khởi tạo người từ các thông tin được truyền vào bao gồm cả vai trò. */
+    public Person(String email, String hoten, String sdt, DiaChi diachi, LocalDate ngsinh, String vaitro) {
+        this.email = email;
+        this.hoten = hoten;
+        this.sdt = sdt;
+        this.diachi = diachi;
+        this.ngsinh = ngsinh;
+        this.vaitro = vaitro;
     }
 
     /** Sao chép thông tin từ một đối tượng Person khác. */
@@ -36,6 +52,7 @@ public abstract class Person {
         sdt = p.sdt;
         diachi = p.diachi;
         ngsinh = p.ngsinh;
+        vaitro = p.vaitro;
     }
 
     /** Trả về email của người. */
@@ -178,13 +195,42 @@ public abstract class Person {
     @Override
     public String toString() {
         String ngaySinhStr = ngsinh != null ? ngsinh.format(DateUtil.DATE_FORMATTER) : "N/A";
-        return "Họ tên: " + hoten
+        return utils.HienThi.canLe("Họ tên: " + hoten
                 + " | SĐT: " + sdt
                 + " | Email: " + email
                 + " | Địa chỉ: " + diachi
-                + " | Ngày sinh: " + ngaySinhStr;
+                + " | Ngày sinh: " + ngaySinhStr);
     }
 
-    /** Trả về vai trò do lớp con định nghĩa. */
-    public abstract String getVaiTro();
+    /** Trả về vai trò của người. */
+    public String getVaiTro() {
+        return vaitro;
+    }
+
+    /** Cập nhật vai trò của người. */
+    public void setVaiTro(String vaitro) {
+        this.vaitro = vaitro;
+    }
+
+    // ================= ĐỌC / GHI FILE TXT =================
+
+    protected String thongTinNguoiFile() {
+        DiaChi dc = diachi == null ? new DiaChi() : diachi;
+        return DongDuLieu.ghep(email, hoten, sdt) + ";" + dc.thongTinDiaChiFile() + ";" + DongDuLieu.chuoi(ngsinh);
+    }
+
+    protected void docThongTinNguoiFile(String[] p, int start) {
+        email = p[start]; hoten = p[start + 1]; sdt = p[start + 2];
+        diachi = new DiaChi(p[start + 3], p[start + 4], p[start + 5], p[start + 6], p[start + 7]);
+        ngsinh = DongDuLieu.ngay(p[start + 8]);
+    }
+
+    public static Person tuDongFile(String dong) {
+        String loai = dong.split(";", -1)[0];
+        if ("KHACHHANG".equals(loai)) return KhachHang.tuDongFile(dong);
+        return NhanVien.tuDongFile(dong);
+    }
+
+    public void kiemTraDuLieuFile() {
+    }
 }

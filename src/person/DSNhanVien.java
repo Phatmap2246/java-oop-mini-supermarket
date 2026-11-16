@@ -1,4 +1,11 @@
 package person;
+import utils.BoDemMa;
+import utils.DongDuLieu;
+import utils.TepVanBan;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import java.util.HashMap;
 
@@ -11,7 +18,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import utils.DataBase;
 import utils.Validation;
 
 public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
@@ -46,7 +52,7 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
             while(!isTrungMa(nv.getMaNV())); 
             list.add(nv);
         }
-        DataBase.ghiVaoFile(new ArrayList<Object>(list), utils.DuongDanLuuTru.file("NhanVien.txt"), true);
+        ghiFileNhanVien();
     }
 
     /** In thông tin từng nhân viên; thông báo nếu danh sách rỗng. */
@@ -75,7 +81,7 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
         while(!isTrungMa(nv.getMaNV()));         
 
         list.add(nv);
-        DataBase.ghiVaoFile(list.getLast(), utils.DuongDanLuuTru.file("NhanVien.txt"), false);
+        ghiFileNhanVien();
 
     }
 
@@ -90,7 +96,7 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
         while(!isTrungMa(nv.getMaNV()));         
 
             list.add(nv);
-            DataBase.ghiVaoFile(list.getLast(), utils.DuongDanLuuTru.file("NhanVien.txt"), false);
+            ghiFileNhanVien();
 
         }
     }
@@ -162,7 +168,7 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
                         System.out.println("[!] Lựa chọn không hợp lệ, vui lòng thử lại.");
                 }
             } while (choice != 0);
-            DataBase.ghiVaoFile(new ArrayList<Object>(list), utils.DuongDanLuuTru.file("NhanVien.txt"), true);
+            ghiFileNhanVien();
             return true;
         } catch (IllegalArgumentException e) {
             System.out.println("[!] " + e.getMessage());
@@ -186,7 +192,7 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
         }
 
         nv.setSaThai(true);
-        DataBase.ghiVaoFile(new ArrayList<Object>(list), utils.DuongDanLuuTru.file("NhanVien.txt"), true);
+        ghiFileNhanVien();
         System.out.println("[+] Đã cập nhật trạng thái sa thải cho nhân viên " + maNV + ".");
         return true;
     }
@@ -230,21 +236,11 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
         return null;
     }
 
-    /** Tìm vị trí nhân viên theo tên chính xác hoặc gần đúng; trả về -1 nếu không tìm thấy. */
+    /** Nhập mã nhân viên đã được cấp rồi tra cứu trong danh sách. */
     public NhanVien nhapTimKiem(Scanner sc) {
-        System.out.print("Nhập mã hoặc tên nhân viên: ");
-        String khoa = sc.nextLine().trim().toLowerCase();
-        for (NhanVien nhanVien : list) {
-            if (nhanVien == null || nhanVien.isSaThai() || nhanVien.getMaNV() == null) continue;
-            if (nhanVien.getMaNV().equalsIgnoreCase(khoa)
-                    || (nhanVien.getHoten() != null && nhanVien.getHoten().equalsIgnoreCase(khoa))
-                    || (nhanVien.getHoten() != null && nhanVien.getHoten().toLowerCase().contains(khoa))) {
-                System.out.println("[+] Đã tìm thấy nhân viên.");
-                return nhanVien;
-            }
-        }
-        System.out.println("[!] Không tìm thấy nhân viên.");
-        return null;
+        String ma = Validation.inputStringRegex(sc, "Nhập mã nhân viên: ",
+                Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng!", NhanVien.getSoThuTu());
+        return timMa(ma);
     }
 
     public void timKhoa(Scanner sc) {
@@ -266,7 +262,7 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
             System.out.println("Kết quả tra cứu:");
             switch (luaChon) {
                 case 1: {
-                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã nhân viên cần tìm: ", Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng. Vui lòng nhập lại!");
+                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã nhân viên cần tìm: ", Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng. Vui lòng nhập lại!", NhanVien.getSoThuTu());
                     System.out.println("Đang tra cứu...");
                     Validation.danghoatdong(1);
                     for (NhanVien nv : list) {
@@ -517,7 +513,7 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
 
                 String maNV = Validation.inputStringRegex(
                         sc, "Nhập mã nhân viên cần phân ca: ", Validation.MaNV_REGEX,
-                        "Mã nhân viên không đúng định dạng (NVxxx).");
+                        "Mã nhân viên không đúng định dạng (NVxxx).", NhanVien.getSoThuTu());
                 for (NhanVien nv : list) {
                     if (nv == null) continue;
                     if (maNV.equals(nv.getMaNV())
@@ -542,5 +538,68 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
 
     public void getDSNhanVien() {
         // đọc file danh sách nhân viên và lưu và list
+    }
+
+    /** Mỗi đối tượng tạo một dòng; thông tin con được ghi thành dòng riêng. */
+
+
+    /** Có lỗi thì giữ danh sách đang dùng, không bỏ dòng lỗi. */
+
+    // ================= ĐỌC / GHI FILE TXT =================
+
+    public void ghiFile(String tenFile) throws IOException {
+        ArrayList<String> cacDong = new ArrayList<>();
+        Set<String> maDaGhi = new HashSet<>();
+        for (NhanVien obj : list) {
+            if (obj == null) throw new IOException("Danh sách chứa null.");
+            TepVanBan.khongTrung(maDaGhi, obj.getMaNV());
+            cacDong.add(obj.toDongFile());
+            if (obj instanceof QuanLy) {
+                for (utils.YeuCau yc : ((QuanLy) obj).getDsYeuCauFile().getList()) {
+                    cacDong.add("YCQUANLY;" + obj.getMaNV() + ";" + yc.toDongFile());
+                }
+            }
+        }
+        TepVanBan.ghi(tenFile, "DSNhanVien", cacDong);
+    }
+
+    public void docFile(String tenFile) throws IOException {
+        docFile(tenFile, false);
+    }
+
+    public void docFileVaiTroDangNhap(String tenFile) throws IOException {
+        docFile(tenFile, true);
+    }
+
+    private void docFile(String tenFile, boolean boQuaTaiKhoan) throws IOException {
+        int[] demTruoc = BoDemMa.chup();
+        ArrayList<NhanVien> moi = new ArrayList<>();
+        Set<String> maDaDoc = new HashSet<>();
+        Map<String, NhanVien> theoMa = new LinkedHashMap<>();
+        try {
+            for (String dong : TepVanBan.doc(tenFile)) {
+                if (boQuaTaiKhoan && dong.startsWith("TAIKHOAN;")) continue;
+                if (dong.startsWith("YCQUANLY;")) {
+                    String[] p = dong.split(";", 3);
+                    NhanVien chu = p.length == 3 ? theoMa.get(p[1].toUpperCase(Locale.ROOT)) : null;
+                    DongDuLieu.yeuCau(chu instanceof QuanLy, "Yêu cầu không có quản lý tương ứng.");
+                    ((QuanLy) chu).getDsYeuCauFile().them(utils.YeuCau.tuDongFile(p[2]));
+                    continue;
+                }
+                NhanVien obj = NhanVien.tuDongFile(dong);
+                TepVanBan.khongTrung(maDaDoc, obj.getMaNV());
+                moi.add(obj);
+                theoMa.put(obj.getMaNV().toUpperCase(Locale.ROOT), obj);
+            }
+        } catch (RuntimeException | IOException e) {
+            BoDemMa.khoiPhuc(demTruoc);
+            throw new IOException("Không đọc được " + tenFile + ": " + e.getMessage(), e);
+        }
+        this.list = moi;
+    }
+
+    public void ghiFileNhanVien() {
+        try { ghiFile(utils.DuongDanLuuTru.file("NhanVien.txt")); }
+        catch (IOException e) { throw new IllegalStateException("Không lưu được nhân viên.", e); }
     }
 }

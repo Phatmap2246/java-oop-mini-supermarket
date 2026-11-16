@@ -2,6 +2,7 @@
 
 Bộ mẫu đã được nạp vào `hien-tai/`, dùng trực tiếp khi chạy `Main`. Đây là dữ liệu
 giả lập để thử nghiệp vụ, không tạo giao dịch ngân hàng thật. Ngày tạo: 14/11/2026.
+Các file hiện dùng TXT UTF-8, mỗi bản ghi một dòng và các thuộc tính ngăn bởi `;`.
 
 ## Đăng nhập
 
@@ -36,7 +37,7 @@ Tồn kho là số lượng hiện tại của bộ mẫu; các hóa đơn là m
 - Hóa đơn bán: HD001 đã trả bằng tiền mặt, HD002 đã trả bằng chuyển khoản, HD003 chưa trả.
 - Hóa đơn nhập: HD004 và HD005 đã duyệt/nhập kho; HD006 chưa duyệt, chưa nhập kho.
 - Công nợ HD004/PNK001 quá hạn và chưa trả; HD005/PNK002 đã trả.
-- File `YeuCau.txt` có sẵn được giữ nguyên, không bị thay bởi bộ mẫu.
+- Nội dung `YeuCau.txt` có sẵn được giữ nguyên; định dạng lưu hiện là TXT theo cột, không dùng Base64.
 
 ## Thử nhanh
 

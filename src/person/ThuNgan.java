@@ -1,5 +1,7 @@
 package person;
 
+import utils.DongDuLieu;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Scanner;
@@ -99,11 +101,10 @@ public class ThuNgan extends NhanVien {
             System.out.println("2. Chỉnh sửa hóa đơn chưa thanh toán!");
             System.out.println("3. Xuất danh sách hóa đơn bán!");
             System.out.println("4. Tìm kiếm hóa đơn bán!");
-            System.out.println("5. Quản lý khách hàng!");
-            System.out.println("6. Tính tiền cuối ca!");
-            System.out.println("7. Lọc hóa đơn theo tổng giá!");
-            System.out.println("8. Thống kê hóa đơn chưa thanh toán!");
-            System.out.println("9. Thêm k hóa đơn bán!");
+            System.out.println("5. Tính tiền cuối ca!");
+            System.out.println("6. Lọc hóa đơn theo tổng giá!");
+            System.out.println("7. Thống kê hóa đơn chưa thanh toán!");
+            System.out.println("8. Thêm k hóa đơn bán!");
             System.out.println("0. Trở về.");
             luaChon = Validation.luaChon(sc, "Nhập lựa chọn: ", 0, 9);
             switch (luaChon)
@@ -125,23 +126,19 @@ public class ThuNgan extends NhanVien {
                     break;
                 }
                 case 5: {
-                    dskh.quanLyDanhSach(sc);
-                    break;
-                }
-                case 6: {
                     System.out.println("Tổng tiền cuối ca là: " + tinhTienCuoiCa());
                     break;
                 }
-                case 7: {
+                case 6: {
                     long nguongGia = Validation.inputLong(sc, "Nhập ngưỡng tổng giá: ");
                     locCacHoaDonTheoTongGia(nguongGia);
                     break;
                 }
-                case 8: {
+                case 7: {
                     danhSachHoaDonBan.thongKeHoaDonChuaThanhToan();
                     break;
                 }
-                case 9: {
+                case 8: {
                     int k = Validation.inputInt(sc, "Nhập số phần tử cần thêm: ");
                     danhSachHoaDonBan.taoKHoaDonBan(sc, dsspkm, dskm, qlsp, dskh, getMaNV(), k);
                     break;
@@ -153,5 +150,30 @@ public class ThuNgan extends NhanVien {
                     break;
             }
         } while (luaChon != 0);
+    }
+
+    // ================= ĐỌC / GHI FILE TXT =================
+
+    @Override public String toDongFile() {
+        kiemTraDuLieuFile();
+        return "THUNGAN;" + thongTinNhanVienFile() + ";" + DongDuLieu.ghep(tongTienDauCa);
+    }
+
+    public static ThuNgan tuDongFile(String dong) {
+        String[] p = dong.split(";", -1);
+        DongDuLieu.yeuCau(p.length == 16 && "THUNGAN".equals(p[0]), "Sai dòng THUNGAN (cần 16 cột).");
+        int dem = NhanVien.getSoThuTu();
+        ThuNgan obj = new ThuNgan();
+        NhanVien.datBoDemFile(dem); // Constructor đọc file không cấp mã mới.
+        obj.docThongTinNhanVienFile(p);
+        obj.tongTienDauCa = Long.parseLong(p[15]);
+        obj.kiemTraDuLieuFile();
+        obj.capNhatMaFile();
+        return obj;
+    }
+
+    public void kiemTraDuLieuFile() {
+        super.kiemTraDuLieuFile();
+        DongDuLieu.khongAm(tongTienDauCa, "tongTienDauCa");
     }
 }

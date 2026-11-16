@@ -1,5 +1,7 @@
 # Cấu trúc TXT đơn giản (phiên bản 3)
 
+Xem thêm [ERD toàn dự án](./ERD.md) để biết các thực thể và quan hệ logic.
+
 Mỗi dòng là một bản ghi, các cột ngăn bởi `;`. Dùng `split(";", -1)` để giữ cột rỗng cuối. `null` ghi thành ô rỗng; không có escape, JSON hoặc bản ghi lồng trong một ô. Chuỗi mới không được chứa `;`, CR hoặc LF.
 
 Ba dòng đầu là chú thích: phiên bản, nhóm dữ liệu và sáu bộ đếm mã. Không có footer:

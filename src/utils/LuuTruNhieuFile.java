@@ -9,7 +9,7 @@ public class LuuTruNhieuFile {
     public static final String[] TEN_FILE = {
             "SanPham.txt", "NhanVien.txt", "KhachHang.txt", "DoiTac.txt",
             "KhuyenMai.txt", "SanPhamKhuyenMai.txt", "HoaDonBan.txt",
-            "HoaDonNhap.txt", "NhanVienDangNhap.txt"
+            "HoaDonNhap.txt", "CongNo.txt", "NhanVienDangNhap.txt"
     };
 
     public static Path thuMucHienTai(String thuMuc) throws IOException {
@@ -34,7 +34,7 @@ public class LuuTruNhieuFile {
         Path tam = Files.createTempDirectory(goc, "dang-ghi-");
         try {
             for (String ten : TEN_FILE) {
-                DataBase.ghiDoiTuong(duLieu.get(ten), tam.resolve(ten).toString());
+                KhoDuLieuTxt.ghi(duLieu.get(ten), tam.resolve(ten).toString());
             }
             // Chỉ thay dữ liệu hiện tại khi tất cả các file đều đã ghi xong.
             xoaBanLuu(truoc);

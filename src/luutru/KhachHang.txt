@@ -1,1 +1,6 @@
-# UTF-8 tab-separated data; DocGhiFile_temp writes the column header and records.
+#SIEUTHI_TXT_3
+#NHOM;DSKhachHang
+#BODEM;9;5;4;7;5;4
+KHACHHANG;KH001;16/05/2026;250000;Đồng;250;false;khachhang1@example.com;Nguyễn Thảo Linh;0933000000;14;Nguyễn Trãi;Bến Thành;Quận 1;TP Hồ Chí Minh;10/06/1995
+KHACHHANG;KH002;16/05/2026;1500000;Bạc;1500;true;khachhang2@example.com;Trần Hoàng Nam;0933000001;15;Nguyễn Trãi;Bến Thành;Quận 1;TP Hồ Chí Minh;10/06/1996
+KHACHHANG;KH003;16/05/2026;5500000;Vàng;5500;true;khachhang3@example.com;Lê Hà My;0933000002;16;Nguyễn Trãi;Bến Thành;Quận 1;TP Hồ Chí Minh;10/06/1997

@@ -1,5 +1,7 @@
 package person;
 
+import utils.DongDuLieu;
+
 import hoadon.DanhSachHoaDonBan;
 import hoadon.DanhSachHoaDonNhap;
 
@@ -9,9 +11,9 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import dichvu.DanhSachSPKM;
-import dichvu.Danhsachdoitac;
+import doitac.Danhsachdoitac;
 import dichvu.Danhsachkhuyenmai;
-import dichvu.Nhacungcap;
+import doitac.Nhacungcap;
 import sanpham.QuanLySanPham;
 import utils.YeuCau;
 import utils.Validation;
@@ -21,6 +23,7 @@ public class QuanLy extends NhanVien {
     private transient DSNhanVien dsnv = new DSNhanVien();
     private transient Danhsachkhuyenmai dsKhuyenMai = new Danhsachkhuyenmai();
     private transient DanhSachSPKM dsSanPhamKhuyenMai = new DanhSachSPKM();
+    private transient DSTaiKhoan dsTaiKhoan = new DSTaiKhoan();
 
     /** Khởi tạo quản lý với thông tin mặc định. */
     public QuanLy() {
@@ -71,6 +74,15 @@ public class QuanLy extends NhanVien {
         dsSanPhamKhuyenMai = list;
     }
 
+    public DSTaiKhoan getDsTaiKhoan() {
+        return dsTaiKhoan;
+    }
+
+    public void setDSTaiKhoan(DSTaiKhoan list) {
+        if (list == null) throw new IllegalArgumentException("Danh sách tài khoản không được null.");
+        dsTaiKhoan = list;
+    }
+
     /** Hiển thị menu để thêm, sa thải hoặc sửa nhân viên trong danh sách quản lý. */
     public void quanLyNhanSu(Scanner sc) {
         while (true) {
@@ -85,6 +97,7 @@ public class QuanLy extends NhanVien {
             System.out.println("8. Thêm k nhân viên");
             System.out.println("9. Thống kê nhân viên theo vai trò");
             System.out.println("10. Phân ca làm việc");
+            System.out.println("11. Quản lý danh sách tài khoản");
             int c = Validation.inputInt(sc, "Chọn chức năng: ");
             switch (c) {
                 case 1:
@@ -92,12 +105,12 @@ public class QuanLy extends NhanVien {
                     break;
                 case 2:
                     String maNV = Validation.inputStringRegex(sc, "Nhập mã nhân viên cần sa thải: ",
-                            Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng (NVxxx).");
+                            Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng (NVxxx).", NhanVien.getSoThuTu());
                     dsnv.xoa(maNV);
                     break;
                 case 3:
                     String maNVSua = Validation.inputStringRegex(sc, "Nhập mã nhân viên cần sửa: ",
-                            Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng (NVxxx).");
+                            Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng (NVxxx).", NhanVien.getSoThuTu());
                     dsnv.sua(maNVSua, sc);
                     break;
                 case 4:
@@ -121,6 +134,13 @@ public class QuanLy extends NhanVien {
                     break;
                 case 10:
                     phanCaLamViec(dsnv, sc);
+                    break;
+                case 11:
+                    if (dsTaiKhoan != null) {
+                        dsTaiKhoan.quanLyDanhSach(sc);
+                    } else {
+                        System.out.println("[!] Chưa liên kết danh sách tài khoản.");
+                    }
                     break;
                 default:
                     System.out.println("Lựa chọn không hợp lệ!");
@@ -147,14 +167,14 @@ public class QuanLy extends NhanVien {
             System.out.println("3. Xóa sản phẩm");
             System.out.println("4. Sửa thông tin sản phẩm");
             System.out.println("5. Điều chỉnh giá bán");
-            System.out.println("6. Thoát");
             System.out.println("7. Nhập danh sách sản phẩm");
             System.out.println("8. Thêm k sản phẩm");
             System.out.println("9. Tìm kiếm sản phẩm");
             System.out.println("10. Thống kê theo loại");
             System.out.println("11. Thống kê theo nhà cung cấp");
             System.out.println("12. Thống kê tình trạng sản phẩm");
-            int luaChon = Validation.luaChon(sc, "Chọn chức năng (1-12): ", 1, 12);
+            System.out.println("0. Thoát");
+            int luaChon = Validation.luaChon(sc, "Chọn chức năng (0-12): ", 0, 12);
 
             switch (luaChon) {
                 case 1:
@@ -164,17 +184,17 @@ public class QuanLy extends NhanVien {
                     dsSanPham.them(sc, dsNCC);
                     break;
                 case 3:
-                    String c = Validation.inputStringRegex(sc, "Nhap ma san pham can sua (vi du: SP001)", "^SP\\d+$", "Sai dinh dang ma san pham, nhap lai ");
+                    String c =Validation.inputStringRegex(sc, "Nhap ma san pham can sua (vi du: SP001)","^SP\\d+$", "Sai dinh dang ma san pham, nhap lai ", sanpham.SanPham.getSoThuTu());
                     dsSanPham.xoa(c);
                     break;
                 case 4:
-                    String d = Validation.inputStringRegex(sc, "Nhap ma san pham can sua (vi du: SP001)", "^SP\\d+$", "Sai dinh dang ma san pham, nhap lai ");
-                    dsSanPham.sua(sc, d, dsNCC);
+                    String d =Validation.inputStringRegex(sc, "Nhap ma san pham can sua (vi du: SP001)","^SP\\d+$", "Sai dinh dang ma san pham, nhap lai ", sanpham.SanPham.getSoThuTu());
+                    dsSanPham.sua(sc,d,dsNCC);
                     break;
                 case 5:
                     dieuChinhGiaBan(sc, dsSanPham);
                     break;
-                case 6:
+                case 0:
                     return;
                 case 7:
                     dsSanPham.taoDanhSach(sc, dsNCC);
@@ -190,7 +210,7 @@ public class QuanLy extends NhanVien {
                     dsSanPham.thongKeTheoLoai(sc);
                     break;
                 case 11:
-                    String maNCC = Validation.inputStringRegex(sc, "Nhập mã nhà cung cấp: ", Validation.MaNCC_REGEX, "Mã nhà cung cấp không hợp lệ!");
+                    String maNCC = Validation.inputStringRegex(sc, "Nhập mã nhà cung cấp: ", Validation.MaNCC_REGEX, "Mã nhà cung cấp không hợp lệ!", Nhacungcap.getSoThuTuNCC());
                     dsSanPham.thongKeSanPhamTheoNhaCungCap(maNCC);
                     break;
                 case 12:
@@ -255,7 +275,7 @@ public class QuanLy extends NhanVien {
         System.out.println("\n=== THỐNG KÊ TÌNH TRẠNG SIÊU THỊ ===");
         dssp.thongKeTinhTrang();
         dsnv.thongKeTheoVaiTro();
-        DSYeuCau danhSachYeuCau = new DSYeuCau(dYeuCaus);
+        DSYeuCau danhSachYeuCau = new DSYeuCau(dYeuCaus.toArray(new YeuCau[0]));
         danhSachYeuCau.thongKe();
     }
 
@@ -314,7 +334,7 @@ public class QuanLy extends NhanVien {
                 case 8: {
                     try {
                         dsYeuCau.docDanhSachYeuCau(utils.DuongDanLuuTru.file("YeuCau.txt"));
-                        thongKe(sc, dsnv, qlsp, dsYeuCau.getList());
+                        thongKe(sc, dsnv, qlsp, new ArrayList<>(java.util.Arrays.asList(dsYeuCau.getList())));
                     } catch (IOException e) {
                         System.out.println("Không thể đọc danh sách yêu cầu: " + e.getMessage());
                     }
@@ -325,7 +345,8 @@ public class QuanLy extends NhanVien {
                     break;
                 }
                 case 10: {
-                    tuDongGiamGiaCanHSD(qlsp);
+                    int soLuong = dsSanPhamKhuyenMai.tuDongGiamGiaCanHSD(qlsp, dsKhuyenMai);
+                    System.out.println("Đã cập nhật giảm giá cận hạn cho " + soLuong + " sản phẩm.");
                     break;
                 }
                 case 11: {
@@ -343,5 +364,30 @@ public class QuanLy extends NhanVien {
                     break;
             }
         } while (luaChon != 0);
+    }
+
+    public DSYeuCau getDsYeuCauFile() { return dsYeuCau; }
+
+    // ================= ĐỌC / GHI FILE TXT =================
+
+    @Override public String toDongFile() {
+        kiemTraDuLieuFile();
+        return "QUANLY;" + thongTinNhanVienFile();
+    }
+
+    public static QuanLy tuDongFile(String dong) {
+        String[] p = dong.split(";", -1);
+        DongDuLieu.yeuCau(p.length == 15 && "QUANLY".equals(p[0]), "Sai dòng QUANLY (cần 15 cột).");
+        int dem = NhanVien.getSoThuTu();
+        QuanLy obj = new QuanLy();
+        NhanVien.datBoDemFile(dem); // Constructor đọc file không cấp mã mới.
+        obj.docThongTinNhanVienFile(p);
+        obj.kiemTraDuLieuFile();
+        obj.capNhatMaFile();
+        return obj;
+    }
+
+    public void kiemTraDuLieuFile() {
+        super.kiemTraDuLieuFile();
     }
 }

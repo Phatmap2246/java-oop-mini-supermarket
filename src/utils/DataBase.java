@@ -10,103 +10,23 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.io.*;
 import java.nio.file.*;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 public class DataBase {
-    // Lưu cả đồ thị đối tượng để giữ nguyên lớp con và các tham chiếu dùng chung.
-    private static class BanLuu {
-        private Object duLieu;
-        private Map<String, Integer> boDem = new LinkedHashMap<>();
-
-        private BanLuu() { }
-
-        private BanLuu(Object duLieu) throws ReflectiveOperationException {
-            this.duLieu = duLieu;
-            for (Class<?> lop : CAC_LOP_CO_BO_DEM) {
-                Field field = layTruongBoDem(lop);
-                boDem.put(lop.getName(), field.getInt(null));
-            }
-        }
-
-        private void khoiPhucBoDem(Map<String, Integer> truocKhiDoc) throws ReflectiveOperationException, IOException {
-            for (Class<?> lop : CAC_LOP_CO_BO_DEM) {
-                Integer giaTri = boDem.get(lop.getName());
-                if (giaTri == null || giaTri < 0) {
-                    throw new IOException("Bộ đếm mã không hợp lệ: " + lop.getSimpleName());
-                }
-            }
-            for (Class<?> lop : CAC_LOP_CO_BO_DEM) {
-                Field field = layTruongBoDem(lop);
-                field.setInt(null, Math.max(truocKhiDoc.get(lop.getName()), boDem.get(lop.getName())));
-            }
-        }
-    }
-
-    private static final Class<?>[] CAC_LOP_CO_BO_DEM = {
-            sanpham.SanPham.class, person.NhanVien.class, person.KhachHang.class,
-            hoadon.HoaDon.class, dichvu.Khuyenmai.class, dichvu.Nhacungcap.class
-    };
-
-    private static Field layTruongBoDem(Class<?> lop) throws NoSuchFieldException {
-        String tenTruong = lop == dichvu.Nhacungcap.class ? "soThuTuNCC" : "soThuTu";
-        Field field = lop.getDeclaredField(tenTruong);
-        field.setAccessible(true);
-        return field;
-    }
-
-    /** Ghi file tạm trước, chỉ thay file cũ sau khi ghi thành công. */
+    /** Lớp danh sách ghi từng bản ghi TXT theo thuộc tính. */
     public static synchronized void ghiDoiTuong(Object duLieu, String tenFile) throws IOException {
-        if (duLieu == null) throw new IllegalArgumentException("Không có dữ liệu để lưu.");
-        Path dich = Paths.get(tenFile).toAbsolutePath();
-        Files.createDirectories(dich.getParent());
-        Path tam = Files.createTempFile(dich.getParent(), "sieu-thi-", ".tmp");
-        try {
-            BanLuu banLuu = new BanLuu(duLieu);
-            try (OutputStream writer = new BufferedOutputStream(Files.newOutputStream(tam))) {
-                VanBanDoiTuong.ghi(banLuu, writer);
-            }
-            try {
-                Files.move(tam, dich, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
-            } catch (AtomicMoveNotSupportedException e) {
-                Files.move(tam, dich, StandardCopyOption.REPLACE_EXISTING);
-            }
-        } catch (ReflectiveOperationException e) {
-            throw new IOException("Không thể lưu bộ đếm mã.", e);
-        } finally {
-            Files.deleteIfExists(tam);
-        }
+        KhoDuLieuTxt.ghi(duLieu, tenFile);
     }
 
-    /** File chưa có thì trả null; file lỗi phải báo ra, không coi là dữ liệu rỗng. */
+    /** Chỉ đọc TXT dạng dòng; file chưa có trả null, file lỗi báo IOException. */
     public static synchronized <T> T docDoiTuong(Class<T> lop, String tenFile) throws IOException {
-        Path file = Paths.get(tenFile);
-        if (Files.notExists(file)) return null;
-        Map<String, Integer> truocKhiDoc = new LinkedHashMap<>();
-        boolean thanhCong = false;
-        try (BufferedInputStream reader = new BufferedInputStream(Files.newInputStream(file))) {
-            for (Class<?> c : CAC_LOP_CO_BO_DEM) truocKhiDoc.put(c.getName(), layTruongBoDem(c).getInt(null));
-            Object obj = VanBanDoiTuong.doc(reader);
-            if (!(obj instanceof BanLuu)) throw new IOException("File không đúng định dạng lưu của chương trình.");
-            BanLuu banLuu = (BanLuu) obj;
-            if (!lop.isInstance(banLuu.duLieu)) throw new IOException("File chứa sai loại dữ liệu.");
-            banLuu.khoiPhucBoDem(truocKhiDoc);
-            thanhCong = true;
-            return lop.cast(banLuu.duLieu);
-        } catch (ReflectiveOperationException | ClassCastException e) {
-            throw new IOException("Không thể khôi phục dữ liệu chương trình.", e);
-        } finally {
-            // Constructor dùng để đọc TXT không được làm tăng bộ đếm mã.
-            if (!thanhCong) {
-                for (Class<?> c : CAC_LOP_CO_BO_DEM) {
-                    try {
-                        if (truocKhiDoc.containsKey(c.getName())) layTruongBoDem(c).setInt(null, truocKhiDoc.get(c.getName()));
-                    } catch (ReflectiveOperationException e) {
-                        throw new IOException("Không thể khôi phục bộ đếm mã sau lỗi đọc.", e);
-                    }
-                }
-            }
+        if (Files.notExists(Paths.get(tenFile))) return null;
+        int[] truoc = BoDemMa.chup();
+        try {
+            return KhoDuLieuTxt.doc(lop, tenFile);
+        } catch (RuntimeException | IOException e) {
+            BoDemMa.khoiPhuc(truoc);
+            throw new IOException("Không thể đọc " + tenFile + ": " + e.getMessage(), e);
         }
     }
 
@@ -180,22 +100,14 @@ public class DataBase {
         return null;
     }
     public static String getFilePath(Class<?> clazz) {
-        if(TrongFile.class.isAssignableFrom(clazz)){
-            try {
-                TrongFile coFile = (TrongFile) clazz.getDeclaredConstructor().newInstance();
-                return coFile.getFilePath();
-            } catch (InstantiationException e) {
-                throw new RuntimeException(e);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            } catch (InvocationTargetException e) {
-                throw new RuntimeException(e);
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        System.err.println("không lưu trữ được");
-        return null;
+        // Không tạo đối tượng chỉ để hỏi đường dẫn, tránh tăng bộ đếm mã.
+        if (clazz == person.DiaChi.class) return DuongDanLuuTru.file("DiaChi.txt");
+        if (clazz == dichvu.KhuyenMaiPhanTram.class) return DuongDanLuuTru.file("KhuyenMaiPhanTram.txt");
+        if (clazz == dichvu.KhuyenMaiTrucTiep.class) return DuongDanLuuTru.file("KhuyenMaiTrucTiep.txt");
+        if (clazz == dichvu.KhuyenMaiMuaTang.class) return DuongDanLuuTru.file("KhuyenMaiMuaTang.txt");
+        if (clazz == hoadon.ThanhToanTienMat.class) return DuongDanLuuTru.file("ThanhToanTienMat.txt");
+        if (clazz == hoadon.ThanhToanChuyenKhoan.class) return DuongDanLuuTru.file("ThanhToanChuyenKhoan.txt");
+        throw new IllegalArgumentException("Lớp chưa khai báo đường dẫn TXT: " + clazz.getName());
     }
     //Class của object cần constuctor rỗng VD public SanPham(){};
     public static <T> T taoObject (Class<T> clazz,String CSVHeader, String CSVLine){
@@ -250,85 +162,67 @@ public class DataBase {
             return null;
         }
     }
-    public static void ghiVaoFile(Object obj, String filePath,boolean ghiDe){
-        if (obj == null) {
-            System.err.println("Không có đối tượng để ghi file.");
-            return;
-        }
-        String headers = DataBase.getCSVHeader(obj);
-        String csvLine = DataBase.getCSVLine(obj);
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(filePath,!ghiDe))){
-            if(ghiDe == true) writer.write(headers);
-            writer.newLine();
-            writer.write(csvLine);
-        }
-        catch(Exception e){
-            System.err.println(e.getMessage());
-        }
+    /** API tương thích: ghi bản ghi tường minh, không lấy thuộc tính bằng reflection. */
+    public static void ghiVaoFile(Object obj, String filePath, boolean ghiDe) {
+        ArrayList<Object> list = new ArrayList<>();
+        list.add(obj);
+        ghiVaoFile(list, filePath, ghiDe);
     }
-    public static void ghiVaoFile(ArrayList<Object> objs, String filePath, boolean ghiDe){
-        if (objs == null || objs.isEmpty() || objs.getFirst() == null) {
-            System.err.println("Danh sách rỗng, không có dữ liệu để ghi.");
-            return;
-        }
-        String headers = DataBase.getCSVHeader(objs.getFirst());
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(filePath,!ghiDe))){
-            if(ghiDe == true) writer.write(headers);
-            for(Object obj : objs){
-            String csvLine = DataBase.getCSVLine(obj);
-            writer.newLine();
-            writer.write(csvLine);
+    public static void ghiVaoFile(ArrayList<Object> objs, String filePath, boolean ghiDe) {
+        try {
+            ArrayList<String> cacDong = new ArrayList<>();
+            if (!ghiDe && Files.exists(Paths.get(filePath))) cacDong.addAll(TepVanBan.doc(filePath));
+            for (Object obj : objs) {
+                if (!(obj instanceof interfaces.BanGhiFile)) throw new IOException("Đối tượng chưa có định dạng dòng.");
+                if (obj instanceof hoadon.HoaDon || obj instanceof person.QuanLy || obj instanceof doitac.Nhacungcap)
+                    throw new IOException("Hãy ghi đối tượng có danh sách con qua lớp quản lý để giữ đủ dữ liệu.");
+                cacDong.add(((interfaces.BanGhiFile) obj).toDongFile());
             }
-        }
-        catch(Exception e){
-            System.err.println(e.getMessage());
-        }
+            TepVanBan.ghi(filePath, "DanhSach", cacDong);
+        } catch (IOException e) { throw new UncheckedIOException(e); }
     }
-    public static void ghiVanBan(String filePath, String content, boolean ghiDe){
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(filePath,!ghiDe))){
-          writer.write(content);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    /** Chỉ hỗ trợ API đọc kiểu cũ; từng họ đối tượng tự nhận diện loại của mình. */
+    public static <T> T tuDongFile(Class<T> lop, String dong) {
+        Object obj;
+        if (sanpham.SanPham.class.isAssignableFrom(lop)) obj = sanpham.SanPham.tuDongFile(dong);
+        else if (person.Person.class.isAssignableFrom(lop)) obj = person.Person.tuDongFile(dong);
+        else if (dichvu.Khuyenmai.class.isAssignableFrom(lop)) obj = dichvu.Khuyenmai.tuDongFile(dong);
+        else if (doitac.Doitac.class.isAssignableFrom(lop)) obj = doitac.Doitac.tuDongFile(dong);
+        else if (hoadon.HoaDon.class.isAssignableFrom(lop)) obj = hoadon.HoaDon.tuDongFile(dong);
+        else if (hoadon.CTHoaDon.class.isAssignableFrom(lop)) obj = hoadon.CTHoaDon.tuDongFile(dong);
+        else if (lop == person.DiaChi.class) obj = person.DiaChi.tuDongFile(dong);
+        else if (lop == dichvu.SanPhamKhuyenMai.class) obj = dichvu.SanPhamKhuyenMai.tuDongFile(dong);
+        else if (lop == hoadon.ThanhToanTienMat.class) obj = hoadon.ThanhToanTienMat.tuDongFile(dong);
+        else if (lop == hoadon.ThanhToanChuyenKhoan.class) obj = hoadon.ThanhToanChuyenKhoan.tuDongFile(dong);
+        else if (lop == YeuCau.class) obj = YeuCau.tuDongFile(dong);
+        else throw new IllegalArgumentException("Hãy đọc đối tượng qua lớp quản lý danh sách tương ứng.");
+        if (!lop.isInstance(obj)) throw new IllegalArgumentException("Dòng chứa sai loại dữ liệu.");
+        return lop.cast(obj);
     }
-    public static <T> ArrayList<T> docfile( Class<T> clazz, String filePath){
-       ArrayList<T> objs = new ArrayList<T>();
-       try(BufferedReader reader = new BufferedReader(new FileReader(filePath))){
-           String headers =reader.readLine();
-           if(headers == null || headers.trim().isEmpty()){
-               return objs;
-           }
-           String line;
-           while ((line = reader.readLine()) != null) {
-               T obj = DataBase.taoObject(clazz, headers, line);
-               if (obj != null) objs.add(obj);
-           }
-           return objs;
-       }
-       catch(Exception e){
-           System.err.println(e.getMessage());
-           return objs;
-       }
-    }
-    public static <T> ArrayList<T> docfile( Class<T> clazz){
-        ArrayList<T> objs = new ArrayList<T>();
-        String filePath = getFilePath(clazz);
-        if(filePath == null) return objs;
-        try(BufferedReader reader = new BufferedReader(new FileReader(filePath))){
-            String headers =reader.readLine();
-            if(headers.trim().isEmpty()){
-                return objs;
+    public static void ghiVanBan(String filePath, String content, boolean ghiDe) {
+        Path file = Paths.get(filePath);
+        try {
+            Path parent = file.toAbsolutePath().getParent();
+            Files.createDirectories(parent);
+            try (BufferedWriter writer = Files.newBufferedWriter(file, java.nio.charset.StandardCharsets.UTF_8,
+                    StandardOpenOption.CREATE, ghiDe ? StandardOpenOption.TRUNCATE_EXISTING : StandardOpenOption.APPEND)) {
+                writer.write(content);
             }
-            String line;
-            while ((line = reader.readLine()) != null) {
-                objs.add(DataBase.taoObject(clazz, headers, line));
+        } catch (IOException e) { throw new UncheckedIOException(e); }
+    }
+    public static <T> ArrayList<T> docfile(Class<T> clazz, String filePath) {
+        ArrayList<T> values = new ArrayList<>();
+        try {
+            for (String dong : TepVanBan.doc(filePath)) {
+                values.add(tuDongFile(clazz, dong));
             }
-            return objs;
-        }
-        catch(Exception e){
-            System.err.println(e.getMessage());
-            return objs;
-        }
+            return values;
+        } catch (IOException e) { throw new UncheckedIOException(e); }
+    }
+    public static <T> ArrayList<T> docfile(Class<T> clazz) {
+        String file = getFilePath(clazz);
+        if (file == null) throw new IllegalArgumentException("Lớp chưa khai báo đường dẫn file.");
+        return docfile(clazz, file);
     }
     public static <T> void suaObjectTrongArrayList(ArrayList<T> objs, int index){
         if (objs == null || index < 0 || index >= objs.size() || objs.get(index) == null) {

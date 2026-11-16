@@ -1,10 +1,12 @@
 package person;
 
+import utils.DongDuLieu;
+
 import java.util.Scanner;
 
 import interfaces.TrongFile;
 
-public class DiaChi implements TrongFile {
+public class DiaChi implements TrongFile, interfaces.BanGhiFile {
     private String soNha;
     private String duong;
     private String phuongXa;
@@ -125,13 +127,41 @@ public class DiaChi implements TrongFile {
     public String toString() {
         return String.join(", ", soNha, duong, phuongXa, quanHuyen, tinhThanhPho);
     }
-    @Override
-    public String getFilePath(){
-        return utils.DuongDanLuuTru.file("DiaChi.csv");
-    }
+
     /** In địa chỉ ra console. */
     public void xuatDiaChi() {
         System.out.println("Địa chỉ: " + this);
     }
 
+    String thongTinDiaChiFile() {
+        return DongDuLieu.ghep(soNha, duong, phuongXa, quanHuyen, tinhThanhPho);
+    }
+
+    // ================= ĐỌC / GHI FILE TXT =================
+
+    @Override
+    public String getFilePath(){
+        return utils.DuongDanLuuTru.file("DiaChi.txt");
+    }
+
+    @Override public String toDongFile() {
+        kiemTraDuLieuFile();
+        return "DIACHI;" + thongTinDiaChiFile();
+    }
+
+    public static DiaChi tuDongFile(String dong) {
+        String[] p = dong.split(";", -1);
+        DongDuLieu.yeuCau(p.length == 6 && "DIACHI".equals(p[0]), "Sai dòng DIACHI (cần 6 cột).");
+        DiaChi obj = new DiaChi();
+        obj.soNha = p[1];
+        obj.duong = p[2];
+        obj.phuongXa = p[3];
+        obj.quanHuyen = p[4];
+        obj.tinhThanhPho = p[5];
+        obj.kiemTraDuLieuFile();
+        return obj;
+    }
+
+    public void kiemTraDuLieuFile() {
+    }
 }
