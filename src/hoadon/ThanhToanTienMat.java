@@ -21,12 +21,23 @@ public class ThanhToanTienMat implements IThanhToan, TrongFile, interfaces.BanGh
     // Ghi đè Interface
     @Override 
     public boolean thucHienThanhToan(Scanner sc, long tongTien){
-        this.tienKhachDua = Validation.inputLong(sc, "Nhap so tien khach dua: ");
-        if (this.tienKhachDua >= tongTien) {
-            this.tienThua = this.tienKhachDua - tongTien;
-            return true;
+        if (tongTien < 0) throw new IllegalArgumentException("Tổng tiền không được âm.");
+        this.tienKhachDua = 0;
+        this.tienThua = 0;
+        System.out.printf("Tổng tiền cần thanh toán: %,d VND.%n", tongTien);
+        if (tongTien == 0) {
+            return Validation.inputCoKhong(sc, "Hóa đơn 0 VND. Xác nhận hoàn tất thanh toán?");
         }
-        return false;
+        while (true) {
+            this.tienKhachDua = Validation.inputLong(sc, "Nhập số tiền khách đưa (0 để hủy thanh toán): ");
+            if (this.tienKhachDua == 0) return false;
+            if (this.tienKhachDua >= tongTien) {
+                this.tienThua = this.tienKhachDua - tongTien;
+                return true;
+            }
+            System.out.printf("Tiền khách đưa chưa đủ, còn thiếu %,d VND. Vui lòng nhập lại.%n",
+                    tongTien - this.tienKhachDua);
+        }
     }
 
     @Override 

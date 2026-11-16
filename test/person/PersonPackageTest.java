@@ -25,7 +25,7 @@ public class PersonPackageTest {
     public static void main(String[] args) throws Exception {
         testDiaChi();
         testPersonAndNhanVien();
-        testDSNhanVien();
+        testDSTaiKhoan();
         testKhachHang();
         testDSKhachHang();
         testKeToan();
@@ -48,7 +48,7 @@ public class PersonPackageTest {
     }
 
     private static void testPersonAndNhanVien() {
-        NhanVien employee = employee("NV001", "ThuNgan");
+        TaiKhoanNhanVien employee = employee("NV001", "ThuNgan");
         employee.setEmail("staff@example.com");
         employee.setHoten("Nguyen Van A");
         employee.setSdt("0912345678");
@@ -67,41 +67,41 @@ public class PersonPackageTest {
         equal(LocalDate.of(2000, 1, 2), employee.getNgsinh(), "Person accepts valid date");
         employee.setLuong(12_000);
         employee.setPhuCapTrachNhiem(3_000);
-        equal(15_000L, employee.getLuong(), "NhanVien total salary getter");
-        equal(15_000L, employee.tinhLuong(), "NhanVien salary calculation");
-        equal("ThuNgan", employee.getVaiTro(), "NhanVien role");
-        check(!employee.isSaThai(), "NhanVien defaults to active");
+        equal(15_000L, employee.getLuong(), "TaiKhoanNhanVien total salary getter");
+        equal(15_000L, employee.tinhLuong(), "TaiKhoanNhanVien salary calculation");
+        equal("ThuNgan", employee.getVaiTro(), "TaiKhoanNhanVien role");
+        check(!employee.isSaThai(), "TaiKhoanNhanVien defaults to active");
         employee.setSaThai(true);
-        check(employee.isSaThai(), "NhanVien dismissal state setter");
-        NhanVien copy = new NhanVien(employee);
-        check(copy.isSaThai(), "NhanVien copy preserves dismissal state");
-        check(copy.toString().contains("Đã sa thải"), "NhanVien display includes dismissal state");
-        NhanVien restored = DataBase.taoObject(
-                NhanVien.class,
+        check(employee.isSaThai(), "TaiKhoanNhanVien dismissal state setter");
+        TaiKhoanNhanVien copy = new TaiKhoanNhanVien(employee);
+        check(copy.isSaThai(), "TaiKhoanNhanVien copy preserves dismissal state");
+        check(copy.toString().contains("Đã sa thải"), "TaiKhoanNhanVien display includes dismissal state");
+        TaiKhoanNhanVien restored = DataBase.taoObject(
+                TaiKhoanNhanVien.class,
                 "maNV,vaitro,luong,phuCapTrachNhiem,isSaThai",
                 "NV001,ThuNgan,0,0,true");
-        check(restored.isSaThai(), "NhanVien persistence reads dismissal state");
-        NhanVien legacyRecord = DataBase.taoObject(
-                NhanVien.class,
+        check(restored.isSaThai(), "TaiKhoanNhanVien persistence reads dismissal state");
+        TaiKhoanNhanVien legacyRecord = DataBase.taoObject(
+                TaiKhoanNhanVien.class,
                 "maNV,vaitro,luong,phuCapTrachNhiem",
                 "NV001,ThuNgan,0,0");
-        check(!legacyRecord.isSaThai(), "NhanVien legacy records default to active");
+        check(!legacyRecord.isSaThai(), "TaiKhoanNhanVien legacy records default to active");
     }
 
-    private static void testDSNhanVien() {
-        NhanVien employee = employee("NV002", "KeToan");
-        ArrayList<NhanVien> employees = new ArrayList<>();
+    private static void testDSTaiKhoan() {
+        TaiKhoanNhanVien employee = employee("NV002", "KeToan");
+        ArrayList<TaiKhoanNhanVien> employees = new ArrayList<>();
         employees.add(employee);
-        DSNhanVien list = new DSNhanVien(employees);
-        equal(0, list.timViTri(" NV002 "), "DSNhanVien finds trimmed code");
-        check(list.sua("NV002", new Scanner("2\nTran Thi B\n0\n")), "DSNhanVien edits existing employee");
-        equal("Tran Thi B", employee.getHoten(), "DSNhanVien edit persists");
-        check(!list.sua("NV999", new Scanner("0\n")), "DSNhanVien reports missing employee");
-        check(list.xoa("NV002"), "DSNhanVien dismisses existing employee");
-        equal(-1, list.timViTri("NV002"), "DSNhanVien hides dismissed employee from active search");
-        check(employee.isSaThai(), "DSNhanVien marks employee as dismissed");
-        check(!list.xoa("NV002"), "DSNhanVien does not dismiss an employee twice");
-        check(new DSNhanVien(list).list == list.list, "DSNhanVien copy shares backing list");
+        DSTaiKhoan list = new DSTaiKhoan(employees);
+        equal(0, list.timViTri(" NV002 "), "DSTaiKhoan finds trimmed code");
+        check(list.sua("NV002", new Scanner("2\nTran Thi B\n0\n")), "DSTaiKhoan edits existing employee");
+        equal("Tran Thi B", employee.getHoten(), "DSTaiKhoan edit persists");
+        check(!list.sua("NV999", new Scanner("0\n")), "DSTaiKhoan reports missing employee");
+        check(list.xoa("NV002"), "DSTaiKhoan dismisses existing employee");
+        equal(-1, list.timViTri("NV002"), "DSTaiKhoan hides dismissed employee from active search");
+        check(employee.isSaThai(), "DSTaiKhoan marks employee as dismissed");
+        check(!list.xoa("NV002"), "DSTaiKhoan does not dismiss an employee twice");
+        check(new DSTaiKhoan(list).list == list.list, "DSTaiKhoan copy shares backing list");
     }
 
     private static void testKhachHang() {
@@ -164,10 +164,10 @@ public class PersonPackageTest {
         Path requestFile = Paths.get("YeuCau.txt");
         check(!Files.exists(requestFile), "Request test starts in isolated working directory");
 
-        NhanVien employee = employee("NV003", "KeToan");
+        TaiKhoanNhanVien employee = employee("NV003", "KeToan");
         employee.taoYeuCau(new Scanner("Đề nghị duyệt thanh toán, nội dung | cần xét\n"));
         ArrayList<YeuCau.BanGhiDataBase> requests = YeuCau.docDanhSach(requestFile);
-        equal(1, requests.size(), "NhanVien writes request in DataBase format");
+        equal(1, requests.size(), "TaiKhoanNhanVien writes request in DataBase format");
         equal("Đề nghị duyệt thanh toán, nội dung | cần xét",
                 requests.get(0).getNoiDung(), "Request content supports CSV separators");
         equal("ChoDuyet", requests.get(0).getTrangThai(), "New request starts pending");
@@ -254,8 +254,8 @@ public class PersonPackageTest {
                 "ThuNgan writes invoice history with expected fields");
     }
 
-    private static NhanVien employee(String code, String role) {
-        return new NhanVien(
+    private static TaiKhoanNhanVien employee(String code, String role) {
+        return new TaiKhoanNhanVien(
                 null, null, null, new DiaChi(), LocalDate.of(1990, 1, 1),
                 code, role, 0, 0);
     }

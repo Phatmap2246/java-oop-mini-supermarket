@@ -1,4 +1,4 @@
-package dichvu;
+package doitac;
 
 import utils.DongDuLieu;
 import utils.Validation;
@@ -6,7 +6,6 @@ import utils.Validation;
 import java.util.Scanner;
 
 public abstract class Doitac implements interfaces.BanGhiFile {
-    // 11/11/2026: Xóa bằng trạng thái để giữ dữ liệu trong danh sách.
     private boolean tonTai = true;
 
     public boolean isTonTai() { return tonTai; }

@@ -9,16 +9,16 @@ import java.time.LocalDate;
 
 import java.util.Locale;
 
-import dichvu.Nhacungcap;
+import doitac.Nhacungcap;
 import utils.Validation;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class QuanLySanPham implements interfaces.IQuanLy<SanPham> {
-    private transient dichvu.Danhsachdoitac nguonDoiTac;
+    private transient doitac.Danhsachdoitac nguonDoiTac;
 
-    public void cauHinh(dichvu.Danhsachdoitac doiTacs) { nguonDoiTac = doiTacs; }
+    public void cauHinh(doitac.Danhsachdoitac doiTacs) { nguonDoiTac = doiTacs; }
 
     private ArrayList<Nhacungcap> nhaCungCaps() {
         return nguonDoiTac == null ? new ArrayList<>() : nguonDoiTac.layDanhSachNhaCungCap();

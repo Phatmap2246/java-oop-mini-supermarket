@@ -1,4 +1,5 @@
 import dichvu.*;
+import doitac.*;
 import hoadon.*;
 import person.*;
 import sanpham.*;
@@ -193,7 +194,7 @@ public class Pr43LogicIntegrationTest {
         check(tra && hd.tinhTongTien() == 9700 && hd.getChietKhau() == 0.03, "Nhận đúng tiền sau chiết khấu Bạc");
         check(sp.getSoLuongTonKho() == 9 && kh.getTongChiTieu() == 1509700, "Trả thành công mới trừ kho và tích lũy");
         HoaDonBanHang thatBai = new HoaDonBanHang("NV001");
-        tra = thatBai.nhapHoaDon(new Scanner("KH001\nSP001\n1\n0\n1\n9600\n"), ds,
+        tra = thatBai.nhapHoaDon(new Scanner("KH001\nSP001\n1\n0\n1\n9600\n0\n"), ds,
                 new DanhSachSPKM(), new Danhsachkhuyenmai(), khs);
         check(!tra && sp.getSoLuongTonKho() == 9 && kh.getTongChiTieu() == 1509700, "Thiếu tiền không đổi kho và tích lũy");
         kh.setTongChiTieu(4995000);
@@ -254,12 +255,12 @@ public class Pr43LogicIntegrationTest {
     private static void giuKiemTraCu() throws Exception {
         DienTu dt = new DienTu();
         loi(IllegalArgumentException.class, () -> dt.setThoiGianBaoHanh(-6));
-        NhanVien nv = new NhanVien();
+        TaiKhoanNhanVien nv = new TaiKhoanNhanVien();
         loi(IllegalArgumentException.class, () -> nv.setEmail("sai-email"));
         nv.setDiachi(new DiaChi("1", "Đường A", "Phường B", "Quận C", "Tỉnh D"));
         nv.setNgsinh(LocalDate.of(2000, 1, 1));
         check(!nv.getDiachi().isBlank(), "Giữ overload địa chỉ và ngày sinh cũ");
-        NhanVien diaChiNull = new NhanVien(null, null, null, null, null, "NV008", "KeToan", 0, 0);
+        TaiKhoanNhanVien diaChiNull = new TaiKhoanNhanVien(null, null, null, null, null, "NV008", "KeToan", 0, 0);
         check(diaChiNull.getDiachi().equals(""), "Địa chỉ null không gây NullPointerException");
         new HoaDonNhapHang("HD050", LocalDateTime.now(), "NV001", "Hoá đơn nhập", "NCC001", 0, 0, true, false);
         check(true, "Giữ constructor hóa đơn nhập 9 tham số");
@@ -272,8 +273,8 @@ public class Pr43LogicIntegrationTest {
         check(new DienTu().getMaSanPham().equals("SP801"), "Setter mã sản phẩm tăng bộ đếm");
         KhachHang kh = new KhachHang(); kh.setMaKhachHang("KH800");
         check(new KhachHang().getMaKhachHang().equals("KH801"), "Setter mã khách hàng tăng bộ đếm");
-        NhanVien nv = new NhanVien(); nv.setMaNV("NV800");
-        check(new NhanVien().getMaNV().equals("NV801"), "Setter mã nhân viên tăng bộ đếm");
+        TaiKhoanNhanVien nv = new TaiKhoanNhanVien(); nv.setMaNV("NV800");
+        check(new TaiKhoanNhanVien().getMaNV().equals("NV801"), "Setter mã nhân viên tăng bộ đếm");
         HoaDonBanHang hd = new HoaDonBanHang(); hd.setMaHoaDon("HD800");
         check(new HoaDonNhapHang().getMaHoaDon().equals("HD801"), "Hóa đơn bán/nhập chia sẻ bộ đếm");
         KhuyenMaiTrucTiep km = new KhuyenMaiTrucTiep(); km.setMaKhuyenMai("KM800");
@@ -285,9 +286,9 @@ public class Pr43LogicIntegrationTest {
     private static void dangNhap() throws Exception {
         GiaoDien gd = new GiaoDien();
         String sai = "KeToanSieuThi\nKETOAN@123\n".repeat(5);
-        String xuat = imLang(() -> gd.MenuKeToan(new Scanner(sai)));
-        check(xuat.contains("quá 5 lần") && !xuat.contains("NGHIỆP VỤ KẾ TOÁN"), "Mật khẩu phân biệt chữ hoa/thường");
-        xuat = imLang(() -> gd.MenuKeToan(new Scanner("KeToanSieuThi\nketoan@123\n0\n")));
+        String xuat = imLang(() -> gd.TrangChu(new Scanner(sai + "0\n")));
+        check(xuat.contains("Số lần đăng nhập sai: 5") && !xuat.contains("NGHIỆP VỤ KẾ TOÁN"), "Mật khẩu phân biệt chữ hoa/thường");
+        xuat = imLang(() -> gd.TrangChu(new Scanner("KeToanSieuThi\nketoan@123\n0\n0\n")));
         check(xuat.contains("NGHIỆP VỤ KẾ TOÁN"), "Mật khẩu đúng vẫn vào được menu");
     }
 

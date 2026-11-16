@@ -6,8 +6,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import dichvu.Danhsachdoitac;
-import dichvu.Nhacungcap;
+import doitac.Danhsachdoitac;
+import doitac.Nhacungcap;
 import sanpham.QuanLySanPham;
 import utils.Validation;
 
@@ -16,7 +16,7 @@ public class HoaDonNhapHang extends HoaDon {
     private long chiPhiVanChuyen;
     private double thueVAT; // Lưu ý VAT lưu dạng 10 (10%)
     private ArrayList<CTHoaDonNhap> ctHoaDonNhaps ;
-    private boolean Duyet ;
+    private TrangThaiDuyet trangThaiDuyet;
     private boolean daNhapSP ;
 
     // Mã hóa đơn nhập: Bắt đầu bằng chữ "HDN" (in hoa) và theo sau là các chữ số. VD: HDN001
@@ -34,7 +34,7 @@ public class HoaDonNhapHang extends HoaDon {
         this.maNhaCungCap = "";
         this.thueVAT = 0;
         this.chiPhiVanChuyen = 0;
-        this.Duyet = false ;
+        this.trangThaiDuyet = TrangThaiDuyet.CHO_DUYET;
         this.daNhapSP = false ;
         this.ctHoaDonNhaps = new ArrayList<>() ;
     }
@@ -46,8 +46,8 @@ public class HoaDonNhapHang extends HoaDon {
         this.maNhaCungCap = maNhaCungCap; // ĐÃ THÊM DÒNG NÀY
         this.chiPhiVanChuyen = chiPhiVanChuyen;
         this.thueVAT = thueVAT;
-        this.Duyet = Duyet ;
-        this.daNhapSP = daNhapSP ;
+        this.trangThaiDuyet = Duyet ? TrangThaiDuyet.DA_DUYET : TrangThaiDuyet.CHO_DUYET;
+        setDaNhapSP(daNhapSP);
         this.ctHoaDonNhaps = new ArrayList<>();
     }
 
@@ -112,11 +112,11 @@ public class HoaDonNhapHang extends HoaDon {
     }
     public void nhapHoaDon( Scanner sc , ArrayList<CTHoaDonNhap> cthoaDonNhaps , String maNhaCungCap)
     {
-        this.thueVAT = Validation.inputDouble(sc, "Nhập thuế VAT (%): ");
-        while (this.thueVAT > 0.15 )
+        this.thueVAT = Validation.inputDouble(sc, "Nhập thuế VAT (%nhập số nguyên): ");
+        while (this.thueVAT > 15 )
         {
             System.out.println("Thuế VAT không vượt quá 15% giá trị hoá đơn vui lòng nhập lại!");
-            this.thueVAT = Validation.inputDouble(sc, "Nhập thuế VAT (%): ");
+            this.thueVAT = Validation.inputDouble(sc, "Nhập thuế VAT (% nhập số nguyên): ");
         }
         this.chiPhiVanChuyen = Validation.inputLong(sc, "Nhập chi phí vận chuyển (VND): ");
         setCtHoaDonNhaps(cthoaDonNhaps);
@@ -170,11 +170,20 @@ public class HoaDonNhapHang extends HoaDon {
     }
 
     public boolean isDuyet() {
-        return Duyet;
+        return trangThaiDuyet == TrangThaiDuyet.DA_DUYET;
     }
 
     public void setDuyet(boolean duyet) {
-        Duyet = duyet;
+        setTrangThaiDuyet(duyet ? TrangThaiDuyet.DA_DUYET : TrangThaiDuyet.CHO_DUYET);
+    }
+
+    public TrangThaiDuyet getTrangThaiDuyet() { return trangThaiDuyet; }
+
+    public void setTrangThaiDuyet(TrangThaiDuyet trangThai) {
+        if (trangThai == null) throw new IllegalArgumentException("Trạng thái duyệt không được null.");
+        if (daNhapSP && trangThai != TrangThaiDuyet.DA_DUYET)
+            throw new IllegalStateException("Hóa đơn đã nhập kho phải giữ trạng thái đã duyệt.");
+        this.trangThaiDuyet = trangThai;
     }
 
     public boolean isDaNhapSP() {
@@ -182,19 +191,21 @@ public class HoaDonNhapHang extends HoaDon {
     }
 
     public void setDaNhapSP(boolean daNhapSP) {
+        if (daNhapSP && !isDuyet())
+            throw new IllegalStateException("Chỉ hóa đơn đã duyệt mới được nhập kho.");
         this.daNhapSP = daNhapSP;
     }
 
     @Override
     public String toString() {
-        return utils.HienThi.canLe(super.toString() + " | Mã nhà cung cấp: " + maNhaCungCap + " | Chi phí vận chuyển: " + chiPhiVanChuyen + " | Thuế VAT: " + thueVAT + " | Trạng thái duyệt: " + ((Duyet)?"Đã duyệt":"Chưa duyệt"));
+        return utils.HienThi.canLe(super.toString() + " | Mã nhà cung cấp: " + maNhaCungCap + " | Chi phí vận chuyển: " + chiPhiVanChuyen + " | Thuế VAT: " + thueVAT + " | Trạng thái duyệt: " + trangThaiDuyet);
     }
 
     // ================= ĐỌC / GHI FILE TXT =================
 
     @Override public String toDongFile() {
         kiemTraDuLieuFile();
-        return "HDNHAP;" + thongTinHoaDonFile() + ";" + DongDuLieu.ghep(maNhaCungCap, chiPhiVanChuyen, thueVAT, Duyet, daNhapSP);
+        return "HDNHAP;" + thongTinHoaDonFile() + ";" + DongDuLieu.ghep(maNhaCungCap, chiPhiVanChuyen, thueVAT, trangThaiDuyet.name(), daNhapSP);
     }
 
     public static HoaDonNhapHang tuDongFile(String dong) {
@@ -207,7 +218,7 @@ public class HoaDonNhapHang extends HoaDon {
         obj.maNhaCungCap = p[5];
         obj.chiPhiVanChuyen = Long.parseLong(p[6]);
         obj.thueVAT = Double.parseDouble(p[7]);
-        obj.Duyet = DongDuLieu.logic(p[8]);
+        obj.trangThaiDuyet = TrangThaiDuyet.tuDuLieuFile(p[8]);
         obj.daNhapSP = DongDuLieu.logic(p[9]);
         obj.kiemTraDuLieuFile();
         obj.capNhatMaFile();
@@ -216,6 +227,7 @@ public class HoaDonNhapHang extends HoaDon {
 
     public void kiemTraDuLieuFile() {
         super.kiemTraDuLieuFile();
+        DongDuLieu.yeuCau(trangThaiDuyet != null && (!daNhapSP || isDuyet()), "Trạng thái duyệt và nhập kho không hợp lệ.");
         DongDuLieu.khongAm(chiPhiVanChuyen, "chiPhiVanChuyen");
         DongDuLieu.tyLe(thueVAT, 100, "thuế VAT");
     }

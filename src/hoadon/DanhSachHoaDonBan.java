@@ -190,21 +190,25 @@ public class DanhSachHoaDonBan implements interfaces.IQuanLy<HoaDonBanHang> {
                             System.out.println("Thêm chi tiết sản phẩm thành công!");
                             break;
                         case 2:
+                            for (int i = 0; i < hd.getCtHoaDonBans().size(); i++) {
+                                System.out.println((i + 1) + ". " + hd.getCtHoaDonBans().get(i));
+                            }
+                            int viTriXoa = Validation.luaChon(sc, "Chọn dòng sản phẩm cần xoá: ",
+                                    1, hd.getCtHoaDonBans().size()) - 1;
+                            hd.getCtHoaDonBans().remove(viTriXoa) ;
+                            System.out.println("Xoá chi tiết sản phẩm thành công!");
+                            break;
                         case 3:
                             for (int i = 0; i < hd.getCtHoaDonBans().size(); i++) {
                                 System.out.println((i + 1) + ". " + hd.getCtHoaDonBans().get(i));
                             }
-                            int viTri = Validation.luaChon(sc, "Chọn dòng sản phẩm cần sửa hoặc xoá: ",
+                            int viTri = Validation.luaChon(sc, "Chọn dòng sản phẩm cần sửa: ",
                                     1, hd.getCtHoaDonBans().size()) - 1;
-                            if (luachon == 2) {
-                                hd.getCtHoaDonBans().remove(viTri);
-                                System.out.println("Xoá chi tiết sản phẩm thành công!");
-                            } else {
                                 CTHoaDonBan ctMoi = new CTHoaDonBan();
+                                System.out.println("Chọn lại sản phẩm mới cho chi tiết hoá đơn");
                                 ctMoi.nhapThongTinBan(sc, qlsp, danhSachKhuyenMai, danhSachSPKM);
                                 hd.getCtHoaDonBans().set(viTri, ctMoi);
                                 System.out.println("Chỉnh sửa sản phẩm thành công!");
-                            }
                             break;
                         default:
                             break;
@@ -425,7 +429,7 @@ public class DanhSachHoaDonBan implements interfaces.IQuanLy<HoaDonBanHang> {
                     break;
                 }
                 case 4: {
-                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã nhân viên cần tìm: ", Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng. Vui lòng nhập lại!", person.NhanVien.getSoThuTu());
+                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã nhân viên cần tìm: ", Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng. Vui lòng nhập lại!", person.TaiKhoanNhanVien.getSoThuTu());
                     System.out.println("Đang tra cứu...");
                     Validation.danghoatdong(1);
                     for (HoaDonBanHang hdb : dsHoaDonBanHang) {
@@ -704,7 +708,6 @@ public class DanhSachHoaDonBan implements interfaces.IQuanLy<HoaDonBanHang> {
         }
         return true;
     }
-<<<<<<< HEAD
 
     /** Mỗi đối tượng tạo một dòng; thông tin con được ghi thành dòng riêng. */
 
@@ -777,6 +780,3 @@ public class DanhSachHoaDonBan implements interfaces.IQuanLy<HoaDonBanHang> {
         this.dsHoaDonBanHang = moi;
     }
 }
-=======
-}
->>>>>>> origin/main

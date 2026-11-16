@@ -12,7 +12,7 @@ import hoadon.DanhSachHoaDonBan;
 import sanpham.QuanLySanPham;
 import utils.Validation;
 
-public class ThuNgan extends NhanVien {
+public class ThuNgan extends TaiKhoanNhanVien {
     private long tongTienDauCa;
     private transient DanhSachHoaDonBan danhSachHoaDonBan ;
 
@@ -166,12 +166,12 @@ public class ThuNgan extends NhanVien {
 
     public static ThuNgan tuDongFile(String dong) {
         String[] p = dong.split(";", -1);
-        DongDuLieu.yeuCau(p.length == 16 && "THUNGAN".equals(p[0]), "Sai dòng THUNGAN (cần 16 cột).");
-        int dem = NhanVien.getSoThuTu();
+        DongDuLieu.yeuCau((p.length == 16 || p.length == 18) && "THUNGAN".equals(p[0]), "Sai dòng THUNGAN (cần 16 cột).");
+        int dem = TaiKhoanNhanVien.getSoThuTu();
         ThuNgan obj = new ThuNgan();
-        NhanVien.datBoDemFile(dem); // Constructor đọc file không cấp mã mới.
+        TaiKhoanNhanVien.datBoDemFile(dem); // Constructor đọc file không cấp mã mới.
         obj.docThongTinNhanVienFile(p);
-        obj.tongTienDauCa = Long.parseLong(p[15]);
+        obj.tongTienDauCa = Long.parseLong(p[p.length == 18 ? 17 : 15]);
         obj.kiemTraDuLieuFile();
         obj.capNhatMaFile();
         return obj;

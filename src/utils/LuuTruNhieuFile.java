@@ -9,7 +9,7 @@ public class LuuTruNhieuFile {
     public static final String[] TEN_FILE = {
             "SanPham.txt", "NhanVien.txt", "KhachHang.txt", "DoiTac.txt",
             "KhuyenMai.txt", "SanPhamKhuyenMai.txt", "HoaDonBan.txt",
-            "HoaDonNhap.txt", "NhanVienDangNhap.txt"
+            "HoaDonNhap.txt", "CongNo.txt", "NhanVienDangNhap.txt"
     };
 
     public static Path thuMucHienTai(String thuMuc) throws IOException {

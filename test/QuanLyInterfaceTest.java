@@ -2,6 +2,7 @@ import interfaces.IQuanLy;
 import person.*;
 import sanpham.*;
 import dichvu.*;
+import doitac.*;
 import hoadon.*;
 import utils.YeuCau;
 
@@ -23,7 +24,7 @@ public class QuanLyInterfaceTest {
             System.setOut(new PrintStream(log, true, java.nio.charset.StandardCharsets.UTF_8));
             GiaoDien gd = GiaoDien.docDuLieu(args[0]);
             IQuanLy<SanPham> sp = lay(gd, "dsSanPham");
-            IQuanLy<NhanVien> nv = lay(gd, "dsNhanVien");
+            IQuanLy<TaiKhoanNhanVien> nv = lay(gd, "dsTaiKhoan");
             IQuanLy<KhachHang> kh = lay(gd, "dsKhachHang");
             IQuanLy<Doitac> dt = lay(gd, "dsDoiTac");
             IQuanLy<Khuyenmai> km = lay(gd, "dsKhuyenMai");
@@ -61,7 +62,9 @@ public class QuanLyInterfaceTest {
             check(nhap.sua("HD006", new Scanner("4\n15000\n")), "Sửa hóa đơn nhập chưa duyệt qua interface");
             check(nhap.timMa("HD006").getChiPhiVanChuyen() == 15000, "Phí vận chuyển đã sửa");
             check(ban.sua("HD003", new Scanner("1\nKH002\n")), "Sửa hóa đơn bán qua interface");
-            check(ban.xoa("HD003") && nhap.xoa("HD006"), "Xóa hóa đơn nháp");
+            check(ban.xoa("HD003") && !nhap.xoa("HD006"), "Giữ hóa đơn nhập đang chờ duyệt");
+            nhap.timMa("HD006").setTrangThaiDuyet(TrangThaiDuyet.TU_CHOI);
+            check(nhap.xoa("HD006"), "Xóa hóa đơn nhập bị từ chối");
             check(!no.xoa("HD005"), "Giữ công nợ đã thanh toán");
             LocalDate han = LocalDate.now().plusDays(20);
             check(no.sua("HD004", new Scanner(han.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")) + "\n")), "Sửa hạn nợ");
@@ -73,7 +76,7 @@ public class QuanLyInterfaceTest {
             check(yc.timMa("NV002") != null && yc.timTen("sữa") != null && yc.timKhoa("QuanKho") != null, "Thêm/tìm yêu cầu");
             check(yc.sua("NV002", new Scanner("Bổ sung sữa\n2\n")), "Sửa yêu cầu");
             check(yc.timMa("NV002").getTrangThai().equals("DaDuyet"), "Trạng thái yêu cầu");
-            check(yc.xoa("NV002") && yc.getList().isEmpty(), "Xóa yêu cầu cuối cùng");
+            check(yc.xoa("NV002") && yc.getList().length == 0, "Xóa yêu cầu cuối cùng");
             check(YeuCau.docDanhSach(fileYC).stream().anyMatch(YeuCau.BanGhiDataBase::laDongLoi), "Giữ dòng lỗi lịch sử yêu cầu");
 
             check(sp.xoa("SP001") && sp.timMa("SP001") == null && sp.timTen("hộp 1 lít") == null, "Xóa mềm sản phẩm");

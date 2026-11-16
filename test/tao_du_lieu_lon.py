@@ -1,6 +1,7 @@
 """Tạo bộ TXT riêng; không sửa dữ liệu ứng dụng hoặc ghi đè bộ mẫu đã tồn tại."""
 from pathlib import Path
 from datetime import date, timedelta
+from ten_san_pham import TEN_SAN_PHAM
 import calendar
 import sys
 
@@ -35,6 +36,7 @@ for i in range(1,101):
         p=['TIEUDUNG',f'SP{i:03}',f'Tiêu dùng mẫu {i:03}','Tiêu dùng',ncc,cost,price,stock,0.05,active,'Nhãn Việt','Việt Nam','Gia dụng','Để xa trẻ em']
     else:
         p=['DIENTU',f'SP{i:03}',f'Điện tử mẫu {i:03}','Điện tử',ncc,cost,price,stock,0.05,active,12 if i%2 else 24,'Nhựa và inox']
+    p[2] = TEN_SAN_PHAM[p[1]]
     products.append(p)
 write('SanPham.txt','QuanLySanPham',products)
 nccs=[]

@@ -1,5 +1,7 @@
 public class Main {
     public static void main(String[] args) {
-        GiaoDien.chayChuongTrinh();
+        try (java.util.Scanner sc = new java.util.Scanner(System.in)) {
+            GiaoDien.chayChuongTrinh(sc);
+        }
     }
 }

@@ -200,7 +200,7 @@ public class YeuCau implements interfaces.BanGhiFile {
 
     public static YeuCau taoYeuCau(Scanner sc) {
         String maNV = Validation.inputStringRegex(sc, "Nhập mã nhân viên: ", Validation.MaNV_REGEX,
-                "Mã nhân viên không đúng định dạng!", person.NhanVien.getSoThuTu());
+                "Mã nhân viên không đúng định dạng!", person.TaiKhoanNhanVien.getSoThuTu());
 
         System.out.print("Nhập vai trò: ");
         String vaitro = sc.nextLine().trim();

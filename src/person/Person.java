@@ -206,7 +206,7 @@ public abstract class Person implements interfaces.BanGhiFile {
     public static Person tuDongFile(String dong) {
         String loai = dong.split(";", -1)[0];
         if ("KHACHHANG".equals(loai)) return KhachHang.tuDongFile(dong);
-        return NhanVien.tuDongFile(dong);
+        return TaiKhoanNhanVien.tuDongFile(dong);
     }
 
     public void kiemTraDuLieuFile() {

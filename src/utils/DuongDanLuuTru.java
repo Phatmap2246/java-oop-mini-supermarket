@@ -5,6 +5,8 @@ import java.nio.file.*;
 /** Một nơi khai báo đường dẫn, để dữ liệu không nằm rải rác trong mã nguồn. */
 public class DuongDanLuuTru {
     public static Path thuMuc() {
+        String override = System.getProperty("sieuthi.dataDir");
+        if (override != null && !override.isBlank()) return Paths.get(override).toAbsolutePath().normalize();
         Path goc = timGoc(Paths.get("").toAbsolutePath());
         if (goc == null) {
             try {

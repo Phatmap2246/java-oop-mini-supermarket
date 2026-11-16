@@ -147,7 +147,6 @@ public class DanhSachSPKM implements interfaces.IQuanLy<SanPhamKhuyenMai> {
             QuanLySanPham dssp,
             Danhsachkhuyenmai dsKhuyenMai) {
 
-<<<<<<< HEAD
         if (dssp == null || dsKhuyenMai == null) {
             throw new IllegalArgumentException(
                     "Danh sách sản phẩm và khuyến mãi không được null.");
@@ -178,40 +177,6 @@ public class DanhSachSPKM implements interfaces.IQuanLy<SanPhamKhuyenMai> {
                 continue;
             }
 
-=======
-
-    /**
-     * Tự động quét kho và định giá động (Dynamic Pricing) theo bậc thang cho Thực phẩm cận hạn (<= 15 ngày).
-     */
-    public int tuDongGiamGiaCanHSD(QuanLySanPham dssp, Danhsachkhuyenmai dsKhuyenMai) {
-        if (dssp == null || dssp.getDanhSachSanPham().isEmpty()) {
-            System.out.println("[!] Kho hàng trống, không có sản phẩm để quét.");
-            return 0;
-        }
-        if (dsKhuyenMai == null) {
-            throw new IllegalArgumentException("Danh sách khuyến mãi không được null.");
-        }
-
-        LocalDate homNay = LocalDate.now();
-        int demDaApDung = 0;
-
-        System.out.println("\n=== HỆ THỐNG TỰ ĐỘNG ĐỊNH GIÁ ĐỘNG (DYNAMIC PRICING) ===");
-        for (SanPham sp : dssp.getDanhSachSanPham()) {
-            if (sp == null || !sp.isTonTai() || !(sp instanceof ThucPham tp)
-                    || tp.getSoLuongTonKho() <= 0 || tp.getHanSuDung() == null) {
-                continue;
-            }
-
-            long soNgayConLai = java.time.temporal.ChronoUnit.DAYS.between(homNay, tp.getHanSuDung());
-            if (soNgayConLai < 0 || soNgayConLai > 15) {
-                continue;
-            }
-            if (timViTri(tp.getMaSanPham()) != -1) {
-                System.out.println("[i] Bỏ qua " + tp.getMaSanPham() + " (" + tp.getTenSanPham() + ") vì đã có khuyến mãi.");
-                continue;
-            }
-
->>>>>>> origin/main
             double tyLeGiam;
             if (soNgayConLai <= 3) {
                 tyLeGiam = 0.50;
@@ -221,7 +186,6 @@ public class DanhSachSPKM implements interfaces.IQuanLy<SanPhamKhuyenMai> {
                 tyLeGiam = 0.15;
             }
 
-<<<<<<< HEAD
             int viTri = -1;
             for (int i = 0; i < soLuongSanPham; i++) {
                 SanPhamKhuyenMai lk = sanPhamKhuyenMais[i];
@@ -307,33 +271,6 @@ public class DanhSachSPKM implements interfaces.IQuanLy<SanPhamKhuyenMai> {
         sanPhams.getDanhSachSanPham().addAll(danhSach);
         int soLuong = tuDongGiamGiaCanHSD(sanPhams, khuyenMais);
         System.out.println("Đã cập nhật giảm giá cận hạn cho " + soLuong + " sản phẩm.");
-=======
-            KhuyenMaiPhanTram kmTuDong = new KhuyenMaiPhanTram();
-            kmTuDong.setNgayBatDau(homNay);
-            kmTuDong.setNgayKetThuc(tp.getHanSuDung());
-            kmTuDong.setMucChiToiThieu(0);
-            kmTuDong.setPhanTramGiamGia(tyLeGiam);
-            long mucToiDa = Math.max(1000L, (tp.getGiaBan() * tp.getSoLuongTonKho()) / 2);
-            kmTuDong.setMucGiamToiDa(mucToiDa);
-            int phanTramInt = (int) Math.round(tyLeGiam * 100);
-            kmTuDong.setLoaiKhuyenMai("Giảm theo phần trăm - Auto Cận Date (-" + phanTramInt + "%)");
-
-            dsKhuyenMai.them(kmTuDong);
-            them(new SanPhamKhuyenMai(tp.getMaSanPham(), kmTuDong.getMaKhuyenMai()));
-
-            System.out.printf("[+] Tự động gắn mã %s (-%d%%) cho [%s - %s] | Còn %d ngày (HSD: %s)%n",
-                    kmTuDong.getMaKhuyenMai(), phanTramInt,
-                    tp.getMaSanPham(), tp.getTenSanPham(), soNgayConLai, tp.getHanSuDung());
-            demDaApDung++;
-        }
-
-        if (demDaApDung == 0) {
-            System.out.println("[i] Không phát hiện thực phẩm cận hạn (<= 15 ngày) nào cần tạo mã mới.");
-        } else {
-            System.out.println("=> Hoàn tất! Đã tự động kích hoạt khuyến mãi cho " + demDaApDung + " mặt hàng.");
-        }
-        return demDaApDung;
->>>>>>> origin/main
     }
     @Override
     public boolean sua(String maSanPham, Scanner sc)
@@ -575,7 +512,6 @@ public class DanhSachSPKM implements interfaces.IQuanLy<SanPhamKhuyenMai> {
             }
         } while (luaChon != 0);
     }
-<<<<<<< HEAD
 
     /** Mỗi đối tượng tạo một dòng; thông tin con được ghi thành dòng riêng. */
 
@@ -614,6 +550,3 @@ public class DanhSachSPKM implements interfaces.IQuanLy<SanPhamKhuyenMai> {
         this.soLuongSanPham = moi.size();
     }
 }
-=======
-}
->>>>>>> origin/main

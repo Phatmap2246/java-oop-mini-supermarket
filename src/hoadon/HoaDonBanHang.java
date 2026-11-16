@@ -91,8 +91,24 @@ public class HoaDonBanHang extends HoaDon {
             {
                 if ( cthdb.getMaSanPham().equalsIgnoreCase(ct.getMaSanPham()))
                 {
-                    System.out.println("Không thể nhập 1 sản phẩm hai lần: ");
-                    flag = true ;
+                   int soLuongThem = ct.getSoLuong();
+                   long soLuongMoi = (long) soLuongThem + cthdb.getSoLuong();
+                   while (true)
+                   {
+                       if (soLuongThem > 0 && soLuongMoi <= qlsp.timMa(ct.getMaSanPham()).getSoLuongTonKho()) {
+                           try {
+                               cthdb.setSoLuong((int) soLuongMoi);
+                               break;
+                           } catch (IllegalArgumentException e) {
+                               System.out.println(e.getMessage());
+                           }
+                       }
+                       System.out.println("Số lương sản phẩm mua thêm vào vượt quá hàng tồn kho( còn lại: " +qlsp.timMa(ct.getMaSanPham()).getSoLuongTonKho() + " ) vui lòng nhập lại!"  );
+                       soLuongThem = Validation.inputInt(sc, "Nhập lại số lượng sản phẩm thêm vào: " );
+                       soLuongMoi = (long) soLuongThem + cthdb.getSoLuong();
+                   }
+                   flag = true ;
+                   break;
                 }
             }
             if (!flag) ctHoaDonBans.add(ct) ;
@@ -138,9 +154,15 @@ public class HoaDonBanHang extends HoaDon {
         long tongTienHang = 0;
         for(CTHoaDonBan ct : ctHoaDonBans){
             if (ct == null || !ct.isTonTai()) continue;
-            tongTienHang += ct.tinhThanhTien();
+            try {
+                tongTienHang = Math.addExact(tongTienHang, ct.tinhThanhTien());
+            } catch (ArithmeticException e) {
+                throw new IllegalStateException("Tổng tiền hóa đơn vượt giới hạn.", e);
+            }
         }
-        return (long) (tongTienHang*(1-chietKhau));
+        return java.math.BigDecimal.valueOf(tongTienHang)
+                .multiply(java.math.BigDecimal.ONE.subtract(java.math.BigDecimal.valueOf(chietKhau)))
+                .toBigInteger().longValueExact();
     }
    
     @Override 
@@ -153,6 +175,10 @@ public class HoaDonBanHang extends HoaDon {
             System.out.println(ct);
         }
         System.out.println("Thành tiền phải trả: " + tinhTongTien());
+        if (phuongThucThanhToan instanceof ThanhToanTienMat tienMat) {
+            System.out.println("Số tiền nhận: " + tienMat.getTienKhachDua() + " VND");
+            System.out.println("Số tiền trả lại: " + tienMat.getTienThua() + " VND");
+        }
         System.out.println( "Trạng thái: " + ((daThanhToan)?"Đã thanh toán":"Chưa thanh toán") + " | Phương thức thanh toán: " + (phuongThucThanhToan == null ? "Chưa chọn" : phuongThucThanhToan.getTenPhuongThuc()));
     }
     public void danhSachSanPhamDaMua()

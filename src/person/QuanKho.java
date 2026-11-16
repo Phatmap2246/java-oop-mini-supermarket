@@ -4,11 +4,11 @@ import utils.DongDuLieu;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
-import dichvu.Danhsachdoitac;
+import doitac.Danhsachdoitac;
 import hoadon.*;
 import sanpham.*;
 import utils.Validation;
-public class QuanKho extends NhanVien
+public class QuanKho extends TaiKhoanNhanVien
 {
     private transient QuanLySanPham qlsp ;
     private transient DanhSachHoaDonNhap dsHoaDonNhap;
@@ -208,10 +208,10 @@ public class QuanKho extends NhanVien
 
     public static QuanKho tuDongFile(String dong) {
         String[] p = dong.split(";", -1);
-        DongDuLieu.yeuCau(p.length == 15 && "QUANKHO".equals(p[0]), "Sai dòng QUANKHO (cần 15 cột).");
-        int dem = NhanVien.getSoThuTu();
+        DongDuLieu.yeuCau((p.length == 15 || p.length == 17) && "QUANKHO".equals(p[0]), "Sai dòng QUANKHO (cần 15 cột).");
+        int dem = TaiKhoanNhanVien.getSoThuTu();
         QuanKho obj = new QuanKho();
-        NhanVien.datBoDemFile(dem); // Constructor đọc file không cấp mã mới.
+        TaiKhoanNhanVien.datBoDemFile(dem); // Constructor đọc file không cấp mã mới.
         obj.docThongTinNhanVienFile(p);
         obj.kiemTraDuLieuFile();
         obj.capNhatMaFile();

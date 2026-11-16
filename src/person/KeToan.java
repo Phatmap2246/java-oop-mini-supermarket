@@ -12,11 +12,11 @@ import hoadon.HoaDonNhapHang;
 import hoadon.DanhSachHoaDonBan;
 import hoadon.DanhSachHoaDonNhap;
 import hoadon.DanhSachCongNo;
-import dichvu.Danhsachdoitac;
+import doitac.Danhsachdoitac;
 import utils.DateUtil;
 import utils.Validation;
 
-public class KeToan extends NhanVien {
+public class KeToan extends TaiKhoanNhanVien {
     // Mặc định kỳ hạn thanh toán công nợ với NCC là 30 ngày kể từ ngày lập hóa đơn
     private static final int KY_HAN_CONG_NO_NGAY = 30;
 
@@ -216,9 +216,9 @@ public class KeToan extends NhanVien {
 
             System.out.printf("%d. HĐ: %s | Đối tác: %s | Tiền: %,d VND | Hạn: %s | [%s]%n",
                     i + 1,
-                    hdn.getMaHoaDon(),
-                    hdn.getMaNhaCungCap(),
-                    hdn.tinhTongTien(),
+                    hd.getMaHoaDon(),
+                    hd instanceof HoaDonNhapHang hdn ? hdn.getMaNhaCungCap() : "",
+                    hd.tinhTongTien(),
                     DateUtil.formatDate(han),
                     trangThai);
         }
@@ -230,10 +230,10 @@ public class KeToan extends NhanVien {
             HoaDon hd = dsChuaTra.get(i);
             System.out.printf("%d. HĐ: %s - %s (%,d VND - Hạn: %s)%n",
                     i + 1,
-                    hdn.getMaHoaDon(),
-                    hdn.getMaNhaCungCap(),
-                    hdn.tinhTongTien(),
-                    DateUtil.formatDate(tinhNgayDenHan(hdn)));
+                    hd.getMaHoaDon(),
+                    hd instanceof HoaDonNhapHang hdn ? hdn.getMaNhaCungCap() : "",
+                    hd.tinhTongTien(),
+                    DateUtil.formatDate(tinhNgayDenHan(hd)));
         }
         System.out.println("0. Quay lại");
     }
@@ -344,10 +344,10 @@ public class KeToan extends NhanVien {
 
     public static KeToan tuDongFile(String dong) {
         String[] p = dong.split(";", -1);
-        DongDuLieu.yeuCau(p.length == 15 && "KETOAN".equals(p[0]), "Sai dòng KETOAN (cần 15 cột).");
-        int dem = NhanVien.getSoThuTu();
+        DongDuLieu.yeuCau((p.length == 15 || p.length == 17) && "KETOAN".equals(p[0]), "Sai dòng KETOAN (cần 15 cột).");
+        int dem = TaiKhoanNhanVien.getSoThuTu();
         KeToan obj = new KeToan();
-        NhanVien.datBoDemFile(dem); // Constructor đọc file không cấp mã mới.
+        TaiKhoanNhanVien.datBoDemFile(dem); // Constructor đọc file không cấp mã mới.
         obj.docThongTinNhanVienFile(p);
         obj.kiemTraDuLieuFile();
         obj.capNhatMaFile();

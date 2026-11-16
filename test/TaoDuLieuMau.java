@@ -1,4 +1,5 @@
 import dichvu.*;
+import doitac.*;
 import hoadon.*;
 import person.*;
 import sanpham.*;
@@ -18,7 +19,7 @@ public class TaoDuLieuMau {
         }
         GiaoDien gd = GiaoDien.docDuLieu(thuMuc);
         QuanLySanPham dsSP = lay(gd, "dsSanPham");
-        DSNhanVien dsNV = lay(gd, "dsNhanVien");
+        DSTaiKhoan dsNV = lay(gd, "dsTaiKhoan");
         DSKhachHang dsKH = lay(gd, "dsKhachHang");
         Danhsachdoitac dsDT = lay(gd, "dsDoiTac");
         Danhsachkhuyenmai dsKM = lay(gd, "dsKhuyenMai");
@@ -26,7 +27,7 @@ public class TaoDuLieuMau {
         DanhSachHoaDonBan dsBan = lay(gd, "dsHoaDonBan");
         DanhSachHoaDonNhap dsNhap = lay(gd, "dsHoaDonNhap");
         DanhSachCongNo dsNo = lay(gd, "dsCongNo");
-        if (!dsSP.getDanhSachSanPham().isEmpty() || !dsNV.getDanhSachNhanVien().isEmpty()
+        if (!dsSP.getDanhSachSanPham().isEmpty() || !dsNV.getDanhSachTaiKhoan().isEmpty()
                 || dsKH.getSoLuong() != 0 || !dsDT.getDanhSachDoiTac().isEmpty()
                 || dsKM.getSoLuongKhuyenMai() != 0 || dsSPKM.getSoLuongSanPham() != 0
                 || !dsBan.getDsHoaDonBanHang().isEmpty() || !dsNhap.getDsHoaDonNhapHang().isEmpty()
@@ -36,14 +37,14 @@ public class TaoDuLieuMau {
         LocalDate homNay = LocalDate.now();
         String[] tenNV = {"Nguyễn Minh An", "Trần Quốc Bình", "Lê Ngọc Chi", "Phạm Thanh Dũng"};
         String[] vaiTro = {"QuanLy", "QuanKho", "ThuNgan", "KeToan"};
-        NhanVien[] nhanViens = {lay(gd, "quanLy"), lay(gd, "quanKho"), lay(gd, "thuNgan"), lay(gd, "keToan")};
+        TaiKhoanNhanVien[] nhanViens = {lay(gd, "quanLy"), lay(gd, "quanKho"), lay(gd, "thuNgan"), lay(gd, "keToan")};
         for (int i = 0; i < nhanViens.length; i++) {
-            NhanVien nv = nhanViens[i];
+            TaiKhoanNhanVien nv = nhanViens[i];
             nv.setHoten(tenNV[i]); nv.setVaiTro(vaiTro[i]);
             nv.setEmail("nhanvien" + (i + 1) + "@example.com"); nv.setSdt("090100000" + i);
             nv.setDiachi(diaChi(i)); nv.setNgsinh(LocalDate.of(1990 + i, 3, 15));
             nv.setLuong(i == 0 ? 15000000 : 8000000); nv.setPhuCapTrachNhiem(1000000);
-            dsNV.getDanhSachNhanVien().add(nv);
+            dsNV.getDanhSachTaiKhoan().add(nv);
         }
 
         String[] tenNCC = {"Thực phẩm An Nhiên", "Gia dụng Bình Minh", "Điện máy Hòa Phát"};
@@ -139,7 +140,7 @@ public class TaoDuLieuMau {
 
     private static DiaChi diaChi(int i) { return new DiaChi("" + (10 + i), "Nguyễn Trãi", "Bến Thành", "Quận 1", "TP Hồ Chí Minh"); }
 
-    private static HoaDonBanHang hoaDonBan(String ma, NhanVien nv, KhachHang kh, LocalDate ngay, boolean daTra) {
+    private static HoaDonBanHang hoaDonBan(String ma, TaiKhoanNhanVien nv, KhachHang kh, LocalDate ngay, boolean daTra) {
         HoaDonBanHang hd = new HoaDonBanHang(nv.getMaNV()); hd.setMaHoaDon(ma);
         hd.setMaKhachHang(kh.getMaKhachHang()); hd.setNgayLap(ngay.atTime(10, 30)); hd.setDaThanhToan(daTra);
         if (daTra) hd.setPhuongThucThanhToan(new ThanhToanTienMat());
@@ -151,7 +152,7 @@ public class TaoDuLieuMau {
         ct.setSoTienGiam(giam); ct.setThanhTienSauKhuyenMai(sl * sp.getGiaBan() - giam); return ct;
     }
 
-    private static HoaDonNhapHang hoaDonNhap(String ma, NhanVien nv, Nhacungcap ncc, SanPham sp, int sl, LocalDate ngay, boolean daNhap) {
+    private static HoaDonNhapHang hoaDonNhap(String ma, TaiKhoanNhanVien nv, Nhacungcap ncc, SanPham sp, int sl, LocalDate ngay, boolean daNhap) {
         HoaDonNhapHang hd = new HoaDonNhapHang(nv.getMaNV()); hd.setMaHoaDon(ma);
         hd.setNgayLap(ngay.atTime(9, 0)); hd.setMaNhaCungCap(ncc.getMaDoiTac()); hd.setDuyet(daNhap); hd.setDaNhapSP(daNhap);
         CTHoaDonNhap ct = new CTHoaDonNhap(); ct.setMaSanpham(sp.getMaSanPham());
@@ -170,7 +171,7 @@ public class TaoDuLieuMau {
     private static void kiemTra(GiaoDien gd) throws Exception {
         QuanLySanPham sp = lay(gd, "dsSanPham");
         if (sp.getDanhSachSanPham().size() != 8 || ((DSKhachHang) lay(gd, "dsKhachHang")).getSoLuong() != 3
-                || ((DSNhanVien) lay(gd, "dsNhanVien")).getDanhSachNhanVien().size() != 4
+                || ((DSTaiKhoan) lay(gd, "dsTaiKhoan")).getDanhSachTaiKhoan().size() != 4
                 || ((Danhsachdoitac) lay(gd, "dsDoiTac")).getDanhSachDoiTac().size() != 3
                 || ((Danhsachkhuyenmai) lay(gd, "dsKhuyenMai")).getSoLuongKhuyenMai() != 4
                 || ((List<?>) lay(lay(gd, "dsCongNo"), "maHoaDonCongNo")).size() != 2

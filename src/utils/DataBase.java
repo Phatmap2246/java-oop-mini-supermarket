@@ -174,7 +174,7 @@ public class DataBase {
             if (!ghiDe && Files.exists(Paths.get(filePath))) cacDong.addAll(TepVanBan.doc(filePath));
             for (Object obj : objs) {
                 if (!(obj instanceof interfaces.BanGhiFile)) throw new IOException("Đối tượng chưa có định dạng dòng.");
-                if (obj instanceof hoadon.HoaDon || obj instanceof person.QuanLy || obj instanceof dichvu.Nhacungcap)
+                if (obj instanceof hoadon.HoaDon || obj instanceof person.QuanLy || obj instanceof doitac.Nhacungcap)
                     throw new IOException("Hãy ghi đối tượng có danh sách con qua lớp quản lý để giữ đủ dữ liệu.");
                 cacDong.add(((interfaces.BanGhiFile) obj).toDongFile());
             }
@@ -187,7 +187,7 @@ public class DataBase {
         if (sanpham.SanPham.class.isAssignableFrom(lop)) obj = sanpham.SanPham.tuDongFile(dong);
         else if (person.Person.class.isAssignableFrom(lop)) obj = person.Person.tuDongFile(dong);
         else if (dichvu.Khuyenmai.class.isAssignableFrom(lop)) obj = dichvu.Khuyenmai.tuDongFile(dong);
-        else if (dichvu.Doitac.class.isAssignableFrom(lop)) obj = dichvu.Doitac.tuDongFile(dong);
+        else if (doitac.Doitac.class.isAssignableFrom(lop)) obj = doitac.Doitac.tuDongFile(dong);
         else if (hoadon.HoaDon.class.isAssignableFrom(lop)) obj = hoadon.HoaDon.tuDongFile(dong);
         else if (hoadon.CTHoaDon.class.isAssignableFrom(lop)) obj = hoadon.CTHoaDon.tuDongFile(dong);
         else if (lop == person.DiaChi.class) obj = person.DiaChi.tuDongFile(dong);

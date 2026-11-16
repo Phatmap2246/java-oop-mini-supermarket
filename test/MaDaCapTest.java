@@ -1,4 +1,5 @@
 import dichvu.*;
+import doitac.*;
 import hoadon.*;
 import person.*;
 import sanpham.*;
@@ -16,7 +17,7 @@ public class MaDaCapTest {
     public static void main(String[] args) throws Exception {
         check(new HoaDonBanHang("NV001").getMaHoaDon().equals("HD001"), "Hóa đơn đầu tiên dùng mã dương");
         GiaoDien gd = GiaoDien.docDuLieu(args[0]);
-        DSNhanVien nv = lay(gd, "dsNhanVien");
+        DSTaiKhoan nv = lay(gd, "dsTaiKhoan");
         QuanLySanPham sp = lay(gd, "dsSanPham");
         Danhsachdoitac dt = lay(gd, "dsDoiTac");
         Danhsachkhuyenmai km = lay(gd, "dsKhuyenMai");
@@ -45,8 +46,8 @@ public class MaDaCapTest {
         thuNhapLai(() -> hd.nhapHoaDon(new Scanner("NCC999\nNCC001\n0\n0\nSP001\n1\nkhong\n"), sp, dt));
         check(hd.getMaNhaCungCap().equals("NCC001") && hd.getCtHoaDonNhaps().size() == 1, "Regex NCC hợp lệ và đã được cấp");
         thuNhapLai(() -> {
-            String khongHopLe = "NV" + String.format("%03d", NhanVien.getSoThuTu());
-            String ma = Validation.inputStringRegex(new Scanner(khongHopLe + "\nNV001\n"), "", Validation.MaNV_REGEX, "", NhanVien.getSoThuTu());
+            String khongHopLe = "NV" + String.format("%03d", TaiKhoanNhanVien.getSoThuTu());
+            String ma = Validation.inputStringRegex(new Scanner(khongHopLe + "\nNV001\n"), "", Validation.MaNV_REGEX, "", TaiKhoanNhanVien.getSoThuTu());
             check(ma.equals("NV001"), "Bộ đếm tiếp theo chưa phải mã đã cấp");
         });
         try {

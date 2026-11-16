@@ -13,15 +13,15 @@ import java.util.Set;
 
 import sanpham.SanPham;
 
-import dichvu.Nhacungcap;
+import doitac.Nhacungcap;
 
-import dichvu.Doitac;
+import doitac.Doitac;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
-import dichvu.Danhsachdoitac;
+import doitac.Danhsachdoitac;
 import sanpham.QuanLySanPham;
 import utils.Validation;
 
@@ -46,12 +46,12 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
     }
     @Override public boolean sua(String ma, Scanner sc) {
         HoaDonNhapHang hd = timMa(ma);
-        if (hd == null || hd.isDuyet() || hd.isDaNhapSP()) return false;
+        if (hd == null || hd.getTrangThaiDuyet() != TrangThaiDuyet.CHO_DUYET || hd.isDaNhapSP()) return false;
         kiemTraNguon(); return sua(sc, ma, nguonSanPham);
     }
     @Override public boolean xoa(String ma) {
         HoaDonNhapHang hd = timMa(ma);
-        if (hd == null || hd.isDuyet() || hd.isDaNhapSP())
+        if (hd == null || hd.getTrangThaiDuyet() != TrangThaiDuyet.TU_CHOI || hd.isDaNhapSP())
         {
             return false;
         }
@@ -428,8 +428,8 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
             System.out.println("Mã hoá đơn không tồn tại!");
             return false;
         }
-        if (hdn.isDuyet() || hdn.isDaNhapSP()) {
-            System.out.println("Hoá đơn đã được duyệt nên không thể chỉnh sửa thuộc tính!");
+        if (hdn.getTrangThaiDuyet() != TrangThaiDuyet.CHO_DUYET || hdn.isDaNhapSP()) {
+            System.out.println("Chỉ hóa đơn chờ duyệt và chưa nhập kho mới được chỉnh sửa!");
             return false;
         }
         System.out.println("Nhập thuộc tính của hoá đơn cần sửa: ");
@@ -680,7 +680,7 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
                     break;
                 }
                 case 4: {
-                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã nhân viên cần tìm: ", Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng. Vui lòng nhập lại!", person.NhanVien.getSoThuTu());
+                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã nhân viên cần tìm: ", Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng. Vui lòng nhập lại!", person.TaiKhoanNhanVien.getSoThuTu());
                     System.out.println("Đang tra cứu...");
                     Validation.danghoatdong(1);
                     for (HoaDonNhapHang hdn : dsHoaDonNhapHang) {
@@ -790,19 +790,19 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
     public void thongKeCacDonChuaDuyet ()
     {
         int tongHoaDon = 0 ;
-        System.out.println("==================DANH SÁCH HOÁ ĐƠN CHƯA DUYỆT==================");
+        System.out.println("==================DANH SÁCH HOÁ ĐƠN CHỜ DUYỆT==================");
         System.out.println("Đang thống kê...");
         Validation.danghoatdong(1);
         for ( HoaDonNhapHang hdn: dsHoaDonNhapHang )
         {
             if (hdn == null) continue;
-            if ( !hdn.isDuyet())
+            if (hdn.getTrangThaiDuyet() == TrangThaiDuyet.CHO_DUYET)
             {
                 hdn.hienThiHoaDon();
                 tongHoaDon++ ;
             }
         }
-        System.out.println("Tổng hoá đơn chưa duyệt là: " + tongHoaDon);
+        System.out.println("Tổng hoá đơn chờ duyệt là: " + tongHoaDon);
     }
     public void thongKeCacDonChuaNhap()
     {
@@ -1003,12 +1003,12 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
             System.out.println("2. Xuất danh sách hóa đơn nhập!");
             System.out.println("3. Thêm hóa đơn nhập!");
             System.out.println("4. Thêm k hóa đơn nhập!");
-            System.out.println("5. Xoá hoá đơn chưa được duyệt!");
+            System.out.println("5. Xóa hóa đơn bị từ chối!");
             System.out.println("6. Sửa hóa đơn nhập!");
             System.out.println("7. Tìm kiếm hóa đơn nhập!");
             System.out.println("8. Xem báo cáo nhập hàng!");
             System.out.println("0. Trở về.");
-            luaChon = Validation.luaChon(sc, "Nhập lựa chọn: ", 0, 7);
+            luaChon = Validation.luaChon(sc, "Nhập lựa chọn: ", 0, 8);
             switch (luaChon)
             {
                 case 1: {
@@ -1029,9 +1029,7 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
                     break;
                 }
                 case 5: {
-                    String ma = Validation.inputStringRegex(sc, "Nhập mã hóa đơn: ", "(?i)" + HoaDonNhapHang.MA_HD_NHAP_REGEX, "Mã hóa đơn không đúng định dạng!", HoaDon.getSoThuTu());
-                    if (!xoa(ma))
-                        System.out.println("Hoá đơn đã được duyệt nên không thể xoá!");
+                    xoaHoaDonBiTuChoi(sc);
                     break;
                 }
                 case 6: {
@@ -1056,20 +1054,55 @@ public class DanhSachHoaDonNhap implements interfaces.IQuanLy<HoaDonNhapHang> {
         } while (luaChon != 0);
     }
 
-    public void duyetHoaDonNhap(Scanner sc)
-    {
+    private String nhapMaXuLy(Scanner sc) {
+        while (true) {
+            System.out.print("Nhập mã hóa đơn (0 để quay lại): ");
+            if (!sc.hasNextLine()) return "0";
+            String ma = sc.nextLine().trim();
+            if (ma.equals("0") || ma.matches(HoaDonNhapHang.MA_HD_NHAP_REGEX)) return ma;
+            System.out.println("Mã hóa đơn không đúng định dạng!");
+        }
+    }
+
+    public void duyetHoaDonNhap(Scanner sc) {
         thongKeCacDonChuaDuyet();
-        String maHoaDon = Validation.inputStringRegex(sc, "Nhập mã hóa đơn cần duyệt: ",
-                "(?i)" + HoaDonNhapHang.MA_HD_NHAP_REGEX, "Mã hóa đơn không đúng định dạng!", HoaDon.getSoThuTu());
-        HoaDonNhapHang hdn = timMa(maHoaDon);
-        if (hdn == null) return;
-        if (hdn.isDuyet()) {
-            System.out.println("Hóa đơn này đã được duyệt!");
+        if (dsHoaDonNhapHang.stream().noneMatch(hd -> hd != null
+                && hd.getTrangThaiDuyet() == TrangThaiDuyet.CHO_DUYET && !hd.isDaNhapSP())) {
+            System.out.println("Không có hóa đơn chờ duyệt.");
             return;
         }
-        if (Validation.inputCoKhong(sc, "Bạn có muốn duyệt hóa đơn này không")) {
-            hdn.setDuyet(true);
-            System.out.println("Duyệt hóa đơn nhập thành công!");
+        String ma = nhapMaXuLy(sc);
+        if (ma.equals("0")) return;
+        HoaDonNhapHang hd = timMa(ma);
+        if (hd == null) { System.out.println("Mã hóa đơn không tồn tại!"); return; }
+        if (hd.getTrangThaiDuyet() != TrangThaiDuyet.CHO_DUYET || hd.isDaNhapSP()) {
+            System.out.println("Chỉ có thể xử lý hóa đơn chờ duyệt và chưa nhập kho."); return;
+        }
+        hd.hienThiHoaDon();
+        int chon = Validation.luaChon(sc, "1. Duyệt / 2. Từ chối / 0. Quay lại: ", 0, 2);
+        if (chon == 0) return;
+        hd.setTrangThaiDuyet(chon == 1 ? TrangThaiDuyet.DA_DUYET : TrangThaiDuyet.TU_CHOI);
+        System.out.println("Trạng thái hóa đơn: " + hd.getTrangThaiDuyet());
+    }
+
+    public void xoaHoaDonBiTuChoi(Scanner sc) {
+        boolean coHoaDon = false;
+        for (HoaDonNhapHang hd : dsHoaDonNhapHang) {
+            if (hd != null && hd.getTrangThaiDuyet() == TrangThaiDuyet.TU_CHOI && !hd.isDaNhapSP()) {
+                hd.hienThiHoaDon();
+                coHoaDon = true;
+            }
+        }
+        if (!coHoaDon) { System.out.println("Không có hóa đơn bị từ chối để xóa."); return; }
+        String ma = nhapMaXuLy(sc);
+        if (ma.equals("0")) return;
+        HoaDonNhapHang hd = timMa(ma);
+        if (hd == null) { System.out.println("Mã hóa đơn không tồn tại!"); return; }
+        if (hd.getTrangThaiDuyet() != TrangThaiDuyet.TU_CHOI || hd.isDaNhapSP()) {
+            System.out.println("Chỉ được xóa hóa đơn bị từ chối và chưa nhập kho."); return;
+        }
+        if (Validation.inputCoKhong(sc, "Xác nhận xóa hóa đơn " + hd.getMaHoaDon() + "?")) {
+            if (xoa(ma)) System.out.println("Đã xóa hóa đơn bị từ chối.");
         }
     }
 

@@ -1,6 +1,7 @@
 package utils;
 
 import dichvu.*;
+import doitac.*;
 import hoadon.*;
 import person.*;
 import sanpham.*;
@@ -14,7 +15,7 @@ public final class KhoDuLieuTxt {
     public static void ghi(Object obj, String file) throws IOException {
         try {
             if (obj instanceof QuanLySanPham) ((QuanLySanPham) obj).ghiFile(file);
-            else if (obj instanceof DSNhanVien) ((DSNhanVien) obj).ghiFile(file);
+            else if (obj instanceof DSTaiKhoan) ((DSTaiKhoan) obj).ghiFile(file);
             else if (obj instanceof DSKhachHang) ((DSKhachHang) obj).ghiFile(file);
             else if (obj instanceof Danhsachdoitac) ((Danhsachdoitac) obj).ghiFile(file);
             else if (obj instanceof Danhsachkhuyenmai) ((Danhsachkhuyenmai) obj).ghiFile(file);
@@ -23,7 +24,7 @@ public final class KhoDuLieuTxt {
             else if (obj instanceof DanhSachHoaDonNhap) ((DanhSachHoaDonNhap) obj).ghiFile(file);
             else if (obj instanceof DanhSachCongNo) ((DanhSachCongNo) obj).ghiFile(file);
             else if (obj instanceof DSYeuCau) ((DSYeuCau) obj).ghiFile(file);
-            else if (obj instanceof NhanVien[]) ghiVaiTro((NhanVien[]) obj, file);
+            else if (obj instanceof TaiKhoanNhanVien[]) ghiVaiTro((TaiKhoanNhanVien[]) obj, file);
             else if (obj instanceof String) TepVanBan.ghi(file, "Chuoi", Collections.singletonList(DongDuLieu.ghep("CHUOI", obj)));
             else if (obj instanceof BanGhiFile && !(obj instanceof HoaDon) && !(obj instanceof QuanLy) && !(obj instanceof Nhacungcap)) {
                 TepVanBan.ghi(file, "BanGhi", Collections.singletonList(((BanGhiFile) obj).toDongFile()));
@@ -34,7 +35,8 @@ public final class KhoDuLieuTxt {
         Object obj;
         switch (TepVanBan.nhom(file)) {
             case "QuanLySanPham": { QuanLySanPham ds = new QuanLySanPham(); ds.docFile(file); obj = ds; break; }
-            case "DSNhanVien": { DSNhanVien ds = new DSNhanVien(); ds.docFile(file); obj = ds; break; }
+            case "DSNhanVien": // Tương thích nhãn nhóm trong file dữ liệu cũ.
+            case "DSTaiKhoan": { DSTaiKhoan ds = new DSTaiKhoan(); ds.docFile(file); obj = ds; break; }
             case "DSKhachHang": { DSKhachHang ds = new DSKhachHang(); ds.docFile(file); obj = ds; break; }
             case "Danhsachdoitac": { Danhsachdoitac ds = new Danhsachdoitac(); ds.docFile(file); obj = ds; break; }
             case "Danhsachkhuyenmai": { Danhsachkhuyenmai ds = new Danhsachkhuyenmai(); ds.docFile(file); obj = ds; break; }
@@ -61,10 +63,10 @@ public final class KhoDuLieuTxt {
         if (!type.isInstance(obj)) throw new IOException("File chứa sai loại dữ liệu.");
         return type.cast(obj);
     }
-    public static void ghiVaiTro(NhanVien[] vaiTro, String file) throws IOException {
+    public static void ghiVaiTro(TaiKhoanNhanVien[] vaiTro, String file) throws IOException {
         kiemTraVaiTro(vaiTro);
         List<String> cacDong = new ArrayList<>();
-        for (NhanVien nv : vaiTro) {
+        for (TaiKhoanNhanVien nv : vaiTro) {
             cacDong.add(nv.toDongFile());
             if (nv instanceof QuanLy) {
                 for (YeuCau yc : ((QuanLy) nv).getDsYeuCauFile().getList()) {
@@ -74,12 +76,12 @@ public final class KhoDuLieuTxt {
         }
         TepVanBan.ghi(file, "VaiTro", cacDong);
     }
-    public static NhanVien[] docVaiTro(String file) throws IOException {
+    public static TaiKhoanNhanVien[] docVaiTro(String file) throws IOException {
         int[] truoc = BoDemMa.chup();
         try {
-            DSNhanVien ds = new DSNhanVien();
+            DSTaiKhoan ds = new DSTaiKhoan();
             ds.docFile(file);
-            NhanVien[] result = ds.getDanhSachNhanVien().toArray(new NhanVien[0]);
+            TaiKhoanNhanVien[] result = ds.getDanhSachTaiKhoan().toArray(new TaiKhoanNhanVien[0]);
             kiemTraVaiTro(result);
             return result;
         } catch (IOException | RuntimeException e) {
@@ -87,13 +89,13 @@ public final class KhoDuLieuTxt {
             throw new IOException("Không thể đọc nhân viên đăng nhập: " + file, e);
         }
     }
-    private static void kiemTraVaiTro(NhanVien[] v) throws IOException {
+    private static void kiemTraVaiTro(TaiKhoanNhanVien[] v) throws IOException {
         if (v.length != 4 || !(v[0] instanceof QuanLy) || !(v[1] instanceof QuanKho)
                 || !(v[2] instanceof ThuNgan) || !(v[3] instanceof KeToan)) {
             throw new IOException("Cần bốn vai trò: quản lý, quản kho, thu ngân, kế toán.");
         }
         Set<String> ma = new HashSet<>();
-        for (NhanVien nv : v) {
+        for (TaiKhoanNhanVien nv : v) {
             if (nv.getMaNV() == null || !ma.add(nv.getMaNV().toUpperCase(Locale.ROOT))) {
                 throw new IOException("Trùng hoặc thiếu mã nhân viên đăng nhập.");
             }

@@ -10,7 +10,7 @@ import java.util.Scanner;
 import utils.Validation;
 import utils.YeuCau;
 
-public class NhanVien extends Person {
+public class TaiKhoanNhanVien extends Nguoidung {
     private String maNV;
     private String vaitro;
     private long luong;
@@ -24,12 +24,12 @@ public class NhanVien extends Person {
         }
     }
 
-    protected NhanVien(String vaitroMacDinh) {
+    protected TaiKhoanNhanVien(String vaitroMacDinh) {
         this();
         this.vaitro = vaitroMacDinh;
     }
 
-    public NhanVien() {
+    public TaiKhoanNhanVien() {
         super();
         maNV = Validation.taoMa("NV%03d" , soThuTu) ;
         vaitro = null;
@@ -39,7 +39,7 @@ public class NhanVien extends Person {
         soThuTu++ ;
     }
     /** Khởi tạo nhân viên từ các thông tin được truyền vào. */
-    public NhanVien(String email, String hoten, String sdt, DiaChi diachi, LocalDate ngsinh,
+    public TaiKhoanNhanVien(String email, String hoten, String sdt, DiaChi diachi, LocalDate ngsinh,
             String maNV, String vaitro, long luong, long phuCapTrachNhiem) {
         super(email, hoten, sdt, diachi, ngsinh);
         if (luong < 0) throw new IllegalArgumentException("Luong không được âm.");
@@ -51,13 +51,13 @@ public class NhanVien extends Person {
         capNhatSoThuTuTuMa(maNV);
     }
     /** Khởi tạo nhân viên từ thông tin được truyền vào, bao gồm trạng thái sa thải. */
-    public NhanVien(String email, String hoten, String sdt, DiaChi diachi, LocalDate ngsinh,
+    public TaiKhoanNhanVien(String email, String hoten, String sdt, DiaChi diachi, LocalDate ngsinh,
             String maNV, String vaitro, long luong, long phuCapTrachNhiem, boolean isSaThai) {
         this(email, hoten, sdt, diachi, ngsinh, maNV, vaitro, luong, phuCapTrachNhiem);
         this.isSaThai = isSaThai;
     }
     /** Sao chép thông tin từ một nhân viên khác. */
-    public NhanVien(NhanVien nv) {
+    public TaiKhoanNhanVien(TaiKhoanNhanVien nv) {
         super(nv);
         maNV = nv.maNV;
         vaitro = nv.vaitro;
@@ -177,10 +177,18 @@ public class NhanVien extends Person {
     }
 
     /** Nhập thông tin chung và các thông tin riêng của nhân viên. */
+    public boolean isDaXoa() { return isSaThai(); }
+    public void setDaXoa(boolean value) { setSaThai(value); }
+    public void nhapThongTin(Scanner sc, DSTaiKhoan ds) {
+        nhapThongTin(sc);
+        nhapTaiKhoan(sc, ds);
+    }
+
     public void nhapThongTin(Scanner sc) {
         super.nhapThongTin(sc);
         setLuong(sc);
-        setVaiTro(sc);
+        if (getClass() == TaiKhoanNhanVien.class) setVaiTro(sc);
+        else setVaiTro(getVaiTro());
         setPhuCapTrachNhiem(sc);
     }
 
@@ -213,7 +221,7 @@ public class NhanVien extends Person {
     // ================= ĐỌC / GHI FILE TXT =================
 
     protected String thongTinNhanVienFile() {
-        return DongDuLieu.ghep(maNV, vaitro, luong, phuCapTrachNhiem, isSaThai) + ";" + thongTinNguoiFile();
+        return DongDuLieu.ghep(maNV, vaitro, luong, phuCapTrachNhiem, isSaThai) + ";" + thongTinNguoiFile() + ";" + DongDuLieu.ghep(taiKhoan, matKhau);
     }
 
     protected void docThongTinNhanVienFile(String[] p) {
@@ -223,6 +231,10 @@ public class NhanVien extends Person {
         phuCapTrachNhiem = Long.parseLong(p[4]);
         isSaThai = DongDuLieu.logic(p[5]);
         docThongTinNguoiFile(p, 6);
+        if (p.length >= 17) {
+            if (!p[15].isEmpty()) setTaiKhoan(p[15]);
+            if (!p[16].isEmpty()) setMatKhau(p[16]);
+        }
     }
 
     @Override public String toDongFile() {
@@ -230,16 +242,16 @@ public class NhanVien extends Person {
         return "NHANVIEN;" + thongTinNhanVienFile();
     }
 
-    public static NhanVien tuDongFile(String dong) {
+    public static TaiKhoanNhanVien tuDongFile(String dong) {
         String[] p = dong.split(";", -1);
         if ("QUANLY".equals(p[0])) return QuanLy.tuDongFile(dong);
         if ("QUANKHO".equals(p[0])) return QuanKho.tuDongFile(dong);
         if ("KETOAN".equals(p[0])) return KeToan.tuDongFile(dong);
         if ("THUNGAN".equals(p[0])) return ThuNgan.tuDongFile(dong);
-        DongDuLieu.yeuCau(p.length == 15 && "NHANVIEN".equals(p[0]), "Sai dòng NHANVIEN (cần 15 cột).");
-        int dem = NhanVien.getSoThuTu();
-        NhanVien obj = new NhanVien();
-        NhanVien.datBoDemFile(dem); // Constructor đọc file không cấp mã mới.
+        DongDuLieu.yeuCau((p.length == 15 || p.length == 17) && "NHANVIEN".equals(p[0]), "Sai dòng NHANVIEN (cần 15 cột).");
+        int dem = TaiKhoanNhanVien.getSoThuTu();
+        TaiKhoanNhanVien obj = new TaiKhoanNhanVien();
+        TaiKhoanNhanVien.datBoDemFile(dem); // Constructor đọc file không cấp mã mới.
         obj.docThongTinNhanVienFile(p);
         obj.kiemTraDuLieuFile();
         obj.capNhatMaFile();

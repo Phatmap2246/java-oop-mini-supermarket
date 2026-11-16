@@ -11,16 +11,16 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import dichvu.DanhSachSPKM;
-import dichvu.Danhsachdoitac;
+import doitac.Danhsachdoitac;
 import dichvu.Danhsachkhuyenmai;
-import dichvu.Nhacungcap;
+import doitac.Nhacungcap;
 import sanpham.QuanLySanPham;
 import utils.YeuCau;
 import utils.Validation;
 
-public class QuanLy extends NhanVien {
+public class QuanLy extends TaiKhoanNhanVien {
     private DSYeuCau dsYeuCau = new DSYeuCau();
-    private transient DSNhanVien dsnv = new DSNhanVien();
+    private transient DSTaiKhoan dsnv = new DSTaiKhoan();
     private transient Danhsachkhuyenmai dsKhuyenMai = new Danhsachkhuyenmai();
     private transient DanhSachSPKM dsSanPhamKhuyenMai = new DanhSachSPKM();
 
@@ -46,11 +46,11 @@ public class QuanLy extends NhanVien {
         return "QuanLy";
     }
 
-    public DSNhanVien getDsNhanVien() {
+    public DSTaiKhoan getDsNhanVien() {
         return dsnv;
     }
 
-    public void setDSNhanVien(DSNhanVien list) {
+    public void setDSTaiKhoan(DSTaiKhoan list) {
         if (list == null) throw new IllegalArgumentException("Danh sách không được null.");
         dsnv = list;
     }
@@ -94,12 +94,12 @@ public class QuanLy extends NhanVien {
                     break;
                 case 2:
                     String maNV = Validation.inputStringRegex(sc, "Nhập mã nhân viên cần sa thải: ",
-                            Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng (NVxxx).", NhanVien.getSoThuTu());
+                            Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng (NVxxx).", TaiKhoanNhanVien.getSoThuTu());
                     dsnv.xoa(maNV);
                     break;
                 case 3:
                     String maNVSua = Validation.inputStringRegex(sc, "Nhập mã nhân viên cần sửa: ",
-                            Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng (NVxxx).", NhanVien.getSoThuTu());
+                            Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng (NVxxx).", TaiKhoanNhanVien.getSoThuTu());
                     dsnv.sua(maNVSua, sc);
                     break;
                 case 4:
@@ -133,11 +133,11 @@ public class QuanLy extends NhanVien {
         }
     }
 
-    public void getDSNhanVien() {
-        dsnv.getDSNhanVien();
+    public void getDSTaiKhoan() {
+        dsnv.getDSTaiKhoan();
     }
 
-    public void phanCaLamViec(DSNhanVien ds, Scanner sc) {
+    public void phanCaLamViec(DSTaiKhoan ds, Scanner sc) {
         ds.phanCaLamViec(sc);
     }
 
@@ -149,14 +149,14 @@ public class QuanLy extends NhanVien {
             System.out.println("3. Xóa sản phẩm");
             System.out.println("4. Sửa thông tin sản phẩm");
             System.out.println("5. Điều chỉnh giá bán");
-            System.out.println("6. Thoát");
             System.out.println("7. Nhập danh sách sản phẩm");
             System.out.println("8. Thêm k sản phẩm");
             System.out.println("9. Tìm kiếm sản phẩm");
             System.out.println("10. Thống kê theo loại");
             System.out.println("11. Thống kê theo nhà cung cấp");
             System.out.println("12. Thống kê tình trạng sản phẩm");
-            int luaChon = Validation.luaChon(sc, "Chọn chức năng (1-12): ", 1, 12);
+            System.out.println("0. Thoát");
+            int luaChon = Validation.luaChon(sc, "Chọn chức năng (0-12): ", 0, 12);
 
             switch (luaChon) {
                 case 1:
@@ -166,26 +166,17 @@ public class QuanLy extends NhanVien {
                     dsSanPham.them(sc, dsNCC);
                     break;
                 case 3:
-<<<<<<< HEAD
                     String c =Validation.inputStringRegex(sc, "Nhap ma san pham can sua (vi du: SP001)","^SP\\d+$", "Sai dinh dang ma san pham, nhap lai ", sanpham.SanPham.getSoThuTu());
                     dsSanPham.xoa(c);
                     break;
                 case 4:
                     String d =Validation.inputStringRegex(sc, "Nhap ma san pham can sua (vi du: SP001)","^SP\\d+$", "Sai dinh dang ma san pham, nhap lai ", sanpham.SanPham.getSoThuTu());
                     dsSanPham.sua(sc,d,dsNCC);
-=======
-                    String c = Validation.inputStringRegex(sc, "Nhap ma san pham can sua (vi du: SP001)", "^SP\\d+$", "Sai dinh dang ma san pham, nhap lai ");
-                    dsSanPham.xoa(c);
-                    break;
-                case 4:
-                    String d = Validation.inputStringRegex(sc, "Nhap ma san pham can sua (vi du: SP001)", "^SP\\d+$", "Sai dinh dang ma san pham, nhap lai ");
-                    dsSanPham.sua(sc, d, dsNCC);
->>>>>>> origin/main
                     break;
                 case 5:
                     dieuChinhGiaBan(sc, dsSanPham);
                     break;
-                case 6:
+                case 0:
                     return;
                 case 7:
                     dsSanPham.taoDanhSach(sc, dsNCC);
@@ -259,14 +250,14 @@ public class QuanLy extends NhanVien {
         dsYeuCau.xemLichSuDuyet(file);
     }
 
-    public void thongKe(Scanner sc, DSNhanVien dsnv, QuanLySanPham dssp, ArrayList<YeuCau> dYeuCaus) {
+    public void thongKe(Scanner sc, DSTaiKhoan dsnv, QuanLySanPham dssp, ArrayList<YeuCau> dYeuCaus) {
         if (dsnv == null || dssp == null || dYeuCaus == null) {
             throw new IllegalArgumentException("Danh sách nhân viên, sản phẩm và yêu cầu không được null.");
         }
         System.out.println("\n=== THỐNG KÊ TÌNH TRẠNG SIÊU THỊ ===");
         dssp.thongKeTinhTrang();
         dsnv.thongKeTheoVaiTro();
-        DSYeuCau danhSachYeuCau = new DSYeuCau(dYeuCaus);
+        DSYeuCau danhSachYeuCau = new DSYeuCau(dYeuCaus.toArray(new YeuCau[0]));
         danhSachYeuCau.thongKe();
     }
 
@@ -325,7 +316,7 @@ public class QuanLy extends NhanVien {
                 case 8: {
                     try {
                         dsYeuCau.docDanhSachYeuCau(utils.DuongDanLuuTru.file("YeuCau.txt"));
-                        thongKe(sc, dsnv, qlsp, dsYeuCau.getList());
+                        thongKe(sc, dsnv, qlsp, new ArrayList<>(java.util.Arrays.asList(dsYeuCau.getList())));
                     } catch (IOException e) {
                         System.out.println("Không thể đọc danh sách yêu cầu: " + e.getMessage());
                     }
@@ -336,12 +327,8 @@ public class QuanLy extends NhanVien {
                     break;
                 }
                 case 10: {
-<<<<<<< HEAD
                     int soLuong = dsSanPhamKhuyenMai.tuDongGiamGiaCanHSD(qlsp, dsKhuyenMai);
                     System.out.println("Đã cập nhật giảm giá cận hạn cho " + soLuong + " sản phẩm.");
-=======
-                    tuDongGiamGiaCanHSD(qlsp);
->>>>>>> origin/main
                     break;
                 }
                 case 11: {
@@ -360,7 +347,6 @@ public class QuanLy extends NhanVien {
             }
         } while (luaChon != 0);
     }
-<<<<<<< HEAD
 
     public DSYeuCau getDsYeuCauFile() { return dsYeuCau; }
 
@@ -373,10 +359,10 @@ public class QuanLy extends NhanVien {
 
     public static QuanLy tuDongFile(String dong) {
         String[] p = dong.split(";", -1);
-        DongDuLieu.yeuCau(p.length == 15 && "QUANLY".equals(p[0]), "Sai dòng QUANLY (cần 15 cột).");
-        int dem = NhanVien.getSoThuTu();
+        DongDuLieu.yeuCau((p.length == 15 || p.length == 17) && "QUANLY".equals(p[0]), "Sai dòng QUANLY (cần 15 cột).");
+        int dem = TaiKhoanNhanVien.getSoThuTu();
         QuanLy obj = new QuanLy();
-        NhanVien.datBoDemFile(dem); // Constructor đọc file không cấp mã mới.
+        TaiKhoanNhanVien.datBoDemFile(dem); // Constructor đọc file không cấp mã mới.
         obj.docThongTinNhanVienFile(p);
         obj.kiemTraDuLieuFile();
         obj.capNhatMaFile();
@@ -387,6 +373,3 @@ public class QuanLy extends NhanVien {
         super.kiemTraDuLieuFile();
     }
 }
-=======
-}
->>>>>>> origin/main

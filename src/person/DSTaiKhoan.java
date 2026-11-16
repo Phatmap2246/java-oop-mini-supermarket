@@ -20,25 +20,42 @@ import java.util.Scanner;
 
 import utils.Validation;
 
-public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
-    ArrayList<NhanVien> list;
+public class DSTaiKhoan implements interfaces.IQuanLy<TaiKhoanNhanVien> {
+    public TaiKhoanNhanVien timKiemTheoTaiKhoan(String taiKhoan) {
+        if (taiKhoan == null || taiKhoan.isBlank()) return null;
+        for (TaiKhoanNhanVien nv : list)
+            if (taiKhoan.equalsIgnoreCase(nv.getTaiKhoan())) return nv;
+        return null;
+    }
 
-    public ArrayList<NhanVien> getDanhSachNhanVien() {
+    ArrayList<TaiKhoanNhanVien> list;
+
+    private TaiKhoanNhanVien taoNhanVienTheoVaiTro(Scanner sc) {
+        int chon = Validation.luaChon(sc, "Vai trò: 1. Thu ngân | 2. Quản kho | 3. Quản lý | 4. Kế toán: ", 1, 4);
+        return switch (chon) {
+            case 1 -> new ThuNgan();
+            case 2 -> new QuanKho();
+            case 3 -> new QuanLy();
+            default -> new KeToan();
+        };
+    }
+
+    public ArrayList<TaiKhoanNhanVien> getDanhSachTaiKhoan() {
         return list;
     }
 
     /** Khởi tạo danh sách nhân viên rỗng. */
-    public DSNhanVien() {
+    public DSTaiKhoan() {
         list = new ArrayList<>();
     }
 
     /** Khởi tạo danh sách bằng danh sách được truyền vào. */
-    public DSNhanVien(ArrayList<NhanVien> newList) {
+    public DSTaiKhoan(ArrayList<TaiKhoanNhanVien> newList) {
         list = newList == null ? new ArrayList<>() : newList;
     }
 
     /** Khởi tạo danh sách dùng chung danh sách của đối tượng nguồn. */
-    public DSNhanVien(DSNhanVien l) {
+    public DSTaiKhoan(DSTaiKhoan l) {
         this.list = l == null ? new ArrayList<>() : l.list;
     }
     /** Nhập số lượng rồi nhập thông tin và thêm từng nhân viên vào danh sách. */
@@ -47,8 +64,8 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
         int n = Validation.inputInt(sc, "Nhập số nhân viên cần tạo: ");
         for (int i = 0; i < n; i++) {
             System.out.printf("%n--- Nhập nhân viên %d/%d ---%n", i + 1, n);
-            NhanVien nv = new NhanVien();
-            do{nv.nhapThongTin(sc);}
+            TaiKhoanNhanVien nv = taoNhanVienTheoVaiTro(sc);
+            do{nv.nhapThongTin(sc, this);}
             while(!isTrungMa(nv.getMaNV())); 
             list.add(nv);
         }
@@ -66,7 +83,7 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
         System.out.println("\n=== DANH SÁCH NHÂN VIÊN ===");
         System.out.println("Đang tải danh sách...");
         Validation.danghoatdong(1);
-        for (NhanVien nv : list) {
+        for (TaiKhoanNhanVien nv : list) {
             if (nv != null && !nv.isSaThai()) System.out.println(nv);
         }
     }
@@ -74,9 +91,9 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
     /** Nhập thông tin một nhân viên mới rồi thêm vào danh sách. */
     @Override
     public void them(Scanner sc) {
-        NhanVien nv = new NhanVien();
+        TaiKhoanNhanVien nv = taoNhanVienTheoVaiTro(sc);
         do{
-            nv.nhapThongTin(sc);
+            nv.nhapThongTin(sc, this);
         }
         while(!isTrungMa(nv.getMaNV()));         
 
@@ -89,9 +106,9 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
     public void them(Scanner sc, int k) {
         for (int i = 1; i <= k; i++) {
             System.out.printf("%n--- Nhập nhân viên %d/%d ---%n", i, k);
-            NhanVien nv = new NhanVien();
+            TaiKhoanNhanVien nv = taoNhanVienTheoVaiTro(sc);
         do{
-            nv.nhapThongTin(sc);
+            nv.nhapThongTin(sc, this);
         }
         while(!isTrungMa(nv.getMaNV()));         
 
@@ -112,7 +129,7 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
                 return false;
             }
 
-            NhanVien nv = list.get(idx);
+            TaiKhoanNhanVien nv = list.get(idx);
             int choice;
             do {
                 System.out.println("\n=== CẬP NHẬT NHÂN VIÊN: " + nv.getMaNV() + " ===");
@@ -125,8 +142,9 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
                 System.out.println("7. Lương");
                 System.out.println("8. Phụ cấp trách nhiệm");
                 System.out.println("9. Trạng thái làm việc");
+                System.out.println("10. Tài khoản đăng nhập");
                 System.out.println("0. Hoàn tất");
-                choice = Validation.luaChon(sc, "Chọn thông tin cần sửa (0-9): ", 0, 9);
+                choice = Validation.luaChon(sc, "Chọn thông tin cần sửa (0-10): ", 0, 10);
 
                 switch (choice) {
                     case 1:
@@ -162,6 +180,9 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
                                 sc, "Chọn trạng thái: 1. Đang làm | 2. Đã sa thải: ", 1, 2);
                         nv.setSaThai(trangThai == 2);
                         break;
+                    case 10:
+                        nv.nhapTaiKhoan(sc, this);
+                        break;
                     case 0:
                         break;
                     default:
@@ -185,7 +206,7 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
             return false;
         }
 
-        NhanVien nv = list.get(viTri);
+        TaiKhoanNhanVien nv = list.get(viTri);
         if (nv.isSaThai()) {
             System.out.println("[!] Nhân viên này đã được sa thải.");
             return false;
@@ -211,15 +232,15 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
     }
 
     @Override
-    public NhanVien timMa(String ma) {
+    public TaiKhoanNhanVien timMa(String ma) {
         int viTri = timViTri(ma);
         return viTri == -1 ? null : list.get(viTri);
     }
 
     @Override
-    public NhanVien timTen(String ten) {
+    public TaiKhoanNhanVien timTen(String ten) {
         if (ten == null || ten.isBlank()) return null;
-        for (NhanVien nv : list) {
+        for (TaiKhoanNhanVien nv : list) {
             if (nv != null && !nv.isSaThai() && nv.getHoten() != null
                     && nv.getHoten().toLowerCase(Locale.ROOT).contains(ten.trim().toLowerCase(Locale.ROOT))) return nv;
         }
@@ -227,9 +248,9 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
     }
 
     @Override
-    public NhanVien timKhoa(String khoa) {
+    public TaiKhoanNhanVien timKhoa(String khoa) {
         if (khoa == null || khoa.isBlank()) return null;
-        for (NhanVien nv : list) {
+        for (TaiKhoanNhanVien nv : list) {
             if (nv != null && !nv.isSaThai()
                     && nv.toString().toLowerCase(Locale.ROOT).contains(khoa.trim().toLowerCase(Locale.ROOT))) return nv;
         }
@@ -237,9 +258,9 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
     }
 
     /** Nhập mã nhân viên đã được cấp rồi tra cứu trong danh sách. */
-    public NhanVien nhapTimKiem(Scanner sc) {
+    public TaiKhoanNhanVien nhapTimKiem(Scanner sc) {
         String ma = Validation.inputStringRegex(sc, "Nhập mã nhân viên: ",
-                Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng!", NhanVien.getSoThuTu());
+                Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng!", TaiKhoanNhanVien.getSoThuTu());
         return timMa(ma);
     }
 
@@ -262,10 +283,10 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
             System.out.println("Kết quả tra cứu:");
             switch (luaChon) {
                 case 1: {
-                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã nhân viên cần tìm: ", Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng. Vui lòng nhập lại!", NhanVien.getSoThuTu());
+                    String tuKhoa = Validation.inputStringRegex(sc, "Nhập mã nhân viên cần tìm: ", Validation.MaNV_REGEX, "Mã nhân viên không đúng định dạng. Vui lòng nhập lại!", TaiKhoanNhanVien.getSoThuTu());
                     System.out.println("Đang tra cứu...");
                     Validation.danghoatdong(1);
-                    for (NhanVien nv : list) {
+                    for (TaiKhoanNhanVien nv : list) {
                         if (nv != null && !nv.isSaThai() && ((nv.getMaNV()) != null && nv.getMaNV().equalsIgnoreCase(tuKhoa))) {
                             System.out.println(nv);
                             flag = true;
@@ -277,7 +298,7 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
                     String tuKhoa = Validation.inputStringRegex(sc, "Nhập họ tên cần tìm: ", ".+", "Họ tên không được rỗng.");
                     System.out.println("Đang tra cứu...");
                     Validation.danghoatdong(1);
-                    for (NhanVien nv : list) {
+                    for (TaiKhoanNhanVien nv : list) {
                         if (nv != null && !nv.isSaThai() && ((nv.getHoten()) != null && (nv.getHoten()).toLowerCase(Locale.ROOT).contains(tuKhoa.toLowerCase(Locale.ROOT)))) {
                             System.out.println(nv);
                             flag = true;
@@ -289,7 +310,7 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
                     String tuKhoa = Validation.inputStringRegex(sc, "Nhập email cần tìm: ", Validation.EMAIL_REGEX, "Email không đúng định dạng. Vui lòng nhập lại!");
                     System.out.println("Đang tra cứu...");
                     Validation.danghoatdong(1);
-                    for (NhanVien nv : list) {
+                    for (TaiKhoanNhanVien nv : list) {
                         if (nv != null && !nv.isSaThai() && ((nv.getEmail()) != null && nv.getEmail().equalsIgnoreCase(tuKhoa))) {
                             System.out.println(nv);
                             flag = true;
@@ -301,7 +322,7 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
                     String tuKhoa = Validation.inputStringRegex(sc, "Nhập số điện thoại cần tìm: ", Validation.PHONE_REGEX, "Số điện thoại không đúng định dạng. Vui lòng nhập lại!");
                     System.out.println("Đang tra cứu...");
                     Validation.danghoatdong(1);
-                    for (NhanVien nv : list) {
+                    for (TaiKhoanNhanVien nv : list) {
                         if (nv != null && !nv.isSaThai() && ((nv.getSdt()) != null && nv.getSdt().equalsIgnoreCase(tuKhoa))) {
                             System.out.println(nv);
                             flag = true;
@@ -313,7 +334,7 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
                     String tuKhoa = Validation.inputStringRegex(sc, "Nhập địa chỉ cần tìm: ", ".+", "Địa chỉ không được rỗng.");
                     System.out.println("Đang tra cứu...");
                     Validation.danghoatdong(1);
-                    for (NhanVien nv : list) {
+                    for (TaiKhoanNhanVien nv : list) {
                         if (nv != null && !nv.isSaThai() && ((nv.getDiaChi() == null ? null : nv.getDiachi()) != null && (nv.getDiaChi() == null ? null : nv.getDiachi()).toLowerCase(Locale.ROOT).contains(tuKhoa.toLowerCase(Locale.ROOT)))) {
                             System.out.println(nv);
                             flag = true;
@@ -330,7 +351,7 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
                     }
                     System.out.println("Đang tra cứu...");
                     Validation.danghoatdong(1);
-                    for (NhanVien nv : list) {
+                    for (TaiKhoanNhanVien nv : list) {
                         if (nv != null && !nv.isSaThai() && (nv.getNgsinh() != null && !nv.getNgsinh().isBefore(tu) && !nv.getNgsinh().isAfter(den))) {
                             System.out.println(nv);
                             flag = true;
@@ -342,7 +363,7 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
                     String tuKhoa = Validation.inputStringRegex(sc, "Nhập vai trò cần tìm: ", ".+", "Vai trò không được rỗng.");
                     System.out.println("Đang tra cứu...");
                     Validation.danghoatdong(1);
-                    for (NhanVien nv : list) {
+                    for (TaiKhoanNhanVien nv : list) {
                         if (nv != null && !nv.isSaThai() && ((nv.getVaiTro()) != null && (nv.getVaiTro()).toLowerCase(Locale.ROOT).contains(tuKhoa.toLowerCase(Locale.ROOT)))) {
                             System.out.println(nv);
                             flag = true;
@@ -359,7 +380,7 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
                     }
                     System.out.println("Đang tra cứu...");
                     Validation.danghoatdong(1);
-                    for (NhanVien nv : list) {
+                    for (TaiKhoanNhanVien nv : list) {
                         if (nv != null && !nv.isSaThai() && (nv.getLuong() >= tu && nv.getLuong() <= den)) {
                             System.out.println(nv);
                             flag = true;
@@ -376,7 +397,7 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
                     }
                     System.out.println("Đang tra cứu...");
                     Validation.danghoatdong(1);
-                    for (NhanVien nv : list) {
+                    for (TaiKhoanNhanVien nv : list) {
                         if (nv != null && !nv.isSaThai() && (nv.getPhuCapTrachNhiem() >= tu && nv.getPhuCapTrachNhiem() <= den)) {
                             System.out.println(nv);
                             flag = true;
@@ -397,7 +418,7 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
         int soDaSaThai = 0;
         System.out.println("Đang thống kê...");
         Validation.danghoatdong(1);
-        for (NhanVien nhanVien : list) {
+        for (TaiKhoanNhanVien nhanVien : list) {
             if (nhanVien == null) continue;
             if (nhanVien.isSaThai()) {
                 soDaSaThai++;
@@ -416,7 +437,7 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
 
     }
     public boolean isTrungMa(String maNV){
-        for(NhanVien i: list)
+        for(TaiKhoanNhanVien i: list)
             if(i != null && i.getMaNV() != null && i.getMaNV().equalsIgnoreCase(maNV))
                 {
                     System.out.println("Ma bi trung, hay nhap lai");
@@ -455,7 +476,7 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
 
     private void phanCongCa(Scanner sc, String tenCa) {
         int soNhanVienToiDa = 0;
-        for (NhanVien nv : list) {
+        for (TaiKhoanNhanVien nv : list) {
             if (nv == null) continue;
             String vaiTro = nv.getVaiTro();
             if (!nv.isSaThai()
@@ -472,9 +493,9 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
             }
         } while (soNguoi < 0 || soNguoi > soNhanVienToiDa);
 
-        ArrayList<NhanVien> nhanVienTrongCa = new ArrayList<>();
+        ArrayList<TaiKhoanNhanVien> nhanVienTrongCa = new ArrayList<>();
         for (int i = 0; i < soNguoi; i++) {
-            NhanVien nhanVienDuocChon = null;
+            TaiKhoanNhanVien nhanVienDuocChon = null;
             while (nhanVienDuocChon == null) {
                 System.out.println("\nChọn vai trò:");
                 System.out.println("1. Kế toán");
@@ -498,7 +519,7 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
                 }
 
                 boolean coNhanVienPhuHop = false;
-                for (NhanVien nv : list) {
+                for (TaiKhoanNhanVien nv : list) {
                     if (nv == null) continue;
                     if (!nv.isSaThai() && vaiTro.equals(nv.getVaiTro())
                             && !nhanVienTrongCa.contains(nv)) {
@@ -513,8 +534,8 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
 
                 String maNV = Validation.inputStringRegex(
                         sc, "Nhập mã nhân viên cần phân ca: ", Validation.MaNV_REGEX,
-                        "Mã nhân viên không đúng định dạng (NVxxx).", NhanVien.getSoThuTu());
-                for (NhanVien nv : list) {
+                        "Mã nhân viên không đúng định dạng (NVxxx).", TaiKhoanNhanVien.getSoThuTu());
+                for (TaiKhoanNhanVien nv : list) {
                     if (nv == null) continue;
                     if (maNV.equals(nv.getMaNV())
                             && vaiTro.equals(nv.getVaiTro())
@@ -536,7 +557,7 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
 
     }
 
-    public void getDSNhanVien() {
+    public void getDSTaiKhoan() {
         // đọc file danh sách nhân viên và lưu và list
     }
 
@@ -550,9 +571,11 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
     public void ghiFile(String tenFile) throws IOException {
         ArrayList<String> cacDong = new ArrayList<>();
         Set<String> maDaGhi = new HashSet<>();
-        for (NhanVien obj : list) {
+        Set<String> taiKhoanDaGhi = new HashSet<>();
+        for (TaiKhoanNhanVien obj : list) {
             if (obj == null) throw new IOException("Danh sách chứa null.");
             TepVanBan.khongTrung(maDaGhi, obj.getMaNV());
+            if (!obj.getTaiKhoan().isEmpty()) TepVanBan.khongTrung(taiKhoanDaGhi, obj.getTaiKhoan());
             cacDong.add(obj.toDongFile());
             if (obj instanceof QuanLy) {
                 for (utils.YeuCau yc : ((QuanLy) obj).getDsYeuCauFile().getList()) {
@@ -560,25 +583,27 @@ public class DSNhanVien implements interfaces.IQuanLy<NhanVien> {
                 }
             }
         }
-        TepVanBan.ghi(tenFile, "DSNhanVien", cacDong);
+        TepVanBan.ghi(tenFile, "DSTaiKhoan", cacDong);
     }
 
     public void docFile(String tenFile) throws IOException {
         int[] demTruoc = BoDemMa.chup();
-        ArrayList<NhanVien> moi = new ArrayList<>();
+        ArrayList<TaiKhoanNhanVien> moi = new ArrayList<>();
         Set<String> maDaDoc = new HashSet<>();
-        Map<String, NhanVien> theoMa = new LinkedHashMap<>();
+        Set<String> taiKhoanDaDoc = new HashSet<>();
+        Map<String, TaiKhoanNhanVien> theoMa = new LinkedHashMap<>();
         try {
             for (String dong : TepVanBan.doc(tenFile)) {
                 if (dong.startsWith("YCQUANLY;")) {
                     String[] p = dong.split(";", 3);
-                    NhanVien chu = p.length == 3 ? theoMa.get(p[1].toUpperCase(Locale.ROOT)) : null;
+                    TaiKhoanNhanVien chu = p.length == 3 ? theoMa.get(p[1].toUpperCase(Locale.ROOT)) : null;
                     DongDuLieu.yeuCau(chu instanceof QuanLy, "Yêu cầu không có quản lý tương ứng.");
-                    ((QuanLy) chu).getDsYeuCauFile().getList().add(utils.YeuCau.tuDongFile(p[2]));
+                    ((QuanLy) chu).getDsYeuCauFile().them(utils.YeuCau.tuDongFile(p[2]));
                     continue;
                 }
-                NhanVien obj = NhanVien.tuDongFile(dong);
+                TaiKhoanNhanVien obj = TaiKhoanNhanVien.tuDongFile(dong);
                 TepVanBan.khongTrung(maDaDoc, obj.getMaNV());
+                if (!obj.getTaiKhoan().isEmpty()) TepVanBan.khongTrung(taiKhoanDaDoc, obj.getTaiKhoan());
                 moi.add(obj);
                 theoMa.put(obj.getMaNV().toUpperCase(Locale.ROOT), obj);
             }

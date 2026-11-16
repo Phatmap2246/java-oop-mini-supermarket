@@ -1,4 +1,5 @@
 import dichvu.*;
+import doitac.*;
 import hoadon.*;
 import person.*;
 import sanpham.*;
@@ -15,7 +16,7 @@ import java.util.*;
 /** Chạy write và read ở hai JVM khác nhau để kiểm tra việc mở lại chương trình. */
 public class LuuTruChuongTrinhTest {
     private static final String TEN = "Sữa, \"đặc biệt\" | Tiếng Việt";
-    private static final Class<?>[] CAC_LOP = {SanPham.class, NhanVien.class, KhachHang.class,
+    private static final Class<?>[] CAC_LOP = {SanPham.class, TaiKhoanNhanVien.class, KhachHang.class,
             HoaDon.class, Khuyenmai.class, Nhacungcap.class};
 
     public static void main(String[] args) throws Exception {
@@ -49,8 +50,8 @@ public class LuuTruChuongTrinhTest {
         kh.setDiachi(new DiaChi("12/3", "Đường A, B", "Phường 1", "Quận 2", "TP Hồ Chí Minh"));
         kh.setTonTai(false);
         ((DSKhachHang) lay(gd, "dsKhachHang")).setList(new KhachHang[]{kh}, 1);
-        DSNhanVien nhanViens = lay(gd, "dsNhanVien");
-        ArrayList<NhanVien> list = lay(nhanViens, "list");
+        DSTaiKhoan nhanViens = lay(gd, "dsTaiKhoan");
+        ArrayList<TaiKhoanNhanVien> list = lay(nhanViens, "list");
         list.add(new KeToan());
         list.add(new ThuNgan());
         list.add(new QuanKho(sanPhams, lay(gd, "dsHoaDonNhap")));
@@ -86,7 +87,7 @@ public class LuuTruChuongTrinhTest {
         them(congNo, "nganHangThanhToanCongNo", null);
         them(congNo, "daThanhToanCongNo", false);
         QuanLy quanLy = lay(gd, "quanLy");
-        ((DSYeuCau) lay(quanLy, "dsYeuCau")).getList().add(new YeuCau("NV001", "QuanKho", TEN, "ChoDuyet"));
+        ((DSYeuCau) lay(quanLy, "dsYeuCau")).them(new YeuCau("NV001", "QuanKho", TEN, "ChoDuyet"));
 
         for (Class<?> lop : CAC_LOP) {
             Field f = lop.getDeclaredField(lop == Nhacungcap.class ? "soThuTuNCC" : "soThuTu");
@@ -118,8 +119,10 @@ public class LuuTruChuongTrinhTest {
         check(ncc.getSanPhamCungCap().getDanhSachSanPham().get(0) == sp, "Tham chiếu SP dùng chung với NCC");
         KhachHang kh = ((DSKhachHang) lay(gd, "dsKhachHang")).getList()[0];
         check(!kh.isTonTai() && kh.getDiaChi().getDuong().equals("Đường A, B"), "Xóa mềm và địa chỉ lồng nhau");
-        ArrayList<NhanVien> nhanViens = lay(lay(gd, "dsNhanVien"), "list");
-        check(nhanViens.size() == 4 && nhanViens.get(0) instanceof KeToan, "Danh sách nhân viên đa hình");
+        ArrayList<TaiKhoanNhanVien> nhanViens = lay(lay(gd, "dsTaiKhoan"), "list");
+        check(nhanViens.size() == 8 && nhanViens.get(4) instanceof KeToan, "Bốn tài khoản mặc định và bốn nhân viên thêm mới");
+        check(((DSTaiKhoan) lay(gd, "dsTaiKhoan")).timKiemTheoTaiKhoan("QuanLySieuThi") == lay(gd, "quanLy"),
+                "Tài khoản mặc định dùng chính đối tượng trong danh sách");
         check(((Danhsachkhuyenmai) lay(gd, "dsKhuyenMai")).getSoLuongKhuyenMai() == 3, "Khuyến mãi");
         check(((DanhSachSPKM) lay(gd, "dsSanPhamKhuyenMai")).getSoLuongSanPham() == 1, "Liên kết sản phẩm khuyến mãi");
         DanhSachHoaDonBan bans = lay(gd, "dsHoaDonBan");
@@ -132,9 +135,9 @@ public class LuuTruChuongTrinhTest {
         check(((ArrayList<?>) lay(lay(gd, "dsCongNo"), "soTienCongNo")).get(0).equals(10000L), "Công nợ");
         check(lay(lay(gd, "quanKho"), "qlsp") == sanPhams, "Kho dùng cùng danh mục");
         check(lay(lay(gd, "thuNgan"), "danhSachHoaDonBan") == bans, "Thu ngân dùng cùng hóa đơn");
-        check(lay(lay(gd, "quanLy"), "dsnv") == lay(gd, "dsNhanVien"), "Quản lý dùng cùng nhân viên");
+        check(lay(lay(gd, "quanLy"), "dsnv") == lay(gd, "dsTaiKhoan"), "Quản lý dùng cùng nhân viên");
         DSYeuCau requests = lay(lay(gd, "quanLy"), "dsYeuCau");
-        check(requests.getList().size() == 1 && requests.getList().get(0).getNoiDung().equals(TEN),
+        check(requests.getList().length == 1 && requests.getList()[0].getNoiDung().equals(TEN),
                 "Yêu cầu quản lý ghi thành dòng riêng vẫn khôi phục đầy đủ");
         check(new ThucPham().getMaSanPham().equals("SP071"), "Mã mới không trùng sau mở lại");
 

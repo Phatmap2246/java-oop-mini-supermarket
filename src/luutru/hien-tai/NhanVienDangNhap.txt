@@ -1,6 +1,6 @@
 #SIEUTHI_TXT_3
 #NHOM;VaiTro
-#BODEM;101;13;41;121;13;11
+#BODEM;101;13;41;122;17;11
 QUANLY;NV001;QuanLy;15000000;1000000;false;nhanvien1@example.com;Nguyễn Minh An;0901000000;10;Nguyễn Trãi;Bến Thành;Quận 1;TP Hồ Chí Minh;15/03/1990
 QUANKHO;NV002;QuanKho;8000000;1000000;false;nhanvien2@example.com;Trần Quốc Bình;0901000001;11;Nguyễn Trãi;Bến Thành;Quận 1;TP Hồ Chí Minh;15/03/1991
 THUNGAN;NV003;ThuNgan;8000000;1000000;false;nhanvien3@example.com;Lê Ngọc Chi;0901000002;12;Nguyễn Trãi;Bến Thành;Quận 1;TP Hồ Chí Minh;15/03/1992;0

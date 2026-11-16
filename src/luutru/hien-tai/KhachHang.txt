@@ -1,9 +1,9 @@
 #SIEUTHI_TXT_3
 #NHOM;DSKhachHang
-#BODEM;101;13;41;121;13;11
+#BODEM;101;13;41;122;17;11
 KHACHHANG;KH001;11/10/2025;250000;Đồng;2;true;kh1@example.com;Nguyễn Minh Anh;0933000001;1;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
 KHACHHANG;KH002;11/10/2025;1500000;Bạc;15;true;kh2@example.com;Nguyễn Minh Anh;0933000002;2;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
-KHACHHANG;KH003;11/10/2025;5500000;Vàng;55;true;kh3@example.com;Nguyễn Minh Anh;0933000003;3;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
+KHACHHANG;KH003;11/10/2025;5941750;Vàng;59;true;kh3@example.com;Nguyễn Minh Anh;0933000003;3;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
 KHACHHANG;KH004;11/10/2025;11000000;Kim Cương;110;true;kh4@example.com;Nguyễn Minh Anh;0933000004;4;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
 KHACHHANG;KH005;11/10/2025;250000;Đồng;2;true;kh5@example.com;Nguyễn Minh Anh;0933000005;5;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995
 KHACHHANG;KH006;11/10/2025;1500000;Bạc;15;true;kh6@example.com;Nguyễn Minh Anh;0933000006;6;Nguyễn Trãi;Bến Thành;Quận Một;Hồ Chí Minh;10/06/1995

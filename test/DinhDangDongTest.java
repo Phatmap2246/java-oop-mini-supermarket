@@ -2,6 +2,7 @@ import interfaces.BanGhiFile;
 import utils.*;
 import sanpham.*;
 import dichvu.*;
+import doitac.*;
 import hoadon.*;
 import person.*;
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class DinhDangDongTest {
         loi(() -> DongDuLieu.ghep("Có;dấu phân cách"));
         loi(() -> DongDuLieu.ghep("Có\nxuống dòng"));
 
-        BanGhiFile[] models = {new ThucPham(), new DienTu(), new TieuDung(), new NhanVien(),
+        BanGhiFile[] models = {new ThucPham(), new DienTu(), new TieuDung(), new TaiKhoanNhanVien(),
                 new QuanLy(), new QuanKho(), new ThuNgan(), new KeToan(), new KhachHang(), new DiaChi(),
                 new Nhacungcap(), new KhuyenMaiPhanTram(), new KhuyenMaiTrucTiep(), new KhuyenMaiMuaTang(),
                 new SanPhamKhuyenMai(), new HoaDonBanHang(), new HoaDonNhapHang(), new CTHoaDonBan(),

@@ -22,6 +22,8 @@ public class CTHoaDonBan extends CTHoaDon{
     private int soLuongPhaiTra;
     private long soTienGiam;
     private String loaiKhuyenMai ;
+    // Chỉ dùng khi đang lập/sửa chi tiết; dữ liệu lịch sử giữ nguyên ưu đãi đã lưu.
+    private transient Khuyenmai khuyenMaiApDung;
 
     // constructor
     public CTHoaDonBan() {
@@ -46,8 +48,10 @@ public class CTHoaDonBan extends CTHoaDon{
         this.soLuongPhaiTra=soLuong;
     }
     public void nhapThongTinBan(Scanner sc, QuanLySanPham qlsp, Danhsachkhuyenmai dskm, DanhSachSPKM dsspkm) {
+        apDungKhuyenMai(null);
+        setSoLuong(0);
         while (true) {
-            setMaSanpham(Validation.inputStringRegex(sc, "Nhập mã sản phẩm (VD: SP01): ", Validation.MaSP_REGEX, "Lỗi: Mã SP phải bắt đầu bằng SP và theo sau là số!" , SanPham.getSoThuTu()));
+            setMaSanpham(Validation.inputStringRegex(sc, "Nhập mã sản phẩm (VD: SP001): ", Validation.MaSP_REGEX, "Lỗi: Mã SP phải bắt đầu bằng SP và theo sau là 3 đến 5 chữ số (VD: SP001)!" , SanPham.getSoThuTu()));
             SanPham sanPham = qlsp.timMa(super.getMaSanpham()) ;
             if (sanPham == null || sanPham.getSoLuongTonKho() == 0 || !sanPham.isTonTai() || (sanPham instanceof ThucPham && ((ThucPham) sanPham).kiemTraSanPhamHong())) {
                 System.out.println("[!] Mã sản phẩm không có trong danh mục/tồn kho.");
@@ -57,7 +61,13 @@ public class CTHoaDonBan extends CTHoaDon{
             setDonGia(sanPham.getGiaBan());
             int soLuongConLai = sanPham.getSoLuongTonKho();
             do {
-                setSoLuong(Validation.inputInt(sc, "Nhập tổng số lượng lấy khỏi kho, gồm quà tặng nếu có (còn " + soLuongConLai + "): "));
+                int soLuongNhap = Validation.inputInt(sc, "Nhập tổng số lượng lấy khỏi kho, gồm quà tặng nếu có (còn " + soLuongConLai + "): ");
+                try {
+                    setSoLuong(soLuongNhap);
+                } catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
+                    setSoLuong(0);
+                }
                 if (super.getSoLuong() == 0 || super.getSoLuong() > soLuongConLai) {
                     System.out.println("[!] Số lượng phải từ 1 đến " + soLuongConLai + ".");
                 }
@@ -77,13 +87,7 @@ public class CTHoaDonBan extends CTHoaDon{
                 SanPhamKhuyenMai spkm = dsspkm.getSanPhamKhuyenMais()[index_spkm] ;
                 int indexKm = dskm.timViTri(spkm.getMaKhuyenMai());
                 Khuyenmai km = indexKm == -1 ? null : dskm.getKhuyenmais()[indexKm];
-                if (km != null && km.dangHoatDong(LocalDate.now()) && km.isTonTai()
-                        && super.getDonGia() * super.getSoLuong() >= km.getMucChiToiThieu()) {
-                    this.soLuongTangKem = km.tinhSoLuongTang(super.getSoLuong());
-                    this.soTienGiam = km.tinhTienGiam(super.getDonGia(), super.getSoLuong());
-                    this.soLuongPhaiTra = Math.max(0, super.getSoLuong() - this.soLuongTangKem);
-                    this.loaiKhuyenMai = km.getLoaiKhuyenMai();
-                }
+                apDungKhuyenMai(km);
             }
             break;
         }
@@ -91,7 +95,36 @@ public class CTHoaDonBan extends CTHoaDon{
         System.out.println("Thêm chi tiết hoá đơn thành công!");
     }
     private long tinhThanhTienSauKhuyenMai() {
-        return Math.max(0, super.getDonGia() * super.getSoLuong() - soTienGiam);
+        return Math.max(0, tienHang(super.getDonGia(), super.getSoLuong()) - soTienGiam);
+    }
+
+    private static long tienHang(long donGia, int soLuong) {
+        try {
+            return Math.multiplyExact(donGia, (long) soLuong);
+        } catch (ArithmeticException e) {
+            throw new IllegalArgumentException("Thành tiền vượt giới hạn. Vui lòng giảm số lượng hoặc đơn giá.", e);
+        }
+    }
+
+    public void apDungKhuyenMai(Khuyenmai khuyenMai) {
+        khuyenMaiApDung = khuyenMai;
+        capNhatKhuyenMai();
+    }
+
+    private void capNhatKhuyenMai() {
+        long tong = tienHang(super.getDonGia(), super.getSoLuong());
+        soTienGiam = 0;
+        soLuongTangKem = 0;
+        loaiKhuyenMai = "Không áp dụng";
+        if (khuyenMaiApDung != null && khuyenMaiApDung.isTonTai()
+                && khuyenMaiApDung.dangHoatDong(LocalDate.now())
+                && tong >= khuyenMaiApDung.getMucChiToiThieu()) {
+            soLuongTangKem = khuyenMaiApDung.tinhSoLuongTang(super.getSoLuong());
+            soTienGiam = khuyenMaiApDung.tinhTienGiam(super.getDonGia(), super.getSoLuong());
+            loaiKhuyenMai = khuyenMaiApDung.getLoaiKhuyenMai();
+        }
+        soLuongPhaiTra = Math.max(0, super.getSoLuong() - soLuongTangKem);
+        thanhTienSauKhuyenMai = tinhThanhTienSauKhuyenMai();
     }
 
     public long tinhThanhTien() {
@@ -147,7 +180,12 @@ public class CTHoaDonBan extends CTHoaDon{
         if (soLuong < 0) {
             throw new IllegalArgumentException("SoLuong không được âm.");
         }
+        tienHang(super.getDonGia(), soLuong);
         super.setSoLuong(soLuong);
+        if (khuyenMaiApDung != null) {
+            capNhatKhuyenMai();
+            return;
+        }
         this.soLuongPhaiTra = Math.max(0, soLuong - this.soLuongTangKem);
         this.thanhTienSauKhuyenMai = tinhThanhTienSauKhuyenMai();
     }
@@ -162,7 +200,12 @@ public class CTHoaDonBan extends CTHoaDon{
         if (donGia < 0) {
             throw new IllegalArgumentException("DonGia không được âm.");
         }
+        tienHang(donGia, super.getSoLuong());
         super.setDonGia(donGia);
+        if (khuyenMaiApDung != null) {
+            capNhatKhuyenMai();
+            return;
+        }
         this.thanhTienSauKhuyenMai = tinhThanhTienSauKhuyenMai();
     }
 
@@ -253,6 +296,7 @@ public class CTHoaDonBan extends CTHoaDon{
 
     public void kiemTraDuLieuFile() {
         super.kiemTraDuLieuFile();
+        tienHang(super.getDonGia(), super.getSoLuong());
         DongDuLieu.khongAm(thanhTienSauKhuyenMai, "thanhTienSauKhuyenMai");
         DongDuLieu.khongAm(soLuongTangKem, "soLuongTangKem");
         DongDuLieu.khongAm(soLuongPhaiTra, "soLuongPhaiTra");

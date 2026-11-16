@@ -3,7 +3,7 @@ import sanpham.QuanLySanPham;
 import hoadon.DanhSachHoaDonBan;
 import hoadon.DanhSachHoaDonNhap;
 import hoadon.DanhSachCongNo;
-import dichvu.Danhsachdoitac;
+import doitac.Danhsachdoitac;
 import dichvu.Danhsachkhuyenmai;
 import dichvu.DanhSachSPKM;
 import utils.Validation;
@@ -13,8 +13,8 @@ import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import dichvu.Nhacungcap;
-import dichvu.Doitac;
+import doitac.Nhacungcap;
+import doitac.Doitac;
 import sanpham.SanPham;
 
 import java.util.Scanner;
@@ -22,10 +22,10 @@ import java.util.Scanner;
 public class GiaoDien {
     public static final String THU_MUC_DU_LIEU = utils.DuongDanLuuTru.thuMuc().toString();
 
-    private void lienKetVaiTro(NhanVien nv) {
+    private void lienKetVaiTro(TaiKhoanNhanVien nv) {
         if (nv instanceof QuanLy) {
             QuanLy ql = (QuanLy) nv;
-            ql.setDSNhanVien(dsNhanVien);
+            ql.setDSTaiKhoan(dsTaiKhoan);
             ql.setDSKhuyenMai(dsKhuyenMai);
             ql.setDanhSachSPKM(dsSanPhamKhuyenMai);
         }
@@ -45,7 +45,7 @@ public class GiaoDien {
         lienKetVaiTro(quanLy);
         lienKetVaiTro(quanKho);
         lienKetVaiTro(thuNgan);
-        for (NhanVien nv : dsNhanVien.getDanhSachNhanVien()) lienKetVaiTro(nv);
+        for (TaiKhoanNhanVien nv : dsTaiKhoan.getDanhSachTaiKhoan()) lienKetVaiTro(nv);
         Map<String, SanPham> sanPhams = new LinkedHashMap<>();
         for (SanPham sp : dsSanPham.getDanhSachSanPham()) {
             if (sp != null) sanPhams.put(sp.getMaSanPham().toUpperCase(java.util.Locale.ROOT), sp);
@@ -66,7 +66,7 @@ public class GiaoDien {
 
 
     private QuanLySanPham dsSanPham = new QuanLySanPham();
-    private DSNhanVien dsNhanVien = new DSNhanVien();
+    private DSTaiKhoan dsTaiKhoan = new DSTaiKhoan();
     private DSKhachHang dsKhachHang = new DSKhachHang();
     private Danhsachdoitac dsDoiTac = new Danhsachdoitac();
     private Danhsachkhuyenmai dsKhuyenMai = new Danhsachkhuyenmai();
@@ -90,153 +90,109 @@ public class GiaoDien {
         matKhauKeToan = "ketoan@123" ;
         matKhauQuanKho = "quankho@123" ;
         matKhauQuanLy = "quanly@123" ;
+        khoiTaoTaiKhoanMacDinh();
         lienKetDuLieu();
     }
-    public void TrangChu(Scanner sc )
-    {
+    private TaiKhoanNhanVien nguoiDangNhap;
+
+    public void TrangChu(Scanner sc) {
+        if (sc == null) throw new IllegalArgumentException("Scanner không được null.");
         dsSanPhamKhuyenMai.tuDongGiamGiaCanHSD(dsSanPham, dsKhuyenMai);
-        while (true)
-        {
-            System.out.println("==========================TRANG CHỦ========================");
-            System.out.println("Bạn muốn đăng nhập vào nhân viên nào!");
-            System.out.println("1. Đăng nhập dưới vai trò nhân viên thu ngân.");
-            System.out.println("2. Đăng nhập dưới vai trò nhân viên quản lý kho.");
-            System.out.println("3. Đăng nhập dưới vai trò nhân viên quản lý cửa hàng.");
-            System.out.println("4. Đăng nhập dưới vai trò nhân viên kế toán.");
-            System.out.println("0. Thoát chương trình.");
-            int luaChon = Validation.luaChon(sc , "Nhập lựa chọn của bạn: " , 0 , 4 );
+        while (true) {
+            nguoiDangNhap = dangNhap(sc);
+            if (nguoiDangNhap == null) return;
             try {
-                switch (luaChon)
-                {
-                    case 1:
-                        MenuThuNgan(sc);
-                        break;
-                    case 2:
-                        MenuQuanLyKho(sc);
-                        break;
-                    case 3:
-                        MenuQuanLy(sc);
-                        break;
-                    case 4:
-                        MenuKeToan(sc);
-                        break;
-                    case 0:
-                        System.out.println("Chương trình kết thúc, tạm biệt!");
-                        return;
-                    default:
-                        break;
-                }
+                System.out.println("Đăng nhập thành công: " + nguoiDangNhap.getMaNV());
+                moMenuNguoiDangNhap(sc);
             } catch (IllegalStateException e) {
                 System.out.println("[!] " + e.getMessage());
+            } finally {
+                nguoiDangNhap = null;
+                dsHoaDonBan.cauHinh(dsSanPhamKhuyenMai, dsKhuyenMai, dsSanPham, dsKhachHang, null);
+                dsHoaDonNhap.cauHinh(null, dsSanPham, dsDoiTac);
+                luuDuLieu();
             }
-            // Lưu thay đổi sau mỗi lần trở về từ một menu nghiệp vụ.
-            luuDuLieu();
         }
     }
-    public void MenuQuanLyKho( Scanner sc )
-    {
-        System.out.println("=================ĐĂNG NHẬP QUẢN LÝ KHO=================");
-        System.out.println("Vui lòng nhập thông tin đăng nhập!");
-        System.out.println("Nhâp tài khoản: ");
-        String taiKhoan = sc.nextLine() ;
-        System.out.println("Nhập mật khẩu: ");
-        String matKhau = sc.nextLine() ;
-        int soLanNhapSai = 5 ;
-        while ( !taiKhoan.equalsIgnoreCase(taiKhoanQuanKho) || !matKhau.equals(matKhauQuanKho) )
-        {
-            soLanNhapSai-- ;
-            if ( soLanNhapSai == 0 ) break;
-            System.out.println("Bạn đã nhập sai mật khẩu hoặc tài khoản vui lòng nhập lại!(Còn " +soLanNhapSai + " lần thử)");
-            System.out.println("Nhâp tài khoản: ");
-            taiKhoan = sc.nextLine() ;
-            System.out.println("Nhập mật khẩu: ");
-            matKhau = sc.nextLine() ;
+
+    private TaiKhoanNhanVien dangNhap(Scanner sc) {
+        System.out.println("\n================ ĐĂNG NHẬP ================");
+        int soLanSai = 0;
+        while (true) {
+            System.out.print("Tài khoản (0 để thoát): ");
+            System.out.flush();
+            if (!sc.hasNextLine()) return null;
+            String tk = sc.nextLine().trim();
+            if (tk.equals("0")) return null;
+            System.out.print("Mật khẩu: ");
+            System.out.flush();
+            if (!sc.hasNextLine()) return null;
+            TaiKhoanNhanVien nv = dsTaiKhoan.timKiemTheoTaiKhoan(tk);
+            String mk = sc.nextLine();
+            if (nv != null && !nv.isSaThai() && nv.getMatKhau().equals(mk)) return nv;
+            System.out.println("Sai tài khoản hoặc mật khẩu, hoặc tài khoản đã bị vô hiệu hóa.");
+            System.out.println("Số lần đăng nhập sai: " + (++soLanSai));
         }
-        if ( soLanNhapSai == 0 )
-        {
-            System.out.println("Bạn đã nhập sai quá 5 lần do đó bạn phải chờ thời gian nhập lại!");
-            return;
-        }
-        quanKho.thucHienNghiepVu(sc, dsDoiTac);
     }
-    public void MenuKeToan( Scanner sc )
-    {
-        System.out.println("=================ĐĂNG NHẬP KẾ TOÁN=================");
-        System.out.println("Vui lòng nhập thông tin đăng nhập!");
-        System.out.println("Nhâp tài khoản: ");
-        String taiKhoan = sc.nextLine() ;
-        System.out.println("Nhập mật khẩu: ");
-        String matKhau = sc.nextLine() ;
-        int soLanNhapSai = 5 ;
-        while ( !taiKhoan.equalsIgnoreCase(taiKhoanKeToan) || !matKhau.equals(matKhauKeToan) )
-        {
-            soLanNhapSai--;
-            if ( soLanNhapSai == 0 ) break;
-            System.out.println("Bạn đã nhập sai mật khẩu hoặc tài khoản vui lòng nhập lại!(Còn " +soLanNhapSai + " lần thử)");
-            System.out.println("Nhâp tài khoản: ");
-            taiKhoan = sc.nextLine() ;
-            System.out.println("Nhập mật khẩu: ");
-            matKhau = sc.nextLine() ;
+
+    private void khoiTaoTaiKhoanMacDinh() {
+        TaiKhoanNhanVien[] ds = {quanLy, quanKho, thuNgan, keToan};
+        String[] tk = {taiKhoanQuanLy, taiKhoanQuanKho, taiKhoanThuNgan, taiKhoanKeToan};
+        String[] mk = {matKhauQuanLy, matKhauQuanKho, matKhauThuNgan, matKhauKeToan};
+        for (int i = 0; i < ds.length; i++) {
+            TaiKhoanNhanVien cu = ds[i];
+            TaiKhoanNhanVien canonical = null;
+            for (TaiKhoanNhanVien nv : dsTaiKhoan.getDanhSachTaiKhoan())
+                if (nv.getMaNV().equalsIgnoreCase(ds[i].getMaNV())) canonical = nv;
+            if (canonical == null) {
+                canonical = ds[i];
+                dsTaiKhoan.getDanhSachTaiKhoan().add(canonical);
+            }
+            if (canonical.getClass() != ds[i].getClass())
+                throw new IllegalStateException("Xung đột kiểu nhân viên: " + canonical.getMaNV());
+            ds[i] = canonical;
+
+            if (ds[i].getTaiKhoan().isEmpty()) {
+                String ten = cu.getTaiKhoan().isEmpty() ? tk[i] : cu.getTaiKhoan();
+                String matKhau = cu.getTaiKhoan().isEmpty() ? mk[i] : cu.getMatKhau();
+                TaiKhoanNhanVien trung = dsTaiKhoan.timKiemTheoTaiKhoan(ten);
+                if (trung != null && trung != ds[i]) throw new IllegalStateException("Trùng tài khoản cũ: " + ten);
+                ds[i].setTaiKhoan(ten);
+                ds[i].setMatKhau(matKhau);
+            }
         }
-        if ( soLanNhapSai == 0 )
-        {
-            System.out.println("Bạn đã nhập sai quá 5 lần do đó bạn phải chờ thời gian nhập lại!");
-            return;
-        }
-        keToan.thucHienNghiepVu(sc, dsHoaDonBan, dsHoaDonNhap, dsDoiTac, dsCongNo);
+        quanLy = (QuanLy) ds[0];
+        quanKho = (QuanKho) ds[1];
+        thuNgan = (ThuNgan) ds[2];
+        keToan = (KeToan) ds[3];
     }
-    public void MenuQuanLy( Scanner sc )
-    {
-        System.out.println("=================ĐĂNG NHẬP QUẢN LÝ=================");
-        System.out.println("Vui lòng nhập thông tin đăng nhập!");
-        System.out.println("Nhâp tài khoản: ");
-        String taiKhoan = sc.nextLine() ;
-        System.out.println("Nhập mật khẩu: ");
-        String matKhau = sc.nextLine() ;
-        int soLanNhapSai = 5 ;
-        while ( !taiKhoan.equalsIgnoreCase(taiKhoanQuanLy) || !matKhau.equals(matKhauQuanLy) )
-        {
-            soLanNhapSai--;
-            if ( soLanNhapSai == 0 ) break;
-            System.out.println("Bạn đã nhập sai mật khẩu hoặc tài khoản vui lòng nhập lại!(Còn " +soLanNhapSai + " lần thử)");
-            System.out.println("Nhâp tài khoản: ");
-            taiKhoan = sc.nextLine() ;
-            System.out.println("Nhập mật khẩu: ");
-            matKhau = sc.nextLine() ;
-        }
-        if ( soLanNhapSai == 0 )
-        {
-            System.out.println("Bạn đã nhập sai quá 5 lần do đó bạn phải chờ thời gian nhập lại!");
-            return;
-        }
-        quanLy.thucHienNghiepVu(sc, dsSanPham, dsDoiTac, dsHoaDonNhap, dsHoaDonBan, dsKhachHang);
+
+    private void moMenuNguoiDangNhap(Scanner sc) {
+        lienKetVaiTro(nguoiDangNhap);
+        dsHoaDonBan.cauHinh(dsSanPhamKhuyenMai, dsKhuyenMai, dsSanPham, dsKhachHang, nguoiDangNhap.getMaNV());
+        dsHoaDonNhap.cauHinh(nguoiDangNhap.getMaNV(), dsSanPham, dsDoiTac);
+        if (nguoiDangNhap instanceof ThuNgan) MenuThuNgan(sc);
+        else if (nguoiDangNhap instanceof QuanKho) MenuQuanLyKho(sc);
+        else if (nguoiDangNhap instanceof QuanLy) MenuQuanLy(sc);
+        else if (nguoiDangNhap instanceof KeToan) MenuKeToan(sc);
+        else System.out.println("Kiểu nhân viên chưa có menu: " + nguoiDangNhap.getClass().getSimpleName());
     }
-    public void MenuThuNgan(Scanner sc )
-    {
-        System.out.println("=================ĐĂNG NHẬP THU NGÂN=================");
-        System.out.println("Vui lòng nhập thông tin đăng nhập!");
-        System.out.println("Nhâp tài khoản: ");
-        String taiKhoan = sc.nextLine() ;
-        System.out.println("Nhập mật khẩu: ");
-        String matKhau = sc.nextLine() ;
-        int soLanNhapSai = 5 ;
-        while ( !taiKhoan.equalsIgnoreCase(taiKhoanThuNgan) || !matKhau.equals(matKhauThuNgan) )
-        {
-            soLanNhapSai--;
-            if ( soLanNhapSai == 0 ) break;
-            System.out.println("Bạn đã nhập sai mật khẩu hoặc tài khoản vui lòng nhập lại!(Còn " +soLanNhapSai + " lần thử)");
-            System.out.println("Nhâp tài khoản: ");
-            taiKhoan = sc.nextLine() ;
-            System.out.println("Nhập mật khẩu: ");
-            matKhau = sc.nextLine() ;
-        }
-        if ( soLanNhapSai == 0 )
-        {
-            System.out.println("Bạn đã nhập sai quá 5 lần do đó bạn phải chờ thời gian nhập lại!");
-            return;
-        }
-        thuNgan.thucHienNghiepVu(sc, dsSanPham, dsSanPhamKhuyenMai, dsKhuyenMai, dsKhachHang);
+    public void MenuQuanLyKho(Scanner sc) {
+        if (nguoiDangNhap instanceof QuanKho nv) nv.thucHienNghiepVu(sc, dsDoiTac);
     }
+    public void MenuQuanLy(Scanner sc) {
+        if (nguoiDangNhap instanceof QuanLy nv) nv.thucHienNghiepVu(sc, dsSanPham, dsDoiTac, dsHoaDonNhap, dsHoaDonBan, dsKhachHang);
+    }
+    public void MenuThuNgan(Scanner sc) {
+        if (nguoiDangNhap instanceof ThuNgan nv) nv.thucHienNghiepVu(sc, dsSanPham, dsSanPhamKhuyenMai, dsKhuyenMai, dsKhachHang);
+    }
+    public void MenuKeToan(Scanner sc) {
+        if (nguoiDangNhap instanceof KeToan nv) {
+            dsCongNo.cauHinh(dsHoaDonNhap, dsDoiTac);
+            nv.thucHienNghiepVu(sc, dsHoaDonBan, dsHoaDonNhap, dsDoiTac, dsCongNo);
+        }
+    }
+
     /** Nạp khi mở, lưu khi thoát menu hoặc kết thúc nhập liệu. */
 
     // ================= ĐỌC / GHI FILE TXT =================
@@ -253,7 +209,7 @@ public class GiaoDien {
                 // Bốn vai trò mặc định sẽ được thay bằng dữ liệu file, không cấp mã mới.
                 utils.BoDemMa.khoiPhuc(truoc);
                 gd.dsSanPham.docFile(duongDanFile(hienTai, "SanPham.txt"));
-                gd.dsNhanVien.docFile(duongDanFile(hienTai, "NhanVien.txt"));
+                gd.dsTaiKhoan.docFile(duongDanFile(hienTai, "NhanVien.txt"));
                 gd.dsKhachHang.docFile(duongDanFile(hienTai, "KhachHang.txt"));
                 gd.dsDoiTac.docFile(duongDanFile(hienTai, "DoiTac.txt"));
                 gd.dsKhuyenMai.docFile(duongDanFile(hienTai, "KhuyenMai.txt"));
@@ -261,7 +217,7 @@ public class GiaoDien {
                 gd.dsHoaDonBan.docFile(duongDanFile(hienTai, "HoaDonBan.txt"));
                 gd.dsHoaDonNhap.docFile(duongDanFile(hienTai, "HoaDonNhap.txt"));
                 gd.dsCongNo.docFile(duongDanFile(hienTai, "CongNo.txt"));
-                NhanVien[] vaiTro = utils.KhoDuLieuTxt.docVaiTro(duongDanFile(hienTai, "NhanVienDangNhap.txt"));
+                TaiKhoanNhanVien[] vaiTro = utils.KhoDuLieuTxt.docVaiTro(duongDanFile(hienTai, "NhanVienDangNhap.txt"));
                 if (vaiTro.length != 4 || !(vaiTro[0] instanceof QuanLy)
                         || !(vaiTro[1] instanceof QuanKho) || !(vaiTro[2] instanceof ThuNgan)
                         || !(vaiTro[3] instanceof KeToan)) {
@@ -274,6 +230,7 @@ public class GiaoDien {
             } else {
                 gd = new GiaoDien();
             }
+            gd.khoiTaoTaiKhoanMacDinh();
             gd.lienKetDuLieu();
             thanhCong = true;
             return gd;
@@ -291,7 +248,7 @@ public class GiaoDien {
     public synchronized void ghiDuLieu(String thuMuc) throws IOException {
         Map<String, Object> duLieu = new LinkedHashMap<>();
         duLieu.put("SanPham.txt", dsSanPham);
-        duLieu.put("NhanVien.txt", dsNhanVien);
+        duLieu.put("NhanVien.txt", dsTaiKhoan);
         duLieu.put("KhachHang.txt", dsKhachHang);
         duLieu.put("DoiTac.txt", dsDoiTac);
         duLieu.put("KhuyenMai.txt", dsKhuyenMai);
@@ -299,7 +256,7 @@ public class GiaoDien {
         duLieu.put("HoaDonBan.txt", dsHoaDonBan);
         duLieu.put("HoaDonNhap.txt", dsHoaDonNhap);
         duLieu.put("CongNo.txt", dsCongNo);
-        duLieu.put("NhanVienDangNhap.txt", new NhanVien[]{quanLy, quanKho, thuNgan, keToan});
+        duLieu.put("NhanVienDangNhap.txt", new TaiKhoanNhanVien[]{quanLy, quanKho, thuNgan, keToan});
         LuuTruNhieuFile.ghiDuLieu(thuMuc, duLieu);
     }
 
@@ -312,6 +269,10 @@ public class GiaoDien {
     }
 
     public static void chayChuongTrinh() {
+        chayChuongTrinh(new Scanner(System.in));
+    }
+
+    public static void chayChuongTrinh(Scanner sc) {
         GiaoDien giaoDien;
         try {
             giaoDien = docDuLieu(THU_MUC_DU_LIEU);
@@ -319,7 +280,7 @@ public class GiaoDien {
             System.err.println("Không mở được dữ liệu: " + e.getMessage());
             return;
         }
-        try (Scanner sc = new Scanner(System.in)) {
+        try {
             giaoDien.TrangChu(sc);
         } catch (java.util.NoSuchElementException e) {
             System.out.println("Đã kết thúc nhập liệu.");
